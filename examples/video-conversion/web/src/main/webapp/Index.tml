@@ -1,0 +1,31 @@
+<t:border xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd" title="Home">
+
+    Approximate backlog: ${approximateBacklog}<br/>
+
+    <h2>Video Conversion Service:</h2>
+    <t:loop t:source="services" t:value="service">
+        <div t:type="t5components/SlidingPanel" subject="service.toString()" style="width: 100%;" closed="true">
+            <t:loop t:source="watchesForCurrentService" t:value="watch">
+                <t:watch service="service.toString()" watch="watch.id"/>
+            </t:loop>
+        </div>
+    </t:loop>
+
+    <h2>Cybernodes:</h2>
+    <t:loop t:source="cybernodes" t:value="service">
+        <div t:type="t5components/SlidingPanel" subject="service.toString()" style="width: 100%;" closed="true">
+            <t:loop t:source="watchesForCurrentCybernode" t:value="watch">
+                <t:watch service="service.toString()" watch="watch.id"/>
+            </t:loop>
+        </div>
+    </t:loop>
+
+    <p>
+        [<t:pagelink t:page="Index">refresh</t:pagelink>]
+    </p>
+
+    <p>
+        [<t:pagelink t:page="videos/Convert">Ask for video conversion (for a previously uploaded video)</t:pagelink>]<br/>
+        [<t:pagelink t:page="videos/ConvertAndUpload">Ask for video conversion (and upload video)</t:pagelink>]
+    </p>
+</t:border>

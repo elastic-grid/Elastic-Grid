@@ -1,0 +1,2 @@
+Some hints in:
+http://jeremy.zawodny.com/mysql/mytop/mytop.html#the%20basics

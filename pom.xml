@@ -1,0 +1,165 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.elasticgrid</groupId>
+    <artifactId>elastic-grid</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Elastic Grid (Suite)</name>
+    <prerequisites>
+        <maven>2.0.8</maven>
+    </prerequisites>
+    <inceptionYear>2008</inceptionYear>
+    <url>http://www.elastic-grid.com</url>
+    <organization>
+        <name>Elastic Grid</name>
+        <url>http://www.elastic-grid.com</url>
+    </organization>
+
+    <scm>
+        <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://www.elastic-grid.com/jira/browse/EG</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>teamcity</system>
+        <url>http://www.elastic-grid.com/teamcity</url>
+    </ciManagement>
+
+    <modules>
+        <module>modules</module>
+        <module>amazon-ec2-platform</module>
+        <module>substrates</module>
+        <module>examples</module>
+    </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>elastic-grid</id>
+            <name>Elastic Grid Repository</name>
+            <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
+        </repository>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Jerome Bernard</name>
+            <email>jerome.bernard@elastic-grid.com</email>
+        </developer>
+        <developer>
+            <name>Dennis Reedy</name>
+            <email>dennis.reedy@elastic-grid.com</email>
+        </developer>
+    </developers>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>issue-tracking</report>
+                            <report>mailing-list</report>
+                            <report>license</report>
+                            <report>summary</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <quiet>true</quiet>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>2.0-beta-5</version>
+                <configuration>
+                    <outputEncoding>utf-8</outputEncoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>elastic-grid</id>
+            <url>http://maven.elastic-grid.com</url>
+        </repository>
+		<repository>
+            <id>rio</id>
+            <url>http://www.rio-project.org/maven2</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>elastic-grid</id>
+            <url>http://maven.elastic-grid.com</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>rio</id>
+            <url>http://www.rio-project.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Codehaus Snapshots</id>
+            <url>http://snapshots.repository.codehaus.org/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>mc-release</id>
+            <name>Local Maven repository of releases</name>
+            <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

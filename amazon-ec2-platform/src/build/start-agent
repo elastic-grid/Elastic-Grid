@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ec2run ami-c140a5a8 -g eg-cybernode -g elastic-grid -g default -k eg-gsg-keypair -f ec2params.config
+

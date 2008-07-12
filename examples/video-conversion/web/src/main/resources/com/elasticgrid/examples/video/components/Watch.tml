@@ -1,0 +1,4 @@
+<div xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
+     t:type="t5components/SlidingPanel" subject="watch" style="width: 100%;" closed="windowState">
+    <t:watchChart width="400" height="300" context="serviceWatchContext" popup="popupSize"/>
+</div>

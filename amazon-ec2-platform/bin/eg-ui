@@ -1,0 +1,21 @@
+#!/bin/bash
+
+scriptDir="$(dirname $0)"
+
+CP="$EG_HOME/lib/rio-ui.jar:$EG_HOME/lib/jini2_1/lib/jsk-platform.jar:$EG_HOME/lib/jini2_1/lib/jsk-lib.jar:$EG_HOME/lib/prefuse/prefuse.jar"
+for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
+do
+    CP=$CP:$j
+done
+
+if [ "$scriptDir" = "bin" ] ; then
+    java -cp $CP org.rioproject.tools.ui.Main $*
+else
+    if [ "$scriptDir" = "." ] ; then
+        java -jar ../lib/rio-ui.jar $*
+    else
+        echo "Dont know how to start Rio UI from [$scriptDir]"
+        exit 1
+    fi
+fi
+

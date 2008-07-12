@@ -1,0 +1,48 @@
+#!/bin/bash
+# Use parameters passed in during launch to configure Elastic Grid expects:
+# - MASTER_HOST : should be the internal IP address of the monitor or "master" if starting the first monitor,
+# - MAX_MONITORS: the maximum of monitors to start with a "cluster"
+
+echo "Attempting to start Elastic Grid" | logger -t elastic-grid
+
+# set defaults
+MAX_MONITORS=2
+
+wget -q -O - http://169.254.169.254/latest/user-data | tr ',' '\n' > /tmp/user-data
+source /tmp/user-data
+
+export EG_HOME=`ls -d /usr/local/eg-*`
+export JAVA_HOME=`ls -d /usr/local/jdk*`
+
+echo 'Max monitors:' $MAX_MONITORS | logger -t elastic-grid
+echo 'Yum packages to install:' $YUM_PACKAGES | logger -t elastic-grid
+
+# Install Yum packages
+yum -y install $YUM_PACKAGES
+
+[ ! -f /etc/hosts ] &&  echo "127.0.0.1 localhost" > /etc/hosts
+
+mkdir -p /mnt/eg/logs
+
+# not set on boot
+export USER="root"
+
+mkdir -p /var/log/eg
+"$EG_HOME"/bin/eg-bootstrap
+
+echo Local host name: `hostname`.`dnsdomainname` | logger -t elastic-grid
+echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
+
+if [ "$MONITOR_HOST" == `hostname`.`dnsdomainname` ]; then
+  # Elastic Grid
+  echo Starting Elastic Grid monitor | logger -t elastic-grid
+  cat $EG_HOME/config/monitor-cybernode.config > $EG_HOME/config/cybernode.config
+  "$EG_HOME"/bin/eg start monitor 2>&1 > /var/log/eg/rio-monitor.log &
+  echo Starting Elastic Grid cybernode | logger -t elastic-grid
+  "$EG_HOME"/bin/eg start cybernode &
+else
+  # Elastic Grid
+  echo Starting Elastic Grid cybernode | logger -t elastic-grid
+  cat $EG_HOME/config/slave-cybernode.config > $EG_HOME/config/cybernode.config 
+  "$EG_HOME"/bin/eg start cybernode &
+fi

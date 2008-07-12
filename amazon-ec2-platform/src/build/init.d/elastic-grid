@@ -1,0 +1,59 @@
+#!/bin/sh
+# Startup script for Elastic Grid
+#
+# chkconfig: 2345 99 05
+# description: Run Elastic Grid
+# pidfile: /var/run/elastic-grid.pid
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+prog="elastic-grid"
+PIDFILE=/var/run/elastic-grid.pid
+
+
+start() {
+    echo -n $"Starting $prog: " 
+    daemon /root/eg-init
+    RETVAL=$?
+    if [ $RETVAL -ne 0 ]; then
+	failure;
+    fi;
+    echo
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+	killproc -p ${pidfile} -d 10 $httpd
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
+}
+
+case "$1" in
+	start)
+	    start
+	    ;;
+	
+	stop)
+	    stop
+	    ;;
+	
+	status)
+	    status $prog
+	    RETVAL=$?
+	    ;;
+
+	restart)
+	    stop
+	    start
+	    ;;
+
+	*)
+	    echo $"Usage: $0 {start|stop|restart|status}"
+	    RETVAL=3
+
+esac
+
+exit $RETVAL

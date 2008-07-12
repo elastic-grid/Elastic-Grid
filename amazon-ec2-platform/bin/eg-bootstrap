@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "Bootstrapping Elastic Grid platform..."
+
+CP=""
+for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
+do
+    CP=$CP:$j
+done
+
+# Check for JAVA_HOME
+if [ -z "$JAVA_HOME" ] ; then
+    JAVACMD=java
+else
+    JAVACMD="$JAVA_HOME/bin/java"
+fi
+
+$JAVACMD -cp $CP -DEG_HOME=$EG_HOME com.elasticgrid.amazon.Bootstrapper $* | logger -t elastic-grid

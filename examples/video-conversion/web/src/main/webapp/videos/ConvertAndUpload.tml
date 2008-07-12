@@ -1,0 +1,22 @@
+<t:border xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd" title="Upload and Convert">
+    <t:form t:id="videoConversionForm">
+        <t:errors/>
+
+        <fieldset t:type="t5components/FieldSet" closed="false" style="width:600px;">
+            <legend>Upload and convert a new video</legend>
+            <div class="tap5c_fieldset_content">
+
+                <t:label t:for="video"/>:
+                <t:upload t:id="video" t:validate="required"/>
+                <br/>
+
+                <t:label t:for="format"/>:
+                <t:textfield t:id="format" t:validate="required"/>
+                <br/>
+
+                <t:submit value="Process"/>
+
+            </div>
+        </fieldset>
+    </t:form>
+</t:border>

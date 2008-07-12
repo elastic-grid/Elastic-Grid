@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+
+<opstring>
+
+    <OperationalString Name="eXo Portal WebOS Example">
+
+        <Groups>
+		    <Group>rio</Group>
+        </Groups>
+        <Organization>Elastic Grid, LLC.</Organization>
+        <Codebase>https://elastic-grid.s3.amazonaws.com/</Codebase>
+
+        <SystemRequirements id="Elastic Grid Platform">
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Kernel"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Framework"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+        </SystemRequirements>
+
+        <ServiceExec Name="eXoUltimateProduct">
+            <SystemRequirements>
+                <SystemComponent Name="SoftwareSupport">
+                    <Attribute Name="Name" Value="eXoUltimateProduct"/>
+                    <Attribute Name="Version" Value="r11432"/>
+                    <SoftwareLoad RemoveOnDestroy="no"> <!-- so that the data is kept in case of redeployment -->
+                        <Download Source="exo-eXoUltimateProduct-r11432-tomcat.zip"
+                                  InstallRoot="/mnt/exo-platform"
+                                  Unarchive="yes">
+                            <Location>https://elastic-grid.s3.amazonaws.com/exo-platform/</Location>
+                        </Download>
+                        <PostInstall RemoveOnCompletion="no">
+                            <Exec nohup="no">
+                                <CommandLine>/bin/chmod</CommandLine>
+                                <InputArg>+x /mnt/exo-platform/exo-eXoUltimateProduct-r11432-tomcat/bin/*sh</InputArg>
+                            </Exec>
+                        </PostInstall>
+                    </SoftwareLoad>
+                </SystemComponent>
+            </SystemRequirements>
+
+            <Exec>
+                <CommandLine>/mnt/exo-platform/exo-eXoUltimateProduct-r11432-tomcat/bin/eXo.sh</CommandLine>
+                <InputArg>run</InputArg>
+            </Exec>
+
+            <Maintain>1</Maintain>
+        </ServiceExec>
+
+    </OperationalString>
+
+</opstring>
