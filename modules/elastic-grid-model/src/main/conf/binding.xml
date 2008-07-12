@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+            http://www.gnu.org/licenses/lgpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<binding name="ElasticGrid"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="binding.xsd">
+
+    <namespace uri="http://aws.amazon.com/s3" prefix="s3"/>
+
+    <format type="java.net.InetAddress"
+            serializer="com.elasticgrid.utils.jibx.Conversion.serializeInetAddress"
+            deserializer="com.elasticgrid.utils.jibx.Conversion.deserializeInetAddress"/>
+
+    <mapping name="local-repository" class="com.elasticgrid.model.internal.LocalStore"
+             extends="com.elasticgrid.model.internal.AbstractStore">
+        <structure map-as="com.elasticgrid.model.internal.AbstractStore"/>
+    </mapping>
+    <mapping name="remote-repository" class="com.elasticgrid.model.internal.RemoteStore"
+             extends="com.elasticgrid.model.internal.AbstractStore">
+        <value name="s3:bucket" constant="1234"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractStore"/>
+    </mapping>
+
+    <mapping class="com.elasticgrid.model.internal.AbstractStore" abstract="true">
+        <collection name="grids" field="grids" item-type="java.lang.String" usage="optional"
+                    factory="com.elasticgrid.model.internal.AbstractStore.setOfGrids">
+            <structure name="grid">
+                <value name="name" style="attribute"/>
+            </structure>
+        </collection>
+        <collection name="applications" field="applications" item-type="java.lang.String" usage="optional"
+                    factory="com.elasticgrid.model.internal.AbstractStore.setOfApplications">
+            <structure name="application">
+                <value name="name" style="attribute"/>
+            </structure>
+        </collection>
+    </mapping>
+
+
+    <mapping class="com.elasticgrid.model.internal.AbstractGrid" abstract="true">
+        <value name="name" field="name" style="attribute"/>
+        <collection name="applications" field="applications"
+                    item-type="com.elasticgrid.model.internal.ApplicationImpl"
+                    factory="com.elasticgrid.model.internal.Factories.listOfApplications"/>
+    </mapping>
+    <mapping name="grid" class="com.elasticgrid.model.ec2.impl.EC2GridImpl" extends="com.elasticgrid.model.internal.AbstractGrid">
+        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractGrid"/>
+        <collection name="nodes" get-method="getNodes" set-method="setNodes"
+                    item-type="com.elasticgrid.model.ec2.impl.EC2NodeImpl"
+                    factory="com.elasticgrid.model.internal.AbstractGrid.setOfNodes"/>
+    </mapping>
+
+    <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">
+        <value name="address" field="address"/>
+    </mapping>
+    <mapping name="node" class="com.elasticgrid.model.ec2.impl.EC2NodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
+        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
+        <value name="instanceID" field="instanceID"/>
+    </mapping>
+
+    <mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">
+        <value name="name" field="name" style="attribute"/>
+        <structure field="oar" type="com.elasticgrid.model.internal.OARImpl"/>
+    </mapping>
+
+    <mapping name="oar" class="com.elasticgrid.model.internal.OARImpl">
+        <value name="name" field="name"/>
+        <value name="version" field="version" usage="optional"/>
+        <value name="opstring-name" field="opStringName" usage="optional"/>
+        <value name="deploy-directory" field="deployDir" usage="optional"/>
+        <value name="activation-type" field="activationType" usage="optional"/>
+    </mapping>
+
+</binding>

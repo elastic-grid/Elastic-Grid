@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+    	<groupId>com.elasticgrid</groupId>
+	    <artifactId>elastic-grid-modules</artifactId>
+	<version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>elastic-grid-model</artifactId>
+    <packaging>jar</packaging>
+    <name>Modules :: Elastic Grid Model</name>
+
+    <dependencies>
+
+        <!-- Elastic Grid Utilities -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Object/XML mapping dependencies -->
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-run</artifactId>
+            <version>1.1.6a</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-extras</artifactId>
+            <version>1.1.6a</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <version>4.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-lib</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Various utilities -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.5</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jibx</groupId>
+                <artifactId>maven-jibx-plugin</artifactId>
+                <version>1.1.6a</version>
+                <configuration>
+                    <directory>src/main/conf</directory>
+                    <load>true</load>
+                    <validate>true</validate>
+                    <verbose>true</verbose>
+                    <verify>true</verify>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>bind</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${basedir}/src/test/conf/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <childDelegation>true</childDelegation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

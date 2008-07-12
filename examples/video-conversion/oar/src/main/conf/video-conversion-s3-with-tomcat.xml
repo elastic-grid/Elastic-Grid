@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+            http://www.gnu.org/licenses/lgpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+
+<opstring>
+
+    <OperationalString Name="Video Conversion Example">
+
+        <Groups>
+		    <Group>rio</Group>
+        </Groups>
+        <Organization>Elastic Grid, LLC.</Organization>
+        <Codebase>https://javaone-demo.s3.amazonaws.com/</Codebase>
+
+        <SystemRequirements id="Elastic Grid Platform">
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Kernel"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Framework"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+        </SystemRequirements>
+
+        <Logging>
+            <Logger Name="com.elasticgrid.examples.video" Level="FINE">
+                <Handler ClassName="java.util.logging.ConsoleHandler" Level="FINE"/>
+            </Logger>
+            <Logger Name="com.elasticgrid.amazon.sqs" Level="FINE">
+                <Handler ClassName="java.util.logging.ConsoleHandler" Level="FINE"/>
+            </Logger>
+            <Logger Name="com.elasticgrid.amazon.ec2" Level="FINEST">
+                <Handler ClassName="java.util.logging.ConsoleHandler" Level="FINEST"/>
+            </Logger>
+            <!--<Logger Name="org.rioproject" Level="FINER">-->
+                <!--<Handler ClassName="java.util.logging.ConsoleHandler" Level="FINER"/>-->
+            <!--</Logger>-->
+        </Logging>
+
+        <ServiceBean Name="Video Converter">
+
+            <Interfaces>
+                <Interface>com.elasticgrid.examples.video.VideoConverter</Interface>
+                <Resources>
+                    <JAR>video-conversion-oar/lib-dl/video-conversion-converter-1.0-SNAPSHOT-dl.jar</JAR>
+                    <JAR>elastic-grid/framework/amazon-sqs-1.0-SNAPSHOT.jar</JAR>
+                    <JAR>elastic-grid/kernel/typica-1.2.jar</JAR>
+                    <JAR>elastic-grid/kernel/jets3t-0.6.0.jar</JAR>
+                </Resources>
+            </Interfaces>
+
+            <ImplementationClass Name="com.elasticgrid.examples.video.VideoConverterJSB">
+                <Resources>
+                    <JAR>video-conversion-oar/lib/video-conversion-converter-1.0-SNAPSHOT-impl.jar</JAR>
+                    <JAR>video-conversion-oar/lib/video-conversion-converter-1.0-SNAPSHOT.jar</JAR>
+                </Resources>
+            </ImplementationClass>
+
+            <Configuration>
+                import java.io.File;
+
+                com.elasticgrid.examples.video.VideoConverter {
+                    encoder = new com.elasticgrid.examples.video.MencoderEncoder(false);
+                    threadPoolSize = Integer.valueOf(4);
+                    sourceVideosBucket = "viv-src";
+                    encodedVideosBucket = "viv-dest";
+                    <!--enableS3 = Boolean.FALSE;-->
+                    enableS3 = Boolean.TRUE;
+                    statistics = new File("video-conversion.csv");
+                }
+                com.elasticgrid.amazon.sqs.SQS {
+                    queueName = "VideoConversion";
+                    visibilityTimeout = new Integer(600);   // visibility timeout of 10 minutes
+                    watchPeriod = new Long(60000L);          // every minute - 60 seconds
+                }
+                com.elasticgrid.amazon.ec2 {
+                    amazonImageID = "ami-3d7a9f54";
+                    keyName = "eg-gsg-keypair";
+                    groups = java.util.Arrays.asList(new String[] {"elastic-grid", "default"});
+                    secured = Boolean.TRUE;
+                    publicAddress = Boolean.TRUE;
+                }
+            </Configuration>
+
+            <ServiceLevelAgreements>
+                <SLA ID="Queue VideoConversion" Low="2" High="5">
+                    <!--
+                        Scale for up to 5 instances on a Amazon EC2
+                        Increase/decrease instances if the SLA is breanched for more than 1 minute = 3600ms
+                    -->
+                    <!--<PolicyHandler class="com.elasticgrid.amazon.ec2.qos.EC2ScalingPolicyHandler"-->
+                          <!--max="5" lowerDampener="3600" upperDampener="3600"/>-->
+                    <!--
+                        Scale for up to 4 instances on a LAN
+                        Increase/decrease instances if the SLA is breanched for more than 1 minute = 3600ms
+                    -->
+                    <PolicyHandler type="scaling" max="10" lowerDampener="3600" upperDampener="3600"/>
+                </SLA>
+                <!--SystemRequirements ref="Elastic Grid Platform"/-->
+            </ServiceLevelAgreements>
+
+            <Maintain>1</Maintain>
+            <MaxPerMachine>1</MaxPerMachine>
+            <Comment>Video Converter.</Comment>
+        </ServiceBean>
+
+        <ServiceExec Name="Tomcat">
+            <SystemRequirements>
+                <SystemComponent Name="SoftwareSupport">
+                    <Attribute Name="Name" Value="Tomcat"/>
+                    <Attribute Name="Version" Value="6.0.16"/>
+                    <SoftwareLoad RemoveOnDestroy="yes">
+                        <Download Source="apache-tomcat-6.0.16.zip"
+                                  InstallRoot="/mnt/tomcat"
+                                  Unarchive="yes">
+                            <Location>https://elastic-grid.s3.amazonaws.com/tomcat/</Location>
+                        </Download>
+                        <PostInstall RemoveOnCompletion="no">
+                            <Download Source="video-conversion.war"
+                                      InstallRoot="/mnt/tomcat/apache-tomcat-6.0.16/webapps">
+                                <Location>https://javaone-demo.s3.amazonaws.com/video-conversion-oar/</Location>
+                            </Download>
+                            <Exec nohup="no">
+                                <CommandLine>/bin/chmod</CommandLine>
+                                <InputArg>+x /mnt/tomcat/apache-tomcat-6.0.16/bin/*sh</InputArg>
+                            </Exec>
+                        </PostInstall>
+                    </SoftwareLoad>
+                </SystemComponent>
+            </SystemRequirements>
+
+            <Exec>
+                <CommandLine>bin/catalina.sh</CommandLine>
+                <InputArg>run</InputArg>
+            </Exec>
+
+            <Maintain>1</Maintain>
+        </ServiceExec>
+
+    </OperationalString>
+
+</opstring>

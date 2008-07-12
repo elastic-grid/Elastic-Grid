@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="gridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
+        <property name="repositoryManager" ref="repositoryManager"/>
+        <property name="ec2" ref="ec2"/>
+        <property name="keyName" value="${amazon.ec2.key}"/>
+        <property name="amiSmall" value="${amazon.ec2.ami.small}"/>
+        <property name="amiLarge" value="${amazon.ec2.ami.large}"/>
+        <property name="amiExtraLarge" value="${amazon.ec2.ami.extralarge}"/>
+    </bean>
+    
+    <bean id="gridFactory" class="com.elasticgrid.grid.ec2.impl.EC2GridFactory"/>
+
+    <bean id="ec2" class="com.elasticgrid.amazon.ec2.EC2InstantiatorImpl">
+        <property name="jec2" ref="jec2"/>
+    </bean>
+
+    <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
+        <constructor-arg index="0" value="${aws.accessId}"/>
+        <constructor-arg index="1" value="${aws.secretKey}"/>
+        <constructor-arg index="2" value="${amazon.ec2.secured}"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.eg/aws.properties</value>
+                <value>file:${user.home}/.eg/ec2.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
+

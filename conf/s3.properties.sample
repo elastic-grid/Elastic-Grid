@@ -1,0 +1,4 @@
+amazon.s3.bucket.name = your-bucket-name
+
+# Amazon S3 location (empty for US, "EU" for Europe)
+amazon.s3.bucket.location = 

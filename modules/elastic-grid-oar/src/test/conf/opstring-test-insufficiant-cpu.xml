@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+            http://www.gnu.org/licenses/lgpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+
+<opstring>
+
+    <OperationalString Name="Test">
+
+        <Codebase>$[org.rioproject.codeserver]</Codebase>
+        <Groups>
+			<Group>rio</Group>
+            <Group>kalixia</Group>
+            <Group>production</Group>
+        </Groups>
+        <Organization>Kalixia, SARL.</Organization>
+
+        <ServiceBean Name="Test JSB">
+
+            <Interfaces>
+                <Interface>com.elasticgrid.TestInterface</Interface>
+                <Resources>
+                    <JAR>elastic-grid/lib-test/amazon-ec2-provisioner-1.0-SNAPSHOT-tests.jar</JAR>
+                </Resources>
+            </Interfaces>
+
+            <ImplementationClass>com.elasticgrid.TestJSB
+                <Resources>
+                    <JAR>elastic-grid/lib-test/amazon-ec2-provisioner-1.0-SNAPSHOT-tests.jar</JAR>
+                    <JAR>elastic-grid/lib/amazon-ec2-provisioner-1.0-SNAPSHOT-impl.jar</JAR>
+                </Resources>
+            </ImplementationClass>
+
+            <ServiceLevelAgreements>
+                <!--
+                <SLA ID="fetch-feeds-backlog" Low="2" High="10">
+                    <PolicyHandler type="scaling" max="10" lowerDampener="10000" upperDampener="10000"/>
+                    <Monitor name="Number of feeds to fetch" property="backlog" period="5000"/>
+                </SLA>
+                -->
+                <SLA ID="testGauge" Low="0" High="10">
+                    <Configuration>
+                        <Component Name="org.rioproject.qos.SLAPolicyHandler">
+                            <Parameter Name="slaPolicyHandler">
+                                <![CDATA[
+                                    new com.elasticgrid.amazon.ec2.qos.EC2ScalingPolicyHandler(
+                                                                        (org.rioproject.core.SLA) $data,
+                                                                        new com.elasticgrid.MockEC2Instantiator()
+                                                                    )
+                                ]]>
+                            </Parameter>
+                            <Parameter Name="MaxServices" Value="10"/>
+                            <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
+                            <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
+                        </Component>
+                        <Component Name="com.elasticgrid.amazon.ec2">
+                            <Parameter Name="awsAccessKeyId" Value='"0ZFE2GWP55PY92GD0A02"'/>
+                            <Parameter Name="awsSecretKey" Value='"Xj3hJngb3nJD5c3ti/O1MqW/A2v5gnd9ST6rns4h"'/>
+                            <Parameter Name="amazonImageID" Value='"123456"'/>
+                            <Parameter Name="keyName" Value='"production"'/>
+                            <Parameter Name="secured" Value="java.lang.Boolean.TRUE"/>
+                            <Parameter Name="publicAddress" Value="java.lang.Boolean.TRUE"/>
+                            <Parameter Name="secured" Value="java.lang.Boolean.FALSE"/>
+                        </Component>
+                    </Configuration>
+                    <Monitor name="Test Gauge" property="testGauge" period="5000"/>
+                </SLA>
+                <!--
+                <SLA ID="CPU" Low=".001" High=".05">
+                    <Configuration>
+                        <Component Name="org.rioproject.qos.SLAPolicyHandler">
+                            <Parameter Name="slaPolicyHandler">
+                                <![CDATA[
+                                    new com.kalixia.partners.amazon.ec2.qos.EC2ScalingPolicyHandler((org.rioproject.core.SLA) $data)
+                                ]]>
+                            </Parameter>
+                            <Parameter Name="MaxServices" Value="3"/>
+                            <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
+                            <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
+                        </Component>
+                        <Component Name="com.kalixia.partners.amazon.ec2">
+                            <Parameter Name="awsAccessKeyId" Value='"0ZFE2GWP55PY92GD0A02"'/>
+                            <Parameter Name="awsSecretKey" Value='"Xj3hJngb3nJD5c3ti/O1MqW/A2v5gnd9ST6rns4h"'/>
+                            <Parameter Name="amazonImageID" Value='"123456"'/>
+                            <Parameter Name="keyName" Value='"production"'/>
+                            <Parameter Name="secured" Value="java.lang.Boolean.TRUE"/>
+                            <Parameter Name="publicAddress" Value="java.lang.Boolean.TRUE"/>
+                            <Parameter Name="secured" Value="java.lang.Boolean.FALSE"/>
+                        </Component>
+                    </Configuration>
+                </SLA>
+                -->
+            </ServiceLevelAgreements>
+
+            <Maintain>1</Maintain>
+        </ServiceBean>
+
+    </OperationalString>
+
+</opstring>

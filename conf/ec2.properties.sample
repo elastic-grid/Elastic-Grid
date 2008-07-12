@@ -1,0 +1,5 @@
+amazon.ec2.key = elastic-grid
+amazon.ec2.ami.small = 123456
+amazon.ec2.ami.large = 123456
+amazon.ec2.ami.extralarge = 23567
+amazon.ec2.secured = true

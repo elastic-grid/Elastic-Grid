@@ -1,0 +1,185 @@
+/**
+ * Copyright (C) 2007-2008 Elastic Grid, LLC.
+ * 
+ * Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *         http://www.gnu.org/licenses/lgpl-3.0.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.elasticgrid.amazon.sqs;
+
+import com.xerox.amazonws.sqs2.MessageQueue;
+import com.xerox.amazonws.sqs2.QueueService;
+import com.xerox.amazonws.sqs2.SQSException;
+import net.jini.config.Configuration;
+import net.jini.config.ConfigurationException;
+import org.rioproject.core.jsb.ServiceBeanContext;
+import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.watch.Calculable;
+import org.rioproject.watch.PeriodicWatch;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.rmi.Remote;
+import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * {@link ServiceBeanAdapter} easing development with Amazon SQS.
+ */
+public abstract class SQSServiceBeanAdapter extends ServiceBeanAdapter implements SQSListener {
+    private QueueService queueService;
+    private ScheduledExecutorService pool;
+    protected MessageQueue queue;
+    protected String awsAccessId;
+    protected String awsSecretKey;
+    protected String COMPONENT = SQSServiceBeanAdapter.class.getPackage().getName() + ".SQS";
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
+    @Override
+    protected Object createProxy() {
+        try {
+            // try to load properties from $HOME/.eg/aws.properties
+            Properties awsProperties = new Properties();
+            File awsPropertiesFile = new File(System.getProperty("user.home") + File.separatorChar + ".eg",
+                    "aws.properties");
+            InputStream stream = null;
+            try {
+                stream = new FileInputStream(awsPropertiesFile);
+                awsProperties.load(stream);
+            } catch (Exception e) {
+                // do nothing -- this is expected behaviour
+            } finally {
+                try {
+                    if (stream != null)
+                        stream.close();
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, "Could not close stream", e);
+                }
+            }
+            // try to load properties from $EG_HOME/eg.properties
+            if (awsProperties.size() == 0) {
+                awsProperties = new Properties();
+                awsPropertiesFile = new File(System.getProperty("EG_HOME") + File.separatorChar + "config",
+                        "eg.properties");
+                try {
+                    stream = new FileInputStream(awsPropertiesFile);
+                    awsProperties.load(stream);
+                } catch (Exception e) {
+                    // do nothing -- this is expected behaviour
+                } finally {
+                    try {
+                        if (stream != null)
+                            stream.close();
+                    } catch (IOException e) {
+                        logger.log(Level.SEVERE, "Could not close stream", e);
+                    }
+                }
+
+            }
+            awsAccessId = (String) awsProperties.get("aws.accessId");
+            awsSecretKey = (String) awsProperties.get("aws.secretKey");
+            Boolean secured = Boolean.parseBoolean((String) awsProperties.get("aws.sqs.secured"));
+            // fall-back to JSB configuration
+            Configuration config = context.getConfiguration();
+            if (awsAccessId == null)
+                awsAccessId = (String) config.getEntry(COMPONENT, "awsAccessId", String.class);
+            if (awsSecretKey == null)
+                awsSecretKey = (String) config.getEntry(COMPONENT, "awsSecretKey", String.class);
+            if (secured == null)
+                secured = (Boolean) config.getEntry(COMPONENT, "secured", Boolean.class, true);
+            // read other JSB configuration parameters
+            final String queueName = (String) config.getEntry(COMPONENT, "queueName", String.class);
+            queueService = new QueueService(awsAccessId, awsSecretKey, secured);
+            queue = com.xerox.amazonws.sqs2.SQSUtils.connectToQueue(queueName, awsAccessId, awsSecretKey);
+        } catch (ConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (SQSException e) {
+            throw new RuntimeException(e);
+        }
+        return super.createProxy();
+    }
+
+    public QueueService getQueueService() {
+        return queueService;
+    }
+
+    @Override
+    public void initialize(ServiceBeanContext context) throws Exception {
+        super.initialize(context);
+        // gather configuration
+        Configuration config = context.getConfiguration();
+        int visibilityTimeout = (Integer) config.getEntry(COMPONENT, "visibilityTimeout", Integer.class, 0);
+        Long watchPeriod = (Long) config.getEntry(COMPONENT, "watchPeriod", Long.class, 5000L);
+        // setup visibility timeout
+        if (visibilityTimeout != 0)
+            queue.setVisibilityTimeout(visibilityTimeout);
+        // setup watches
+        final String queueName = (String) config.getEntry(COMPONENT, "queueName", String.class);
+        PeriodicWatch watch = new PeriodicWatch(String.format("Queue %s", queueName)) {
+            public void checkValue() {
+                try {
+                    int numberOfMessages = queue.getApproximateNumberOfMessages();
+                    logger.log(Level.FINEST,
+                            "Found {0,choice,0#no message|1#one message|1<{0} messages} in queue {1}",
+                            new Object[]{numberOfMessages, queueName});
+                    addWatchRecord(new Calculable(id, numberOfMessages, System.currentTimeMillis()));
+                } catch (SQSException e) {
+                    logger.log(Level.WARNING,
+                            "Could not compute approximate number of messages for queue {0}", queue.getUrl());
+                }
+            }
+        };
+        watch.setPeriod(watchPeriod);
+        watchRegistry.register(watch);
+        // setup the SQS polling thread pool
+        pool = Executors.newScheduledThreadPool(1);
+    }
+
+    public long getApproximateBacklog() {
+        try {
+            return queue.getApproximateNumberOfMessages();
+        } catch (SQSException e) {
+            throw new RuntimeException("Can't fetch the approximate number of messages left in queue", e);
+        }
+    }
+
+    @Override
+    public void advertise() throws IOException {
+        int pollingPeriod;
+        try {
+            pollingPeriod = (Integer) context.getConfiguration().getEntry(COMPONENT, "pollingPeriod", Integer.class, 10);
+        } catch (ConfigurationException e) {
+            IOException ioe = new IOException("Can't retrieve configuration for the polling period");
+            ioe.initCause(e);
+            throw ioe;
+        }
+        logger.log(Level.INFO, "Started polling of SQS queue ''{0}''", SQSUtils.getQueueName(queue));
+        pool.scheduleAtFixedRate(new SQSQueuePollingTask(this, queue), 0, pollingPeriod, TimeUnit.SECONDS);
+        super.advertise();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        pool.shutdown();
+    }
+
+    public Remote getExportedProxy() {
+        return super.getExportedProxy();
+    }
+}

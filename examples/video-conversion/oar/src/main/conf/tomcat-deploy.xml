@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+            http://www.gnu.org/licenses/lgpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+<opstring>
+
+    <OperationalString Name="Tomcat Deploy">
+
+        <Groups>
+            <Group>rio</Group>
+        </Groups>
+
+        <ServiceExec Name="Tomcat">
+            <SystemRequirements>
+                <SystemComponent Name="SoftwareSupport">
+                    <Attribute Name="Name" Value="Tomcat"/>
+                    <Attribute Name="Version" Value="6.0.16"/>
+                    <SoftwareLoad RemoveOnDestroy="yes">
+                        <Download Source="apache-tomcat-6.0.16.zip"
+                                  InstallRoot="/mnt/tomcat"
+                                  Unarchive="yes">
+                            <Location>https://elastic-grid.s3.amazonaws.com/tomcat/</Location>
+                        </Download>
+                        <PostInstall RemoveOnCompletion="no">
+                            <Download Source="sample.war"
+                                      InstallRoot="/mnt/tomcat/apache-tomcat-6.0.16/webapps">
+                                <Location>https://elastic-grid.s3.amazonaws.com/tomcat/</Location>
+                            </Download>
+                            <Exec nohup="no">
+                                <CommandLine>/bin/chmod</CommandLine>
+                                <InputArg>+x /mnt/tomcat/apache-tomcat-6.0.16/bin/*sh</InputArg>
+                            </Exec>
+
+                        </PostInstall>
+                    </SoftwareLoad>
+
+                </SystemComponent>
+            </SystemRequirements>
+
+            <Exec>
+                <CommandLine>bin/catalina.sh</CommandLine>
+                <InputArg>run</InputArg>
+            </Exec>
+
+            <Maintain>1</Maintain>
+
+        </ServiceExec>
+
+    </OperationalString>
+</opstring>

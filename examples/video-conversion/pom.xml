@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid.examples</groupId>
+        <artifactId>examples</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.elasticgrid.examples.video</groupId>
+    <artifactId>video-conversion</artifactId>
+    <packaging>pom</packaging>
+    <name>Examples :: Video Conversion</name>
+
+    <modules>
+        <module>client</module>
+        <module>converter</module>
+        <module>oar</module>
+        <module>web</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.mathieucarbou.mojo</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <header>${basedir}/../../etc/header.txt</header>
+                    <quiet>false</quiet>
+                    <failIfMissing>true</failIfMissing>
+                    <includes>
+                        <include>src/**</include>
+                        <include>**/test/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>target/**</exclude>
+                        <exclude>.clover/**</exclude>
+                    </excludes>
+                    <useDefaultExcludes>true</useDefaultExcludes>
+                    <mapping>
+                        <jwc>xml</jwc>
+                        <application>xml</application>
+                        <myFileExtension>java</myFileExtension>
+                    </mapping>
+                    <useDefaultMapping>true</useDefaultMapping>
+                    <properties>
+                        <year>${project.inceptionYear}</year>
+                    </properties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

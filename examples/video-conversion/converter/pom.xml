@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid.examples.video</groupId>
+        <artifactId>video-conversion</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>video-conversion-converter</artifactId>
+    <packaging>jsb</packaging>
+    <name>Examples :: Video Conversion :: Converter</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-sqs</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Amazon S3 integration -->
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <!-- Various dependencies -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.5</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <forkMode>never</forkMode>
+                    <excludedGroups>qa</excludedGroups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-rio-plugin</artifactId>
+                <version>3.3-m1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <environment>
+                        <rio.home>${env.RIO_HOME}</rio.home>
+                        <jini.home>${env.JINI_HOME}</jini.home>
+                    </environment>
+
+                    <implementationIns>
+                        <implementationIn>com.elasticgrid.examples.video</implementationIn>
+                    </implementationIns>
+                    <implementationTopclasses>
+                        <implementationTopclass>com.elasticgrid.examples.video.VideoConverterJSB</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.examples.video.MencoderEncoder</implementationTopclass>
+                    </implementationTopclasses>
+
+                    <clientIns>
+                        <clientIn>com.elasticgrid.examples.video</clientIn>
+                    </clientIns>
+                    <clientTopclasses>
+                        <clientTopclass>com.elasticgrid.examples.video.VideoConverter</clientTopclass>
+                    </clientTopclasses>
+
+                    <downloadableIns>
+                        <downloadableIn>com.elasticgrid.examples.video</downloadableIn>
+                    </downloadableIns>
+                    <downloadableTopclasses>
+                        <downloadableTopclass>com.elasticgrid.examples.video.S3VideoConverterProxy</downloadableTopclass>
+                        <downloadableTopclass>com.elasticgrid.examples.video.LocalVideoConverterProxy</downloadableTopclass>
+                    </downloadableTopclasses>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

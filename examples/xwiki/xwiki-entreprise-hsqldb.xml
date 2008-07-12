@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+
+<opstring>
+
+    <OperationalString Name="XWiki Example">
+
+        <Groups>
+		    <Group>rio</Group>
+        </Groups>
+        <Organization>Elastic Grid, LLC.</Organization>
+        <Codebase>https://elastic-grid.s3.amazonaws.com/</Codebase>
+
+        <SystemRequirements id="Elastic Grid Platform">
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Kernel"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+            <SystemComponent Name="SoftwareSupport">
+                <Attribute Name="Name" Value="Elastic Grid Framework"/>
+                <Attribute Name="Version" Value="1.0"/>
+            </SystemComponent>
+        </SystemRequirements>
+
+        <ServiceExec Name="XWiki">
+            <SystemRequirements>
+                <SystemComponent Name="SoftwareSupport">
+                    <Attribute Name="Name" Value="XWiki"/>
+                    <Attribute Name="Version" Value="1.3.2"/>
+                    <SoftwareLoad RemoveOnDestroy="no"> <!-- so that the data is kept in case of redeployment -->
+                        <Download Source="xwiki-enterprise-hsqldb-1.3.2.zip"
+                                  InstallRoot="/mnt/xwiki"
+                                  Unarchive="yes">
+                            <Location>https://elastic-grid.s3.amazonaws.com/xwiki/</Location>
+                        </Download>
+                        <PostInstall RemoveOnCompletion="no">
+                            <Exec nohup="no">
+                                <CommandLine>/bin/chmod</CommandLine>
+                                <InputArg>+x /mnt/xwiki/xwiki-enterprise-hsqldb-1.3.2/*.sh</InputArg>
+                            </Exec>
+                        </PostInstall>
+                    </SoftwareLoad>
+                </SystemComponent>
+            </SystemRequirements>
+
+            <Exec>
+                <CommandLine>start_xwiki.sh</CommandLine>
+            </Exec>
+
+            <Maintain>1</Maintain>
+        </ServiceExec>
+
+    </OperationalString>
+
+</opstring>

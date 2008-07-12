@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="remoteRepository" class="com.elasticgrid.repository.s3.S3Repository">
+        <property name="s3" ref="s3service"/>
+        <property name="bucketName" value="${amazon.s3.bucket.name}"/>
+        <property name="bucketLocation" value="${amazon.s3.bucket.location}"/>
+    </bean>
+
+    <bean id="s3service" class="org.jets3t.service.impl.rest.httpclient.RestS3Service">
+        <constructor-arg index="0" ref="awsCredentials"/>
+    </bean>
+
+    <bean id="awsCredentials" class="org.jets3t.service.security.AWSCredentials">
+        <constructor-arg index="0" value="${aws.accessId}"/>
+        <constructor-arg index="1" value="${aws.secretKey}"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.eg/aws.properties</value>
+                <value>file:${user.home}/.eg/s3.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
+
