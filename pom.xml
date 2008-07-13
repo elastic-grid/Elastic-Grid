@@ -16,10 +16,15 @@
         <name>Elastic Grid</name>
         <url>http://www.elastic-grid.com</url>
     </organization>
+    <description>
+        The Elastic Grid is an infrastructure for the dynamic deployment, activation, management
+        of Java applications on virtualized hardware, initially focusing on Amazon EC2.
+    </description>
 
     <scm>
         <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</connection>
         <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</developerConnection>
+        <url>https://svn.forge.objectweb.org/cgi-bin/viewcvs.cgi/elastic-grid/trunk/</url>
     </scm>
 
     <issueManagement>
@@ -45,18 +50,53 @@
             <name>Elastic Grid Repository</name>
             <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
         </repository>
+        <site>
+            <id>website</id>
+            <url>scp://shell.forge.objectweb.org/var/lib/gforge/chroot/home/groups/elastic-grid/htdocs</url>
+        </site>
     </distributionManagement>
 
     <developers>
         <developer>
+            <id>jeje</id>
             <name>Jerome Bernard</name>
             <email>jerome.bernard@elastic-grid.com</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+            </roles>
+            <organization>Elastic Grid, LLC</organization>
+            <timezone>+1</timezone>
         </developer>
         <developer>
+            <id>dreedy</id>
             <name>Dennis Reedy</name>
             <email>dennis.reedy@elastic-grid.com</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+            </roles>
+            <organization>Elastic Grid, LLC</organization>
+            <timezone>-5</timezone>
         </developer>
     </developers>
+
+    <mailingLists>
+        <mailingList>
+            <name>Elastic Grid Users List</name>
+            <subscribe>elastic-grid-subscribe@ow2.org</subscribe>
+            <unsubscribe>elastic-grid-unsubscribe@ow2.org</unsubscribe>
+            <post>elastic-grid@ow2.org</post>
+            <archive>http://mail-archive.ow2.org/elastic-grid</archive>
+        </mailingList>
+        <mailingList>
+            <name>Elastic Grid Developers List</name>
+            <subscribe>elastic-grid-dev-subscribe@ow2.org</subscribe>
+            <unsubscribe>elastic-grid-dev-unsubscribe@ow2.org</unsubscribe>
+            <post>elastic-grid-dev@ow2.org</post>
+            <archive>http://mail-archive.ow2.org/elastic-grid-dev</archive>
+        </mailingList>
+    </mailingLists>
 
     <reporting>
         <plugins>
