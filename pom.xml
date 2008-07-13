@@ -21,6 +21,13 @@
         of Java applications on virtualized hardware, initially focusing on Amazon EC2.
     </description>
 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License 3</name>
+            <url>LICENSE.txt</url>
+        </license>
+    </licenses>
+
     <scm>
         <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</connection>
         <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</developerConnection>
