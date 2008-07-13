@@ -12,7 +12,7 @@ if [ "$scriptDir" = "bin" ] ; then
     java -cp $CP org.rioproject.tools.ui.Main $*
 else
     if [ "$scriptDir" = "." ] ; then
-        java -jar ../lib/rio-ui.jar $*
+        java -cp $CP org.rioproject.tools.ui.Main $*
     else
         echo "Dont know how to start Rio UI from [$scriptDir]"
         exit 1
