@@ -32,6 +32,13 @@
             <version>2.1</version>
         </dependency>
 
+        <!-- Groovy dependencies -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.6-beta-1</version>
+        </dependency>
+
         <!-- Object/XML mapping dependencies -->
         <dependency>
             <groupId>org.jibx</groupId>
@@ -119,5 +126,24 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
