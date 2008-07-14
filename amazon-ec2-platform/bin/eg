@@ -21,7 +21,12 @@
 # This script also sets the
 # environment to download native libraries from the $RIO_HOME/lib/native directory.
 
-export MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
+if [ -e "$EG_HOME/config/monitor-host" ] ; then
+    export MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
+else
+    export MONITOR_HOST=`hostname`
+fi
+
 export RIO_OPTS="-DMONITOR_HOST=$MONITOR_HOST"
 
 scriptDir="$(dirname $0)"
