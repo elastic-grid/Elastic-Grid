@@ -15,8 +15,9 @@
     <modules>
         <module>substrate-api</module>
         <module>mysql</module>
-		<module>tomcat5</module>
+	<module>tomcat5</module>
         <module>tomcat6</module>
+        <module>glassfish2</module>
     </modules>
 
     <dependencies>
