@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-opstring(name:'My Sample Webapp') {
+deployment(name:'My Sample Webapp') {
     groups('rio')
     tomcat(version:'6.0.16', removeOnDestroy: true) {
-        webapp source:'https://elastic-grid.s3.amazonaws.com/tomcat/sample.war'
+        webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
     }
 }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-opstring(name:'My Sample Webapp') {
+deployment(name:'My Sample Webapp') {
     groups('rio')
     serviceExec(name:'Tomcat') {
         software(name:'Tomcat', version:'6.0.16', removeOnDestroy: true) {
             download source:'https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-6.0.16.zip',
                      installRoot:'${RIO_HOME}/system/external/tomcat', unarchive: true
             postInstall(removeOnCompletion: true) {
-                download source:'https://elastic-grid.s3.amazonaws.com/tomcat/sample.war',
+                download source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war',
                          installRoot:'${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps'
-                execute command:'/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*sh',
+                execute command:'/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
                         nohup: false
             }
         }
