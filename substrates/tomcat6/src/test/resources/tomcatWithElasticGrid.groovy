@@ -16,7 +16,7 @@
 
 deployment(name:'My Sample Webapp') {
     groups('rio')
-    tomcat(version:'6.0.16', removeOnDestroy: true) {
+    tomcat(removeOnDestroy: true) {
         webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
     }
 }
