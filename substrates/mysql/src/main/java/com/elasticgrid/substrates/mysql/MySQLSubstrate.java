@@ -18,9 +18,15 @@ package com.elasticgrid.substrates.mysql;
 
 import com.elasticgrid.substrates.AbstractSubstrate;
 import com.elasticgrid.substrates.Substrate;
+import groovy.lang.ExpandoMetaClass;
+import groovy.xml.MarkupBuilder;
 import net.jini.config.Configuration;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 
 public class MySQLSubstrate extends AbstractSubstrate implements Substrate {
@@ -66,6 +72,10 @@ public class MySQLSubstrate extends AbstractSubstrate implements Substrate {
 
     public String getName() {
         return "MySQL";
+    }
+
+    public void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
+        // do nothing by default
     }
 
 }

@@ -20,6 +20,9 @@ import org.rioproject.watch.Watch;
 
 import java.util.Set;
 
+import groovy.lang.ExpandoMetaClass;
+import groovy.xml.MarkupBuilder;
+
 public interface Substrate {
 
     /**
@@ -27,6 +30,13 @@ public interface Substrate {
      * @return the name of the underlying applicaiton
      */
     String getName();
+
+    /**
+     * Enable the substrate to enrich the DSL.
+     * @param builder the XML {@link MarkupBuilder}
+     * @param emc the {@link ExpandoMetaClass} to use in order to inject custom parsing logic
+     */
+    void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc);
 
     /**
      * Return the list of {@link Watch}es for the underlying application.

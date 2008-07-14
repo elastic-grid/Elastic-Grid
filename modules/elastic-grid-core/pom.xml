@@ -20,6 +20,13 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Substrates API -->
+        <dependency>
+            <groupId>com.elasticgrid.substrates</groupId>
+            <artifactId>substrate-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Jini dependencies -->
         <dependency>
             <groupId>net.jini</groupId>
