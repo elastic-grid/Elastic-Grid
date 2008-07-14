@@ -7,6 +7,10 @@ for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
 do
     CP=$CP:$j
 done
+for j in $(find $EG_HOME/lib/elastic-grid/substrates -name "*.jar")
+do
+    CP=$CP:$j
+done
 
 if [ "$scriptDir" = "bin" ] ; then
     java -cp $CP org.rioproject.tools.ui.Main $*
