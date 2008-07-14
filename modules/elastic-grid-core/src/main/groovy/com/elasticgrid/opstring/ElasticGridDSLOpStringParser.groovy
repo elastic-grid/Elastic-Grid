@@ -28,7 +28,7 @@ class ElasticGridDSLOpStringParser extends GroovyDSLOpStringParser {
                              installRoot: '${RIO_HOME}/system/external/tomcat', unarchive: true
                     postInstall(removeOnCompletion: attributes.removeOnDestroy) {
                         cl()
-                        execute command: '/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*sh',
+                        execute command: '/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
                                 nohup: false
                     }
                 }
