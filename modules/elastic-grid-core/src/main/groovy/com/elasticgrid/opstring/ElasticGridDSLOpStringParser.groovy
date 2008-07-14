@@ -18,27 +18,26 @@ package com.elasticgrid.opstring
 
 import org.rioproject.opstring.GroovyDSLOpStringParser
 import groovy.xml.MarkupBuilder
+import com.elasticgrid.substrates.Substrate
 
 class ElasticGridDSLOpStringParser extends GroovyDSLOpStringParser {
+    def SUBSTRATE_DSL_LOCATION = "META-INF/com/elasticgrid/substrates/SubstrateClass"
+
     protected void processAdditionalTags(MarkupBuilder builder, ExpandoMetaClass emc) {
-        emc.tomcat = { Map attributes, Closure cl ->
-            serviceExec(name: 'Tomcat') {
-                software(name: 'Tomcat', version: attributes.version, removeOnDestroy: attributes.removeOnDestroy) {
-                    download source: "https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-${attributes.version}.zip",
-                             installRoot: '${RIO_HOME}/system/external/tomcat', unarchive: true
-                    postInstall(removeOnCompletion: attributes.removeOnDestroy) {
-                        cl()
-                        execute command: '/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
-                                nohup: false
-                    }
-                }
-                execute inDirectory: 'bin', command: 'catalina.sh run'
-                maintain 1
-            }
+        URLClassLoader cl = Thread.currentThread().contextClassLoader
+        List<Substrate> substrates = []
+        // search for all JARs having some substrates declared
+        def resources = cl.getResources(SUBSTRATE_DSL_LOCATION)
+        // extract substrate class names and build them
+        resources.each { URL url ->
+            def substrateClassName = url.content.text
+            def substrate = cl.loadClass(substrateClassName).newInstance()
+            substrates << substrate
         }
-        emc.webapp = { Map attributes ->
-            download source: attributes.source,
-                     installRoot: '${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps'
+        // register each substrate in the DSL
+        substrates.each() { Substrate substrate ->
+            logger.info "Adding DSL features from ${substrate.name} substrate..."
+            substrate.addDomainSpecificLangueFeatures builder, emc
         }
     }
 }

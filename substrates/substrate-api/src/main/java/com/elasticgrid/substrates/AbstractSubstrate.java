@@ -30,11 +30,13 @@ import java.sql.SQLException;
 /**
  * Abstract {@link Substrate} implementation.
  */
-public abstract class AbstractSubstrate extends ServiceBeanAdapter {
+public abstract class AbstractSubstrate extends ServiceBeanAdapter implements Substrate {
     private Set<Watch> watches = new HashSet<Watch>();
     protected Logger logger = Logger.getLogger(getClass().getName());
 
-    protected abstract void initialize(Configuration config) throws ConfigurationException, ClassNotFoundException, SQLException, Exception;
+    protected void initialize(Configuration config) throws Exception {
+        // do nothing by default -- here for subclasses
+    }
 
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {

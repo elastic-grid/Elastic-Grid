@@ -6,14 +6,14 @@
     <artifactId>elastic-grid</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Elastic Grid (Suite)</name>
+    <name>Elastic Grid</name>
     <prerequisites>
         <maven>2.0.8</maven>
     </prerequisites>
     <inceptionYear>2008</inceptionYear>
     <url>http://www.elastic-grid.com</url>
     <organization>
-        <name>Elastic Grid</name>
+        <name>Elastic Grid, LLC.</name>
         <url>http://www.elastic-grid.com</url>
     </organization>
     <description>
@@ -73,7 +73,7 @@
                 <role>Developer</role>
             </roles>
             <organization>Elastic Grid, LLC</organization>
-            <timezone>+1</timezone>
+            <timezone>+2</timezone>
         </developer>
         <developer>
             <id>dreedy</id>

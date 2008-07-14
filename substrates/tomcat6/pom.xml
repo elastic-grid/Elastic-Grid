@@ -23,6 +23,14 @@
             <artifactId>substrate-api</artifactId>
             <version>${pom.version}</version>
         </dependency>
+
+        <!-- Elastic Grid Core -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-core</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <properties>

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.opstring
+package com.elasticgrid.substrates.tomcat6
 
 import org.rioproject.core.provision.StagedSoftware
 import org.rioproject.opstring.GroovyDSLOpStringParser
 import org.rioproject.opstring.OpString
 import org.rioproject.opstring.OpStringParser
+import com.elasticgrid.opstring.ElasticGridDSLOpStringParser
 
 class OpStringParserTest extends GroovyTestCase {
     def OpStringParser rioParser = new GroovyDSLOpStringParser()
