@@ -19,6 +19,7 @@ package com.elasticgrid.substrates;
 import org.rioproject.watch.Watch;
 
 import java.util.Set;
+import java.util.List;
 
 import groovy.lang.ExpandoMetaClass;
 import groovy.xml.MarkupBuilder;
@@ -43,5 +44,11 @@ public interface Substrate {
      * @return the list of watches
      */
     Set<Watch> getWatches();
+
+    /**
+     * Return the list of {@link FirewallRule}s to activate for the substrate.
+     * @return the list of firewall rules
+     */
+    List<FirewallRule> getFirewallRules();
 
 }

@@ -2,6 +2,8 @@ package com.elasticgrid.substrates.tomcat6
 
 import com.elasticgrid.substrates.AbstractSubstrate
 import groovy.xml.MarkupBuilder
+import com.elasticgrid.substrates.FirewallRule
+import com.elasticgrid.substrates.FirewallRule.IpProtocol
 
 class Tomcat6Substrate extends AbstractSubstrate {
     def version
@@ -33,5 +35,13 @@ class Tomcat6Substrate extends AbstractSubstrate {
         }
     }
 
+    /**
+     * Open port 8080 for TCP from anywhere.
+     * @todo temporary situation until we have the Apache frontend working fine.
+     */
+    @Override
+    public List<FirewallRule> getFirewallRules() {
+        [new FirewallRule(getName(), IpProtocol.TCP, 8080, '??')]
+    }
 
 }

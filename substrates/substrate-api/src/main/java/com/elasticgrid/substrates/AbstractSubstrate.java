@@ -24,6 +24,8 @@ import net.jini.config.ConfigurationException;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Collections;
 import java.util.logging.Logger;
 import java.sql.SQLException;
 
@@ -56,5 +58,9 @@ public abstract class AbstractSubstrate extends ServiceBeanAdapter implements Su
 
     public Set<Watch> getWatches() {
         return watches;
+    }
+
+    public List<FirewallRule> getFirewallRules() {
+        return Collections.emptyList();
     }
 }
