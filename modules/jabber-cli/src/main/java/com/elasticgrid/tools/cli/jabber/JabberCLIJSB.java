@@ -77,7 +77,6 @@ public class JabberCLIJSB extends ServiceBeanAdapter implements JabberCLI,
         try {
             logger.info("In init()");
             cli = CLI.getInstance();
-            //CLI.initCLI(new String[] {});
             initializeJabberConnection();
             consumer =
                 new DynamicEventConsumer(SLAThresholdEvent.getEventDescriptor(),
