@@ -15,20 +15,20 @@ class GlassFish2Substrate extends AbstractSubstrate {
             serviceExec(name: 'GlassFish') {
                 version = attributes.version ?: 'v2ur2-b04'
                 software(name: 'GlassFish', version: version, removeOnDestroy: attributes.removeOnDestroy) {
-                    download source: "https://elastic-grid.s3.amazonaws.com/glassfish/glassfish-${version}.zip",
-                             installRoot: '${RIO_HOME}/system/external/glassfish', unarchive: true
+                    install source: "https://elastic-grid.s3.amazonaws.com/glassfish/glassfish-${version}.zip",
+                            installRoot: '${RIO_HOME}/system/external/glassfish', unarchive: true
                     postInstall(removeOnCompletion: attributes.removeOnDestroy) {
-                        cl()
                         execute command: "/bin/chmod +x \${RIO_HOME}/system/external/glassfish/glassfish-$version/bin/*.sh"
                     }
                 }
                 execute inDirectory: 'bin', command: 'catalina.sh run'
+                cl()
                 maintain 1
             }
         }
         emc.webapp = { Map attributes ->
-            download source: attributes.source,
-                     installRoot: "\${RIO_HOME}/system/external/glassfish/glassfish-$version/webapps"
+            data source: attributes.source,
+                 target: "\${RIO_HOME}/system/external/glassfish/glassfish-$version/webapps"
         }
     }
 

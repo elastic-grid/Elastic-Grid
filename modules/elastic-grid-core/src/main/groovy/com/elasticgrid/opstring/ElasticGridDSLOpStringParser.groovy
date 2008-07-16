@@ -19,21 +19,12 @@ package com.elasticgrid.opstring
 import org.rioproject.opstring.GroovyDSLOpStringParser
 import groovy.xml.MarkupBuilder
 import com.elasticgrid.substrates.Substrate
+import com.elasticgrid.substrates.SubstratesRepository
 
 class ElasticGridDSLOpStringParser extends GroovyDSLOpStringParser {
-    def SUBSTRATE_DSL_LOCATION = "META-INF/com/elasticgrid/substrates/SubstrateClass"
-
     protected void processAdditionalTags(MarkupBuilder builder, ExpandoMetaClass emc) {
-        URLClassLoader cl = Thread.currentThread().contextClassLoader
-        List<Substrate> substrates = []
-        // search for all JARs having some substrates declared
-        def resources = cl.getResources(SUBSTRATE_DSL_LOCATION)
-        // extract substrate class names and build them
-        resources.each { URL url ->
-            def substrateClassName = url.content.text
-            def substrate = cl.loadClass(substrateClassName).newInstance()
-            substrates << substrate
-        }
+        // retreive all registered substrates
+        def substrates = SubstratesRepository.findSubstrates()
         // register each substrate in the DSL
         substrates.each() { Substrate substrate ->
             logger.info "Adding DSL features from ${substrate.name} substrate..."

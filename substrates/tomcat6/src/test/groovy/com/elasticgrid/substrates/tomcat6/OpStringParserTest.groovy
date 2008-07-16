@@ -53,10 +53,10 @@ class OpStringParserTest extends GroovyTestCase {
         assertTrue tomcat.unarchive()
 
         System.setProperty("RIO_HOME", '.')
+        assertTrue service.stagedData[0].removeOnDestroy()
+        assertEquals 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war', service.stagedData[0].location.toString()
+        assertEquals '${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps', service.stagedData[0].installRoot
         def postInstall = tomcat.postInstallAttributes
-        assertTrue postInstall.stagedData.removeOnDestroy()
-        assertEquals 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war', postInstall.stagedData.location.toString()
-        assertEquals '${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps', postInstall.stagedData.installRoot
         assertFalse postInstall.execDescriptor.useNoHup()
         assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine
         assertEquals '+x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh', postInstall.execDescriptor.inputArgs

@@ -15,23 +15,24 @@ class Tomcat6Substrate extends AbstractSubstrate {
     public void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
         emc.tomcat = { Map attributes, Closure cl ->
             version = attributes.version ?: '6.0.16'
+            def removeOnDestroy = attributes.removeOnDestroy ?: true
             serviceExec(name: 'Tomcat') {
-                software(name: 'Tomcat', version: version, removeOnDestroy: attributes.removeOnDestroy) {
-                    download source: "https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip",
-                             installRoot: '${RIO_HOME}/system/external/tomcat', unarchive: true
-                    postInstall(removeOnCompletion: attributes.removeOnDestroy) {
-                        cl()
+                software(name: 'Tomcat', version: version, removeOnDestroy: removeOnDestroy) {
+                    install source: "https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip",
+                            installRoot: '${RIO_HOME}/system/external/tomcat', unarchive: true
+                    postInstall(removeOnCompletion: removeOnDestroy) {
                         execute command: "/bin/chmod +x \${RIO_HOME}/system/external/tomcat/apache-tomcat-$version/bin/*.sh",
                                 nohup: false
                     }
                 }
                 execute inDirectory: 'bin', command: 'catalina.sh run'
+                cl()
                 maintain 1
             }
         }
         emc.webapp = { Map attributes ->
-            download source: attributes.source,
-                     installRoot: "\${RIO_HOME}/system/external/tomcat/apache-tomcat-$version/webapps"
+            data source: attributes.source,
+                 target: "\${RIO_HOME}/system/external/tomcat/apache-tomcat-$version/webapps"
         }
     }
 
