@@ -19,7 +19,7 @@ deployment(name:'My Sample Webapp') {
     serviceExec(name:'Tomcat') {
         software(name:'Tomcat', version:'6.0.16', removeOnDestroy: true) {
             install source:'https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-6.0.16.zip',
-                    installRoot:'${RIO_HOME}/system/external/tomcat', unarchive: true
+                    target:'${RIO_HOME}/system/external/tomcat', unarchive: true
             postInstall(removeOnCompletion: true) {
                 execute command:'/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
                         nohup: false
