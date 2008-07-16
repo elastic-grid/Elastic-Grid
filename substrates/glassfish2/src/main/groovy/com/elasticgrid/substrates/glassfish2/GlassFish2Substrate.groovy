@@ -16,7 +16,7 @@ class GlassFish2Substrate extends AbstractSubstrate {
                 version = attributes.version ?: 'v2ur2-b04'
                 software(name: 'GlassFish', version: version, removeOnDestroy: attributes.removeOnDestroy) {
                     install source: "https://elastic-grid.s3.amazonaws.com/glassfish/glassfish-${version}.zip",
-                            installRoot: '${RIO_HOME}/system/external/glassfish', unarchive: true
+                            target: '${RIO_HOME}/system/external/glassfish', unarchive: true
                     postInstall(removeOnCompletion: attributes.removeOnDestroy) {
                         execute command: "/bin/chmod +x \${RIO_HOME}/system/external/glassfish/glassfish-$version/bin/*.sh"
                     }

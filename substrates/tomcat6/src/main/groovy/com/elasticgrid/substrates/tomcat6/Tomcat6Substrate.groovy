@@ -19,7 +19,7 @@ class Tomcat6Substrate extends AbstractSubstrate {
             serviceExec(name: 'Tomcat') {
                 software(name: 'Tomcat', version: version, removeOnDestroy: removeOnDestroy) {
                     install source: "https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip",
-                            installRoot: '${RIO_HOME}/system/external/tomcat', unarchive: true
+                            target: '${RIO_HOME}/system/external/tomcat', unarchive: true
                     postInstall(removeOnCompletion: removeOnDestroy) {
                         execute command: "/bin/chmod +x \${RIO_HOME}/system/external/tomcat/apache-tomcat-$version/bin/*.sh",
                                 nohup: false
