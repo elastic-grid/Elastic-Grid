@@ -61,9 +61,10 @@ public class JiBXTest {
         EC2Grid grid = (EC2Grid) gridFactory.createGrid().name("test-grid");
 
         // add nodes        
-        Node node1 = grid.node("localhost", InetAddress.getByName("localhost"));
+        Node node1 = grid.node("localhost", NodeProfile.MONITOR, InetAddress.getByName("localhost"));
         assertNotNull(node1);
-        Node node2 = grid.node("blog.elastic-grid.com", InetAddress.getByName("blog.elastic-grid.com"));
+        Node node2 = grid.node("blog.elastic-grid.com", NodeProfile.MONITOR,
+                InetAddress.getByName("blog.elastic-grid.com"));
         assertNotNull(node2);
 
         // add applications

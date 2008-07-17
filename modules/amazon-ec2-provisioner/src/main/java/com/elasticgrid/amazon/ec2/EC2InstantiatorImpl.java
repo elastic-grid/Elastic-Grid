@@ -40,11 +40,17 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
             case SMALL:
                 type = com.xerox.amazonws.ec2.InstanceType.DEFAULT;
                 break;
+            case MEDIUM_HIGH_CPU:
+                type = com.xerox.amazonws.ec2.InstanceType.MEDIUM_HCPU;
+                break;
             case LARGE:
                 type = com.xerox.amazonws.ec2.InstanceType.LARGE;
                 break;
             case EXTRA_LARGE:
                 type = com.xerox.amazonws.ec2.InstanceType.XLARGE;
+                break;
+            case EXTRA_LARGE_HIGH_CPU:
+                type = com.xerox.amazonws.ec2.InstanceType.XLARGE_HCPU;
                 break;
             default:
                 throw new IllegalArgumentException(format("Invalid Amazon EC2 instance type '%s'", instanceType.getName()));

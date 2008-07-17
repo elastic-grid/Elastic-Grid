@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2;
+package com.elasticgrid.tools.cli.old.app;
 
-import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.Node;
-import com.elasticgrid.model.NodeProfile;
-
-import java.net.InetAddress;
+import java.util.List;
 
 /**
- * Grid built on top of Amazon EC2.
+ * Display the status of the application on the grid.
  * @author Jerome Bernard
  */
-public interface EC2Grid extends Grid<EC2Node> {
-    Node node(String instanceID, NodeProfile profile, InetAddress address);
+public class ApplicationStatusCommand extends AbstractApplicationCommand {
+    void execute(String applicationName, List<String> args) {
+        String gridName = args.get(0);
+        System.out.printf("Displaying status of application %s on grid %s\n", applicationName, gridName);
+    }
 }

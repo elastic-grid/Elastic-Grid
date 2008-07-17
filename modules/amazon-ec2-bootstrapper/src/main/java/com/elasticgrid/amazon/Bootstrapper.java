@@ -43,7 +43,7 @@ public class Bootstrapper {
     public static final String EG_PARAMETER_SQS_SECURED = "aws.sqs.secured";
 
     public static final String EG_GROUP_MONITOR = "eg-monitor";
-    public static final String EG_GROUP_CYBERNODE = "eg-cybernode";
+    public static final String EG_GROUP_AGENT = "eg-agent";
 
     public static final String LAUNCH_PARAMETERS_FILE = "/tmp/user-data";
     public static final String ELASTIC_GRID_CONFIGURATION_FILE = "config/eg.properties";

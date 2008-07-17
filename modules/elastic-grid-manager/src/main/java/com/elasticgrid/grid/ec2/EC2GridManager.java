@@ -1,36 +1,56 @@
+/**
+ * Copyright (C) 2007-2008 Elastic Grid, LLC.
+ * 
+ * Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *         http://www.gnu.org/licenses/lgpl-3.0.html
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.elasticgrid.grid.ec2;
 
-import com.elasticgrid.grid.GridManager;
-import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.ec2.EC2Grid;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.repository.RepositoryManager;
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.InstanceType;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.rmi.RemoteException;
+import com.elasticgrid.amazon.ec2.EC2GridLocator;
+import com.elasticgrid.grid.GridManager;
+import com.elasticgrid.model.Grid;
+import com.elasticgrid.model.GridAlreadyRunningException;
+import com.elasticgrid.model.GridNotFoundException;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.GridException;
+import com.elasticgrid.model.ec2.EC2Grid;
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.impl.EC2GridImpl;
 import static java.lang.String.format;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Arrays;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class EC2GridManager implements GridManager<EC2Grid> {
-    private RepositoryManager<EC2Grid> repositoryManager;
     private EC2Instantiator ec2;
+    private EC2GridLocator locator;
     private String keyName;
-    private String amiSmall, amiLarge, amiExtraLarge;
-    private static final Logger logger = LoggerFactory.getLogger(EC2GridManager.class);
+    private String ami32 = "", ami64 = "";
+    private static final Logger logger = Logger.getLogger(EC2GridManager.class.getName());
 
-    public void startGrid(String gridName) throws GridAlreadyRunningException, RemoteException {
+    public void startGrid(String gridName) throws GridException, RemoteException {
         startGrid(gridName, 1);
     }
 
-    public void startGrid(String gridName, int size) throws GridAlreadyRunningException, RemoteException {
+    public void startGrid(String gridName, int size) throws GridException, RemoteException {
+        logger.log(Level.INFO, "Starting grid ''{0}'' with {1} node(s)", new Object[] { gridName, size });
         // ensure the grid is not already running
         Grid grid = grid(gridName);
+        logger.info("Grid is " + grid.isRunning());        
         if (grid != null && grid.isRunning()) {
             throw new GridAlreadyRunningException(grid);
         }
@@ -39,79 +59,76 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         String ami = null;
         switch (instanceType) {
             case SMALL:
-                ami = amiSmall;
+                ami = ami32;
+                break;
+            case MEDIUM_HIGH_CPU:
+                ami = ami32;
                 break;
             case LARGE:
-                ami = amiLarge;
+                ami = ami64;
                 break;
             case EXTRA_LARGE:
-                ami = amiExtraLarge;
+                ami = ami64;
+                break;
+            case EXTRA_LARGE_HIGH_CPU:
+                ami = ami64;
                 break;
             default:
                 throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
         }
-        List<String> groupSet = new ArrayList<String>();
         String userData = "";
-        List<String> instances = ec2.startInstances(ami, size, size, groupSet, userData, keyName, true, instanceType);
-    }
-
-    public void stopGrid(String gridName) throws GridNotFoundException, RemoteException {
-        stopGrid(grid(gridName));
-    }
-
-    public EC2Grid stopGrid(EC2Grid grid) throws RemoteException {
-        Set<EC2Node> nodes = grid.getNodes();
-        for (EC2Node node : nodes) {
-            String instanceID = node.getInstanceID();
-            logger.info("Shutting down Amazon EC2 instance '{}'", instanceID);
-            ec2.shutdownInstance(instanceID);
+        for (int i = 0; i < size; i++) {
+            // first first two nodes are {@link NodeProfile.MONITOR}s
+            // and all the other ones are {@link NodeProfile.AGENT}s
+            NodeProfile profile = i < 2 ? NodeProfile.MONITOR : NodeProfile.AGENT;
+            // build the groups list
+            List<String> groups = Arrays.asList(gridName, profile.toString());
+            // start the node
+            logger.log(Level.INFO, "Starting 1 EC2 instance from AMI {0} using groups {1}",
+                                   new Object[] { ami, groups.toString() });
+            ec2.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
         }
-        grid.status(Grid.Status.STOPPED);
-        return grid;
     }
 
-    public EC2Grid grid(String name) throws RemoteException {
-        return repositoryManager.grid(name);
+    public void stopGrid(String gridName) throws GridException, RemoteException {
+        // locate all nodes in the grid
+        List<EC2Node> nodes = locator.findNodes(gridName);
+        // stop each node one by one
+        for (EC2Node node : nodes) {
+            ec2.shutdownInstance(node.getInstanceID());
+        }
+    }
+
+    public EC2Grid grid(String name) throws RemoteException, GridException {
+        EC2Grid grid = new EC2GridImpl();
+        List<EC2Node> nodes = locator.findNodes(name);
+        if (nodes == null)
+            return grid;
+        else
+            return (EC2Grid) grid.name(name).addNodes(nodes);
     }
 
     public void resizeGrid(String gridName, int newSize) throws GridNotFoundException, RemoteException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void destroyGrid(String gridName) throws GridNotFoundException, RemoteException {
-        // locate the grid
-        EC2Grid grid = repositoryManager.grid(gridName);
-        if (grid == null)
-            throw new GridNotFoundException(gridName);
-        // stop it if running
-        if (grid.isRunning()) {
-            stopGrid(grid);
-        }
-        // destroy it from the repository
-        repositoryManager.destroyGrid(grid.getName());
-    }
-
-    public void setRepositoryManager(RepositoryManager<EC2Grid> repositoryManager) {
-        this.repositoryManager = repositoryManager;
-    }
-
     public void setEc2(EC2Instantiator ec2) {
         this.ec2 = ec2;
+    }
+
+    public void setLocator(EC2GridLocator locator) {
+        this.locator = locator;
     }
 
     public void setKeyName(String keyName) {
         this.keyName = keyName;
     }
 
-    public void setAmiSmall(String amiSmall) {
-        this.amiSmall = amiSmall;
+    public void setAmi32(String ami32) {
+        this.ami32 = ami32;
     }
 
-    public void setAmiLarge(String amiLarge) {
-        this.amiLarge = amiLarge;
-    }
-
-    public void setAmiExtraLarge(String amiExtraLarge) {
-        this.amiExtraLarge = amiExtraLarge;
+    public void setAmi64(String ami64) {
+        this.ami64 = ami64;
     }
 }

@@ -20,9 +20,9 @@
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
-        <!--module>elastic-grid-manager</module-->
+        <module>elastic-grid-manager</module>
         <module>elastic-grid-core</module>
-        <!--module>elastic-grid-cli</module-->
+        <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>
         <module>amazon-ec2-bootstrapper</module>
         <module>amazon-ec2-provisioner</module>
@@ -73,6 +73,15 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <dependencies>
+        <!-- Groovy dependencies -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.6-beta-1</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model;
+package com.elasticgrid.tools.cli.old.app;
 
-import java.net.InetAddress;
+import java.util.List;
+import java.rmi.RemoteException;
 
 /**
+ * Destroy a grid application.
  * @author Jerome Bernard
  */
-public interface Node<N extends Node> {
-    NodeProfile getProfile();
-    InetAddress getAddress();
-    N address(InetAddress address);
+public class DestroyApplicationCommand extends AbstractApplicationCommand {
+    void execute(String applicationName, List<String> args) throws RemoteException {
+//        repositoryManager.destroyApplication(applicationName);
+    }
 }

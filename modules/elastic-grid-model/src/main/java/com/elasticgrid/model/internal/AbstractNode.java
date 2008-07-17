@@ -17,17 +17,33 @@
 package com.elasticgrid.model.internal;
 
 import com.elasticgrid.model.Node;
-
+import com.elasticgrid.model.NodeProfile;
 import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard
  */
 public abstract class AbstractNode implements Node {
+    private NodeProfile profile;
     private InetAddress address;
+
+    public AbstractNode() {}
+
+    public AbstractNode(NodeProfile profile) {
+        this.profile = profile;
+    }
+
+    public NodeProfile getProfile() {
+        return profile;
+    }
 
     public InetAddress getAddress() {
         return address;
+    }
+
+    public Node profile(NodeProfile profile) {
+        this.profile = profile;
+        return this;
     }
 
     public Node address(InetAddress address) {

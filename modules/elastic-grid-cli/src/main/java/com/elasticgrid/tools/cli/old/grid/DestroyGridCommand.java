@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.tools.cli;
+package com.elasticgrid.tools.cli.old.grid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.elasticgrid.model.GridNotFoundException;
+
+import java.util.List;
+import java.rmi.RemoteException;
+import static java.lang.String.format;
 
 /**
+ * Destroy an Amazon EC2 grid.
  * @author Jerome Bernard
  */
-public abstract class AbstractCommand implements Command {
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+public class DestroyGridCommand extends AbstractGridCommand {
+    public void execute(String gridName, List<String> args) throws RemoteException {
+        try {
+            gridManager.destroyGrid(gridName);
+        } catch (GridNotFoundException e) {
+            logger.error(format("Can't destroy grid '%s'", gridName));
+        }
+    }
 }

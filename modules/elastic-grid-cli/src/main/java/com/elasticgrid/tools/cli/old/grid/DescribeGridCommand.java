@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2;
+package com.elasticgrid.tools.cli.old.grid;
 
-import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.Node;
-import com.elasticgrid.model.NodeProfile;
-
-import java.net.InetAddress;
+import java.util.List;
+import java.rmi.RemoteException;
 
 /**
- * Grid built on top of Amazon EC2.
+ * Describe a grid
  * @author Jerome Bernard
  */
-public interface EC2Grid extends Grid<EC2Node> {
-    Node node(String instanceID, NodeProfile profile, InetAddress address);
+public class DescribeGridCommand extends AbstractGridCommand {
+    public void execute(String gridName, List<String> args) throws RemoteException {
+        // todo: repositoryManager.describeGrid(gridName);
+    }
 }

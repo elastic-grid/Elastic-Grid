@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2.impl;
+package com.elasticgrid.grid.ec2;
 
 import com.elasticgrid.model.ec2.EC2Grid;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.internal.AbstractGrid;
-import com.elasticgrid.model.NodeProfile;
-
-import java.net.InetAddress;
+import com.elasticgrid.model.ec2.impl.EC2GridImpl;
+import com.elasticgrid.model.GridFactory;
 
 /**
+ * Grid factory for EC2.
  * @author Jerome Bernard
  */
-public class EC2GridImpl extends AbstractGrid<EC2Node> implements EC2Grid {
-    protected EC2Node createNode(NodeProfile profile) {
-        return new EC2NodeImpl();
-    }
-
-    public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
-        return node(profile, address).instanceID(instanceID);
+public class EC2GridFactory implements GridFactory<EC2Grid> {
+    public EC2Grid createGrid() {
+        return new EC2GridImpl();
     }
 }

@@ -46,4 +46,5 @@ public interface EC2Instantiator {
      * @throws RemoteException if there is a network failure
      */
     void shutdownInstance(String instanceID) throws RemoteException;
+
 }

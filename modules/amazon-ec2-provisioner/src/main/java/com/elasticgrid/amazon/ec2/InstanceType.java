@@ -20,7 +20,9 @@ package com.elasticgrid.amazon.ec2;
  * Enum of the type of Amazon EC2 instances.
  */
 public enum InstanceType {
-    SMALL("small"), LARGE("large"), EXTRA_LARGE("extra large");
+    SMALL("small"),
+    LARGE("large"), EXTRA_LARGE("extra large"),
+    MEDIUM_HIGH_CPU("medium_hcpu"), EXTRA_LARGE_HIGH_CPU("xlarge_hcpu");
 
     private String name;
 
