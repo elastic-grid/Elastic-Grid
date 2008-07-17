@@ -64,7 +64,8 @@
                 <include>com.elasticgrid:amazon-ec2-provisioner</include>
 				<include>com.elasticgrid:elastic-grid-core</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
-				<!--<include>*:elastic-grid-*</include>-->
+                <!--<include>*:elastic-grid-*</include>-->
+                <include>com.xerox.amazonws:typica</include>
                 <!--<include>log4j:*</include>-->
                 <!--<include>org.slf4j:*</include>-->
             </includes>

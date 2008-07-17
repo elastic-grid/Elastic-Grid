@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2.impl;
+package com.elasticgrid.model;
 
-import com.elasticgrid.model.ec2.EC2Grid;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.internal.AbstractGrid;
-import com.elasticgrid.model.NodeProfile;
-
-import java.net.InetAddress;
+import static java.lang.String.format;
 
 /**
+ * Exception thrown when a grid can't be found
  * @author Jerome Bernard
  */
-public class EC2GridImpl extends AbstractGrid<EC2Node> implements EC2Grid {
-    protected EC2Node createNode(NodeProfile profile) {
-        return new EC2NodeImpl();
-    }
-
-    public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
-        return node(profile, address).instanceID(instanceID);
+public class GridNotFoundException extends GridException {
+    public GridNotFoundException(String gridName) {
+        super(format("Could not find grid '%s'", gridName));
     }
 }

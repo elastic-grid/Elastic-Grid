@@ -19,6 +19,7 @@ package com.elasticgrid.model.internal;
 import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.Application;
+import com.elasticgrid.model.NodeProfile;
 
 import java.util.*;
 import java.net.InetAddress;
@@ -28,12 +29,11 @@ import java.net.InetAddress;
  */
 public abstract class AbstractGrid<N extends Node> implements Grid<N> {
     private String name;
-    private Status status;
     @SuppressWarnings("unchecked")
     private Set<N> nodes = setOfNodes();
     private List<Application> applications = Factories.listOfApplications();
 
-    protected abstract N createNode();
+    protected abstract N createNode(NodeProfile profile);
 
     @SuppressWarnings("unchecked")
     private static Set setOfNodes() {
@@ -45,13 +45,8 @@ public abstract class AbstractGrid<N extends Node> implements Grid<N> {
         return this;
     }
 
-    public Grid status(Status status) {
-        this.status = status;
-        return this;
-    }
-
     public boolean isRunning() {
-        return status == Status.RUNNING;
+        return nodes != null && nodes.size() > 0;
     }
 
     public String getName() {
@@ -67,8 +62,8 @@ public abstract class AbstractGrid<N extends Node> implements Grid<N> {
     }
 
     @SuppressWarnings("unchecked")
-    public N node(InetAddress address) {
-        N node = (N) createNode().address(address);
+    public N node(NodeProfile profile, InetAddress address) {
+        N node = (N) createNode(profile).address(address);
         nodes.add(node);
         return node;
     }
@@ -85,6 +80,11 @@ public abstract class AbstractGrid<N extends Node> implements Grid<N> {
         Application application = new ApplicationImpl().name(name);
         applications.add(application);
         return application;
+    }
+
+    public Grid addNodes(List<N> nodes) {
+        this.nodes.addAll(nodes);
+        return this;
     }
 
 }

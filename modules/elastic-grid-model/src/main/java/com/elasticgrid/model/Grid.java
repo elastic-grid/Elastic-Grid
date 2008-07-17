@@ -16,6 +16,8 @@
 
 package com.elasticgrid.model;
 
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.EC2Grid;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -26,13 +28,13 @@ import java.net.InetAddress;
  */
 public interface Grid<N extends Node> extends Serializable {
     String getName();
-    Grid name(String name);
-    Grid status(Status status);
+    Grid<N> name(String name);
+    Grid<N> status(Status status);
     boolean isRunning();
     Set<N> getNodes();
-    N node(InetAddress address);
     List<Application> getApplications();
     Application application(String name);
+    Grid<N> addNodes(List<N> nodes);
 
     enum Status {
         RUNNING, STOPPED

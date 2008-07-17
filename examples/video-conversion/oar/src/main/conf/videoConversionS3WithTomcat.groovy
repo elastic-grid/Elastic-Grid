@@ -36,7 +36,7 @@ deployment(name:'Video Conversion Example') {
             classes 'com.elasticgrid.examples.video.VideoConverter'
             resources 'video-conversion-oar/lib-dl/video-conversion-converter-1.0-SNAPSHOT-dl.jar',
                       'elastic-grid/framework/amazon-sqs-1.0-SNAPSHOT.jar',
-                      'elastic-grid/kernel/typica-1.2.jar',
+                      'elastic-grid/kernel/typica-1.3.jar',
                       'elastic-grid/kernel/jets3t-0.6.0.jar'
 
         }

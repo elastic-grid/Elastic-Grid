@@ -16,73 +16,53 @@
 
 package com.elasticgrid.grid.ec2;
 
-import org.springframework.test.context.ContextConfiguration;
-import com.elasticgrid.grid.GridManager;
-import com.elasticgrid.grid.ec2.impl.EC2GridFactory;
-import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.GridFactory;
-import com.elasticgrid.repository.RepositoryManager;
-import com.elasticgrid.amazon.ec2.EC2Instantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
-import static org.easymock.EasyMock.*;
 import org.testng.annotations.Test;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
+import static org.easymock.EasyMock.*;
+import com.elasticgrid.amazon.ec2.EC2Instantiator;
+import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.amazon.ec2.EC2GridLocator;
+import com.elasticgrid.model.GridNotFoundException;
+import com.elasticgrid.model.GridAlreadyRunningException;
+import com.elasticgrid.model.GridException;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 
 import java.rmi.RemoteException;
 import java.util.Collections;
+import java.util.Arrays;
+import java.util.ArrayList;
 
-@ContextConfiguration(locations = "/com/elasticgrid/grid/ec2/applicationContext.xml")
 public class EC2GridManagerTest {
-    private GridManager gridManager;
-    private GridFactory gridFactory;
-    private RepositoryManager mockRepository;
+    private EC2GridManager gridManager;
     private EC2Instantiator mockEC2;
-
-    @Test
-    public void testLifecycle() throws RemoteException, GridNotFoundException, GridAlreadyRunningException {
-        expect(mockEC2.startInstances(null, 1, 1, Collections.<String>emptyList(), "", null, true, InstanceType.SMALL))
-                .andReturn(null);
-        expect(mockRepository.grid("test")).andReturn(null);
-        expect(mockRepository.grid("test")).andReturn(gridFactory.createGrid().name("test").status(Grid.Status.RUNNING));
-//        mockEC2.shutdownInstance(null);
-        mockRepository.destroyGrid("test");
-        replay(mockEC2, mockRepository);
-        gridManager.startGrid("test");
-        gridManager.destroyGrid("test");
-    }
+    private EC2GridLocator mockLocator;
 
     @Test(expectedExceptions = GridAlreadyRunningException.class)
-    public void testStartingARunningGrid() throws GridAlreadyRunningException, RemoteException {
-        expect(mockEC2.startInstances(null, 1, 1, Collections.<String>emptyList(), "", null, true, InstanceType.SMALL))
-                .andReturn(null);
-        expect(mockRepository.grid("test")).andReturn(null);
-        expect(mockRepository.grid("test")).andReturn(gridFactory.createGrid().name("test").status(Grid.Status.RUNNING));
-        replay(mockEC2, mockRepository);
+    public void testStartingARunningGrid() throws GridException, RemoteException {
+//        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("test", "eg-monitor"), "", null, true, InstanceType.SMALL))
+//                .andReturn(null);
+        expect(mockLocator.findNodes("test"))
+                .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123"))).times(1);
+        replay(mockEC2, mockLocator);
         gridManager.startGrid("test");
         gridManager.startGrid("test");
-    }
-
-    @Test(expectedExceptions = GridNotFoundException.class)
-    public void testDestroyUnknownGrid() throws GridNotFoundException, RemoteException {
-        expect(mockRepository.grid("test")).andReturn(null);        
-        replay(mockEC2, mockRepository);
-        gridManager.destroyGrid("test");
     }
 
     @BeforeTest
     public void setUpGridManager() {
         gridManager = new EC2GridManager();
-        gridFactory = new EC2GridFactory();
         mockEC2 = createMock(EC2Instantiator.class);
-        mockRepository = createMock(RepositoryManager.class);
-        ((EC2GridManager) gridManager).setEc2(mockEC2);
-        ((EC2GridManager) gridManager).setRepositoryManager(mockRepository);
+        mockLocator = createMock(EC2GridLocator.class);
+        gridManager.setEc2(mockEC2);
+        gridManager.setLocator(mockLocator);
     }
 
     @AfterMethod
     public void verifyMocks() {
-        verify(mockEC2, mockRepository);
-        reset(mockEC2, mockRepository);
+        verify(mockEC2, mockLocator);
+        reset(mockEC2, mockLocator);
     }
 }

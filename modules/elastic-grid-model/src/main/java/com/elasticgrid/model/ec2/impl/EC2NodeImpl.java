@@ -18,12 +18,22 @@ package com.elasticgrid.model.ec2.impl;
 
 import com.elasticgrid.model.internal.AbstractNode;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.NodeProfile;
+import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard
  */
 public class EC2NodeImpl extends AbstractNode implements EC2Node {
     private String instanceID;
+
+    public EC2NodeImpl() {
+        super();
+    }
+
+    public EC2NodeImpl(NodeProfile profile) {
+        super(profile);
+    }
 
     public String getInstanceID() {
         return instanceID;

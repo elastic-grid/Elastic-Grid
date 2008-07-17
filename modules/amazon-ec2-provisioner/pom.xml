@@ -14,11 +14,18 @@
 
     <dependencies>
 
+        <!-- Elastic Grid model -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-model</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Amazon EC2 dependencies -->
         <dependency>
             <groupId>com.xerox.amazonws</groupId>
             <artifactId>typica</artifactId>
-            <version>1.1</version>
+            <version>1.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

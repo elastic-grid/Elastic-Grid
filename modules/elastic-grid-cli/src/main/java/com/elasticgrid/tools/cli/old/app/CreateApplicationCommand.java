@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model;
+package com.elasticgrid.tools.cli.old.app;
 
-import java.net.InetAddress;
+import com.elasticgrid.model.Application;
+
+import java.util.List;
+import java.rmi.RemoteException;
 
 /**
+ * Create a grid application.
  * @author Jerome Bernard
  */
-public interface Node<N extends Node> {
-    NodeProfile getProfile();
-    InetAddress getAddress();
-    N address(InetAddress address);
+public class CreateApplicationCommand extends AbstractApplicationCommand {
+    void execute(String applicationName, List<String> args) throws RemoteException {
+//        Application application = repositoryManager.application(applicationName);
+        // todo: complete the creation of the application
+        // save the application to the local repository
+//        repositoryManager.save(application);
+    }
 }

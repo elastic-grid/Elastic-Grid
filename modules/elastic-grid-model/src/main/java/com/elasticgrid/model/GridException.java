@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2;
+package com.elasticgrid.model;
 
-import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.Node;
-import com.elasticgrid.model.NodeProfile;
+public class GridException extends Exception {
+    public GridException(String message) {
+        super(message);
+    }
 
-import java.net.InetAddress;
-
-/**
- * Grid built on top of Amazon EC2.
- * @author Jerome Bernard
- */
-public interface EC2Grid extends Grid<EC2Node> {
-    Node node(String instanceID, NodeProfile profile, InetAddress address);
+    public GridException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

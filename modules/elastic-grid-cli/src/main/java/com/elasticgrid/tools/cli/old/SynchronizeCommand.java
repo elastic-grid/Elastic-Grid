@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.model.ec2.impl;
+package com.elasticgrid.tools.cli.old;
 
-import com.elasticgrid.model.ec2.EC2Grid;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.internal.AbstractGrid;
-import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.tools.cli.AbstractCommand;
 
-import java.net.InetAddress;
+import java.rmi.RemoteException;
 
 /**
+ * Synchronize local file-system with remote applications repository.
+// * @see Repository#synchronize()
  * @author Jerome Bernard
  */
-public class EC2GridImpl extends AbstractGrid<EC2Node> implements EC2Grid {
-    protected EC2Node createNode(NodeProfile profile) {
-        return new EC2NodeImpl();
+public class SynchronizeCommand extends AbstractCommand {
+//    private RepositoryManager repositoryManager;
+
+    public void execute(String... args) throws IllegalArgumentException, RemoteException {
+        //repositoryManager.synchronize();`
+        throw new UnsupportedOperationException();
     }
 
-    public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
-        return node(profile, address).instanceID(instanceID);
-    }
+//    public void setRepositoryManager(RepositoryManager repositoryManager) {
+//        this.repositoryManager = repositoryManager;
+//    }
 }

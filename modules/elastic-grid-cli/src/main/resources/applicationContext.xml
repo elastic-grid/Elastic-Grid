@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+            http://www.gnu.org/licenses/lgpl-3.0.html
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -14,52 +32,52 @@
     </bean>
 
     <util:map id="commands">
-        <entry key="sync" value-ref="synchronizeCommand"/>
-        <entry key="grid-create" value-ref="gridCreateCommand"/>
-        <entry key="grid-destroy" value-ref="gridDestroyCommand"/>
-        <entry key="grid-resize" value-ref="gridResizeCommand"/>
-        <entry key="grid-describe" value-ref="gridResizeCommand"/>
-        <entry key="app-create" value-ref="appCreateCommand"/>
-        <entry key="app-destroy" value-ref="appDestroyCommand"/>
-        <entry key="app-publish" value-ref="appPublishCommand"/>
-        <entry key="app-unpublish" value-ref="appUnpublishCommand"/>
-        <entry key="app-deploy" value-ref="appDeployCommand"/>
-        <entry key="app-undeploy" value-ref="appUndeployCommand"/>
-        <entry key="app-status" value-ref="appStatusCommand"/>
+        <!--<entry key="sync" value-ref="synchronizeCommand"/>-->
+        <!--<entry key="grid-create" value-ref="gridCreateCommand"/>-->
+        <!--<entry key="grid-destroy" value-ref="gridDestroyCommand"/>-->
+        <!--<entry key="grid-resize" value-ref="gridResizeCommand"/>-->
+        <!--<entry key="grid-describe" value-ref="gridResizeCommand"/>-->
+        <!--<entry key="app-create" value-ref="appCreateCommand"/>-->
+        <!--<entry key="app-destroy" value-ref="appDestroyCommand"/>-->
+        <!--<entry key="app-publish" value-ref="appPublishCommand"/>-->
+        <!--<entry key="app-unpublish" value-ref="appUnpublishCommand"/>-->
+        <!--<entry key="app-deploy" value-ref="appDeployCommand"/>-->
+        <!--<entry key="app-undeploy" value-ref="appUndeployCommand"/>-->
+        <!--<entry key="app-status" value-ref="appStatusCommand"/>-->
     </util:map>
 
-    <bean id="synchronizeCommand" class="com.elasticgrid.tools.cli.SynchronizeCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
+    <!--<bean id="synchronizeCommand" class="com.elasticgrid.tools.cli.old.SynchronizeCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
 
-    <bean id="gridCommand" abstract="true">
-        <property name="gridManager" ref="gridManager"/>
-    </bean>
-    <bean id="gridCreateCommand" class="com.elasticgrid.tools.cli.grid.CreateGridCommand" parent="gridCommand"/>
-    <bean id="gridDestroyCommand" class="com.elasticgrid.tools.cli.grid.DestroyGridCommand" parent="gridCommand"/>
-    <bean id="gridResizeCommand" class="com.elasticgrid.tools.cli.grid.ResizeGridCommand" parent="gridCommand"/>
+    <!--<bean id="gridCommand" abstract="true">-->
+        <!--<property name="gridManager" ref="gridManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="gridCreateCommand" class="com.elasticgrid.tools.cli.old.grid.CreateGridCommand" parent="gridCommand"/>-->
+    <!--<bean id="gridDestroyCommand" class="com.elasticgrid.tools.cli.old.grid.DestroyGridCommand" parent="gridCommand"/>-->
+    <!--<bean id="gridResizeCommand" class="com.elasticgrid.tools.cli.old.grid.ResizeGridCommand" parent="gridCommand"/>-->
 
-    <bean id="appCreateCommand" class="com.elasticgrid.tools.cli.app.CreateApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appDestroyCommand" class="com.elasticgrid.tools.cli.app.DestroyApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appPublishCommand" class="com.elasticgrid.tools.cli.app.PublishApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appUnpublishCommand" class="com.elasticgrid.tools.cli.app.UnpublishApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appDeployCommand" class="com.elasticgrid.tools.cli.app.DeployApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appUndeployCommand" class="com.elasticgrid.tools.cli.app.UndeployApplicationCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
-    <bean id="appStatusCommand" class="com.elasticgrid.tools.cli.app.ApplicationStatusCommand">
-        <property name="repositoryManager" ref="repositoryManager"/>
-    </bean>
+    <!--<bean id="appCreateCommand" class="com.elasticgrid.tools.cli.old.app.CreateApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appDestroyCommand" class="com.elasticgrid.tools.cli.old.app.DestroyApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appPublishCommand" class="com.elasticgrid.tools.cli.old.app.PublishApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appUnpublishCommand" class="com.elasticgrid.tools.cli.old.app.UnpublishApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appDeployCommand" class="com.elasticgrid.tools.cli.old.app.DeployApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appUndeployCommand" class="com.elasticgrid.tools.cli.old.app.UndeployApplicationCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
+    <!--<bean id="appStatusCommand" class="com.elasticgrid.tools.cli.old.app.ApplicationStatusCommand">-->
+        <!--<property name="repositoryManager" ref="repositoryManager"/>-->
+    <!--</bean>-->
 
 </beans>
 
