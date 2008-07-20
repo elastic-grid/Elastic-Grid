@@ -17,7 +17,7 @@
 
 -->
 
-<!DOCTYPE opstring SYSTEM "java://org/rioproject/dtd/rio_opstring.dtd">
+<!DOCTYPE opstring PUBLIC "-/RIO//DTD" "http://www.rio-project.org/dtd/rio_opstring.dtd">
 
 <opstring>
 
