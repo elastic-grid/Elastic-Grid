@@ -50,10 +50,10 @@ RIO_LIB=$RIO_HOME/lib
 
 # Check JINI_HOME
 if [ -z "$JINI_HOME" ] ; then
-    if [ -e "$RIO_HOME/lib/jini2_1" ] ; then
-        JINI_HOME=$RIO_HOME/lib/jini2_1
+    if [ -e "$RIO_HOME/lib/apache-river" ] ; then
+        JINI_HOME=$RIO_HOME/lib/apache-river
     else
-        echo "Cannot locate expected Jini distribution, either set JINI_HOME or download Rio with dependencies, exiting"
+        echo "Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Rio with dependencies, exiting"
 	    exit 1
     fi
 fi
