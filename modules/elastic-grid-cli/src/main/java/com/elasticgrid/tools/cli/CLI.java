@@ -16,6 +16,7 @@
 
 package com.elasticgrid.tools.cli;
 
+import com.elasticgrid.grid.GridManager;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import org.rioproject.tools.cli.DirHandler;
@@ -24,7 +25,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import com.elasticgrid.grid.GridManager;
 
 public class CLI extends org.rioproject.tools.cli.CLI {
     private static ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
@@ -42,6 +42,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
     protected void loadOptionHandlers(Configuration config) throws ConfigurationException {
         List<OptionHandlerDesc> optionHandlers = new LinkedList<OptionHandlerDesc>();
         optionHandlers.addAll(Arrays.asList(
+                new OptionHandlerDesc("list-grids", ListGridsHandler.class.getName()),
                 new OptionHandlerDesc("start-grid", StartGridHandler.class.getName()),
                 new OptionHandlerDesc("stop-grid", StopGridHandler.class.getName()),
 //              new OptionHandlerDesc("list", ListHandler.class.getName()),

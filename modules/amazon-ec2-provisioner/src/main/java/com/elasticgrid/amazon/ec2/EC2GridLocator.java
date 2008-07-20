@@ -16,13 +16,21 @@
 
 package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.model.GridNotFoundException;
 import com.elasticgrid.model.GridException;
+import com.elasticgrid.model.GridNotFoundException;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.ec2.EC2Node;
 import java.util.List;
 
 public interface EC2GridLocator<N extends Node> {
+
+    /**
+     * Locate all grids.
+     * @return the grids name.
+     * @throws GridException if tehre is a technical error
+     */
+    List<String> findGrids() throws GridException;
+
     /**
      * Locate nodes which are part of a grid.
      * @param gridName the name of the grid for whom nodes should be found

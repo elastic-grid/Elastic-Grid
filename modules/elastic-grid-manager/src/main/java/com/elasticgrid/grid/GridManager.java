@@ -22,6 +22,7 @@ import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.GridException;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface GridManager<G extends Grid> {
     /**
@@ -45,6 +46,13 @@ public interface GridManager<G extends Grid> {
     void startGrid(String gridName, int size) throws GridException, RemoteException;
 
     void stopGrid(String gridName) throws GridException, RemoteException;
+
+    /**
+     * Retreive all grids details.
+     * @return the grids details
+     * @throws RemoteException if there is a network failure
+     */
+    List<Grid> getGrids() throws RemoteException, GridException;
 
     /**
      * Retrieve grid details.

@@ -16,11 +16,11 @@
 
 package com.elasticgrid.tools.cli;
 
+import com.elasticgrid.model.GridAlreadyRunningException;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.util.StringTokenizer;
-import com.elasticgrid.model.GridAlreadyRunningException;
 
 public class StartGridHandler extends AbstractHandler implements OptionHandler {
 
