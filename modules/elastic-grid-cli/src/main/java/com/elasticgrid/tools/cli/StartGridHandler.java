@@ -40,6 +40,7 @@ public class StartGridHandler extends AbstractHandler implements OptionHandler {
         if (tok.countTokens() > 1) {
             // first token is "start-grid"
             tok.nextToken();
+            // second token is grid name
             String gridName = tok.nextToken();
             int gridSize = 1;
             if (tok.countTokens() == 3)

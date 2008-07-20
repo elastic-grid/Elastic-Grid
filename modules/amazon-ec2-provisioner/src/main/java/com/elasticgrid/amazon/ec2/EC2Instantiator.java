@@ -16,6 +16,7 @@
 
 package com.elasticgrid.amazon.ec2;
 
+import com.elasticgrid.model.NodeProfile;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -49,4 +50,5 @@ public interface EC2Instantiator {
 
     List<String> getGroupsNames() throws RemoteException;
     void createGridGroup(String gridName) throws RemoteException;
+    void createProfileGroup(NodeProfile profile) throws RemoteException;
 }

@@ -52,7 +52,7 @@ public interface GridManager<G extends Grid> {
      * @return the grids details
      * @throws RemoteException if there is a network failure
      */
-    List<Grid> getGrids() throws RemoteException, GridException;
+    List<Grid> getGrids() throws RemoteException, GridException, RemoteException;
 
     /**
      * Retrieve grid details.
@@ -60,7 +60,7 @@ public interface GridManager<G extends Grid> {
      * @return the grid or null if the grid is not found
      * @throws RemoteException if there is a network failure
      */
-    G grid(String name) throws RemoteException, GridException;
+    G grid(String name) throws RemoteException, GridException, RemoteException;
 
-    void resizeGrid(String gridName, int newSize) throws GridNotFoundException, RemoteException;
+    void resizeGrid(String gridName, int newSize) throws GridNotFoundException, GridException, RemoteException;
 }

@@ -68,7 +68,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
         }
         // build of list of all the instances
         List nodes = gridReservation.collect { ReservationDescription reservation ->
-            reservation.instances.collect { ReservationDescription.Instance instance ->
+            reservation.instances.findAll { it.isRunning() }.collect { ReservationDescription.Instance instance ->
                 boolean monitor = reservation.groups.contains(NodeProfile.MONITOR.toString())
                 boolean agent = reservation.groups.contains(NodeProfile.AGENT.toString())
                 def profile = null;
