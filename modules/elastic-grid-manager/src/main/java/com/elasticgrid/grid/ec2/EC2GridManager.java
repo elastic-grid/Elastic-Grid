@@ -53,7 +53,7 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         if (grid != null && grid.isRunning()) {
             throw new GridAlreadyRunningException(grid);
         }
-        // todo: start the grid accordingly to the parameters
+        // todo: allow clients to specify which kind of EC2 instances to start
         InstanceType instanceType = InstanceType.SMALL;
         String ami = null;
         switch (instanceType) {
@@ -80,16 +80,21 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             // first first two nodes are {@link NodeProfile.MONITOR}s
             // and all the other ones are {@link NodeProfile.AGENT}s
             NodeProfile profile = i < 2 ? NodeProfile.MONITOR : NodeProfile.AGENT;
+            // ensure the grid name group exists
+            if (!ec2.getGroupsNames().contains("elastic-grid-cluster-" + gridName)) {
+                ec2.createGridGroup(gridName);
+            }
             // build the groups list
-            List<String> groups = Arrays.asList(gridName, profile.toString());
+            List<String> groups = Arrays.asList("elastic-grid-cluster-" + gridName, profile.toString());
             // start the node
-            logger.log(Level.INFO, "Starting 1 EC2 instance from AMI {0} using groups {1}",
+            logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1}",
                                    new Object[] { ami, groups.toString() });
             ec2.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
         }
     }
 
     public void stopGrid(String gridName) throws GridException, RemoteException {
+        logger.log(Level.INFO, "Stopping grid ''{0}''", new Object[] { gridName });
         // locate all nodes in the grid
         List<EC2Node> nodes = locator.findNodes(gridName);
         // stop each node one by one

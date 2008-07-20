@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.tools.cli.old.app;
+package com.elasticgrid.tools.cli;
 
-import java.util.List;
-import java.rmi.RemoteException;
+import com.elasticgrid.grid.GridManager;
+import org.rioproject.tools.cli.OptionHandler;
 
-/**
- * Destroy a grid application.
- * @author Jerome Bernard
- */
-public class DestroyApplicationCommand extends AbstractApplicationCommand {
-    void execute(String applicationName, List<String> args) throws RemoteException {
-//        repositoryManager.destroyApplication(applicationName);
+abstract class AbstractHandler implements OptionHandler {
+    public GridManager getGridManager() {
+        return CLI.getGridManager();
     }
 }

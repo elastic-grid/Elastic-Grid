@@ -13,11 +13,17 @@
 
     <dependencies>
 
-        <!-- Elastic Grid repository dependencies -->
+        <!-- Elastic Grid Manager dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject.tools</groupId>
+            <artifactId>cli</artifactId>
+            <version>4.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Command line parsing -->
@@ -85,7 +91,7 @@
                         <index>true</true>
                         -->
                         <manifest>
-                            <mainClass>com.elasticgrid.tools.cli.CLI</mainClass>
+                            <mainClass>com.elasticgrid.tools.cli.old.CLI</mainClass>
                             <packageName>com.elasticgrid.tools.cli</packageName>
                             <addClasspath>true</addClasspath>
                             <!--<addExtensions/>-->

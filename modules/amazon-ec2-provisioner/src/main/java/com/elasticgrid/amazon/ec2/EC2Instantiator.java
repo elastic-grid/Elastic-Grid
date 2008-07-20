@@ -47,4 +47,6 @@ public interface EC2Instantiator {
      */
     void shutdownInstance(String instanceID) throws RemoteException;
 
+    List<String> getGroupsNames() throws RemoteException;
+    void createGridGroup(String gridName) throws RemoteException;
 }

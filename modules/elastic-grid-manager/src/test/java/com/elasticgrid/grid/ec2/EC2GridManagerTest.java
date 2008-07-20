@@ -44,8 +44,10 @@ public class EC2GridManagerTest {
     public void testStartingARunningGrid() throws GridException, RemoteException {
         expect(mockLocator.findNodes("test"))
                 .andReturn(null);
-        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("test", "eg-monitor"), "", null, true, InstanceType.SMALL))
+        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor"), "",
+                null, true, InstanceType.SMALL))
                 .andReturn(null);
+        expect(mockEC2.getGroupsNames()).andReturn(Arrays.asList("elastic-grid-cluster-test"));
         expect(mockLocator.findNodes("test"))
                 .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123")));
         replay(mockEC2, mockLocator);

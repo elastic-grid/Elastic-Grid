@@ -39,6 +39,10 @@ public class EC2NodeImpl extends AbstractNode implements EC2Node {
         return instanceID;
     }
 
+    public void setInstanceID(String instanceID) {
+        this.instanceID = instanceID;
+    }
+
     public EC2Node instanceID(String instanceID) {
         this.instanceID = instanceID;
         return this;

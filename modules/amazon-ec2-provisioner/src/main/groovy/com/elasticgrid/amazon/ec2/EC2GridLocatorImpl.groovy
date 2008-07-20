@@ -35,7 +35,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
 
     public List<EC2Node> findNodes(String gridName) throws GridNotFoundException, GridException {
         // retrieve the list of instances running
-        logger.log Level.INFO, "Searching for Elastic Grid nodes in grid '{0}'...", gridName
+        logger.log Level.INFO, "Searching for Elastic Grid nodes in grid '$gridName'..."
         List<ReservationDescription> reservations
         try {
             reservations = ec2.describeInstances(Collections.emptyList())
@@ -43,9 +43,11 @@ class EC2GridLocatorImpl implements EC2GridLocator {
             throw new GridException("Can't locate grid $gridName", e)
         }
         // filter nodes which are not part of the grid
-        def gridReservation = reservations.findAll { it.groups.contains gridName }
+        def gridReservation = reservations.findAll { ReservationDescription reservation ->
+            reservation.groups.contains "elastic-grid-cluster-$gridName" as String
+        }
         // build of list of all the instances
-        return gridReservation.collect { ReservationDescription reservation ->
+        List nodes = gridReservation.collect { ReservationDescription reservation ->
             reservation.instances.collect { ReservationDescription.Instance instance ->
                 boolean monitor = reservation.groups.contains(NodeProfile.MONITOR.toString())
                 boolean agent = reservation.groups.contains(NodeProfile.AGENT.toString())
@@ -55,20 +57,20 @@ class EC2GridLocatorImpl implements EC2GridLocator {
                     return
                 } else if (agent && monitor) {
                     logger.log Level.WARNING,
-                               "Instance ${instance.instanceID} is both a monitor and an agent. Using it as a monitor!"
+                            "Instance ${instance.instanceID} is both a monitor and an agent. Using it as a monitor!"
                     profile = NodeProfile.MONITOR
                 } else if (monitor) {
                     profile = NodeProfile.MONITOR
                 } else if (agent) {
                     profile = NodeProfile.AGENT
                 }
-                return new EC2NodeImpl(
-                        'instanceID': instance.instanceId,
-                        'profile': profile,
-                        'address': instance.dnsName as InetAddress
-                )
+                return new EC2NodeImpl(profile)
+                        .instanceID(instance.instanceId)
+                        .address(InetAddress.getByName(instance.dnsName))
             }
         }.flatten()
+        logger.log Level.INFO, "Found ${nodes.size()} nodes in grid '$gridName'..."
+        return nodes
     }
 
     public void setEc2(Jec2 ec2) {
