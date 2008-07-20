@@ -38,7 +38,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
         logger.log Level.INFO, "Searching for Elastic Grid nodes in grid '{0}'...", gridName
         List<ReservationDescription> reservations
         try {
-            reservations = ec2.describeInstances(Collections.<String>emptyList())
+            reservations = ec2.describeInstances(Collections.emptyList())
         } catch (EC2Exception e) {
             throw new GridException("Can't locate grid $gridName", e)
         }

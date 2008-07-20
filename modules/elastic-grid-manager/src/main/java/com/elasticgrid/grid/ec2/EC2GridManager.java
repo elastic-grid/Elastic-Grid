@@ -50,7 +50,6 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         logger.log(Level.INFO, "Starting grid ''{0}'' with {1} node(s)", new Object[] { gridName, size });
         // ensure the grid is not already running
         Grid grid = grid(gridName);
-        logger.info("Grid is " + grid.isRunning());        
         if (grid != null && grid.isRunning()) {
             throw new GridAlreadyRunningException(grid);
         }
