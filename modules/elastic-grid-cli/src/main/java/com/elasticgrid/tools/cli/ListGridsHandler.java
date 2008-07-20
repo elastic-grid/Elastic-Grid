@@ -17,12 +17,14 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.model.GridNotFoundException;
+import com.elasticgrid.model.Grid;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.util.StringTokenizer;
+import java.util.List;
 
-public class StopGridHandler extends AbstractHandler implements OptionHandler {
+public class ListGridsHandler extends AbstractHandler implements OptionHandler {
 
     /**
      * Process the option.
@@ -36,25 +38,15 @@ public class StopGridHandler extends AbstractHandler implements OptionHandler {
      * @return The result of the action.
      */
     public String process(String input, BufferedReader br, PrintStream out) {
-        StringTokenizer tok = new StringTokenizer(input);
-        if (tok.countTokens() > 1) {
-            // first token is "stop-grid"
-            tok.nextToken();
-            String gridName = tok.nextToken();
-            int gridSize = 1;
-            if (tok.countTokens() == 3)
-                gridSize = Integer.parseInt(tok.nextToken());
-            try {
-                getGridManager().stopGrid(gridName);
-                return "Grid '" + gridName + "' stopped";
-            } catch (GridNotFoundException e) {
-                return "grid not found!";
-            } catch (Exception e) {
-                e.printStackTrace(out);
-                return "unexpected grid exception";
-            }
-        } else {
-            return getUsage();
+        try {
+            List<Grid> grids = getGridManager().getGrids();
+            Formatter.printGrids(grids, br, out);
+            return "";
+        } catch (GridNotFoundException e) {
+            return "grid not found!";
+        } catch (Exception e) {
+            e.printStackTrace(out);
+            return "unexpected grid exception";
         }
     }
 
@@ -64,7 +56,7 @@ public class StopGridHandler extends AbstractHandler implements OptionHandler {
      * @return Command usage
      */
     public String getUsage() {
-        return("usage: stop-grid gridName\n");
+        return("usage: list-grids\n");
     }
 
 }

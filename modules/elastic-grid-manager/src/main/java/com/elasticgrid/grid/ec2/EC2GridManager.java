@@ -32,6 +32,7 @@ import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -101,6 +102,15 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         for (EC2Node node : nodes) {
             ec2.shutdownInstance(node.getInstanceID());
         }
+    }
+
+    public List<Grid> getGrids() throws GridException, RemoteException {
+        List<String> gridsNames = locator.findGrids();
+        List<Grid> grids = new ArrayList<Grid>(gridsNames.size());
+        for (String grid : gridsNames) {
+            grids.add(grid(grid));
+        }
+        return grids;
     }
 
     public EC2Grid grid(String name) throws RemoteException, GridException {

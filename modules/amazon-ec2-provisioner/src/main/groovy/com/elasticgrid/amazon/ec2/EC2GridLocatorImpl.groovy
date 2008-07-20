@@ -33,6 +33,26 @@ class EC2GridLocatorImpl implements EC2GridLocator {
     public static final String EG_GROUP_AGENT = "eg-agent"
     private static final Logger logger = Logger.getLogger(EC2GridLocatorImpl.class.name)
 
+    public List<String> findGrids() {
+        logger.info "Searching for all grids..."
+        List<ReservationDescription> reservations
+        try {
+            reservations = ec2.describeInstances(Collections.emptyList())
+        } catch (EC2Exception e) {
+            throw new GridException("Can't locate grids", e)
+        }
+        // extract grid names
+        def grids = []
+        reservations.each { ReservationDescription reservation ->
+            reservation.groups.each { String group ->
+                if (group.startsWith("elastic-grid-cluster-")) {
+                    grids << group.substring("elastic-grid-cluster-".length(), group.length())
+                }
+            }
+        }
+        return grids;
+    }
+
     public List<EC2Node> findNodes(String gridName) throws GridNotFoundException, GridException {
         // retrieve the list of instances running
         logger.log Level.INFO, "Searching for Elastic Grid nodes in grid '$gridName'..."
