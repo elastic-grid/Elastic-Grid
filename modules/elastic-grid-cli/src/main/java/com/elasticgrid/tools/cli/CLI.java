@@ -45,6 +45,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
                 new OptionHandlerDesc("list-grids", ListGridsHandler.class.getName()),
                 new OptionHandlerDesc("start-grid", StartGridHandler.class.getName()),
                 new OptionHandlerDesc("stop-grid", StopGridHandler.class.getName()),
+                new OptionHandlerDesc("resize-grid", ResizeGridHandler.class.getName()),
 //              new OptionHandlerDesc("list", ListHandler.class.getName()),
 //              new OptionHandlerDesc("destroy", StopHandler.class.getName()),
 //              new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),

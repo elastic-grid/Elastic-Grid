@@ -20,6 +20,7 @@ import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
 import com.xerox.amazonws.ec2.GroupDescription;
+import com.elasticgrid.model.NodeProfile;
 
 import static java.lang.String.format;
 import java.rmi.RemoteException;
@@ -112,6 +113,14 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
             jec2.createSecurityGroup("elastic-grid-cluster-" + gridName, "Grid " + gridName);
         } catch (EC2Exception e) {
             throw new RemoteException("Can't create security group 'elastic-grid-cluster-" + gridName + "'", e);
+        }
+    }
+
+    public void createProfileGroup(NodeProfile profile) throws RemoteException {
+        try {
+            jec2.createSecurityGroup(profile.toString(), "Elastic Grid Node Profile");
+        } catch (EC2Exception e) {
+            throw new RemoteException("Can't create security group '" + profile.toString() + "'", e);
         }
     }
 
