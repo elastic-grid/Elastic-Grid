@@ -29,7 +29,6 @@ import java.net.InetAddress;
 public interface Grid<N extends Node> extends Serializable {
     String getName();
     Grid<N> name(String name);
-    Grid<N> status(Status status);
     boolean isRunning();
     Set<N> getNodes();
     List<Application> getApplications();

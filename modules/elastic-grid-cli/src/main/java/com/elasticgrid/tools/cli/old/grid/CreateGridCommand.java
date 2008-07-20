@@ -17,6 +17,7 @@
 package com.elasticgrid.tools.cli.old.grid;
 
 import com.elasticgrid.model.GridAlreadyRunningException;
+import com.elasticgrid.model.GridException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -46,6 +47,8 @@ public class CreateGridCommand extends AbstractGridCommand {
             gridManager.startGrid(gridName, size);
         } catch (GridAlreadyRunningException e) {
             logger.error(format("Grid '%s' is already running", gridName));
+        } catch (GridException e) {
+            logger.error("Unexpected grid error", e);
         }
     }
 }
