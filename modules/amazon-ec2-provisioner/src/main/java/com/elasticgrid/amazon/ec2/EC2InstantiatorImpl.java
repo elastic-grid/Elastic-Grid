@@ -19,11 +19,13 @@ package com.elasticgrid.amazon.ec2;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
+import com.xerox.amazonws.ec2.GroupDescription;
 
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,8 +34,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
     public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, InstanceType instanceType) throws RemoteException {
-        logger.log(Level.INFO, "Starting {0} Amazon EC2 instance from image {1}...", new Object[] { minCount, imageID });
-        logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image {1}: keyName={2}, groups={3}, userdata={4}, instanceType={5}",
+        logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image ''{1}'': keyName={2}, groups={3}, userdata={4}, instanceType={5}",
                 new Object[] { minCount, imageID, keyName, groupSet, userData, instanceType });
         com.xerox.amazonws.ec2.InstanceType type;
         switch (instanceType) {
@@ -62,6 +63,8 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
             try {
                 while (last.isPending()) {
                     Thread.sleep(200);
+                    reservation = jec2.describeInstances(Arrays.asList(last.getInstanceId())).get(0);
+                    last = reservation.getInstances().get(instances.size() - 1);
                 }
             } catch (InterruptedException e) {
                 String message = format("Couldn't start properly %d Amazon EC2 instances." +
@@ -74,6 +77,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
             for (ReservationDescription.Instance instance : instances) {
                 instancesIDs.add(instance.getInstanceId());
             }
+            logger.log(Level.INFO, "Started {0} Amazon EC2 instance from image ''{1}''...", new Object[] { minCount, imageID });
             return instancesIDs;
         } catch (EC2Exception e) {
             throw new RemoteException("Can't start Amazon EC2 instances", e);
@@ -81,7 +85,34 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
     }
 
     public void shutdownInstance(String instanceID) throws RemoteException {
-        logger.info(format("Shutting down Amazon EC2 instance %s...", instanceID));
+        logger.info(format("Shutting down Amazon EC2 instance '%s'...", instanceID));
+        try {
+            jec2.terminateInstances(Arrays.asList(instanceID));
+        } catch (EC2Exception e) {
+            throw new RemoteException(format("Can't stop Amazon instance '%s'", instanceID), e);
+        }
+    }
+
+    public List<String> getGroupsNames() throws RemoteException {
+        List<GroupDescription> groups = null;
+        try {
+            groups = jec2.describeSecurityGroups(new String[] {});
+        } catch (EC2Exception e) {
+            throw new RemoteException("Can't get list of groups names", e);
+        }
+        List<String> groupNames = new ArrayList<String>(groups.size());
+        for (GroupDescription group : groups) {
+            groupNames.add(group.getName());
+        }
+        return groupNames;
+    }
+
+    public void createGridGroup(String gridName) throws RemoteException {
+        try {
+            jec2.createSecurityGroup("elastic-grid-cluster-" + gridName, "Grid " + gridName);
+        } catch (EC2Exception e) {
+            throw new RemoteException("Can't create security group 'elastic-grid-cluster-" + gridName + "'", e);
+        }
     }
 
     public void setJec2(Jec2 jec2) {

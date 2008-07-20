@@ -27,38 +27,7 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-    <bean id="gridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
-        <property name="ec2" ref="ec2"/>
-        <property name="locator" ref="locator"/>
-        <property name="keyName" value="${amazon.ec2.key}"/>
-        <property name="ami32" value="${amazon.ec2.ami32}"/>
-        <property name="ami64" value="${amazon.ec2.ami64}"/>
-    </bean>
-    
-    <bean id="gridFactory" class="com.elasticgrid.grid.ec2.EC2GridFactory"/>
-
-    <bean id="ec2" class="com.elasticgrid.amazon.ec2.EC2InstantiatorImpl">
-        <property name="jec2" ref="jec2"/>
-    </bean>
-
-    <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
-        <constructor-arg index="0" value="${aws.accessId}"/>
-        <constructor-arg index="1" value="${aws.secretKey}"/>
-        <constructor-arg index="2" value="${amazon.ec2.secured}"/>
-    </bean>
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>file:${user.home}/.eg/aws.properties</value>
-                <value>file:${user.home}/.eg/ec2.properties</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="locator" class="com.elasticgrid.amazon.ec2.EC2GridLocatorImpl">
-        <property name="ec2" ref="jec2"/>
-    </bean>
+    <import resource="classpath:/com/elasticgrid/grid/applicationContext.xml"/>
 
 </beans>
 
