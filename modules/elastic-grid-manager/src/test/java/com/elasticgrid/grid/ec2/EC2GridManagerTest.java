@@ -34,6 +34,8 @@ import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 public class EC2GridManagerTest {
     private EC2GridManager gridManager;
@@ -41,14 +43,15 @@ public class EC2GridManagerTest {
     private EC2GridLocator mockLocator;
 
     @Test(expectedExceptions = GridAlreadyRunningException.class)
-    public void testStartingARunningGrid() throws GridException, RemoteException {
+    public void testStartingARunningGrid() throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         expect(mockLocator.findNodes("test"))
                 .andReturn(null);
-        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor"), "",
+        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "elastic-grid"),
+                "MAX_MONITORS=3,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
                 null, true, InstanceType.SMALL))
                 .andReturn(null);
         expect(mockEC2.getGroupsNames())
-                .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent"))
+                .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"))
                 .times(3);
         expect(mockLocator.findNodes("test"))
                 .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123")));

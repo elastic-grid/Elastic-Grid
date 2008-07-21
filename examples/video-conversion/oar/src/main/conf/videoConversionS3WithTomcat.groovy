@@ -19,16 +19,15 @@ import java.util.logging.Level
 deployment(name:'Video Conversion Example') {
     groups('rio')
 
+    systemRequirements(id: 'Elastic Grid Platform') {
+        software name: 'Elastic Grid Kernel', version: '1.0'
+        software name: 'Elastic Grid Framework', version: '1.0'
+    }
+
     logging {
-        logger('com.elasticgrid.examples.video', Level.FINE) {
-            handler 'java.util.logging.ConsoleHandler', Level.FINE
-        }
-        logger('com.elasticgrid.amazon.sqs', Level.FINE) {
-            handler 'java.util.logging.ConsoleHandler', Level.FINE
-        }
-        logger('com.elasticgrid.amazon.ec2', Level.FINE) {
-            handler 'java.util.logging.ConsoleHandler', Level.FINE
-        }
+        logger('com.elasticgrid.examples.video', Level.FINE)
+        logger('com.elasticgrid.amazon.sqs', Level.FINE)
+        logger('com.elasticgrid.amazon.ec2', Level.FINE)
     }
 
     service(name: 'Video Converter') {
@@ -68,6 +67,7 @@ deployment(name:'Video Conversion Example') {
             }
         '''
         serviceLevelAgreements {
+            systemRequirements ref: 'Elastic Grid Platform'
             sla(id: 'Queue VideoConversion', low: 2, high: 5) {
                 policy(type: 'scaling', max: 10, lowerDampener: 3600, upperDampener: 3600)
             }
