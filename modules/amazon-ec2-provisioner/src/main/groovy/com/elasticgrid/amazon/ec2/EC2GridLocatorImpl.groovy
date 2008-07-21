@@ -42,15 +42,16 @@ class EC2GridLocatorImpl implements EC2GridLocator {
             throw new GridException("Can't locate grids", e)
         }
         // extract grid names
-        def grids = []
+        def Set grids = new HashSet()
         reservations.each { ReservationDescription reservation ->
             reservation.groups.each { String group ->
                 if (group.startsWith("elastic-grid-cluster-")) {
-                    grids << group.substring("elastic-grid-cluster-".length(), group.length())
+                    if (reservation.instances.any { it.isRunning() })
+                        grids << group.substring("elastic-grid-cluster-".length(), group.length())
                 }
             }
         }
-        return grids;
+        return grids as List;
     }
 
     public List<EC2Node> findNodes(String gridName) throws GridNotFoundException, GridException {

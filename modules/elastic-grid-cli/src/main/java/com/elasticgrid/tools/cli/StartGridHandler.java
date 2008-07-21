@@ -43,7 +43,7 @@ public class StartGridHandler extends AbstractHandler implements OptionHandler {
             // second token is grid name
             String gridName = tok.nextToken();
             int gridSize = 1;
-            if (tok.countTokens() == 3)
+            if (tok.countTokens() == 1)
                 gridSize = Integer.parseInt(tok.nextToken());
             try {
                 getGridManager().startGrid(gridName, gridSize);

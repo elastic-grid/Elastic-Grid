@@ -30,6 +30,9 @@
     <bean id="gridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
         <property name="ec2" ref="ec2"/>
         <property name="locator" ref="locator"/>
+        <property name="awsAccessID" value="${aws.accessId}"/>
+        <property name="awsSecretKey" value="${aws.secretKey}"/>
+        <property name="awsSecured" value="${amazon.ec2.secured}"/>
         <property name="keyName" value="${amazon.ec2.key}"/>
         <property name="ami32" value="${amazon.ec2.ami32}"/>
         <property name="ami64" value="${amazon.ec2.ami64}"/>

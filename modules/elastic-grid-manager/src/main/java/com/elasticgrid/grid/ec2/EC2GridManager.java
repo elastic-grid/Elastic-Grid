@@ -16,40 +16,48 @@
 
 package com.elasticgrid.grid.ec2;
 
+import com.elasticgrid.amazon.ec2.EC2GridLocator;
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.InstanceType;
-import com.elasticgrid.amazon.ec2.EC2GridLocator;
 import com.elasticgrid.grid.GridManager;
 import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.GridAlreadyRunningException;
-import com.elasticgrid.model.GridNotFoundException;
-import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.GridException;
-import com.elasticgrid.model.Node;
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Grid;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2GridImpl;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EC2GridManager implements GridManager<EC2Grid> {
     private EC2Instantiator ec2;
     private EC2GridLocator locator;
     private String keyName;
+    private String awsAccessID, awsSecretKey;
+    private boolean awsSecured = true;
     private String ami32 = "", ami64 = "";
+    private ExecutorService executor = Executors.newFixedThreadPool(5);
     private static final Logger logger = Logger.getLogger(EC2GridManager.class.getName());
 
-    public void startGrid(String gridName) throws GridException, RemoteException {
+    public void startGrid(String gridName) throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         startGrid(gridName, 1);
     }
 
-    public void startGrid(String gridName, int size) throws GridException, RemoteException {
+    public void startGrid(String gridName, int size) throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         logger.log(Level.INFO, "Starting grid ''{0}'' with {1} node(s)...", new Object[] { gridName, size });
         // ensure the grid is not already running
         Grid grid = grid(gridName);
@@ -78,29 +86,18 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             default:
                 throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
         }
-        String userData = "";
+        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(size);
         for (int i = 0; i < size; i++) {
             // first first two nodes are {@link NodeProfile.MONITOR}s
             // and all the other ones are {@link NodeProfile.AGENT}s
             NodeProfile profile = i < 2 ? NodeProfile.MONITOR : NodeProfile.AGENT;
-            // ensure the grid name group exists
-            if (!ec2.getGroupsNames().contains("elastic-grid-cluster-" + gridName)) {
-                ec2.createGridGroup(gridName);
-            }
-            // ensure the monitor group exists
-            if (!ec2.getGroupsNames().contains(NodeProfile.MONITOR.toString())) {
-                ec2.createProfileGroup(NodeProfile.MONITOR);
-            }
-            // ensure the agent group exists
-            if (!ec2.getGroupsNames().contains(NodeProfile.AGENT.toString())) {
-                ec2.createProfileGroup(NodeProfile.AGENT);
-            }
-            // build the groups list
-            List<String> groups = Arrays.asList("elastic-grid-cluster-" + gridName, profile.toString());
             // start the node
-            logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1}...",
-                                   new Object[] { ami, groups.toString() });
-            ec2.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
+            futures.add(executor.submit(new StartInstanceTask(ec2, gridName, profile, instanceType, ami,
+                            awsAccessID, awsSecretKey, awsSecured)));
+        }
+        // wait for the threads to finish
+        for (Future<List<String>> future : futures) {
+            future.get(5 * 60, TimeUnit.SECONDS);
         }
     }
 
@@ -132,7 +129,7 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             return (EC2Grid) grid.name(name).addNodes(nodes);
     }
 
-    public void resizeGrid(String gridName, int newSize) throws GridException, RemoteException {
+    public void resizeGrid(String gridName, int newSize) throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         EC2Grid grid = grid(gridName);
         Set<EC2Node> nodes = grid.getNodes();
         if (nodes.size() == newSize) {
@@ -175,16 +172,22 @@ public class EC2GridManager implements GridManager<EC2Grid> {
                 default:
                     throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
             }
-            String userData = "";
+            List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(toStart);
             // if there is less than two monitors, start some new ones
             while (numberOfMonitors < 2) {
-                startMonitor(gridName, instanceType, ami, userData);
+                futures.add(executor.submit(new StartInstanceTask(ec2, gridName, NodeProfile.MONITOR, instanceType, ami,
+                        awsAccessID, awsSecretKey, awsSecured)));
                 numberOfMonitors++;
                 toStart--;
             }
             // otherwise start some new agents
             while (toStart-- > 0) {
-                startAgent(gridName, instanceType, ami, userData);
+                futures.add(executor.submit(new StartInstanceTask(ec2, gridName, NodeProfile.AGENT, instanceType, ami,
+                        awsAccessID, awsSecretKey, awsSecured)));
+            }
+            // wait for the threads to finish
+            for (Future<List<String>> future : futures) {
+                future.get(5 * 60, TimeUnit.SECONDS);
             }
         } else {
             // decrease grid size
@@ -228,34 +231,24 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         }
     }
 
-    private void startMonitor(String gridName, InstanceType instanceType, String ami, String userData) throws RemoteException {
-        // ensure the monitor group exists
-        if (!ec2.getGroupsNames().contains(NodeProfile.MONITOR.toString())) {
-            ec2.createProfileGroup(NodeProfile.MONITOR);
-        }
-        // start the monitor node
-        ec2.startInstances(ami, 1, 1,
-                Arrays.asList("elastic-grid-cluster-" + gridName, NodeProfile.MONITOR.toString()),
-                userData, keyName, true, instanceType);
-    }
-
-    private void startAgent(String gridName, InstanceType instanceType, String ami, String userData) throws RemoteException {
-        // ensure the agent group exists
-        if (!ec2.getGroupsNames().contains(NodeProfile.AGENT.toString())) {
-            ec2.createProfileGroup(NodeProfile.AGENT);
-        }
-        // start the agent node
-        ec2.startInstances(ami, 1, 1,
-                Arrays.asList("elastic-grid-cluster-" + gridName, NodeProfile.AGENT.toString()),
-                userData, keyName, true, instanceType);
-    }
-
     public void setEc2(EC2Instantiator ec2) {
         this.ec2 = ec2;
     }
 
     public void setLocator(EC2GridLocator locator) {
         this.locator = locator;
+    }
+
+    public void setAwsAccessID(String awsAccessID) {
+        this.awsAccessID = awsAccessID;
+    }
+
+    public void setAwsSecretKey(String awsSecretKey) {
+        this.awsSecretKey = awsSecretKey;
+    }
+
+    public void setAwsSecured(boolean awsSecured) {
+        this.awsSecured = awsSecured;
     }
 
     public void setKeyName(String keyName) {
@@ -268,5 +261,46 @@ public class EC2GridManager implements GridManager<EC2Grid> {
 
     public void setAmi64(String ami64) {
         this.ami64 = ami64;
+    }
+
+    class StartInstanceTask implements Callable<List<String>> {
+        private EC2Instantiator ec2;
+        private String gridName;
+        private NodeProfile profile;
+        private InstanceType instanceType;
+        private String ami;
+        private String userData;
+
+        public StartInstanceTask(EC2Instantiator ec2, String gridName, NodeProfile profile, InstanceType instanceType,
+                                 String ami, String awsAccessId, String awsSecretKey, boolean awsSecured) {
+            this.ec2 = ec2;
+            this.gridName = gridName;
+            this.profile = profile;
+            this.instanceType = instanceType;
+            this.ami = ami;
+            this.userData = String.format(
+                    "MAX_MONITORS=3,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
+                    awsAccessId, awsSecretKey, awsSecured);
+        }
+
+        public List<String> call() throws RemoteException {
+            // ensure the monitor group exists
+            if (!ec2.getGroupsNames().contains(NodeProfile.MONITOR.toString())) {
+                ec2.createProfileGroup(NodeProfile.MONITOR);
+            }
+            // ensure the monitor group exists
+            if (!ec2.getGroupsNames().contains(NodeProfile.AGENT.toString())) {
+                ec2.createProfileGroup(NodeProfile.AGENT);
+            }
+            // ensure the grid name group exists
+            if (!ec2.getGroupsNames().contains("elastic-grid-cluster-" + gridName)) {
+                ec2.createGridGroup(gridName);
+            }
+            // start the agent node
+            List<String> groups = Arrays.asList("elastic-grid-cluster-" + gridName, profile.toString(), "elastic-grid");
+            logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
+                                       new Object[] { ami, groups.toString(), userData });
+            return ec2.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
+        }
     }
 }
