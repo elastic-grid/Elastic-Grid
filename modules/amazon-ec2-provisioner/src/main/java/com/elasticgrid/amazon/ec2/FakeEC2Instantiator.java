@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.elasticgrid.model.NodeProfile;
 
 public class FakeEC2Instantiator implements EC2Instantiator {
     private Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
@@ -37,6 +38,18 @@ public class FakeEC2Instantiator implements EC2Instantiator {
 
     public void shutdownInstance(String instanceID) throws RemoteException {
         logger.info(format("Shutting down Amazon EC2 instance %s...", instanceID));
+    }
+
+    public List<String> getGroupsNames() throws RemoteException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void createGridGroup(String gridName) throws RemoteException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void createProfileGroup(NodeProfile profile) throws RemoteException {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }
