@@ -28,8 +28,8 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <bean id="gridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
-        <property name="ec2" ref="ec2"/>
-        <property name="locator" ref="locator"/>
+        <property name="nodeInstantiator" ref="ec2"/>
+        <property name="gridLocator" ref="locator"/>
         <property name="awsAccessID" value="${aws.accessId}"/>
         <property name="awsSecretKey" value="${aws.secretKey}"/>
         <property name="awsSecured" value="${amazon.ec2.secured}"/>

@@ -21,6 +21,7 @@ import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
 import com.xerox.amazonws.ec2.GroupDescription;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.grid.ec2.InstanceType;
 
 import static java.lang.String.format;
 import java.rmi.RemoteException;
@@ -34,7 +35,8 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
     private Jec2 jec2;
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
-    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, InstanceType instanceType) throws RemoteException {
+    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
+        InstanceType instanceType = (InstanceType) options[0];
         logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image ''{1}'': keyName={2}, groups={3}, userdata={4}, instanceType={5}",
                 new Object[] { minCount, imageID, keyName, groupSet, userData, instanceType });
         com.xerox.amazonws.ec2.InstanceType type;

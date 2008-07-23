@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.grid.ec2;
 
 /**
  * Enum of the type of Amazon EC2 instances.

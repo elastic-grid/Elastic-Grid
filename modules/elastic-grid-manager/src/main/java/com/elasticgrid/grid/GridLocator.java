@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.grid;
 
+import com.elasticgrid.model.Node;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridNotFoundException;
-import com.elasticgrid.model.Node;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.grid.GridLocator;
 import java.util.List;
 
-public interface EC2GridLocator extends GridLocator<EC2Node> {
+public interface GridLocator <N extends Node> {
 
     /**
      * Locate all grids.
      * @return the grids name.
-     * @throws GridException if tehre is a technical error
+     * @throws com.elasticgrid.model.GridException if tehre is a technical error
      */
     List<String> findGrids() throws GridException;
 
     /**
      * Locate nodes which are part of a grid.
      * @param gridName the name of the grid for whom nodes should be found
-     * @return the list of {@link EC2Node}s
-     * @throws GridNotFoundException if the grid can't be found
+     * @return the list of {@link Node}s
+     * @throws com.elasticgrid.model.GridNotFoundException if the grid can't be found
      * @throws GridException if there is a technical error
      */
-    List<EC2Node> findNodes(String gridName) throws GridNotFoundException, GridException;
+    List<N> findNodes(String gridName) throws GridNotFoundException, GridException;
 }

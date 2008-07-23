@@ -18,7 +18,7 @@ package com.elasticgrid.amazon.ec2.qos;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.FakeEC2Instantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.grid.ec2.InstanceType;
 import org.rioproject.sla.SLA;
 import org.rioproject.sla.ScalingPolicyHandler;
 import org.rioproject.core.jsb.ServiceBeanContext;

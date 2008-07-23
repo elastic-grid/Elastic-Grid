@@ -14,10 +14,10 @@
 
     <dependencies>
 
-        <!-- Elastic Grid model -->
+        <!-- Elastic Grid manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-model</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 

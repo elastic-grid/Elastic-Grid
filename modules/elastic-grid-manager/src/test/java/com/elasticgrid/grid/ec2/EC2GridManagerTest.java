@@ -20,27 +20,22 @@ import org.testng.annotations.Test;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeTest;
 import static org.easymock.EasyMock.*;
-import com.elasticgrid.amazon.ec2.EC2Instantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
-import com.elasticgrid.amazon.ec2.EC2GridLocator;
-import com.elasticgrid.model.GridNotFoundException;
 import com.elasticgrid.model.GridAlreadyRunningException;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
+import com.elasticgrid.grid.NodeInstantiator;
+import com.elasticgrid.grid.GridLocator;
 
 import java.rmi.RemoteException;
-import java.util.Collections;
 import java.util.Arrays;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class EC2GridManagerTest {
     private EC2GridManager gridManager;
-    private EC2Instantiator mockEC2;
-    private EC2GridLocator mockLocator;
+    private NodeInstantiator mockEC2;
+    private GridLocator mockLocator;
 
     @Test(expectedExceptions = GridAlreadyRunningException.class)
     public void testStartingARunningGrid() throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
@@ -63,10 +58,10 @@ public class EC2GridManagerTest {
     @BeforeTest
     public void setUpGridManager() {
         gridManager = new EC2GridManager();
-        mockEC2 = createMock(EC2Instantiator.class);
-        mockLocator = createMock(EC2GridLocator.class);
-        gridManager.setEc2(mockEC2);
-        gridManager.setLocator(mockLocator);
+        mockEC2 = createMock(NodeInstantiator.class);
+        mockLocator = createMock(GridLocator.class);
+        gridManager.setNodeInstantiator(mockEC2);
+        gridManager.setGridLocator(mockLocator);
     }
 
     @AfterMethod

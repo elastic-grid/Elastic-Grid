@@ -20,13 +20,6 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Amazon EC2 integration -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>amazon-ec2-provisioner</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
