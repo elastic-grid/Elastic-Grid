@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Collections;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.grid.ec2.InstanceType;
 import com.elasticgrid.model.NodeProfile;
 
 public class MockEC2Instantiator implements EC2Instantiator {
     private Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
-    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, InstanceType instanceType) throws RemoteException {
+    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
         logger.info(format("Starting new Amazon EC2 instance from image %s...", imageID));
         return Collections.singletonList(UuidFactory.generate().toString());
     }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.grid;
 
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.grid.NodeInstantiator;
-import java.rmi.RemoteException;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.Node;
 import java.util.List;
+import java.rmi.RemoteException;
 
-public interface EC2Instantiator extends NodeInstantiator<EC2Node> {
+public interface NodeInstantiator<N extends Node> {
 
     /**
      * Starts Amazon EC2 instances.
@@ -34,12 +34,23 @@ public interface EC2Instantiator extends NodeInstantiator<EC2Node> {
      * @param userData the user data
      * @param keyName the name of the security keypair
      * @param publicAddress <tt>true</tt> if the instances should also have public IP addresses
-     * @param options the type of instance to start (small, large, extra large) as a {@link com.elasticgrid.grid.ec2.InstanceType}
+     * @param options any specific {@link NodeInstantiator} option 
      * @return the IDs of the instances
-     * @throws RemoteException if there is a network failure
+     * @throws java.rmi.RemoteException if there is a network failure
      */
     List<String> startInstances(String imageID, int minCount, int maxCount,
                                 List<String> groupSet, String userData, String keyName,
                                 boolean publicAddress, Object... options) throws RemoteException;
+
+    /**
+     * Stops an Amazon EC2 instance.
+     * @param instanceID the Amazon EC2 instance ID to shutdown
+     * @throws RemoteException if there is a network failure
+     */
+    void shutdownInstance(String instanceID) throws RemoteException;
+
+    List<String> getGroupsNames() throws RemoteException;
+    void createGridGroup(String gridName) throws RemoteException;
+    void createProfileGroup(NodeProfile profile) throws RemoteException;
 
 }

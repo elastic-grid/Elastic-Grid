@@ -18,7 +18,7 @@ package com.elasticgrid.monitor;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.FakeEC2Instantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.grid.ec2.InstanceType;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.DynamicEventConsumer;
 import org.rioproject.event.EventDescriptor;

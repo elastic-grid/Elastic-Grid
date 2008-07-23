@@ -25,14 +25,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.grid.ec2.InstanceType;
 
 public class FakeEC2Instantiator implements EC2Instantiator {
     private Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
-    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, InstanceType instanceType) throws RemoteException {
+    public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
         logger.log(Level.INFO, "Starting {0} Amazon EC2 instance from image {1}...", new Object[] { minCount, imageID });
         logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image {1}: keyName={2}, groups={3}, userdata={4}, instanceType={5}",
-                new Object[] { minCount, imageID, keyName, groupSet, userData, instanceType });
+                new Object[] { minCount, imageID, keyName, groupSet, userData, options[0] });
         return Collections.singletonList(UuidFactory.generate().toString());
     }
 
