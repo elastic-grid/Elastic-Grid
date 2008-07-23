@@ -20,6 +20,8 @@ import com.elasticgrid.grid.GridManager;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import org.rioproject.tools.cli.DirHandler;
+import org.rioproject.tools.cli.ListHandler;
+import org.rioproject.tools.cli.MonitorControl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.Arrays;
@@ -46,11 +48,11 @@ public class CLI extends org.rioproject.tools.cli.CLI {
                 new OptionHandlerDesc("start-grid", StartGridHandler.class.getName()),
                 new OptionHandlerDesc("stop-grid", StopGridHandler.class.getName()),
                 new OptionHandlerDesc("resize-grid", ResizeGridHandler.class.getName()),
-//              new OptionHandlerDesc("list", ListHandler.class.getName()),
-//              new OptionHandlerDesc("destroy", StopHandler.class.getName()),
-//              new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),
-//              new OptionHandlerDesc("redeploy", MonitorControl.RedeployHandler.class.getName()),
-//              new OptionHandlerDesc("undeploy", MonitorControl.UndeployHandler.class.getName()),
+              new OptionHandlerDesc("list", ListHandler.class.getName()),
+              new OptionHandlerDesc("destroy", StopHandler.class.getName()),
+              new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),
+              new OptionHandlerDesc("redeploy", MonitorControl.RedeployHandler.class.getName()),
+              new OptionHandlerDesc("undeploy", MonitorControl.UndeployHandler.class.getName()),
                 new OptionHandlerDesc("set", SettingsHandler.class.getName()),
                 new OptionHandlerDesc("ls", DirHandler.class.getName()),
                 new OptionHandlerDesc("dir", DirHandler.class.getName()),

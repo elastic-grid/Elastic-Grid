@@ -19,6 +19,9 @@ package com.elasticgrid.tools.cli
 import com.elasticgrid.model.Grid
 import com.elasticgrid.model.ec2.EC2Node
 import com.elasticgrid.model.NodeProfile
+import net.jini.discovery.DiscoveryManagement
+import net.jini.discovery.DiscoveryLocatorManagement
+import net.jini.core.discovery.LookupLocator
 
 class Formatter {
 
@@ -28,14 +31,31 @@ class Formatter {
             out.println "[${index + 1}]\t${grid.name}"
             grid.nodes.eachWithIndex { com.elasticgrid.model.Node node, nodeIndex ->
                 def profile
-                if (NodeProfile.MONITOR == node.profile)
+                def locator
+                if (NodeProfile.MONITOR == node.profile) {
                     profile = "Monitor"
-                else if (NodeProfile.AGENT == node.profile)
+                    locator = "jini://${node.address.hostName}"
+                } else if (NodeProfile.AGENT == node.profile) {
                     profile = "Agent"
+                }
                 if (node instanceof EC2Node) {
                     out.println "\t[${nodeIndex + 1}] ${profile}\t${node.address}\t${node.instanceID}"
                 } else {
                     out.println "\t[${nodeIndex + 1}] ${profile}\t${node.address}"
+                }
+
+                DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
+                println "Locator is $locator"
+                if (dMgr instanceof DiscoveryLocatorManagement) {
+                    if (!locator) {
+                        ((DiscoveryLocatorManagement) dMgr).setLocators(new LookupLocator[0]);
+                    } else {
+                        try {
+                            ((DiscoveryLocatorManagement) dMgr).addLocators([new LookupLocator(locator)] as LookupLocator[]);
+                        } catch (MalformedURLException e) {
+                            out.println("Bad locator format");
+                        }
+                    }
                 }
             }
         }
