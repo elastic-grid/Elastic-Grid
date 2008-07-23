@@ -29,12 +29,12 @@ class Formatter {
         out.println "total: ${grids.size()}"
         grids.eachWithIndex { Grid grid, index ->
             out.println "[${index + 1}]\t${grid.name}"
+            def locators = []
             grid.nodes.eachWithIndex { com.elasticgrid.model.Node node, nodeIndex ->
                 def profile
-                def locator
                 if (NodeProfile.MONITOR == node.profile) {
                     profile = "Monitor"
-                    locator = "jini://${node.address.hostName}"
+                    locators << "jini://${node.address.hostName}"
                 } else if (NodeProfile.AGENT == node.profile) {
                     profile = "Agent"
                 }
@@ -43,18 +43,17 @@ class Formatter {
                 } else {
                     out.println "\t[${nodeIndex + 1}] ${profile}\t${node.address}"
                 }
-
-                DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
-                println "Locator is $locator"
-                if (dMgr instanceof DiscoveryLocatorManagement) {
-                    if (!locator) {
-                        ((DiscoveryLocatorManagement) dMgr).setLocators(new LookupLocator[0]);
-                    } else {
-                        try {
-                            ((DiscoveryLocatorManagement) dMgr).addLocators([new LookupLocator(locator)] as LookupLocator[]);
-                        } catch (MalformedURLException e) {
-                            out.println("Bad locator format");
-                        }
+            }
+            DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
+            println "Locators are $locators"
+            if (dMgr instanceof DiscoveryLocatorManagement) {
+                if (!locators) {
+                    ((DiscoveryLocatorManagement) dMgr).setLocators(new LookupLocator[0]);
+                } else {
+                    try {
+                        ((DiscoveryLocatorManagement) dMgr).addLocators locators as LookupLocator[]
+                    } catch (MalformedURLException e) {
+                        out.println("Bad locator format");
                     }
                 }
             }
