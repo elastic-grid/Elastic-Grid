@@ -33,28 +33,29 @@
                     <Attribute Name="Version" Value="6.0.16"/>
                     <SoftwareLoad RemoveOnDestroy="yes">
                         <Download Source="apache-tomcat-6.0.16.zip"
-                                  InstallRoot="/mnt/tomcat"
+                                  InstallRoot="${RIO_HOME}/system/external/tomcat"
                                   Unarchive="yes">
                             <Location>https://elastic-grid.s3.amazonaws.com/tomcat/</Location>
                         </Download>
                         <PostInstall RemoveOnCompletion="no">
-                            <Download Source="sample.war"
-                                      InstallRoot="/mnt/tomcat/apache-tomcat-6.0.16/webapps">
-                                <Location>https://elastic-grid.s3.amazonaws.com/tomcat/</Location>
-                            </Download>
                             <Exec nohup="no">
                                 <CommandLine>/bin/chmod</CommandLine>
-                                <InputArg>+x /mnt/tomcat/apache-tomcat-6.0.16/bin/*sh</InputArg>
+                                <InputArg>+x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*sh</InputArg>
                             </Exec>
-
                         </PostInstall>
                     </SoftwareLoad>
-
                 </SystemComponent>
             </SystemRequirements>
 
+            <Data Unarchive="yes" Perms="ugo+rwx">
+                <FileName>sample.war</FileName>
+                <Source>https://elastic-grid.s3.amazonaws.com/tomcat/</Source>
+                <Target>${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps</Target>
+            </Data>
+
             <Exec>
-                <CommandLine>bin/catalina.sh</CommandLine>
+                <WorkingDirectory>bin</WorkingDirectory>
+                <CommandLine>catalina.sh</CommandLine>
                 <InputArg>run</InputArg>
             </Exec>
 
