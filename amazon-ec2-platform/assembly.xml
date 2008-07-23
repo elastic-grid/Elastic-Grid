@@ -51,11 +51,16 @@
     </fileSets>
 	<files>
 		<file>
-			<source>README</source>
+			<source>README.txt</source>
 			<outputDirectory>/</outputDirectory>
 			<filtered>true</filtered>
 		</file>
-	</files>
+        <file>
+			<source>LICENSE.txt</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+		</file>
+    </files>
     <dependencySets>
 		<!-- Kernel dependencies -->
         <dependencySet>
