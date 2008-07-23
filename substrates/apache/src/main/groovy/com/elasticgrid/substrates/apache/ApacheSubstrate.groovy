@@ -1,4 +1,4 @@
-package com.elasticgrid.substrates.tomcat6
+package com.elasticgrid.substrates.apache
 
 import com.elasticgrid.substrates.AbstractSubstrate
 import groovy.xml.MarkupBuilder
@@ -13,7 +13,7 @@ class ApacheSubstrate extends AbstractSubstrate {
     }
 
     public void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
-        emc.tomcat = { Map attributes, Closure cl ->
+        emc.webserver = { Map attributes, Closure cl ->
             version = attributes.version ?: '2.2.9'
             def removeOnDestroy = attributes.removeOnDestroy ?: true
             serviceExec(name: 'Apache') {
@@ -30,9 +30,9 @@ class ApacheSubstrate extends AbstractSubstrate {
                 maintain 1
             }
         }
-        emc.site = { Map attributes ->
+        emc.website = { Map attributes ->
             data source: attributes.source,
-                 target: "\${RIO_HOME}/system/external/apache-httpd/httpd-$version/htdocs/"
+                 target: "\${RIO_HOME}/system/external/apache-httpd/httpd-$version/vhosts/${attributes.vhost}"
         }
     }
 
