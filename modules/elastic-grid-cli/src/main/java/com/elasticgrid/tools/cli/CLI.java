@@ -24,15 +24,18 @@ import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CLI extends org.rioproject.tools.cli.CLI {
-    private static ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
+    private static ApplicationContext ctx;
 
     static {
+        SLF4JBridgeHandler.install();
         instance = new CLI();
+        ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
     }
 
     protected CLI() {

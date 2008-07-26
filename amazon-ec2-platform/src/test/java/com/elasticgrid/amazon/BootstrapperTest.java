@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.elasticgrid.utils.amazon.Utils;
+import com.elasticgrid.amazon.boot.Bootstrapper;
 
 /**
  * Test case for Bootstrapper.
