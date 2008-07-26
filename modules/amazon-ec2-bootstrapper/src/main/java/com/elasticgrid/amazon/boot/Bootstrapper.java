@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.amazon;
+package com.elasticgrid.amazon.boot;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.FileUtils;
