@@ -16,31 +16,57 @@
 
 package com.elasticgrid.utils.amazon;
 
-import java.util.Properties;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Utils {
+    private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     public static Properties loadEC2Configuration() throws IOException {
-        Properties ec2 = new Properties();
+        // try to load properties from $HOME/.eg/aws.properties
+        Properties awsProperties = new Properties();
+        File awsPropertiesFile = new File(System.getProperty("user.home") + File.separatorChar + ".eg",
+                "aws.properties");
         InputStream stream = null;
         try {
-            File awsConfigurationFile = new File(System.getProperty("user.home") + File.separator + ".eg",
-                    "aws.properties");
-            stream = new FileInputStream(awsConfigurationFile);
-            ec2.load(stream);
+            stream = new FileInputStream(awsPropertiesFile);
+            awsProperties.load(stream);
+        } catch (Exception e) {
+            // do nothing -- this is expected behaviour
         } finally {
             try {
                 if (stream != null)
                     stream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Could not close stream", e);
             }
         }
-        return ec2;
+        // try to load properties from $EG_HOME/eg.properties
+        if (awsProperties.size() == 0) {
+            awsProperties = new Properties();
+            awsPropertiesFile = new File(System.getProperty("EG_HOME") + File.separatorChar + "config",
+                    "eg.properties");
+            try {
+                stream = new FileInputStream(awsPropertiesFile);
+                awsProperties.load(stream);
+            } catch (Exception e) {
+                // do nothing -- this is expected behaviour
+            } finally {
+                try {
+                    if (stream != null)
+                        stream.close();
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, "Could not close stream", e);
+                }
+            }
+        }
+
+        return awsProperties;
     }
 
 }

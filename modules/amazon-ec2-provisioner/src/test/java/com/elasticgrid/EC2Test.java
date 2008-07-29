@@ -21,11 +21,13 @@ import com.xerox.amazonws.ec2.ImageDescription;
 import com.xerox.amazonws.ec2.Jec2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.io.*;
 
 public class EC2Test {
     private Jec2 ec2;

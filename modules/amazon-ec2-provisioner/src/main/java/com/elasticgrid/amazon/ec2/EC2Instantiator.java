@@ -16,8 +16,8 @@
 
 package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.grid.NodeInstantiator;
+import com.elasticgrid.model.ec2.EC2Node;
 import java.rmi.RemoteException;
 import java.util.List;
 

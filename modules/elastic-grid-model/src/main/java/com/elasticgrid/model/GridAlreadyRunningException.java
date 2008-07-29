@@ -16,7 +16,6 @@
 
 package com.elasticgrid.model;
 
-import com.elasticgrid.model.Grid;
 import static java.lang.String.format;
 
 /**

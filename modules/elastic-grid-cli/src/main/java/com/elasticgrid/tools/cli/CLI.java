@@ -17,14 +17,14 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.grid.GridManager;
-import net.jini.config.Configuration;
-import net.jini.config.ConfigurationException;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
+import net.jini.config.Configuration;
+import net.jini.config.ConfigurationException;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

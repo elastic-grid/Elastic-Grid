@@ -16,15 +16,15 @@
 
 package com.elasticgrid.amazon.ec2.exporters;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.InvalidObjectException;
-import java.io.Serializable;
-import java.io.ObjectStreamField;
-import net.jini.jeri.OutboundRequestIterator;
-import net.jini.jeri.OutboundRequest;
-import net.jini.jeri.Endpoint;
 import net.jini.core.constraint.InvocationConstraints;
+import net.jini.jeri.Endpoint;
+import net.jini.jeri.OutboundRequest;
+import net.jini.jeri.OutboundRequestIterator;
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 
 /**
  * An {@link Endpoint} implementation that aggregates one or more endpoints.

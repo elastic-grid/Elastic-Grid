@@ -16,7 +16,6 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.model.GridAlreadyRunningException;
 import com.elasticgrid.model.GridNotFoundException;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;

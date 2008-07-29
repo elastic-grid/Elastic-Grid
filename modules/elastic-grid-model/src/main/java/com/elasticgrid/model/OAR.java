@@ -16,11 +16,13 @@
 
 package com.elasticgrid.model;
 
+import java.io.Serializable;
+
 /**
  * Opstring Archive for Rio.
  * @author Jerome Bernard
  */
-public interface OAR {
+public interface OAR extends Serializable {
     String getName();
     OAR name(String name);
     String getVersion();

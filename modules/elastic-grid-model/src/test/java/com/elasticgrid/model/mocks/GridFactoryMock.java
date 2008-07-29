@@ -16,8 +16,8 @@
 
 package com.elasticgrid.model.mocks;
 
-import com.elasticgrid.model.GridFactory;
 import com.elasticgrid.model.Grid;
+import com.elasticgrid.model.GridFactory;
 import com.elasticgrid.model.ec2.impl.EC2GridImpl;
 
 /**

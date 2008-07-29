@@ -16,12 +16,9 @@
 
 package com.elasticgrid.model;
 
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.ec2.EC2Grid;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard

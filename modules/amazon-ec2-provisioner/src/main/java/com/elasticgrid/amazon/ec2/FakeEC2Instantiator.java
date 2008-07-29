@@ -16,16 +16,14 @@
 
 package com.elasticgrid.amazon.ec2;
 
+import com.elasticgrid.model.NodeProfile;
 import net.jini.id.UuidFactory;
-
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.grid.ec2.InstanceType;
 
 public class FakeEC2Instantiator implements EC2Instantiator {
     private Logger logger = Logger.getLogger(EC2Instantiator.class.getName());

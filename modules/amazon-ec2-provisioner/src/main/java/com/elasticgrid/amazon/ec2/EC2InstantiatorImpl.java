@@ -16,18 +16,17 @@
 
 package com.elasticgrid.amazon.ec2;
 
+import com.elasticgrid.grid.ec2.InstanceType;
+import com.elasticgrid.model.NodeProfile;
 import com.xerox.amazonws.ec2.EC2Exception;
+import com.xerox.amazonws.ec2.GroupDescription;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
-import com.xerox.amazonws.ec2.GroupDescription;
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.grid.ec2.InstanceType;
-
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -19,7 +19,6 @@ package com.elasticgrid.model.ec2;
 import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.NodeProfile;
-
 import java.net.InetAddress;
 
 /**

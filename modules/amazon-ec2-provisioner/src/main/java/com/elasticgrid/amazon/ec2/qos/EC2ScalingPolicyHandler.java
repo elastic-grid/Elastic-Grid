@@ -19,13 +19,12 @@ package com.elasticgrid.amazon.ec2.qos;
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.FakeEC2Instantiator;
 import com.elasticgrid.grid.ec2.InstanceType;
-import org.rioproject.sla.SLA;
-import org.rioproject.sla.ScalingPolicyHandler;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.EventHandler;
+import org.rioproject.sla.SLA;
+import org.rioproject.sla.ScalingPolicyHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.Collections;

@@ -42,9 +42,6 @@ public class StopGridHandler extends AbstractHandler implements OptionHandler {
             tok.nextToken();
             // second token is grid name
             String gridName = tok.nextToken();
-            int gridSize = 1;
-            if (tok.countTokens() == 3)
-                gridSize = Integer.parseInt(tok.nextToken());
             try {
                 getGridManager().stopGrid(gridName);
                 return "Grid '" + gridName + "' stopped";

@@ -23,10 +23,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.ISOPeriodFormat;
 import org.joda.time.format.PeriodFormatter;
-
-import java.util.Currency;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Currency;
 
 /**
  * Custom XML serializers/deserializers for JiBX.

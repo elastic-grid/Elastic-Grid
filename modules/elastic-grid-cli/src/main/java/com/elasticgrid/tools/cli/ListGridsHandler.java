@@ -16,12 +16,11 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.model.GridNotFoundException;
 import com.elasticgrid.model.Grid;
+import com.elasticgrid.model.GridNotFoundException;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.util.StringTokenizer;
 import java.util.List;
 
 public class ListGridsHandler extends AbstractHandler implements OptionHandler {

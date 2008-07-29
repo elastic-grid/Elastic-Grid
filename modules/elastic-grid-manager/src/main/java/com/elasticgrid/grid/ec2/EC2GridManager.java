@@ -133,6 +133,7 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         Set<EC2Node> nodes = grid.getNodes();
         if (nodes.size() == newSize) {
             // same size -- do nothing
+            logger.log(Level.WARNING, "Grid '{0}' is already made of {1} instances", new Object[] { gridName, newSize });
         } else if (nodes.size() < newSize) {
             // increase grid size
             int toStart = newSize - nodes.size();
@@ -154,17 +155,11 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             String ami;
             switch (instanceType) {
                 case SMALL:
-                    ami = ami32;
-                    break;
                 case MEDIUM_HIGH_CPU:
                     ami = ami32;
                     break;
                 case LARGE:
-                    ami = ami64;
-                    break;
                 case EXTRA_LARGE:
-                    ami = ami64;
-                    break;
                 case EXTRA_LARGE_HIGH_CPU:
                     ami = ami64;
                     break;

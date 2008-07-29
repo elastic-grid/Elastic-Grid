@@ -16,11 +16,10 @@
 
 package com.elasticgrid.amazon.ec2;
 
+import com.elasticgrid.grid.GridLocator;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridNotFoundException;
-import com.elasticgrid.model.Node;
 import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.grid.GridLocator;
 import java.util.List;
 
 public interface EC2GridLocator extends GridLocator<EC2Node> {

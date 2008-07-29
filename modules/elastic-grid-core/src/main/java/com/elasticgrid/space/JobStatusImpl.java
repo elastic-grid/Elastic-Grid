@@ -17,7 +17,6 @@
 package com.elasticgrid.space;
 
 import com.elasticgrid.JobStatus;
-import com.elasticgrid.Task;
 
 /**
  * @author Jerome Bernard
@@ -33,11 +32,11 @@ public class JobStatusImpl implements JobStatus {
         this.pendingTasks = pendingTasks;
     }
 
-    public long getNumberOfTasks() {
+    public synchronized long getNumberOfTasks() {
         return numberOfTasks;
     }
 
-    public long getCompletedTasks() {
+    public synchronized long getCompletedTasks() {
         return completedTasks;
     }
 
@@ -46,11 +45,11 @@ public class JobStatusImpl implements JobStatus {
         pendingTasks--;
     }
 
-    public long getPendingTasks() {
+    public synchronized long getPendingTasks() {
         return pendingTasks;
     }
 
-    public double getProgress() {
+    public synchronized double getProgress() {
         return ((double) completedTasks) / numberOfTasks;
     }
 }

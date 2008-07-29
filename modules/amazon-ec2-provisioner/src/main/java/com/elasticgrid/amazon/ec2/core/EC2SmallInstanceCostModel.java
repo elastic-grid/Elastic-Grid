@@ -18,8 +18,6 @@ package com.elasticgrid.amazon.ec2.core;
 
 import org.rioproject.costmodel.ResourceCostModel;
 
-import static java.lang.String.format;
-
 /**
  * {@link ResourceCostModel} for EC2 service.
  * @author Jerome Bernard

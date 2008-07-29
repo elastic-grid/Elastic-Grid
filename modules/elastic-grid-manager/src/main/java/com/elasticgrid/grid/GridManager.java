@@ -17,7 +17,6 @@
 package com.elasticgrid.grid;
 
 import com.elasticgrid.model.Grid;
-import com.elasticgrid.model.GridAlreadyRunningException;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridNotFoundException;
 import java.rmi.RemoteException;
@@ -30,7 +29,6 @@ public interface GridManager<G extends Grid> {
      * Start a grid with a specified name.
      * Same as calling {@link #startGrid(String, int)} with a <tt>size</tt> of <tt>1</tt>.
      * @param gridName the name of the grid to start
-     * @throws GridAlreadyRunningException if the grid is already running
      * @throws InterruptedException if the grid was not started before timeout
      * @throws RemoteException if there is a network failure
      * @see #startGrid(String, int)
@@ -42,7 +40,6 @@ public interface GridManager<G extends Grid> {
      * Start a grid with a specified name and a specified number of instances.
      * @param gridName the name of the grid to start
      * @param size the number of nodes to start for this grid
-     * @throws GridAlreadyRunningException if the grid is already running
      * @throws InterruptedException if the grid was not started before timeout
      * @throws RemoteException if there is a network failure
      * @see #startGrid(String)
