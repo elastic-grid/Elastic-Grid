@@ -16,13 +16,12 @@
 
 package com.elasticgrid.amazon.sqs;
 
-import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.Message;
+import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.SQSException;
-
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.rmi.RemoteException;
 
 /**
  * Task polling SQS queue.

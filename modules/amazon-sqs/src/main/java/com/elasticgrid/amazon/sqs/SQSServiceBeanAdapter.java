@@ -16,20 +16,17 @@
 
 package com.elasticgrid.amazon.sqs;
 
+import com.elasticgrid.utils.amazon.Utils;
+import org.rioproject.core.jsb.ServiceBeanContext;
+import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.watch.Calculable;
+import org.rioproject.watch.PeriodicWatch;
 import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueService;
 import com.xerox.amazonws.sqs2.SQSException;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
-import org.rioproject.core.jsb.ServiceBeanContext;
-import org.rioproject.jsb.ServiceBeanAdapter;
-import org.rioproject.watch.Calculable;
-import org.rioproject.watch.PeriodicWatch;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.Remote;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -54,43 +51,7 @@ public abstract class SQSServiceBeanAdapter extends ServiceBeanAdapter implement
     protected Object createProxy() {
         try {
             // try to load properties from $HOME/.eg/aws.properties
-            Properties awsProperties = new Properties();
-            File awsPropertiesFile = new File(System.getProperty("user.home") + File.separatorChar + ".eg",
-                    "aws.properties");
-            InputStream stream = null;
-            try {
-                stream = new FileInputStream(awsPropertiesFile);
-                awsProperties.load(stream);
-            } catch (Exception e) {
-                // do nothing -- this is expected behaviour
-            } finally {
-                try {
-                    if (stream != null)
-                        stream.close();
-                } catch (IOException e) {
-                    logger.log(Level.SEVERE, "Could not close stream", e);
-                }
-            }
-            // try to load properties from $EG_HOME/eg.properties
-            if (awsProperties.size() == 0) {
-                awsProperties = new Properties();
-                awsPropertiesFile = new File(System.getProperty("EG_HOME") + File.separatorChar + "config",
-                        "eg.properties");
-                try {
-                    stream = new FileInputStream(awsPropertiesFile);
-                    awsProperties.load(stream);
-                } catch (Exception e) {
-                    // do nothing -- this is expected behaviour
-                } finally {
-                    try {
-                        if (stream != null)
-                            stream.close();
-                    } catch (IOException e) {
-                        logger.log(Level.SEVERE, "Could not close stream", e);
-                    }
-                }
-
-            }
+            Properties awsProperties = Utils.loadEC2Configuration();
             awsAccessId = (String) awsProperties.get("aws.accessId");
             awsSecretKey = (String) awsProperties.get("aws.secretKey");
             Boolean secured = Boolean.parseBoolean((String) awsProperties.get("aws.sqs.secured"));
@@ -106,6 +67,8 @@ public abstract class SQSServiceBeanAdapter extends ServiceBeanAdapter implement
             final String queueName = (String) config.getEntry(COMPONENT, "queueName", String.class);
             queueService = new QueueService(awsAccessId, awsSecretKey, secured);
             queue = com.xerox.amazonws.sqs2.SQSUtils.connectToQueue(queueName, awsAccessId, awsSecretKey);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         } catch (SQSException e) {

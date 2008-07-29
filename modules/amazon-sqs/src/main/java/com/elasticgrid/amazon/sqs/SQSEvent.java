@@ -16,9 +16,8 @@
 
 package com.elasticgrid.amazon.sqs;
 
-import org.rioproject.event.RemoteServiceEvent;
 import org.rioproject.event.EventDescriptor;
-
+import org.rioproject.event.RemoteServiceEvent;
 import java.io.Serializable;
 
 /**

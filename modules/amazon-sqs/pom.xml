@@ -12,6 +12,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Amazon EC2 dependencies -->
         <dependency>
             <groupId>com.xerox.amazonws</groupId>
