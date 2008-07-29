@@ -24,9 +24,8 @@ import com.elasticgrid.utils.jibx.ObjectXmlMappingException;
 import com.elasticgrid.utils.jibx.XmlUtils;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
-
+import org.testng.annotations.Test;
 import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

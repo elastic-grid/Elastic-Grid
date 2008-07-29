@@ -16,34 +16,31 @@
 
 package com.elasticgrid.masterworker.space;
 
+import com.elasticgrid.Task;
 import com.elasticgrid.masterworker.Master;
+import com.elasticgrid.space.AbstractJob;
 import com.elasticgrid.space.TaskEntry;
 import com.elasticgrid.space.TaskResult;
-import com.elasticgrid.space.AbstractJob;
-import com.elasticgrid.Task;
-import com.elasticgrid.JobStatus;
+import org.rioproject.core.jsb.ServiceBeanContext;
+import org.rioproject.watch.Calculable;
+import org.rioproject.watch.PeriodicWatch;
+import org.rioproject.watch.WatchRegistry;
+import net.jini.config.ConfigurationException;
 import net.jini.core.entry.Entry;
 import net.jini.core.entry.UnusableEntryException;
 import net.jini.core.lease.LeaseDeniedException;
 import net.jini.core.transaction.TransactionException;
 import net.jini.space.JavaSpace05;
-import net.jini.config.ConfigurationException;
 import org.springframework.util.Assert;
-import org.rioproject.watch.PeriodicWatch;
-import org.rioproject.watch.Calculable;
-import org.rioproject.watch.GaugeWatch;
-import org.rioproject.watch.WatchRegistry;
-import org.rioproject.core.jsb.ServiceBeanContext;
-
+import java.io.Serializable;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  * Abstract {@link com.elasticgrid.masterworker.Master} based on JavaSpaces.
@@ -52,7 +49,7 @@ import java.io.Serializable;
 public abstract class SpaceMaster<O, R extends Serializable, V extends Serializable> extends AbstractJob<V> implements Master<O, R, V>, Callable<V> {
     private O args;
     private JavaSpace05 space;
-    private long txnTimeout = 2000, pollTimeout = 2000, processTimeout = 20000;
+    private long pollTimeout = 2000, processTimeout = 20000;
     protected final Logger logger = Logger.getLogger(getClass().getName());
     private static final long TIME_OUT = 30 * 60 * 1000;
 

@@ -16,9 +16,9 @@
 
 package com.elasticgrid.model.internal;
 
-import java.util.Set;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class used in order to load Elastic Grid repositories configurations using JiBX.

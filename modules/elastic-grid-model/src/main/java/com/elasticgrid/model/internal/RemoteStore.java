@@ -16,10 +16,6 @@
 
 package com.elasticgrid.model.internal;
 
-import java.util.Set;
-import java.util.Collections;
-import java.util.HashSet;
-
 /**
  * Class used in order to load the remote store configurations using JiBX.
  * @author Jerome Bernard

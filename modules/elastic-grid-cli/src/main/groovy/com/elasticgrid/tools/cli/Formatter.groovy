@@ -17,11 +17,11 @@
 package com.elasticgrid.tools.cli
 
 import com.elasticgrid.model.Grid
-import com.elasticgrid.model.ec2.EC2Node
 import com.elasticgrid.model.NodeProfile
-import net.jini.discovery.DiscoveryManagement
-import net.jini.discovery.DiscoveryLocatorManagement
+import com.elasticgrid.model.ec2.EC2Node
 import net.jini.core.discovery.LookupLocator
+import net.jini.discovery.DiscoveryLocatorManagement
+import net.jini.discovery.DiscoveryManagement
 
 class Formatter {
 

@@ -16,13 +16,13 @@
 
 package com.elasticgrid.amazon.ec2.exporters;
 
+import net.jini.core.constraint.InvocationConstraints;
+import net.jini.io.UnsupportedConstraintException;
+import net.jini.jeri.Endpoint;
+import net.jini.jeri.ServerEndpoint;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.io.IOException;
-import net.jini.io.UnsupportedConstraintException;
-import net.jini.jeri.ServerEndpoint;
-import net.jini.jeri.Endpoint;
-import net.jini.core.constraint.InvocationConstraints;
 
 /**
  * A {@link net.jini.jeri.ServerEndpoint} implementation that aggregates one or more

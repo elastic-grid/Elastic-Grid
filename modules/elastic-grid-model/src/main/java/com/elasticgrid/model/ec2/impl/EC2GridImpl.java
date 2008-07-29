@@ -16,11 +16,10 @@
 
 package com.elasticgrid.model.ec2.impl;
 
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Grid;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.internal.AbstractGrid;
-import com.elasticgrid.model.NodeProfile;
-
 import java.net.InetAddress;
 
 /**

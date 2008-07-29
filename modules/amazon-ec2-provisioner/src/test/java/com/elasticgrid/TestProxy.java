@@ -17,12 +17,10 @@
 package com.elasticgrid;
 
 import org.rioproject.resources.servicecore.AbstractProxy;
-
-import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.rmi.Remote;
-
 import net.jini.id.Uuid;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 public class TestProxy extends AbstractProxy implements TestInterface, Serializable {
     private TestInterface server;

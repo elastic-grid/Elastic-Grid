@@ -16,16 +16,16 @@
 
 package com.elasticgrid.amazon.ec2
 
-import com.xerox.amazonws.ec2.Jec2
-import java.util.logging.Logger
-import com.elasticgrid.model.ec2.EC2Node
-import com.elasticgrid.model.GridNotFoundException
 import com.elasticgrid.model.GridException
-import com.xerox.amazonws.ec2.ReservationDescription
-import com.xerox.amazonws.ec2.EC2Exception
-import java.util.logging.Level
-import com.elasticgrid.model.ec2.impl.EC2NodeImpl
+import com.elasticgrid.model.GridNotFoundException
 import com.elasticgrid.model.NodeProfile
+import com.elasticgrid.model.ec2.EC2Node
+import com.elasticgrid.model.ec2.impl.EC2NodeImpl
+import com.xerox.amazonws.ec2.EC2Exception
+import com.xerox.amazonws.ec2.Jec2
+import com.xerox.amazonws.ec2.ReservationDescription
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class EC2GridLocatorImpl implements EC2GridLocator {
     def Jec2 ec2

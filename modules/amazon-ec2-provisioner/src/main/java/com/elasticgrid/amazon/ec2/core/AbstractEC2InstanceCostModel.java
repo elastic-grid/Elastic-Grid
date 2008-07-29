@@ -17,8 +17,8 @@
 package com.elasticgrid.amazon.ec2.core;
 
 import org.rioproject.costmodel.ResourceCostModel;
-import java.util.logging.Logger;
 import static java.lang.String.format;
+import java.util.logging.Logger;
 
 /**
  * {@link ResourceCostModel} for EC2 service.

@@ -20,7 +20,6 @@ import com.elasticgrid.Job;
 import com.elasticgrid.JobStatus;
 import com.elasticgrid.Task;
 import net.jini.id.UuidFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
