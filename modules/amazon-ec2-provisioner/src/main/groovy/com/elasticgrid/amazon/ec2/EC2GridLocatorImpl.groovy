@@ -26,7 +26,10 @@ import com.xerox.amazonws.ec2.Jec2
 import com.xerox.amazonws.ec2.ReservationDescription
 import java.util.logging.Level
 import java.util.logging.Logger
+import org.springframework.stereotype.Service
+import org.springframework.beans.factory.annotation.Autowired
 
+@Service
 class EC2GridLocatorImpl implements EC2GridLocator {
     def Jec2 ec2
     public static final String EG_GROUP_MONITOR = "eg-monitor"
@@ -94,6 +97,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
         return nodes
     }
 
+    @Autowired
     public void setEc2(Jec2 ec2) {
         this.ec2 = ec2;
     }

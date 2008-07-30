@@ -16,16 +16,21 @@
 
 package com.elasticgrid.amazon.boot;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.FileUtils;
-
-import java.io.*;
-import java.util.*;
-import java.net.InetAddress;
-
-import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.EC2Exception;
+import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Bootstrapper in charge of fetching the EC2 launch parameters and generating the EG configuration files.
