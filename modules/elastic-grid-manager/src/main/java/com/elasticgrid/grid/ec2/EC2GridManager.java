@@ -26,6 +26,9 @@ import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Grid;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2GridImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Service
 public class EC2GridManager implements GridManager<EC2Grid> {
     private NodeInstantiator nodeInstantiator;
     private GridLocator gridLocator;
@@ -225,34 +229,42 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         }
     }
 
+    @Autowired
     public void setNodeInstantiator(NodeInstantiator nodeInstantiator) {
         this.nodeInstantiator = nodeInstantiator;
     }
 
+    @Autowired
     public void setGridLocator(GridLocator gridLocator) {
         this.gridLocator = gridLocator;
     }
 
+    @Required
     public void setAwsAccessID(String awsAccessID) {
         this.awsAccessID = awsAccessID;
     }
 
+    @Required
     public void setAwsSecretKey(String awsSecretKey) {
         this.awsSecretKey = awsSecretKey;
     }
 
+    @Required
     public void setAwsSecured(boolean awsSecured) {
         this.awsSecured = awsSecured;
     }
 
+    @Required
     public void setKeyName(String keyName) {
         this.keyName = keyName;
     }
 
+    @Required
     public void setAmi32(String ami32) {
         this.ami32 = ami32;
     }
 
+    @Required
     public void setAmi64(String ami64) {
         this.ami64 = ami64;
     }

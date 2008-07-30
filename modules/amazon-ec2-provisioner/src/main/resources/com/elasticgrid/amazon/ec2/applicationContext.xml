@@ -22,14 +22,16 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/util/spring-context-2.5.xsd">
 
-    <bean id="ec2" class="com.elasticgrid.amazon.ec2.EC2InstantiatorImpl">
-        <property name="jec2" ref="jec2"/>
-    </bean>
+    <context:annotation-config />
+
+    <context:component-scan base-package="com.elasticgrid.amazon.ec2"/>
 
     <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
         <constructor-arg index="0" value="${aws.accessId}"/>
@@ -37,14 +39,12 @@
         <constructor-arg index="2" value="${amazon.ec2.secured}"/>
     </bean>
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>file:${user.home}/.eg/aws.properties</value>
-                <value>file:${user.home}/.eg/ec2.properties</value>
-            </list>
-        </property>
-    </bean>
+    <util:properties-placeholder-configurer>
+        <util:locations>
+            file:${user.home}/.eg/aws.properties
+            file:${user.home}/.eg/ec2.properties
+        </util:locations>
+    </util:properties-placeholder-configurer>
 
 </beans>
 

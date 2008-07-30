@@ -19,11 +19,13 @@ package com.elasticgrid.grid.ec2;
 import com.elasticgrid.model.ec2.EC2Grid;
 import com.elasticgrid.model.ec2.impl.EC2GridImpl;
 import com.elasticgrid.model.GridFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * Grid factory for EC2.
  * @author Jerome Bernard
  */
+@Service
 public class EC2GridFactory implements GridFactory<EC2Grid> {
     public EC2Grid createGrid() {
         return new EC2GridImpl();
