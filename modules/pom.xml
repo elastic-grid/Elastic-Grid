@@ -24,6 +24,7 @@
         <module>elastic-grid-core</module>
         <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>
+        <module>amazon-sdb</module>
         <module>amazon-ec2-bootstrapper</module>
         <module>amazon-ec2-provisioner</module>
         <!--module>elastic-grid-oar</module-->

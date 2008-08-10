@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.elasticgrid.amazon.sqs;
+package com.elasticgrid.amazon.sdb;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-/**
- * Listener for {@link SQSEvent}s.
- * @author Jerome Bernard
- */
-public interface SQSListener extends Remote {
-    void handle(SQSEvent event) throws RemoteException;
+public class SimpleDBException extends Exception {
+    public SimpleDBException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

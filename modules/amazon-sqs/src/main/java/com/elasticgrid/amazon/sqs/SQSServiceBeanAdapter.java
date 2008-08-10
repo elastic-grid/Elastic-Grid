@@ -16,7 +16,7 @@
 
 package com.elasticgrid.amazon.sqs;
 
-import com.elasticgrid.utils.amazon.Utils;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanAdapter;
 import org.rioproject.watch.Calculable;
@@ -51,9 +51,9 @@ public abstract class SQSServiceBeanAdapter extends ServiceBeanAdapter implement
     protected Object createProxy() {
         try {
             // try to load properties from $HOME/.eg/aws.properties
-            Properties awsProperties = Utils.loadEC2Configuration();
-            awsAccessId = (String) awsProperties.get("aws.accessId");
-            awsSecretKey = (String) awsProperties.get("aws.secretKey");
+            Properties awsProperties = AWSUtils.loadEC2Configuration();
+            awsAccessId = (String) awsProperties.get(AWSUtils.AWS_ACCESS_ID);
+            awsSecretKey = (String) awsProperties.get(AWSUtils.AWS_SECRET_KEY);
             Boolean secured = Boolean.parseBoolean((String) awsProperties.get("aws.sqs.secured"));
             // fall-back to JSB configuration
             Configuration config = context.getConfiguration();
