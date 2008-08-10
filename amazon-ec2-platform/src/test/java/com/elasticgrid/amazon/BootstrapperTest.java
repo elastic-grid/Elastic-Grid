@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 import com.xerox.amazonws.ec2.EC2Exception;
-import com.elasticgrid.utils.amazon.Utils;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import com.elasticgrid.amazon.boot.Bootstrapper;
 
 /**
@@ -26,11 +26,11 @@ public class BootstrapperTest {
         File egConfigDir = new File(egHome, "config");
         egConfigDir.mkdir();
 
-        Properties ec2props = Utils.loadEC2Configuration();
+        Properties ec2props = AWSUtils.loadEC2Configuration();
 
         StringBuffer launchParameters = new StringBuffer();
-        String awsAccessId = (String) ec2props.get("aws.accessId");
-        String awsSecretKey = (String) ec2props.get("aws.secretKey");
+        String awsAccessId = (String) ec2props.get(AWSUtils.AWS_ACCESS_ID);
+        String awsSecretKey = (String) ec2props.get(AWSUtils.AWS_SECRET_KEY);
 
         launchParameters.append(Bootstrapper.LAUNCH_PARAMETER_ACCESS_ID).append('=').append(awsAccessId).append('\n');
         launchParameters.append(Bootstrapper.LAUNCH_PARAMETER_SECRET_KEY).append('=').append(awsSecretKey).append('\n');

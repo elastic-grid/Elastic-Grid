@@ -24,8 +24,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Utils {
-    private static final Logger logger = Logger.getLogger(Utils.class.getName());
+public class AWSUtils {
+    public static final String AWS_ACCESS_ID = "aws.accessId";
+    public static final String AWS_SECRET_KEY = "aws.secretKey";
+    private static final Logger logger = Logger.getLogger(AWSUtils.class.getName());
 
     public static Properties loadEC2Configuration() throws IOException {
         // try to load properties from $HOME/.eg/aws.properties
