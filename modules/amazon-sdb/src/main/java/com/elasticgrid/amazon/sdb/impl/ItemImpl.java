@@ -23,9 +23,12 @@ import com.xerox.amazonws.sdb.SDBException;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ItemImpl implements Item {
     private final com.xerox.amazonws.sdb.Item item;
+    private static final Logger logger = Logger.getLogger(Item.class.getName());
 
     public ItemImpl(com.xerox.amazonws.sdb.Item item) {
         this.item = item;
@@ -40,7 +43,7 @@ public class ItemImpl implements Item {
             List<com.xerox.amazonws.sdb.ItemAttribute> attrs = item.getAttributes();
             List<ItemAttribute> attributes = new ArrayList<ItemAttribute>(attrs.size());
             for (com.xerox.amazonws.sdb.ItemAttribute attribute : attrs) {
-                attributes.add(new ItemAttributeImpl(attribute));
+                attributes.add(new ItemAttribute(attribute));
             }
             return attributes;
         } catch (SDBException e) {
@@ -53,7 +56,7 @@ public class ItemImpl implements Item {
             List<com.xerox.amazonws.sdb.ItemAttribute> attrs = item.getAttributes(attributeName);
             List<ItemAttribute> attributes = new ArrayList<ItemAttribute>(attrs.size());
             for (com.xerox.amazonws.sdb.ItemAttribute attribute : attrs) {
-                attributes.add(new ItemAttributeImpl(attribute));
+                attributes.add(new ItemAttribute(attribute));
             }
             return attributes;
         } catch (SDBException e) {
@@ -61,10 +64,17 @@ public class ItemImpl implements Item {
         }
     }
 
+    public void putAttribute(String attrName, String attrValue, boolean replace) throws SimpleDBException {
+        putAttributes(new ItemAttribute(attrName, attrValue, replace));
+    }
+
     public void putAttributes(ItemAttribute... attributes) throws SimpleDBException {
         List<com.xerox.amazonws.sdb.ItemAttribute> attrs = new ArrayList<com.xerox.amazonws.sdb.ItemAttribute>(attributes.length);
-        for (ItemAttribute attr : attributes)
+        for (ItemAttribute attr : attributes) {
+            logger.log(Level.INFO, "Adding to item {0} attribute {1}Êwith value {2}",
+                    new Object[] { getIdentifier(), attr.getName(), attr.getValue() });
             attrs.add(new com.xerox.amazonws.sdb.ItemAttribute(attr.getName(), attr.getValue(), attr.isReplace()));
+        }
         try {
             item.putAttributes(attrs);
         } catch (SDBException e) {
@@ -74,8 +84,11 @@ public class ItemImpl implements Item {
 
     public void deleteAttributes(ItemAttribute... attributes) throws SimpleDBException {
         List<com.xerox.amazonws.sdb.ItemAttribute> attrs = new ArrayList<com.xerox.amazonws.sdb.ItemAttribute>(attributes.length);
-        for (ItemAttribute attr : attributes)
+        for (ItemAttribute attr : attributes) {
+            logger.log(Level.INFO, "Deleting from item {0} attribute {1}Êwith value {2}",
+                    new Object[] { getIdentifier(), attr.getName(), attr.getValue() });
             attrs.add(new com.xerox.amazonws.sdb.ItemAttribute(attr.getName(), attr.getValue(), attr.isReplace()));
+        }
         try {
             item.deleteAttributes(attrs);
         } catch (SDBException e) {
@@ -83,23 +96,4 @@ public class ItemImpl implements Item {
         }
     }
 
-    private class ItemAttributeImpl implements ItemAttribute {
-        private final com.xerox.amazonws.sdb.ItemAttribute attribute;
-
-        public ItemAttributeImpl(com.xerox.amazonws.sdb.ItemAttribute attribute) {
-            this.attribute = attribute;
-        }
-
-        public String getName() {
-            return attribute.getName();
-        }
-
-        public String getValue() {
-            return attribute.getValue();
-        }
-
-        public boolean isReplace() {
-            return attribute.isReplace();
-        }
-    }
 }

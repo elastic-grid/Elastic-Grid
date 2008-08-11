@@ -24,5 +24,4 @@ public interface Domain {
     QueryResult listItems(String query) throws SimpleDBException;
     QueryResult listItems(String query, String nextToken) throws SimpleDBException;
     QueryResult listItems(String query, String nextToken, int maxResults) throws SimpleDBException;
-    Item addItem(String name, String value) throws SimpleDBException;
 }

@@ -22,8 +22,12 @@ import com.elasticgrid.amazon.sdb.SimpleDBException;
 import com.elasticgrid.amazon.sdb.QueryResult;
 import com.xerox.amazonws.sdb.SDBException;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 public class DomainImpl implements Domain {
     private final com.xerox.amazonws.sdb.Domain domain;
+    private static final Logger logger = Logger.getLogger(Domain.class.getName());
 
     public DomainImpl(com.xerox.amazonws.sdb.Domain domain) {
         this.domain = domain;
@@ -35,6 +39,7 @@ public class DomainImpl implements Domain {
 
     public Item findItem(String identifier) throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Searching for item {0}", identifier);
             return new ItemImpl(domain.getItem(identifier));
         } catch (SDBException e) {
             throw new SimpleDBException("Can't find item " + identifier, e);
@@ -43,6 +48,7 @@ public class DomainImpl implements Domain {
 
     public void deleteItem(String identifier) throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Deleting item {0}", identifier);
             domain.deleteItem(identifier);
         } catch (SDBException e) {
             throw new SimpleDBException("Can't delete item " + identifier, e);
@@ -51,6 +57,7 @@ public class DomainImpl implements Domain {
 
     public QueryResult listItems() throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Searching for items in domain {0}", getName());
             return new QueryResultImpl(domain.listItems());
         } catch (SDBException e) {
             throw new SimpleDBException("Can't list items in domain " + getName(), e);
@@ -59,6 +66,7 @@ public class DomainImpl implements Domain {
 
     public QueryResult listItems(String query) throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Searching for items in domain {0} with query {1}", new Object[] { getName(), query });
             return new QueryResultImpl(domain.listItems(query));
         } catch (SDBException e) {
             throw new SimpleDBException("Can't list items in domain " + getName() + " for query " + query, e);
@@ -67,6 +75,7 @@ public class DomainImpl implements Domain {
 
     public QueryResult listItems(String query, String nextToken) throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Searching for items in domain {0} with query {1}", new Object[] { getName(), query });
             return new QueryResultImpl(domain.listItems(query, nextToken));
         } catch (SDBException e) {
             throw new SimpleDBException("Can't list items in domain " + getName() + " for query " + query, e);
@@ -75,13 +84,11 @@ public class DomainImpl implements Domain {
 
     public QueryResult listItems(String query, String nextToken, int maxResults) throws SimpleDBException {
         try {
+            logger.log(Level.INFO, "Searching for items in domain {0} with query {1}", new Object[] { getName(), query });
             return new QueryResultImpl(domain.listItems(query, nextToken, maxResults));
         } catch (SDBException e) {
             throw new SimpleDBException("Can't list items in domain " + getName() + " for query " + query, e);
         }
     }
 
-    public Item addItem(String name, String value) throws SimpleDBException {
-        return new ItemImpl(new com.xerox.amazonws.sdb.Item());
-    }
 }

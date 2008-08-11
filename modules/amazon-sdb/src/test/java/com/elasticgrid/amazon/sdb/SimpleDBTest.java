@@ -47,7 +47,10 @@ public class SimpleDBTest {
     public void testItemCreation() throws SimpleDBException {
         Domain domain = sdb.createDomain("test");
         assert domain != null;
-        domain.createItem("test_item", "a value");
+        Item item = domain.findItem("test");
+        assert item != null;
+        item.putAttribute("test_attr", "test_value", true);
+        domain.deleteItem(item.getIdentifier());
         sdb.deleteDomain(domain.getName());
     }
 
