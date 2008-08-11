@@ -16,6 +16,8 @@
 
 package com.elasticgrid.amazon.sdb;
 
+import com.xerox.amazonws.sdb.ItemAttribute;
+
 import java.util.List;
 import java.io.Serializable;
 
@@ -23,12 +25,37 @@ public interface Item {
     String getIdentifier();
     List<ItemAttribute> getAttributes() throws SimpleDBException;
     List<ItemAttribute> getAttributes(String attributeName) throws SimpleDBException;
+    void putAttribute(String attrName, String attrValue, boolean replace) throws SimpleDBException;
     void putAttributes(ItemAttribute... attributes) throws SimpleDBException;
     void deleteAttributes(ItemAttribute... attributes) throws SimpleDBException;
 
-    interface ItemAttribute extends Serializable {
-        String getName();
-        String getValue();
-        boolean isReplace();
+    class ItemAttribute implements Serializable {
+        private final String name;
+        private final String value;
+        private final boolean replace;
+
+        public ItemAttribute(String name, String value, boolean replace) {
+            this.name = name;
+            this.value = value;
+            this.replace = replace;
+        }
+
+        public ItemAttribute(com.xerox.amazonws.sdb.ItemAttribute attribute) {
+            this.name = attribute.getName();
+            this.value = attribute.getValue();
+            this.replace = attribute.isReplace();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public boolean isReplace() {
+            return replace;
+        }
     }
 }
