@@ -95,6 +95,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
                 return new EC2NodeImpl(profile)
                         .instanceID(instance.instanceId)
                         .address(InetAddress.getByName(instance.dnsName))
+                        .internalAddress(InetAddress.getByName(instance.privateDnsName))
             }
         }.flatten()
         logger.log Level.INFO, "Found ${nodes.size()} nodes in grid '$gridName'..."

@@ -2,7 +2,7 @@
 
 echo "Bootstrapping Elastic Grid platform..."
 
-CP=""
+CP="$EG_HOME/lib/groovy/groovy-all-1.6-beta-1.jar"
 for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
 do
     CP=$CP:$j

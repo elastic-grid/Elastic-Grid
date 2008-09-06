@@ -20,14 +20,17 @@
 package com.elasticgrid.model.ec2.impl;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.Node;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.internal.AbstractNode;
+import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard
  */
 public class EC2NodeImpl extends AbstractNode implements EC2Node {
     private String instanceID;
+    private InetAddress internalAddress;
 
     public EC2NodeImpl() {
         super();
@@ -48,5 +51,18 @@ public class EC2NodeImpl extends AbstractNode implements EC2Node {
     public EC2Node instanceID(String instanceID) {
         this.instanceID = instanceID;
         return this;
+    }
+
+    public InetAddress getInternalAddress() {
+        return internalAddress;
+    }
+
+    public EC2Node internalAddress(InetAddress address) {
+        setInternalAddress(address);
+        return this;
+    }
+
+    public void setInternalAddress(InetAddress address) {
+        this.internalAddress = address;
     }
 }
