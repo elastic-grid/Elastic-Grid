@@ -41,14 +41,14 @@ yum -y clean all
 # Install Elastic Grid
 echo "Installing Elastic Grid $EG_VERSION."
 mkdir -p /usr/local/elastic-grid-$EG_VERSION
-cd /usr/local
+cd /usr/local/elastic-grid-$EG_VERSION
 wget -nv http://elastic-grid-distributions.s3.amazonaws.com/elastic-grid-$EG_VERSION-bin.tar.gz
 tar xzf elastic-grid-$EG_VERSION-bin.tar.gz
 rm -f elastic-grid-$EG_VERSION-bin.tar.gz
 
 # Configure Elastic Grid
 sed -i -e "s|# export JAVA_HOME=.*|export JAVA_HOME=/usr/local/jdk${JAVA_VERSION}|" \
-       -e 's|# export EG_LOG_DIR=.*|export EG_LOG_DIR=/mnt/eg/logs|' \
+       -e 's|# export EG_LOG_DIR=.*|export EG_LOG_DIR=/mnt/elastic-grid/logs|' \
        -e 's|# export EG_SLAVE_SLEEP=.*|export EG_SLAVE_SLEEP=1|' \
        -e 's|# export EG_OPTS=.*|export EG_OPTS=-server|' \
       /usr/local/elastic-grid-$EG_VERSION/bin/eg
@@ -56,12 +56,12 @@ sed -i -e "s|# export JAVA_HOME=.*|export JAVA_HOME=/usr/local/jdk${JAVA_VERSION
 # Do configuration on instance startup
 echo "echo 'Starting Elastic Grid...'" >> /etc/rc.d/rc.local
 echo "/root/eg-init" >> /etc/rc.d/rc.local
-echo "alias eg='rlwrap /usr/local/eg-${EG_VERSION}/bin/eg'" >> /root/.bashrc
+echo "alias eg='rlwrap /usr/local/elastic-grid-${EG_VERSION}/bin/eg'" >> /root/.bashrc
 
 # Setup root user bash environment
 echo "export JAVA_HOME=/usr/local/jdk${JAVA_VERSION}" >> /root/.bash_profile
-echo "export EG_HOME=/usr/local/eg-${EG_VERSION}" >> /root/.bash_profile
-echo "export RIO_HOME=/usr/local/eg-${EG_VERSION}" >> /root/.bash_profile
+echo "export EG_HOME=/usr/local/elastic-grid-${EG_VERSION}" >> /root/.bash_profile
+echo "export RIO_HOME=/usr/local/elastic-grid-${EG_VERSION}" >> /root/.bash_profile
 echo 'export PATH=$JAVA_HOME/bin:$EG_HOME/bin:$PATH' >> /root/.bash_profile
 
 # Configure networking.
