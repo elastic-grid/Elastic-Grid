@@ -17,28 +17,16 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid;
+package com.elasticgrid.model;
 
-import org.rioproject.jsb.ServiceBeanAdapter;
-import java.rmi.RemoteException;
+import static java.lang.String.format;
 
-public class TestJSB extends ServiceBeanAdapter implements TestInterface {
-    static long count = -1;
-
-    public long getTestGauge() {
-        return count;
-    }
-
-    public String echo(String message) throws RemoteException {
-        if (count == -1)
-            count = 100;
-        else
-            count--;
-        return message;
-    }
-
-    @Override
-    protected Object createProxy() {
-        return new TestProxy(getExportedProxy(), getUuid());
+/**
+ * Exception thrown when a monitor for a grid can't be found
+ * @author Jerome Bernard
+ */
+public class GridMonitorNotFoundException extends GridException {
+    public GridMonitorNotFoundException(String gridName) {
+        super(format("Could not find monitor for grid '%s'", gridName));
     }
 }

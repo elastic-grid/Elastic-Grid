@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
     	<groupId>com.elasticgrid</groupId>
-	<artifactId>elastic-grid-modules</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	    <artifactId>elastic-grid-modules</artifactId>
+	    <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>amazon-ec2-bootstrapper</artifactId>
@@ -12,6 +12,12 @@
     <name>Modules :: Amazon EC2 Bootstrapper</name>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Amazon EC2 dependencies -->
         <dependency>
