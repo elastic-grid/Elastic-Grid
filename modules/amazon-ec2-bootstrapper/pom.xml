@@ -19,11 +19,24 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>2.5.5</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Amazon EC2 dependencies -->
         <dependency>
             <groupId>com.xerox.amazonws</groupId>
             <artifactId>typica</artifactId>
-            <version>1.3</version>
+            <version>1.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

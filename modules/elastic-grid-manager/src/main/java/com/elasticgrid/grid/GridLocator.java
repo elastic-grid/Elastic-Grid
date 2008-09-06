@@ -41,4 +41,13 @@ public interface GridLocator <N extends Node> {
      * @throws GridException if there is a technical error
      */
     List<N> findNodes(String gridName) throws GridNotFoundException, GridException;
+
+    /**
+     * Locate a monitor instance in the specified grid.
+     * @param gridName the name of the grid for whom a monitor instance should be found
+     * @return a monitor {@link Node}
+     * @throws GridNotFoundException if the grid can't be found
+     * @throws GridException if there is a technical error
+     */
+    N findMonitor(String gridName) throws GridNotFoundException, GridException;
 }

@@ -38,7 +38,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
     def Jec2 ec2
     public static final String EG_GROUP_MONITOR = "eg-monitor"
     public static final String EG_GROUP_AGENT = "eg-agent"
-    private static final Logger logger = Logger.getLogger(EC2GridLocatorImpl.class.name)
+    private static final Logger logger = Logger.getLogger(EC2GridLocator.class.name)
 
     public List<String> findGrids() {
         logger.info "Searching for all grids..."
@@ -102,9 +102,10 @@ class EC2GridLocatorImpl implements EC2GridLocator {
     }
 
     public EC2Node findMonitor(String gridName) throws GridNotFoundException, GridException {
+        logger.log Level.INFO, "Searching for monitor node in grid '$gridName'..."
         def List<EC2Node> nodes = findNodes(gridName)
         def found = false
-        def node = nodes.find { NodeProfile.MONITOR == node.profile}
+        def node = nodes.find { NodeProfile.MONITOR == it.profile}
         if (node)
             return node
         else
