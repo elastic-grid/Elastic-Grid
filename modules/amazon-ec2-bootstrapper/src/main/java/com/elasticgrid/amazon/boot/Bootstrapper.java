@@ -56,6 +56,7 @@ public class Bootstrapper {
     public static final String EG_PARAMETER_ACCESS_ID = "aws.accessId";
     public static final String EG_PARAMETER_SECRET_KEY = "aws.secretKey";
     public static final String EG_PARAMETER_SQS_SECURED = "aws.sqs.secured";
+    public static final String EG_MONITOR_HOST = "eg.monitor.host";
 
     public static final String EG_GROUP_MONITOR = "eg-monitor";
     public static final String EG_GROUP_AGENT = "eg-agent";
@@ -67,9 +68,6 @@ public class Bootstrapper {
 
     private final ApplicationContext ctx;
 
-    static {
-
-    }
 
     public Bootstrapper() throws IOException, EC2Exception {
         // retreive EC2 parameters
@@ -88,12 +86,12 @@ public class Bootstrapper {
         String gridName = launchParameters.getProperty(GRID_NAME);
         try {
             EC2Node monitor = locator.findMonitor(gridName);
-            String monitorHost = monitor.getAddress().getHostName();
+            String monitorHost = monitor.getInternalAddress().getHostName();
             if (monitorHost.equals(InetAddress.getByName("localhost").getHostName())) {
                 System.out.printf("This host is going to be the new monitor!");
             } else {
                 System.out.printf("Using monitor host: %s\n", monitorHost);
-                egParameters.put("eg.monitor.host", monitorHost);
+                egParameters.put(EG_MONITOR_HOST, monitorHost);
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost);
         } catch (GridException e) {

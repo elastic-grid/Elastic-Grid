@@ -25,7 +25,6 @@ import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.Arrays;
@@ -36,7 +35,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
     private static ApplicationContext ctx;
 
     static {
-        SLF4JBridgeHandler.install();
+//        SLF4JBridgeHandler.install();
         instance = new CLI();
         ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
     }

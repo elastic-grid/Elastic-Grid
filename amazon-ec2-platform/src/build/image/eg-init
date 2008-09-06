@@ -30,6 +30,8 @@ export USER="root"
 mkdir -p /var/log/eg
 "$EG_HOME"/bin/eg-bootstrap
 
+MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
+
 echo Local host name: `hostname`.`dnsdomainname` | logger -t elastic-grid
 echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
 
