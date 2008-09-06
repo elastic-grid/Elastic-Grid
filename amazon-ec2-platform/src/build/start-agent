@@ -1,4 +1,10 @@
 #!/bin/bash
 
-ec2run ami-cffb1fa6 -g eg-agent -g elastic-grid -g default -k eg-gsg-keypair -f ec2params.config
+if [ "$1" = "" ]; then
+    echo "You must specify a grid name."
+    echo "start-agent GRID_NAME"
+    exit -1
+fi
 
+echo "Starting agent for grid $1"
+ec2run ami-ddfb1fb4 -g eg-monitor -g elastic-grid -g eg-agent -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config
