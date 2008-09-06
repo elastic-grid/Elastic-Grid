@@ -43,6 +43,6 @@ if [ "$MONITOR_HOST" == `hostname`.`dnsdomainname` ]; then
 else
   # Elastic Grid
   echo Starting Elastic Grid cybernode | logger -t elastic-grid
-  cat $EG_HOME/config/slave-cybernode.config > $EG_HOME/config/cybernode.config 
+  cat $EG_HOME/config/cybernode-cybernode.config > $EG_HOME/config/cybernode.config 
   "$EG_HOME"/bin/eg start cybernode &
 fi

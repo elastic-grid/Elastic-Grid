@@ -1,17 +1,20 @@
 /**
  * Copyright (C) 2007-2008 Elastic Grid, LLC.
  * 
- * Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of Elastic Grid.
  * 
- *         http://www.gnu.org/licenses/lgpl-3.0.html
+ * Elastic Grid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Elastic Grid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.elasticgrid.amazon.boot;
@@ -19,6 +22,10 @@ package com.elasticgrid.amazon.boot;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
+import com.elasticgrid.amazon.ec2.EC2GridLocator;
+import com.elasticgrid.amazon.ec2.EC2GridLocatorImpl;
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.GridException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import java.io.File;
@@ -60,48 +67,21 @@ public class Bootstrapper {
         Properties launchParameters = fetchLaunchParameters();
         Properties egParameters = translateProperties(launchParameters);
 
-        // figure out who is the monitor host
-        System.out.printf("Searching for Elastic Grid monitor host...\n");
-        Jec2 ec2 = new Jec2(
-                egParameters.getProperty(EG_PARAMETER_ACCESS_ID), egParameters.getProperty(EG_PARAMETER_SECRET_KEY));
-        List<ReservationDescription> reservations = ec2.describeInstances(Collections.<String>emptyList());
-        boolean monitorFound = false;
-        for (ReservationDescription reservation : reservations) {
-            List<String> groups = reservation.getGroups();
-            if (groups.contains(EG_GROUP_MONITOR)) {
-                // this is a monitor reservation -- instance
-                List<ReservationDescription.Instance> instances = reservation.getInstances();
-                if (instances.size() == 0)
-                    continue;
-                ReservationDescription.Instance monitor = null;
-                for (ReservationDescription.Instance instance : instances) {
-                    monitor = instances.get(0);
-                    if ("running".equals(monitor.getState()))
-                        break;
-                }
-                if (monitor == null) {
-                    System.err.println("Could not find any monitor host. Aborting boot process.");
-                    System.exit(-1);
-                }
-                if (instances.size() > 1) {
-                    System.err.printf("More than once instance found (found %d). Using instance %s as monitor.\n",
-                            instances.size(), monitor.getDnsName());
-                }
-                String monitorHost = monitor.getPrivateDnsName();
-                if (monitorHost.equals(InetAddress.getByName("localhost").getHostName())) {
-                    System.out.printf("This host is going to be the new monitor!");
-                    monitorFound = true;
-                } else {
-                    System.out.printf("Using monitor host: %s\n", monitorHost);
-                    egParameters.put("eg.monitor.host", monitorHost);
-                    monitorFound = true;
-                }
-                FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost);
+        EC2GridLocator locator = new EC2GridLocatorImpl();
+        String gridName = ""; // todo: find the current grid name
+        try {
+            EC2Node monitor = locator.findMonitor(gridName);
+            String monitorHost = monitor.getAddress().getHostName();
+            if (monitorHost.equals(InetAddress.getByName("localhost").getHostName())) {
+                System.out.printf("This host is going to be the new monitor!");
+            } else {
+                System.out.printf("Using monitor host: %s\n", monitorHost);
+                egParameters.put("eg.monitor.host", monitorHost);
             }
-        }
-        if (!monitorFound) {
+            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost);
+        } catch (GridException e) {
             System.err.println("Could not find monitor host!");
-            return;
+            System.exit(-1);
         }
 
         // save configuration

@@ -56,12 +56,12 @@
 			<filtered>true</filtered>
 		</file>
         <file>
-			<source>COPYING</source>
+			<source>COPYING.txt</source>
 			<outputDirectory>/</outputDirectory>
 			<filtered>false</filtered>
 		</file>
         <file>
-			<source>COPYING.LESSER</source>
+			<source>COPYING.LESSER.txt</source>
 			<outputDirectory>/</outputDirectory>
 			<filtered>false</filtered>
 		</file>
