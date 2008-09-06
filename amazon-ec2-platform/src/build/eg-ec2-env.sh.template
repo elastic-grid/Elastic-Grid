@@ -19,13 +19,13 @@
 # Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
 
 # Your Amazon Account Number.
-AWS_ACCOUNT_ID=
+AWS_ACCOUNT_ID=176251750831
 
 # Your Amazon AWS access key.
-AWS_ACCESS_KEY_ID=
+AWS_ACCESS_KEY_ID=1YSNKZHHXGM76D1KCC82
 
 # Your Amazon AWS secret access key.
-AWS_SECRET_ACCESS_KEY=
+AWS_SECRET_ACCESS_KEY=7yIZWLjoZUIKlkiuuQcSnVw2R+aJ8E0rNnH1Oqca
 
 # Location of EC2 keys.
 # The default setting is probably OK if you set up EC2 following the Amazon Getting Started guide.
@@ -33,7 +33,7 @@ EC2_KEYDIR=`dirname "$EC2_PRIVATE_KEY"`
 
 # The EC2 key name used to launch instances.
 # The default is the value used in the Amazon Getting Started guide.
-KEY_NAME=eg-gsg-keypair
+KEY_NAME=eg-keypair
 
 # Where your EC2 private key is stored (created when following the Amazon Getting Started guide).
 # You need to change this if you don't store this with your other EC2 keys.
@@ -43,7 +43,7 @@ PRIVATE_KEY_PATH=`echo "$EC2_KEYDIR"/"id_rsa-$KEY_NAME"`
 SSH_OPTS=`echo -i "$PRIVATE_KEY_PATH" -o StrictHostKeyChecking=no -o ServerAliveInterval=30`
 
 # The version of Elastic Grid to use.
-EG_VERSION=0.8.0
+EG_VERSION=0.8
 
 # The Amazon S3 bucket where the Elastic Grid AMI is stored.
 # The default value is for public images, so can be left if you are using running a public image.
@@ -69,14 +69,14 @@ INSTANCE_TYPE="m1.small"
 #
 
 # The version number of the installed JDK.
-JAVA_VERSION=1.6.0_06
+JAVA_VERSION=1.6.0_07
 
 # SUPPORTED_ARCHITECTURES = ['i386', 'x86_64']
 # The download URL for the Sun JDK. Visit http://java.sun.com/javase/downloads/index.jsp and get the URL for the "Linux self-extracting file".
 if [ "$INSTANCE_TYPE" == "m1.small" ]; then
   ARCH='i386'
   BASE_AMI_IMAGE="ami-2b5fba42"  # ec2-public-images/fedora-8-i386-base-v1.07.manifest.xml
-  JAVA_BINARY_URL=
+  JAVA_BINARY_URL="http://cds.sun.com/is-bin/INTERSHOP.enfinity/WFS/CDS-CDS_Developer-Site/en_US/-/USD/VerifyItem-Start/jdk-6u7-linux-i586.bin?BundledLineItemUUID=jYJIBe.mQlIAAAEcu0IRFzgA&OrderID=eyVIBe.mdecAAAEcrEIRFzgA&ProductID=XzBIBe.oxM4AAAEaVJcGcbZW&FileName=/jdk-6u7-linux-i586.bin"
 else
   ARCH='x86_64'
   BASE_AMI_IMAGE="ami-2d5fba44"  # ec2-public-images/fedora-8-x86_64-base-v1.07.manifest.xml

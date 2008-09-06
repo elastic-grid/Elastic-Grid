@@ -19,9 +19,7 @@
 # Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
 
 # Import variables
-bin=`dirname "$0"`
-bin=`cd "$bin"; pwd`
-. "$bin"/eg-ec2-env.sh
+. eg-ec2-env.sh
 
 AMI_IMAGE=`ec2-describe-images -a | grep $S3_BUCKET | grep $EG_VERSION | grep $ARCH | grep available | awk '{print $2}'`
 
@@ -43,6 +41,7 @@ while true; do
   sleep 1
 done
 
+echo
 echo "The server is available at $HOSTNAME."
 while true; do
   REPLY=`ssh $SSH_OPTS "root@$HOSTNAME" 'echo "hello"'`
@@ -61,9 +60,12 @@ fi
 echo "Copying scripts."
 
 # Copy setup scripts
-scp $SSH_OPTS "$bin"/eg-ec2-env.sh "root@$HOSTNAME:/mnt"
-scp $SSH_OPTS "$bin"/image/create-elastic-grid-image-remote "root@$HOSTNAME:/mnt"
-scp $SSH_OPTS "$bin"/image/eg-init "root@$HOSTNAME:"
+scp $SSH_OPTS eg-ec2-env.sh "root@$HOSTNAME:/mnt"
+scp $SSH_OPTS image/create-elastic-grid-image-remote "root@$HOSTNAME:/mnt"
+scp $SSH_OPTS image/eg-init "root@$HOSTNAME:"
+
+ssh $SSH_OPTS "root@$HOSTNAME" 'chmod +x /mnt/eg-ec2-env.sh'
+ssh $SSH_OPTS "root@$HOSTNAME" 'chmod +x /mnt/create-elastic-grid-image-remote'
 
 # Copy private key and certificate (for bundling image)
 scp $SSH_OPTS $EC2_KEYDIR/pk*.pem "root@$HOSTNAME:/mnt"
