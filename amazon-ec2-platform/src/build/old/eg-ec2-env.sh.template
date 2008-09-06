@@ -1,22 +1,19 @@
-# Set environment variables for running Hadoop on Amazon EC2 here. All are required.
+# Set environment variables for running Elastic Grid on Amazon EC2 here. All are required.
 
-# Copyright (C) 2007-2008 Elastic Grid, LLC.
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
 #
-# Licensed under the GNU Lesser General Public License, Version 3.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#         http://www.gnu.org/licenses/lgpl-3.0.html
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
-# Create a Elastic Grid AMI. Runs on the EC2 instance.
-# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
 
 # Your Amazon Account Number.
 AWS_ACCOUNT_ID=
@@ -43,13 +40,13 @@ PRIVATE_KEY_PATH=`echo "$EC2_KEYDIR"/"id_rsa-$KEY_NAME"`
 SSH_OPTS=`echo -i "$PRIVATE_KEY_PATH" -o StrictHostKeyChecking=no -o ServerAliveInterval=30`
 
 # The version of Elastic Grid to use.
-EG_VERSION=0.8.0
+EG_VERSION=0.1.0
 
 # The Amazon S3 bucket where the Elastic Grid AMI is stored.
 # The default value is for public images, so can be left if you are using running a public image.
 # Change this value only if you are creating your own (private) AMI
 # so you can store it in a bucket you own.
-S3_BUCKET=elastic-grid-distributions
+S3_BUCKET=eg-ec2-images
 
 # Enable public access to JobTracker and TaskTracker web interfaces
 ENABLE_WEB_PORTS=true
@@ -64,6 +61,14 @@ INSTANCE_TYPE="m1.small"
 #INSTANCE_TYPE="m1.large"
 #INSTANCE_TYPE="m1.xlarge"
 
+# The EC2 group master name. CLUSTER is set by calling scripts
+CLUSTER_MASTER=$CLUSTER-master
+
+# Cached values for a given cluster
+MASTER_PRIVATE_IP_PATH=~/.hadooop-private-$CLUSTER_MASTER
+MASTER_IP_PATH=~/.hadooop-$CLUSTER_MASTER
+MASTER_ZONE_PATH=~/.hadooop-zone-$CLUSTER_MASTER
+
 #
 # The following variables are only used when creating an AMI.
 #
@@ -75,10 +80,10 @@ JAVA_VERSION=1.6.0_06
 # The download URL for the Sun JDK. Visit http://java.sun.com/javase/downloads/index.jsp and get the URL for the "Linux self-extracting file".
 if [ "$INSTANCE_TYPE" == "m1.small" ]; then
   ARCH='i386'
-  BASE_AMI_IMAGE="ami-2b5fba42"  # ec2-public-images/fedora-8-i386-base-v1.07.manifest.xml
-  JAVA_BINARY_URL=
+  BASE_AMI_IMAGE="ami-f51aff9c"  # ec2-public-images/fedora-8-i386-base-v1.06.manifest.xml
+  JAVA_BINARY_URL=''
 else
   ARCH='x86_64'
-  BASE_AMI_IMAGE="ami-2d5fba44"  # ec2-public-images/fedora-8-x86_64-base-v1.07.manifest.xml
-  JAVA_BINARY_URL=
+  BASE_AMI_IMAGE="ami-f21aff9b"  # ec2-public-images/fedora-8-x86_64-base-v1.06.manifest.xml
+  JAVA_BINARY_URL=''
 fi
