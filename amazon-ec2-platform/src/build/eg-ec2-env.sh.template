@@ -76,9 +76,9 @@ JAVA_VERSION=1.6.0_07
 if [ "$INSTANCE_TYPE" == "m1.small" ]; then
   ARCH='i386'
   BASE_AMI_IMAGE="ami-2b5fba42"  # ec2-public-images/fedora-8-i386-base-v1.07.manifest.xml
-  JAVA_BINARY_URL="http://cds.sun.com/is-bin/INTERSHOP.enfinity/WFS/CDS-CDS_Developer-Site/en_US/-/USD/VerifyItem-Start/jdk-6u7-linux-i586.bin?BundledLineItemUUID=jYJIBe.mQlIAAAEcu0IRFzgA&OrderID=eyVIBe.mdecAAAEcrEIRFzgA&ProductID=XzBIBe.oxM4AAAEaVJcGcbZW&FileName=/jdk-6u7-linux-i586.bin"
+  JAVA_BINARY_URL=""
 else
   ARCH='x86_64'
   BASE_AMI_IMAGE="ami-2d5fba44"  # ec2-public-images/fedora-8-x86_64-base-v1.07.manifest.xml
-  JAVA_BINARY_URL=
+  JAVA_BINARY_URL=""
 fi
