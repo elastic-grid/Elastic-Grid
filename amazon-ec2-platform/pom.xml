@@ -89,7 +89,7 @@
                     <descriptors>
                         <descriptor>assembly.xml</descriptor>
                     </descriptors>
-                    <finalName>eg-${pom.version}</finalName>
+                    <finalName>elastic-grid-${pom.version}</finalName>
                 </configuration>
 				<executions>
 					<execution>
