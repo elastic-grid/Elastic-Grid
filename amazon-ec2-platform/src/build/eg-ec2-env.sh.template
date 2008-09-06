@@ -19,13 +19,13 @@
 # Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
 
 # Your Amazon Account Number.
-AWS_ACCOUNT_ID=176251750831
+AWS_ACCOUNT_ID=
 
 # Your Amazon AWS access key.
-AWS_ACCESS_KEY_ID=1YSNKZHHXGM76D1KCC82
+AWS_ACCESS_KEY_ID=
 
 # Your Amazon AWS secret access key.
-AWS_SECRET_ACCESS_KEY=7yIZWLjoZUIKlkiuuQcSnVw2R+aJ8E0rNnH1Oqca
+AWS_SECRET_ACCESS_KEY=
 
 # Location of EC2 keys.
 # The default setting is probably OK if you set up EC2 following the Amazon Getting Started guide.
