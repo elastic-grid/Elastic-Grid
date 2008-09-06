@@ -81,11 +81,11 @@ class EC2GridLocatorImpl implements EC2GridLocator {
                 boolean agent = reservation.groups.contains(NodeProfile.AGENT.toString())
                 def profile = null;
                 if (!agent && !monitor) {
-                    logger.log Level.WARNING, "Instance ${instance.instanceID} has no Elastic Grid profile!"
+                    logger.log Level.WARNING, "Instance ${instance.instanceId} has no Elastic Grid profile!"
                     return
                 } else if (agent && monitor) {
                     logger.log Level.WARNING,
-                            "Instance ${instance.instanceID} is both a monitor and an agent. Using it as a monitor!"
+                            "Instance ${instance.instanceId} is both a monitor and an agent. Using it as a monitor!"
                     profile = NodeProfile.MONITOR
                 } else if (monitor) {
                     profile = NodeProfile.MONITOR
