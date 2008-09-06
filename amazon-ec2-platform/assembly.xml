@@ -56,9 +56,14 @@
 			<filtered>true</filtered>
 		</file>
         <file>
-			<source>LICENSE.txt</source>
+			<source>COPYING</source>
 			<outputDirectory>/</outputDirectory>
-			<filtered>true</filtered>
+			<filtered>false</filtered>
+		</file>
+        <file>
+			<source>COPYING.LESSER</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>false</filtered>
 		</file>
     </files>
     <dependencySets>
