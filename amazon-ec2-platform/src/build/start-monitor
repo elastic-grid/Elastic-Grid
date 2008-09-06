@@ -1,3 +1,10 @@
 #!/bin/bash
 
-ec2run ami-1cfb1f75 -g eg-monitor -g elastic-grid -g default -k eg-keypair -f ec2params.config
+if [ "$1" = "" ]; then
+    echo "You must specify a grid name."
+    echo "start-monitor GRID_NAME"
+    exit -1
+fi
+
+echo "Starting grid $1"
+ec2run ami-eefb1f87 -g eg-monitor -g elastic-grid -g eg-monitor -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config

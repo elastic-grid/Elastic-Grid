@@ -73,12 +73,15 @@
                 <include>com.elasticgrid:amazon-ec2-bootstrapper</include>
                 <include>com.elasticgrid:amazon-ec2-provisioner</include>
 				<include>com.elasticgrid:elastic-grid-core</include>
+                <include>com.elasticgrid:elastic-grid-model</include>
+                <include>com.elasticgrid:elastic-grid-manager</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <!--<include>*:elastic-grid-*</include>-->
                 <include>com.xerox.amazonws:typica</include>
                 <include>org.slf4j:*</include>
                 <!--<include>log4j:log4j</include>-->
+                <include>org.springframework:spring</include>
             </includes>
             <excludes>
                 <exclude>org.rioproject:rio</exclude>

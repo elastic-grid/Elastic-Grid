@@ -28,6 +28,8 @@ import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.GridException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,6 +48,7 @@ import java.util.Properties;
  * @author Jerome Bernard
  */
 public class Bootstrapper {
+    public static final String GRID_NAME = "GRID_NAME";
     public static final String LAUNCH_PARAMETER_ACCESS_ID = "AWS_ACCESS_ID";
     public static final String LAUNCH_PARAMETER_SECRET_KEY = "AWS_SECRET_KEY";
     public static final String LAUNCH_PARAMETER_SQS_SECURED = "AWS_SQS_SECURED";
@@ -62,13 +65,27 @@ public class Bootstrapper {
 
     private String egHome = System.getProperty("EG_HOME");
 
+    private final ApplicationContext ctx;
+
+    static {
+
+    }
+
     public Bootstrapper() throws IOException, EC2Exception {
         // retreive EC2 parameters
         Properties launchParameters = fetchLaunchParameters();
         Properties egParameters = translateProperties(launchParameters);
 
-        EC2GridLocator locator = new EC2GridLocatorImpl();
-        String gridName = ""; // todo: find the current grid name
+        // save configuration
+        File file = saveConfiguration(egParameters);
+        System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
+
+        // start Spring context
+        ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
+
+        // locate monitor node
+        EC2GridLocator locator = (EC2GridLocator) ctx.getBean("gridLocator", EC2GridLocator.class);
+        String gridName = launchParameters.getProperty(GRID_NAME);
         try {
             EC2Node monitor = locator.findMonitor(gridName);
             String monitorHost = monitor.getAddress().getHostName();
@@ -83,10 +100,6 @@ public class Bootstrapper {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
         }
-
-        // save configuration
-        File file = saveConfiguration(egParameters);
-        System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
     }
 
     private Properties fetchLaunchParameters() throws IOException {
@@ -113,6 +126,10 @@ public class Bootstrapper {
             if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
                 egParameters.put(EG_PARAMETER_SQS_SECURED, property.getValue());
         }
+        egParameters.put("aws.ec2.secured", Boolean.TRUE.toString());
+        egParameters.put("aws.ec2.key", "eg-key");  // todo: replace this with some dynamic!!
+        egParameters.put("aws.ec2.ami32", "??");    // todo: replace this with some dynamic!!
+        egParameters.put("aws.ec2.ami64", "??");    // todo: replace this with some dynamic!!
         return egParameters;
     }
 

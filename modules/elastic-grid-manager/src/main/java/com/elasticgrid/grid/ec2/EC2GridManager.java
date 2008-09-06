@@ -55,7 +55,7 @@ public class EC2GridManager implements GridManager<EC2Grid> {
     private String keyName;
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
-    private String ami32 = "", ami64 = "";
+    private String ami32, ami64;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
     private static final Logger logger = Logger.getLogger(EC2GridManager.class.getName());
 
@@ -288,8 +288,8 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             this.instanceType = instanceType;
             this.ami = ami;
             this.userData = String.format(
-                    "MAX_MONITORS=3,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
-                    awsAccessId, awsSecretKey, awsSecured);
+                    "GRID_NAME=%s,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
+                    gridName, awsAccessId, awsSecretKey, awsSecured);
         }
 
         public List<String> call() throws RemoteException {
