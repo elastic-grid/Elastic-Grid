@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service
+@Service("nodeInstantiator")
 public class EC2InstantiatorImpl implements EC2Instantiator {
     private Jec2 jec2;
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());

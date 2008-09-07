@@ -28,6 +28,4 @@ import java.net.InetAddress;
 public interface EC2Node extends Node {
     String getInstanceID();
     EC2Node instanceID(String instanceID);
-    InetAddress getInternalAddress();
-    EC2Node internalAddress(InetAddress address);
 }
