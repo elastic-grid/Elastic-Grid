@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import com.elasticgrid.model.GridMonitorNotFoundException
 
-@Service
+@Service("gridLocator")
 class EC2GridLocatorImpl implements EC2GridLocator {
     def Jec2 ec2
     public static final String EG_GROUP_MONITOR = "eg-monitor"
@@ -95,7 +95,6 @@ class EC2GridLocatorImpl implements EC2GridLocator {
                 return new EC2NodeImpl(profile)
                         .instanceID(instance.instanceId)
                         .address(InetAddress.getByName(instance.dnsName))
-                        .internalAddress(InetAddress.getByName(instance.privateDnsName))
             }
         }.flatten()
         logger.log Level.INFO, "Found ${nodes.size()} nodes in grid '$gridName'..."

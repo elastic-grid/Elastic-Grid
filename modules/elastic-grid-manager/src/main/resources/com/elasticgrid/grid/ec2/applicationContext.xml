@@ -36,7 +36,7 @@
     <context:component-scan base-package="com.elasticgrid.amazon.ec2"/>
     <context:component-scan base-package="com.elasticgrid.grid.ec2"/>
 
-    <bean id="EC2GridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
+    <bean id="gridManager" class="com.elasticgrid.grid.ec2.EC2GridManager">
         <property name="awsAccessID" value="${aws.accessId}"/>
         <property name="awsSecretKey" value="${aws.secretKey}"/>
         <property name="awsSecured" value="${aws.ec2.secured}"/>

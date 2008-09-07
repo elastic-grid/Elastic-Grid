@@ -48,7 +48,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service
+@Service("gridManager")
 public class EC2GridManager implements GridManager<EC2Grid> {
     private NodeInstantiator nodeInstantiator;
     private GridLocator gridLocator;
@@ -232,12 +232,12 @@ public class EC2GridManager implements GridManager<EC2Grid> {
         }
     }
 
-    @Autowired
+    @Autowired(required = true)
     public void setNodeInstantiator(NodeInstantiator nodeInstantiator) {
         this.nodeInstantiator = nodeInstantiator;
     }
 
-    @Autowired
+    @Autowired(required = true)
     public void setGridLocator(GridLocator gridLocator) {
         this.gridLocator = gridLocator;
     }

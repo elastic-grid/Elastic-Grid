@@ -175,6 +175,7 @@ else
     classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6-beta-1.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $RIO_OPTS \
         -Djava.security.policy=$RIO_HOME/policy/policy.all \
+        -Djava.util.logging.config.file=$EG_HOME/config/rio-cli.logging.properties \
         $PROPS \
         $NETWORK \
         $DEBUG \
