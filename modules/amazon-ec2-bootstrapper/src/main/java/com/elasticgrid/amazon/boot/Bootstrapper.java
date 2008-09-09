@@ -86,7 +86,7 @@ public class Bootstrapper {
         String gridName = launchParameters.getProperty(GRID_NAME);
         try {
             EC2Node monitor = locator.findMonitor(gridName);
-            String monitorHost = monitor.getInternalAddress().getHostName();
+            String monitorHost = monitor.getAddress().getHostName();
             if (monitorHost.equals(InetAddress.getByName("localhost").getHostName())) {
                 System.out.printf("This host is going to be the new monitor!");
             } else {
