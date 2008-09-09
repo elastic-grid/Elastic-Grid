@@ -20,6 +20,7 @@
 echo "Attempting to start Elastic Grid" | logger -t elastic-grid
 
 wget -q -O - http://169.254.169.254/latest/user-data | tr ',' '\n' > /tmp/user-data
+wget -q -O - http://169.254.169.254/2007-01-19/meta-data/public-hostname | tr ',' '\n' > /tmp/public-hostname
 source /tmp/user-data
 
 export EG_HOME=`ls -d /usr/local/elastic-grid-*`
@@ -39,12 +40,13 @@ export USER="root"
 mkdir -p /var/log/eg
 $HOME/eg-bootstrap
 
+LOCAL_HOST=`cat /tmp/public-hostname`
 MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
 
-echo Local host name: `hostname`.`dnsdomainname` | logger -t elastic-grid
+echo "Local host name: $LOCAL_HOST" | logger -t elastic-grid
 echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
 
-if [ "$MONITOR_HOST" == `hostname`.`dnsdomainname` ]; then
+if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
   # Elastic Grid
   echo Starting Elastic Grid monitor | logger -t elastic-grid
   cat $EG_HOME/config/monitor-cybernode.config > $EG_HOME/config/cybernode.config
