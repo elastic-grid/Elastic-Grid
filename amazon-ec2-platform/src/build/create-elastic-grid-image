@@ -66,6 +66,7 @@ echo "Copying scripts."
 scp $SSH_OPTS eg-ec2-env.sh "root@$HOSTNAME:/mnt"
 scp $SSH_OPTS image/create-elastic-grid-image-remote "root@$HOSTNAME:/mnt"
 scp $SSH_OPTS image/eg-init "root@$HOSTNAME:"
+scp $SSH_OPTS image/eg-bootstrap "root@$HOSTNAME:"
 
 ssh $SSH_OPTS "root@$HOSTNAME" 'chmod +x /mnt/eg-ec2-env.sh'
 ssh $SSH_OPTS "root@$HOSTNAME" 'chmod +x /mnt/create-elastic-grid-image-remote'
