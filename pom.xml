@@ -48,7 +48,7 @@
         <module>modules</module>
         <module>amazon-ec2-platform</module>
         <module>substrates</module>
-        <module>examples</module>
+        <!--<module>examples</module>-->
     </modules>
 
     <distributionManagement>
