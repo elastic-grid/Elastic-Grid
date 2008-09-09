@@ -66,9 +66,6 @@ public class Bootstrapper {
 
     private String egHome = System.getProperty("EG_HOME");
 
-    private final ApplicationContext ctx;
-
-
     public Bootstrapper() throws IOException, EC2Exception {
         // retreive EC2 parameters
         Properties launchParameters = fetchLaunchParameters();
@@ -79,21 +76,21 @@ public class Bootstrapper {
         System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
 
         // start Spring context
-        ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
 
         // locate monitor node
         EC2GridLocator locator = (EC2GridLocator) ctx.getBean("gridLocator", EC2GridLocator.class);
         String gridName = launchParameters.getProperty(GRID_NAME);
         try {
             EC2Node monitor = locator.findMonitor(gridName);
-            String monitorHost = monitor.getAddress().getHostName();
-            if (monitorHost.equals(InetAddress.getByName("localhost").getHostName())) {
+            String monitorHostAddress = monitor.getAddress().getHostAddress();
+            if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
                 System.out.printf("This host is going to be the new monitor!");
             } else {
-                System.out.printf("Using monitor host: %s\n", monitorHost);
-                egParameters.put(EG_MONITOR_HOST, monitorHost);
+                System.out.printf("Using monitor host: %s\n", monitorHostAddress);
+                egParameters.put(EG_MONITOR_HOST, monitorHostAddress);
             }
-            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost);
+            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHostAddress);
         } catch (GridException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
