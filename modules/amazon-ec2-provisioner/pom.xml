@@ -115,6 +115,9 @@
                 <version>2.4.1</version>
                 <configuration>
                     <forkMode>never</forkMode>
+                    <excludes>
+                        <exclude>**/EC2Test.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <!--
