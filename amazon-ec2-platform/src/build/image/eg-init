@@ -1,12 +1,23 @@
 #!/bin/bash
-# Use parameters passed in during launch to configure Elastic Grid expects:
-# - MASTER_HOST : should be the internal IP address of the monitor or "master" if starting the first monitor,
-# - MAX_MONITORS: the maximum of monitors to start with a "cluster"
+
+# Copyright (C) 2007-2008 Elastic Grid, LLC.
+#
+# This file is part of Elastic Grid.
+#
+# Elastic Grid is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or any later version.
+#
+# Elastic Grid is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
 
 echo "Attempting to start Elastic Grid" | logger -t elastic-grid
-
-# set defaults
-MAX_MONITORS=2
 
 wget -q -O - http://169.254.169.254/latest/user-data | tr ',' '\n' > /tmp/user-data
 source /tmp/user-data
@@ -14,11 +25,9 @@ source /tmp/user-data
 export EG_HOME=`ls -d /usr/local/elastic-grid-*`
 export JAVA_HOME=`ls -d /usr/local/jdk*`
 
-echo 'Max monitors:' $MAX_MONITORS | logger -t elastic-grid
-echo 'Yum packages to install:' $YUM_PACKAGES | logger -t elastic-grid
-
 # Install Yum packages
-yum -y install $YUM_PACKAGES
+#echo 'Yum packages to install:' $YUM_PACKAGES | logger -t elastic-grid
+#yum -y install $YUM_PACKAGES
 
 [ ! -f /etc/hosts ] &&  echo "127.0.0.1 localhost" > /etc/hosts
 
@@ -28,7 +37,7 @@ mkdir -p /mnt/eg/logs
 export USER="root"
 
 mkdir -p /var/log/eg
-"$EG_HOME"/bin/eg-bootstrap
+$HOME/eg-bootstrap
 
 MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
 

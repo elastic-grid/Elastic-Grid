@@ -288,7 +288,7 @@ public class EC2GridManager implements GridManager<EC2Grid> {
             this.instanceType = instanceType;
             this.ami = ami;
             this.userData = String.format(
-                    "GRID_NAME=%s,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
+                    "GRID_NAME=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
                     gridName, awsAccessId, awsSecretKey, awsSecured);
         }
 

@@ -19,17 +19,20 @@
 
 package com.elasticgrid.grid.ec2;
 
-import org.testng.annotations.Test;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeTest;
-import static org.easymock.EasyMock.*;
+import com.elasticgrid.grid.GridLocator;
+import com.elasticgrid.grid.NodeInstantiator;
 import com.elasticgrid.model.GridAlreadyRunningException;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
-import com.elasticgrid.grid.NodeInstantiator;
-import com.elasticgrid.grid.GridLocator;
-
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
@@ -44,8 +47,8 @@ public class EC2GridManagerTest {
     public void testStartingARunningGrid() throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         expect(mockLocator.findNodes("test"))
                 .andReturn(null);
-        expect(mockEC2.startInstances("", 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "elastic-grid"),
-                "MAX_MONITORS=3,YUM_PACKAGES=mencoder,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
+        expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "elastic-grid"),
+                "GRID_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
                 null, true, InstanceType.SMALL))
                 .andReturn(null);
         expect(mockEC2.getGroupsNames())
@@ -67,7 +70,7 @@ public class EC2GridManagerTest {
         gridManager.setGridLocator(mockLocator);
     }
 
-    @AfterMethod
+    @AfterTest
     public void verifyMocks() {
         verify(mockEC2, mockLocator);
         reset(mockEC2, mockLocator);
