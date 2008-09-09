@@ -83,14 +83,15 @@ public class Bootstrapper {
         String gridName = launchParameters.getProperty(GRID_NAME);
         try {
             EC2Node monitor = locator.findMonitor(gridName);
-            String monitorHostAddress = monitor.getAddress().getHostAddress();
+            InetAddress monitorHost = monitor.getAddress();
+            String monitorHostAddress = monitorHost.getHostAddress();
             if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
-                System.out.printf("This host is going to be the new monitor!");
+                System.out.println("This host is going to be the new monitor!");
             } else {
-                System.out.printf("Using monitor host: %s\n", monitorHostAddress);
-                egParameters.put(EG_MONITOR_HOST, monitorHostAddress);
+                System.out.printf("Using monitor host: %s\n", monitorHost.getHostName());
+                egParameters.put(EG_MONITOR_HOST, monitorHost.getHostName());
             }
-            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHostAddress);
+            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
         } catch (GridException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
