@@ -10,15 +10,15 @@
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
-        <fileSet>
-            <directory>${env.RIO_HOME}</directory>
-            <outputDirectory>/</outputDirectory>
-            <includes>
-                <include>bin/**/*</include>
-            </includes>
-            <fileMode>0755</fileMode>
-            <useDefaultExcludes>true</useDefaultExcludes>
-        </fileSet>
+        <!--<fileSet>-->
+            <!--<directory>${env.RIO_HOME}</directory>-->
+            <!--<outputDirectory>/</outputDirectory>-->
+            <!--<includes>-->
+                <!--<include>bin/**/*</include>-->
+            <!--</includes>-->
+            <!--<fileMode>0755</fileMode>-->
+            <!--<useDefaultExcludes>true</useDefaultExcludes>-->
+        <!--</fileSet>-->
         <fileSet>
             <directory>${env.RIO_HOME}</directory>
             <outputDirectory>/</outputDirectory>
