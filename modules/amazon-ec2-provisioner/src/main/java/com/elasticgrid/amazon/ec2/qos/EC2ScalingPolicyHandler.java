@@ -79,7 +79,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     protected void doIncrement() {
         try {
             // todo: do not fake the user data!
-            String userdata = "MASTER_HOST=master,MAX_MONITORS=3,YUM_PACKAGES=mencoder";
+            String userdata = "GRID_NAME=test,AWS_ACCESS_ID=123456,AWS_SECRET_KEY=123456,AWS_SQS_SECURED=true";
             List<String> instances = ec2.startInstances(amazonImageID, 1, 1,
                     groups, userdata, keyName, publicAddress, InstanceType.SMALL);
             String instanceID = instances.get(0);
