@@ -38,7 +38,7 @@ mkdir -p /mnt/eg/logs
 export USER="root"
 
 mkdir -p /var/log/eg
-$HOME/eg-bootstrap
+/root/eg-bootstrap
 
 LOCAL_HOST=`cat /tmp/public-hostname`
 MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
@@ -52,10 +52,10 @@ if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
   cat $EG_HOME/config/monitor-cybernode.config > $EG_HOME/config/cybernode.config
   "$EG_HOME"/bin/eg start monitor 2>&1 > /var/log/eg/rio-monitor.log &
   echo Starting Elastic Grid cybernode | logger -t elastic-grid
-  "$EG_HOME"/bin/eg start cybernode &
+  "$EG_HOME"/bin/eg start cybernode 2>&1 > /var/log/eg/rio-agent.log &
 else
   # Elastic Grid
   echo Starting Elastic Grid cybernode | logger -t elastic-grid
   cat $EG_HOME/config/cybernode-cybernode.config > $EG_HOME/config/cybernode.config 
-  "$EG_HOME"/bin/eg start cybernode &
+  "$EG_HOME"/bin/eg start cybernode 2>&1 > /var/log/eg/rio-agent.log &
 fi
