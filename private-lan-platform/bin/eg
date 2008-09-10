@@ -1,0 +1,177 @@
+#!/bin/bash
+
+# Copyright (C) 2007-2008 Elastic Grid, LLC.
+#
+# This file is part of Elastic Grid.
+#
+# Elastic Grid is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or any later version.
+#
+# Elastic Grid is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
+
+# This script provides the command and control utility for starting
+# Rio services and the Rio command line interface.
+
+# This script also sets the
+# environment to download native libraries from the $RIO_HOME/lib/native directory.
+
+scriptDir="$(dirname $0)"
+scriptName=`basename "$0"`
+scriptPath="$scriptDir/$scriptName"
+command_line=$*
+start=
+
+if [ "$1" = "start" ]; then
+    start=1
+    shift
+    command_line=$*
+fi
+
+# Set local variables
+if [ -z "$RIO_HOME" ] ; then
+  RIO_HOME="$scriptDir/.."
+  EG_HOME="$scriptDir/.."
+fi
+RIO_LIB=$RIO_HOME/lib
+
+# Check JINI_HOME
+if [ -z "$JINI_HOME" ] ; then
+    if [ -e "$RIO_HOME/lib/apache-river" ] ; then
+        JINI_HOME=$RIO_HOME/lib/apache-river
+    else
+        echo "Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Rio with dependencies, exiting"
+	    exit 1
+    fi
+fi
+JINI_LIB=$JINI_HOME/lib
+
+# Check for JAVA_HOME
+if [ -z "$JAVA_HOME" ] ; then
+    JAVACMD=java
+else
+    JAVACMD="$JAVA_HOME/bin/java"
+fi
+
+# Function to find a file
+getStarterConfig() {
+    service="$1"
+    if [ -f "$RIO_HOME/config/start-$service.config" ] ; then
+	   starterConfig="$RIO_HOME/config/start-$service.config"
+    else
+	    echo "Cannot locate expected service starter file [start-$service.config] in [$RIO_HOME/config], exiting"
+	    exit 1
+    fi
+}
+
+cygwin=
+case $OS in
+    Windows*)
+        cygwin=1
+esac
+
+# Check to see if path conversion is needed
+toNative() {
+    # Check for Cygwin
+    case $OS in
+        Windows*)
+           toWindows "$@";;
+           *) echo $* ;;
+    esac
+}
+
+# Cygwin utility to convert path if running under windows
+toWindows() {
+    cygpath -pw "$@"
+}
+
+if [ -e "/var/log/eg" ] ; then
+    LOG_DIR=/var/log/eg
+else
+    LOG_DIR=$EG_HOME/logs
+fi
+
+
+#DEBUG=-Dorg.rioproject.tools.webster.debug
+#NETWORK=-Djava.rmi.server.hostname=130.0.0.1
+if [ -z "$NET_ADDR" ] ; then
+    NETWORK="-Djava.rmi.server.hostname="`hostname`
+else
+  NETWORK="-Djava.rmi.server.hostname="$NET_ADDR
+fi
+#echo $NETWORK
+
+if [ -z "$JAVA_MEM_OPTIONS" ] ; then
+    JAVA_MEM_OPTIONS="-Xms256m -Xmx256m"
+fi
+
+# If the command is to start the Rio services, invoke the ServiceStarter
+# Otherwise invoke the CLI
+if [ "$start" = "1" ]; then
+    RIO_NATIVE_DIR="$(toNative $RIO_LIB/native)"
+    # Check for running on OS/X
+    opSys=`uname -s`
+    if [ $opSys = "Darwin" ] ; then
+        export DYLD_LIBRARY_PATH=$RIO_NATIVE_DIR:$DYLD_LIBRARY_PATH
+        libpath="-Djava.library.path=$DYLD_LIBRARY_PATH"
+    else
+        if [ "$cygwin" = "1" ] ; then
+            libpath="-Djava.library.path=$RIO_NATIVE_DIR"
+        else
+            export LD_LIBRARY_PATH=$RIO_NATIVE_DIR:$LD_LIBRARY_PATH
+            libpath="-Djava.library.path=$RIO_NATIVE_DIR"
+        fi
+    fi
+
+    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$RIO_LIB/elastic-grid/kernel/amazon-ec2-provisioner-1.0-SNAPSHOT.jar)"
+    agentpath="-javaagent:$(toNative $RIO_LIB/boot.jar)"
+    launchTarget=com.sun.jini.start.ServiceStarter
+    if [ -z "$1" ] ; then
+        echo "A service to start is required, exiting"
+        exit 1
+    else
+        starter_arg=$1
+        getStarterConfig $1
+        echo "starter config [$starterConfig]"
+        shift
+        command_line=$*
+    fi
+    ARGS="$starter_arg $command_line"
+    ""$JAVACMD"" -server $JAVA_MEM_OPTIONS $classpath $agentpath $RIO_OPTS $libpath  \
+        -Djava.security.policy=$RIO_HOME/policy/policy.all \
+        -Djava.protocol.handler.pkgs=net.jini.url \
+        -DRIO_HOME=$RIO_HOME \
+        -DEG_HOME=$EG_HOME \
+        -Dorg.rioproject.home=$RIO_HOME \
+        -DRIO_NATIVE_DIR=$RIO_NATIVE_DIR \
+        -DJINI_HOME=$JINI_HOME \
+        -DRIO_LOG_DIR=$RIO_HOME/logs/ \
+        -Drio.script.path="$scriptPath" \
+        -Drio.script.args="$ARGS" \
+        $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/rio-$starter_arg.log
+else
+    # Set system properties
+    PROPS="-DRIO_HOME=$RIO_HOME -DJINI_HOME=$JINI_HOME"
+    #cliExt="$RIO_HOME/config/rio-cli.config"
+    cliExt=""
+    launchTarget=com.elasticgrid.tools.cli.CLI
+    for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
+    do
+        CP=$CP:$j
+    done
+    classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6-beta-1.jar)"
+    "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $RIO_OPTS \
+        -Djava.security.policy=$RIO_HOME/policy/policy.all \
+        -Djava.util.logging.config.file=$EG_HOME/config/rio-cli.logging.properties \
+        $PROPS \
+        $NETWORK \
+        $DEBUG \
+        $launchTarget $cliExt $command_line
+fi
