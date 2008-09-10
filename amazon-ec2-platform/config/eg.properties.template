@@ -1,0 +1,3 @@
+aws.accessId=
+aws.secretKey=
+aws.sqs.secured=true
