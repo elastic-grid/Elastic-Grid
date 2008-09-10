@@ -75,12 +75,8 @@
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <include>com.xerox.amazonws:typica</include>
                 <include>org.springframework:spring</include>
+                <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
-            <!--<excludes>-->
-                <!--<exclude>org.rioproject:rio</exclude>-->
-                <!--<exclude>net.jini:jsk-lib</exclude>-->
-                <!--<exclude>net.jini:jsk-platform</exclude>-->
-            <!--</excludes>-->
 			<outputDirectory>lib/elastic-grid/kernel</outputDirectory>
         </dependencySet>
 		<!-- Framework dependencies -->
@@ -93,7 +89,7 @@
         <!-- Substrates dependencies -->
 		<dependencySet>
             <includes>
-                <include>com.elasticgrid.substrates:*</include>
+                <include>com.elasticgrid.substrates:substrate-tomcat6</include>
             </includes>
 			<outputDirectory>lib/elastic-grid/substrates</outputDirectory>
         </dependencySet>
