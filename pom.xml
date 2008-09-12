@@ -29,8 +29,8 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trun</developerConnection>
+        <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trunk</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trunk</developerConnection>
         <url>https://svn.forge.objectweb.org/cgi-bin/viewcvs.cgi/elastic-grid/trunk/</url>
     </scm>
 
@@ -49,7 +49,7 @@
         <module>private-lan-platform</module>
         <module>amazon-ec2-platform</module>
         <module>substrates</module>
-        <!--<module>examples</module>-->
+        <module>examples</module>
     </modules>
 
     <distributionManagement>

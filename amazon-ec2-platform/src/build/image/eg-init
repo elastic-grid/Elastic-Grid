@@ -27,8 +27,10 @@ export EG_HOME=`ls -d /usr/local/elastic-grid-*`
 export JAVA_HOME=`ls -d /usr/local/jdk*`
 
 # Install Yum packages
-#echo 'Yum packages to install:' $YUM_PACKAGES | logger -t elastic-grid
-#yum -y install $YUM_PACKAGES
+if [ -z "$YUM_PACKAGES" ] ; then
+    echo 'Yum packages to install:' $YUM_PACKAGES | logger -t elastic-grid
+    yum -y install $YUM_PACKAGES
+fi
 
 [ ! -f /etc/hosts ] &&  echo "127.0.0.1 localhost" > /etc/hosts
 
