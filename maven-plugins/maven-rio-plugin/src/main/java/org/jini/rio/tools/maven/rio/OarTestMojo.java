@@ -54,7 +54,7 @@ public class OarTestMojo extends AbstractRioMojo {
     private Collection<Artifact> dependencies;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (skipTest)
+        if (skipTest || opstringTest == null || "".equals(opstringTest))
             return;
         
         List<Artifact> jsbs = new ArrayList<Artifact>();
