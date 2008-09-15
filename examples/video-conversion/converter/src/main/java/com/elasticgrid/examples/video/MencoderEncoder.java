@@ -71,8 +71,11 @@ public class MencoderEncoder implements Encoder {
         if (start != null && end != null)
             command = String.format("%s -ss %d -endpos %d", command, start, end);
 
+        logger.info("Command is: " + command);
+
         // run the external conversion program
         File log = new File(videoConverted.getParent(), videoConverted.getName().replace(format, "log"));
+        logger.info("Writing output into " + log.getAbsolutePath());
         FileWriter fileWriter = null;
         try {
             fileWriter = enableLog ? new FileWriter(log) : null;

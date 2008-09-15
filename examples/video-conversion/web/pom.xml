@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.elasticgrid.examples.video</groupId>
         <artifactId>video-conversion</artifactId>
-        <version>0.8</version>
+        <version>0.8.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>video-conversion-web</artifactId>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>t5c-commons</artifactId>
-            <version>0.5.11</version>
+            <version>0.5.15-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -66,10 +66,20 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <configuration>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <connectors>
+                        <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                            <port>9090</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                        <!--<connector implementation="org.mortbay.jetty.security.SslSocketConnector">-->
+                            <!--<port>8443</port>-->
+                            <!--<maxIdleTime>60000</maxIdleTime>-->
+                        <!--</connector>-->
+                    </connectors>
                     <contextPath>/</contextPath>
-                    <requestLog implementation="org.mortbay.jetty.NCSARequestLog">
-                        <append>true</append>
-                    </requestLog>
+                    <!--<requestLog implementation="org.mortbay.jetty.NCSARequestLog">-->
+                        <!--<append>true</append>-->
+                    <!--</requestLog>-->
                     <systemProperties>
                         <systemProperty>
                             <name>java.security.policy</name>
@@ -170,7 +180,7 @@
     </pluginRepositories>
 
     <properties>
-        <tapestry-release-version>5.0.12-SNAPSHOT</tapestry-release-version>
+        <tapestry-release-version>5.0.15-SNAPSHOT</tapestry-release-version>
     </properties>
 
 </project>

@@ -19,9 +19,13 @@
 
 package com.elasticgrid.examples.video.util;
 
+import com.elasticgrid.amazon.ec2.EC2GridLocator;
+import com.elasticgrid.amazon.ec2.EC2GridLocatorImpl;
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.GridException;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
-import com.xerox.amazonws.ec2.ReservationDescription;
 import net.jini.config.ConfigurationException;
 import net.jini.core.discovery.LookupLocator;
 import net.jini.core.lookup.ServiceID;
@@ -30,19 +34,21 @@ import net.jini.core.lookup.ServiceTemplate;
 import net.jini.discovery.DiscoveryManagement;
 import net.jini.lookup.LookupCache;
 import net.jini.lookup.ServiceItemFilter;
-import org.apache.commons.io.IOUtils;
 import org.rioproject.opstring.OpStringManagerProxy;
 import org.rioproject.resources.client.DiscoveryManagementPool;
 import org.rioproject.resources.client.LookupCachePool;
 import org.rioproject.resources.servicecore.Service;
 import org.rioproject.watch.WatchDataSource;
 import org.rioproject.watch.Watchable;
-
-import java.io.*;
+import java.io.IOException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.security.Permission;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,63 +77,32 @@ public class ServiceLocator {
             }
             OpStringManagerProxy.setDiscoveryManagement(discoMgr);
         } catch (ConfigurationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (EC2Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
+        } catch (GridException e) {
+            e.printStackTrace();
         }
     }
 
-    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception {
-        Properties egParameters;
-
-        try {
-            // running on EC2
-            Properties metadata = fetchLaunchParameters();
-            egParameters = translateProperties(metadata);
-        } catch (FileNotFoundException e) {
-            // running on LAN
-            File egConfiguration = new File(System.getProperty("user.home") + File.separator + ".eg", "aws.properties");
-            egParameters = new Properties();
-            egParameters.load(new FileInputStream(egConfiguration));
-        }
-
-        // figure out who is the monitor host
+    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception, GridException {
         System.out.printf("Searching for Elastic Grid monitor host...\n");
-        Jec2 ec2 = new Jec2(
-                egParameters.getProperty(EG_PARAMETER_ACCESS_ID), egParameters.getProperty(EG_PARAMETER_SECRET_KEY));
-        List<ReservationDescription> reservations = ec2.describeInstances(Collections.<String>emptyList());
-        for (ReservationDescription reservation : reservations) {
-            List<String> groups = reservation.getGroups();
-            if (groups.contains(EG_GROUP_MONITOR)) {
-                // this is a monitor reservation -- instance
-                List<ReservationDescription.Instance> instances = reservation.getInstances();
-                if (instances.size() == 0)
-                    continue;
-                ReservationDescription.Instance monitor = null;
-                for (ReservationDescription.Instance instance : instances) {
-                    monitor = instances.get(0);
-                    if ("running".equals(monitor.getState()))
-                        break;
-                }
-                if (monitor == null) {
-                    System.err.println("Could not find any monitor host. Aborting boot process.");
-                    System.exit(-1);
-                }
-                if (instances.size() > 1) {
-                    System.err.printf("More than once instance found (found %d). Using instance %s as monitor.\n",
-                            instances.size(), monitor.getDnsName());
-                }
-                String monitorHost = monitor.getPrivateDnsName();
-                System.out.println("Found monitor " + monitorHost);
-                return new LookupLocator[] { new LookupLocator("jini://" + monitorHost) };
-            }
+        Properties egProps = AWSUtils.loadEC2Configuration();
+        EC2GridLocatorImpl locator = new EC2GridLocatorImpl();
+        String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
+        String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
+        locator.setEc2(new Jec2(awsAccessId, awsSecretKey));
+        EC2Node node = null;
+        try {
+            node = locator.findMonitor("test");
+            return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress() )};
+        } catch (GridException e) {
+            return new LookupLocator[] { new LookupLocator("jini://localhost" )};
         }
-        System.err.println("Could not find monitor host!");
-        return null;
     }
 
     public static ServiceItem getServiceByServiceID(final ServiceID serviceID) throws InterruptedException {
@@ -162,47 +137,5 @@ public class ServiceLocator {
         }
         return watches;
     }
-
-    private static Properties fetchLaunchParameters() throws IOException {
-        Properties launchProperties = new Properties();
-        InputStream launchFile = null;
-        try {
-            File egConfiguration = new File(LAUNCH_PARAMETERS_FILE);
-            launchFile = new FileInputStream(egConfiguration);
-            launchProperties.load(launchFile);
-            return launchProperties;
-        } finally {
-            IOUtils.closeQuietly(launchFile);
-        }
-    }
-
-    private static Properties translateProperties(Properties launchParameters) {
-        // translate properties
-        Properties egParameters = new Properties();
-        for (Map.Entry property : launchParameters.entrySet()) {
-            String key = (String) property.getKey();
-            if (LAUNCH_PARAMETER_ACCESS_ID.equals(key))
-                egParameters.put(EG_PARAMETER_ACCESS_ID, property.getValue());
-            if (LAUNCH_PARAMETER_SECRET_KEY.equals(key))
-                egParameters.put(EG_PARAMETER_SECRET_KEY, property.getValue());
-            if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
-                egParameters.put(EG_PARAMETER_SQS_SECURED, property.getValue());
-        }
-        return egParameters;
-    }
-
-    public static final String LAUNCH_PARAMETER_ACCESS_ID = "AWS_ACCESS_ID";
-    public static final String LAUNCH_PARAMETER_SECRET_KEY = "AWS_SECRET_KEY";
-    public static final String LAUNCH_PARAMETER_SQS_SECURED = "AWS_SQS_SECURED";
-
-    public static final String EG_PARAMETER_ACCESS_ID = "aws.accessId";
-    public static final String EG_PARAMETER_SECRET_KEY = "aws.secretKey";
-    public static final String EG_PARAMETER_SQS_SECURED = "aws.sqs.secured";
-
-    public static final String EG_GROUP_MONITOR = "eg-monitor";
-    public static final String EG_GROUP_CYBERNODE = "eg-cybernode";
-
-    public static final String LAUNCH_PARAMETERS_FILE = "/tmp/user-data";
-    public static final String ELASTIC_GRID_CONFIGURATION_FILE = "config/eg.properties";
 
 }
