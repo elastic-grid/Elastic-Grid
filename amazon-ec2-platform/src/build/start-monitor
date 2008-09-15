@@ -24,4 +24,4 @@ if [ "$1" = "" ]; then
 fi
 
 echo "Starting grid $1"
-ec2run ami-75c7231c -g eg-monitor -g elastic-grid -g eg-monitor -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config
+ec2run ami-16cd297f -g eg-monitor -g elastic-grid -g eg-monitor -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config
