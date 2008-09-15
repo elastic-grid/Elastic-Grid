@@ -36,6 +36,10 @@ rm -f java.bin
 # Install tools
 echo "Installing rpms."
 yum -y install rsync lynx screen httpd rlwrap
+wget http://ftp.freshrpms.net/pub/freshrpms/fedora/linux/4/freshrpms-release/freshrpms-release-1.1-1.fc.noarch.rpm
+rpm -i freshrpms-release-1.1-1.fc.noarch.rpm
+rm freshrpms-release-1.1-1.fc.noarch.rpm
+yum -y update
 yum -y clean all
 
 # Install Elastic Grid
