@@ -27,7 +27,7 @@ fi
 
 AMI=$1
 echo "Starting AMI: $AMI ..."
-OUTPUT=`ec2-run-instances $AMI -g elastic-grid -g default -k eg-keypair` 
+OUTPUT=`ec2-run-instances $AMI -g elastic-grid -g default -k eg-keypair -f ec2params.config` 
 BOOTING_INSTANCE=`echo $OUTPUT | awk '{print $6}'`
 
 echo "Instance is $BOOTING_INSTANCE."
