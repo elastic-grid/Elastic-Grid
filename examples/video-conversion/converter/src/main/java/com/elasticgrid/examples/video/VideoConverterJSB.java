@@ -196,7 +196,7 @@ public class VideoConverterJSB extends SQSServiceBeanAdapter implements VideoCon
         try {
             upload(videosConverted);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Can''t upload video", e);
+            logger.log(Level.SEVERE, "Can't upload video", e);
         }
         return videoToConvert.lastModified();
     }

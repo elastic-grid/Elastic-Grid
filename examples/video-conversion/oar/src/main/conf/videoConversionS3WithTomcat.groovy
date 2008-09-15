@@ -21,54 +21,66 @@ import java.util.logging.Level
 
 deployment(name:'Video Conversion Example') {
     groups('rio')
+    codebase('https://javaone-demo.s3.amazonaws.com')
 
     systemRequirements(id: 'Elastic Grid Platform') {
         software name: 'Elastic Grid Kernel', version: '1.0'
         software name: 'Elastic Grid Framework', version: '1.0'
     }
 
-    logging {
-        logger('com.elasticgrid.examples.video', Level.FINE)
-        logger('com.elasticgrid.amazon.sqs', Level.FINE)
-        logger('com.elasticgrid.amazon.ec2', Level.FINE)
-    }
+//    logging {
+//        logger('com.elasticgrid.examples.video', Level.FINE)
+//        logger('com.elasticgrid.amazon.sqs', Level.FINE)
+//        logger('com.elasticgrid.amazon.ec2', Level.FINE)
+//    }
 
     service(name: 'Video Converter') {
         interfaces {
             classes 'com.elasticgrid.examples.video.VideoConverter'
-            resources 'video-conversion-oar/lib-dl/video-conversion-converter-1.0-SNAPSHOT-dl.jar',
-                      'elastic-grid/framework/amazon-sqs-1.0-SNAPSHOT.jar',
-                      'elastic-grid/kernel/typica-1.3.jar',
-                      'elastic-grid/kernel/jets3t-0.6.0.jar'
+            resources 'video-conversion-oar/lib-dl/video-conversion-converter-0.8.1-dl.jar',
+                      'elastic-grid/framework/amazon-sqs-0.8.1.jar',
+                      'elastic-grid/kernel/typica-1.4.1.jar',
+                      'elastic-grid/kernel/jets3t-0.6.1.jar'
 
         }
         implementation(class: 'com.elasticgrid.examples.video.VideoConverterJSB') {
-            resources 'video-conversion-oar/lib/video-conversion-converter-1.0-SNAPSHOT-impl.jar',
-                      'video-conversion-oar/lib/video-conversion-converter-1.0-SNAPSHOT.jar'
+            resources 'video-conversion-oar/lib/video-conversion-converter-0.8.1-impl.jar',
+                      'video-conversion-oar/lib/video-conversion-converter-0.8.1.jar'
         }
-        configuration '''
-            import java.io.File;
-            com.elasticgrid.examples.video.VideoConverter {
-                encoder = new com.elasticgrid.examples.video.MencoderEncoder(false);
-                threadPoolSize = Integer.valueOf(4);
-                sourceVideosBucket = "viv-src";
-                encodedVideosBucket = "viv-dest";
-                enableS3 = Boolean.TRUE;
-                statistics = new File("video-conversion.csv");
-            }
-            com.elasticgrid.amazon.sqs.SQS {
-                queueName = "VideoConversion";
-                visibilityTimeout = new Integer(600);   // visibility timeout of 10 minutes
-                watchPeriod = new Long(60000L);          // every minute - 60 seconds
-            }
-            com.elasticgrid.amazon.ec2 {
-                amazonImageID = "ami-3d7a9f54";
-                keyName = "eg-gsg-keypair";
-                groups = java.util.Arrays.asList(new String[] {"elastic-grid", "default"});
-                secured = Boolean.TRUE;
-                publicAddress = Boolean.TRUE;
-            }
-        '''
+
+        configuration(
+            'com.elasticgrid.examples.video.VideoConverter': [
+                encoder: 'new com.elasticgrid.examples.video.MencoderEncoder(true)',
+                threadPoolSize: 'Integer.valueOf(4)',
+                sourceVideosBucket: '"viv-src"',
+                encodedVideosBucket: '"viv-dest"',
+                enableS3: 'Boolean.TRUE',
+                statistics: 'new java.io.File("video-conversion.csv")'
+            ],
+            'com.elasticgrid.amazon.sqs.SQS': [
+                queueName: '"VideoConversion"',
+                visibilityTimeout: 'new Integer(600)',
+                watchPeriod: 'new Long(60000L)'
+            ]
+        )
+
+//        configuration '''
+//            import java.io.File;
+//            com.elasticgrid.examples.video.VideoConverter {
+//                encoder = new com.elasticgrid.examples.video.MencoderEncoder(false);
+//                threadPoolSize = Integer.valueOf(4);
+//                sourceVideosBucket = "viv-src";
+//                encodedVideosBucket = "viv-dest";
+//                enableS3 = Boolean.TRUE;
+//                statistics = new File("video-conversion.csv");
+//            }
+//            com.elasticgrid.amazon.sqs.SQS {
+//                queueName = "VideoConversion";
+//                visibilityTimeout = new Integer(600);   // visibility timeout of 10 minutes
+//                watchPeriod = new Long(60000L);         // every minute - 60 seconds
+//            }
+//        '''
+        
         serviceLevelAgreements {
             systemRequirements ref: 'Elastic Grid Platform'
             sla(id: 'Queue VideoConversion', low: 2, high: 5) {
@@ -79,8 +91,8 @@ deployment(name:'Video Conversion Example') {
         maxPerMachine 1
     }
 
-    tomcat(version:'6.0.16', removeOnDestroy: true) {
-        webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
-    }
+//    tomcat(version:'6.0.16', removeOnDestroy: true) {
+//        webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
+//    }
 
 }

@@ -51,10 +51,10 @@ public class AWSUtils {
                 logger.log(Level.SEVERE, "Could not close stream", e);
             }
         }
-        // try to load properties from $EG_HOME/eg.properties
+        // try to load properties from $EG_HOME/config/eg.properties
         if (awsProperties.size() == 0) {
             awsProperties = new Properties();
-            awsPropertiesFile = new File(System.getProperty("EG_HOME") + File.separatorChar + "config",
+            awsPropertiesFile = new File(System.getenv("EG_HOME") + File.separatorChar + "config",
                     "eg.properties");
             try {
                 stream = new FileInputStream(awsPropertiesFile);

@@ -33,11 +33,13 @@ import org.rioproject.resources.servicecore.AbstractProxy;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Proxy based on storage of videos on Amazon S3.
@@ -103,7 +105,12 @@ public class S3VideoConverterProxy extends AbstractProxy implements VideoConvert
                 new Object[] { file, file.length(), bucketName, key });
         long start = System.currentTimeMillis();
         S3Bucket bucket = s3.createBucket(new S3Bucket(bucketName));
-        S3Object object = new S3Object(bucket, file);
+        S3Object object;
+        try {
+            object = new S3Object(bucket, file);
+        } catch (Exception e) {
+            throw new S3ServiceException("Can't upload file to S3 bucket", e);
+        }
         object.setKey(key);
         object.setContentLength(file.length());
         object.setLastModifiedDate(new Date(file.lastModified()));
