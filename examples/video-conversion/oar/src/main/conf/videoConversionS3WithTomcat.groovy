@@ -52,8 +52,8 @@ deployment(name:'Video Conversion Example') {
             'com.elasticgrid.examples.video.VideoConverter': [
                 encoder: 'new com.elasticgrid.examples.video.MencoderEncoder(true)',
                 threadPoolSize: 'Integer.valueOf(4)',
-                sourceVideosBucket: '"viv-src"',
-                encodedVideosBucket: '"viv-dest"',
+                sourceVideosBucket: '"elastic-grid-examples-video-src"',
+                encodedVideosBucket: '"elastic-grid-examples-video-dest"',
                 enableS3: 'Boolean.TRUE',
                 statistics: 'new java.io.File("video-conversion.csv")'
             ],
