@@ -60,7 +60,7 @@ public class Index {
 
     void onActivate() throws RemoteException, InterruptedException {
         ServiceItem[] serviceItems = ServiceLocator.getServicesByClass(VideoConverter.class);
-        if (serviceItems != null && serviceItems.length > 1)
+        if (serviceItems != null && serviceItems.length >= 1)
             converter = (VideoConverter) serviceItems[0].service;
         else
             logger.warning("Could not find any video conversion service");

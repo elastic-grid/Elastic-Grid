@@ -19,7 +19,6 @@
 
 package com.elasticgrid.examples.video.util;
 
-import com.elasticgrid.amazon.ec2.EC2GridLocator;
 import com.elasticgrid.amazon.ec2.EC2GridLocatorImpl;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.GridException;
@@ -99,8 +98,9 @@ public class ServiceLocator {
         EC2Node node = null;
         try {
             node = locator.findMonitor("test");
-            return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress() )};
+            return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress().getHostName() )};
         } catch (GridException e) {
+            logger.info("Could not find monitor host. Using localhost instead hoping we find the service there!");
             return new LookupLocator[] { new LookupLocator("jini://localhost" )};
         }
     }
@@ -117,8 +117,10 @@ public class ServiceLocator {
         return lookupCache.lookup(new ServiceItemFilter() {
             public boolean check(ServiceItem serviceItem) {
                 boolean match = serviceClazz.isAssignableFrom(serviceItem.service.getClass());
-                if (match)
-                    logger.log(Level.INFO, "Found service {0}", serviceItem.serviceID);
+                if (match) {
+                    logger.log(Level.INFO, "Found service {0} with ID {1}",
+                            new Object[] { serviceClazz, serviceItem.serviceID });
+                }
                 return match;
             }
         }, Integer.MAX_VALUE);
