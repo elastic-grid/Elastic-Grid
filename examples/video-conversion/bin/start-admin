@@ -17,6 +17,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
 
-ADMIN_AMI=ami-dcc125b5
+ADMIN_AMI=ami-e0cd2989
 scriptDir="$(dirname $0)"
 $scriptDir/ami-launch $ADMIN_AMI
