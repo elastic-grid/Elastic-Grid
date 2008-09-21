@@ -17,11 +17,13 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.qos;
+package com.elasticgrid.amazon.ec2.sla;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.FakeEC2Instantiator;
 import com.elasticgrid.grid.ec2.InstanceType;
+import com.elasticgrid.utils.amazon.AWSUtils;
+import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.EventHandler;
 import org.rioproject.sla.SLA;
@@ -30,8 +32,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +56,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     public void initialize(Object eventSource, EventHandler eventHandler, ServiceBeanContext context) {
         super.initialize(eventSource, eventHandler, context);
         try {
+            /* This stuff actually will make sense for Cloud Bursting!
             amazonImageID = (String) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
                     "amazonImageID", String.class);
             keyName = (String) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
@@ -61,6 +65,12 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
                     "groups", List.class, Collections.emptyList());
             publicAddress = (Boolean) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
                     "publicAddress", Boolean.class, Boolean.TRUE);
+            */
+            amazonImageID = EC2Utils.getInstanceMetadata("ami-id");
+            keyName = EC2Utils.getInstanceMetadata("eg-keypair");   // todo: write the real key
+            groups = Arrays.asList("default", "elastic-grid",
+                    "eg-agent", "elastic-grid-cluster-test");       // todo: retreive this from the existing instance
+            publicAddress = Boolean.parseBoolean(EC2Utils.getInstanceMetadata("??"));   // todo: write the real key
             ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
                     "/com/elasticgrid/amazon/ec2/applicationContext.xml",
             });
@@ -78,14 +88,19 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     @Override
     protected void doIncrement() {
         try {
-            // todo: do not fake the user data!
-            String userdata = "GRID_NAME=test,AWS_ACCESS_ID=123456,AWS_SECRET_KEY=123456,AWS_SQS_SECURED=true";
-            List<String> instances = ec2.startInstances(amazonImageID, 1, 1,
-                    groups, userdata, keyName, publicAddress, InstanceType.SMALL);
+            Properties egProps = AWSUtils.loadEC2Configuration();
+            // todo: find a way to make this information more manageable
+            String userdata = String.format(
+                    "GRID_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=true",
+                    "test", "mencoder",     // todo: find a way to not hardcode this!
+                    egProps.getProperty(AWSUtils.AWS_ACCESS_ID), egProps.getProperty(AWSUtils.AWS_SECRET_KEY));
+            InstanceType instanceType = InstanceType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
+            List<String> instances = ec2.startInstances(amazonImageID, 1, 1, groups,
+                    userdata, keyName, publicAddress, instanceType);
             String instanceID = instances.get(0);
             logger.log(Level.INFO, "Started Amazon EC2 instance {0}", instanceID);
             context.getServiceBeanConfig().getInitParameters().put(AMAZON_INSTANCE_ID_PARAMETER, instanceID);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, format("Can't start EC2 instance from AMI %s", amazonImageID), e);
         }
         super.doIncrement();

@@ -60,14 +60,14 @@
                 <SLA ID="testGauge" Low="0" High="10">
                     <Configuration>
                         <Component Name="org.rioproject.qos.SLAPolicyHandler">
-                            <Parameter Name="slaPolicyHandler">
+                            <Parameter Name="slaPolicyHandler"><![CDATA[
                                 <![CDATA[
-                                    new com.elasticgrid.amazon.ec2.qos.EC2ScalingPolicyHandler(
+                                    new com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler(
                                                                         (org.rioproject.core.SLA) $data,
                                                                         new com.elasticgrid.MockEC2Instantiator()
                                                                     )
                                 ]]>
-                            </Parameter>
+                            ]]></Parameter>
                             <Parameter Name="MaxServices" Value="10"/>
                             <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
                             <Parameter Name="LowerThresholdDampeningFactor" Value="3000"/>
@@ -87,10 +87,10 @@
                 <!--
                 <SLA ID="CPU" Low=".001" High=".05">
                     <Configuration>
-                        <Component Name="org.rioproject.qos.SLAPolicyHandler">
+                        <Component Name="org.rioproject.sla.SLAPolicyHandler">
                             <Parameter Name="slaPolicyHandler">
                                 <![CDATA[
-                                    new com.kalixia.partners.amazon.ec2.qos.EC2ScalingPolicyHandler((org.rioproject.core.SLA) $data)
+                                    new com.kalixia.partners.amazon.ec2.sla.EC2ScalingPolicyHandler((org.rioproject.core.SLA) $data)
                                 ]]>
                             </Parameter>
                             <Parameter Name="MaxServices" Value="3"/>
