@@ -14,11 +14,11 @@
 
     <modules>
         <module>substrate-api</module>
-        <module>mysql</module>
-	<module>tomcat5</module>
+        <!--<module>mysql</module>-->
+    	<!--<module>tomcat5</module>-->
         <module>tomcat6</module>
-        <module>glassfish2</module>
-	<module>apache</module>
+        <!--<module>glassfish2</module>-->
+	    <!--<module>apache</module>-->
     </modules>
 
     <dependencies>

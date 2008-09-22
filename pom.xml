@@ -219,14 +219,14 @@
             <id>rio</id>
             <url>http://www.rio-project.org/maven2</url>
         </pluginRepository>
-        <pluginRepository>
-            <id>apache.snapshots</id>
-            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>Codehaus Snapshots</id>
-            <url>http://snapshots.repository.codehaus.org/</url>
-        </pluginRepository>
+        <!--<pluginRepository>-->
+            <!--<id>apache.snapshots</id>-->
+            <!--<url>http://people.apache.org/repo/m2-snapshot-repository/</url>-->
+        <!--</pluginRepository>-->
+        <!--<pluginRepository>-->
+            <!--<id>Codehaus Snapshots</id>-->
+            <!--<url>http://snapshots.repository.codehaus.org/</url>-->
+        <!--</pluginRepository>-->
         <pluginRepository>
             <id>mc-release</id>
             <name>Local Maven repository of releases</name>
