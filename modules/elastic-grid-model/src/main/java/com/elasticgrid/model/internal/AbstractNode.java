@@ -54,6 +54,10 @@ public abstract class AbstractNode implements Node {
         return this;
     }
 
+    public void setProfile(NodeProfile profile) {
+        this.profile = profile;
+    }
+
     public void setAddress(InetAddress address) {
         this.address = address;
     }

@@ -30,10 +30,9 @@
                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/util/spring-context-2.5.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
     <context:annotation-config />
-
     <context:component-scan base-package="com.elasticgrid.amazon.ec2"/>
 
     <bean id="gridLocator" class="com.elasticgrid.amazon.ec2.EC2GridLocatorImpl">
@@ -43,7 +42,7 @@
     <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
         <constructor-arg index="0" value="${aws.accessId}"/>
         <constructor-arg index="1" value="${aws.secretKey}"/>
-        <constructor-arg index="2" value="${amazon.ec2.secured}"/>
+        <constructor-arg index="2" value="${aws.ec2.secured}"/>
     </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

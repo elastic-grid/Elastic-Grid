@@ -46,7 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Abstract {@link com.elasticgrid.masterworker.Master} based on JavaSpaces.
+ * Abstract {@link com.elasticgrid.masterworker.Master} based on JavaSpaces.
  * @author Jerome Bernard
  */
 public abstract class SpaceMaster<O, R extends Serializable, V extends Serializable> extends AbstractJob<V> implements Master<O, R, V>, Callable<V> {

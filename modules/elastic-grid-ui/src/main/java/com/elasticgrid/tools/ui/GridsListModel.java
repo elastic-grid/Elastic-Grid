@@ -19,7 +19,24 @@
 
 package com.elasticgrid.tools.ui;
 
+import com.elasticgrid.model.Grid;
 import javax.swing.*;
+import java.util.List;
+import java.util.Collections;
 
-class MonitorsPanel extends JPanel {
+public class GridsListModel extends AbstractListModel {
+    private List<Grid> grids = Collections.emptyList();
+
+    public int getSize() {
+        return grids.size();
+    }
+
+    public Object getElementAt(int index) {
+        return grids.get(index);
+    }
+
+    public void setGrids(List<Grid> grids) {
+        this.grids = grids;
+        super.fireContentsChanged(this, 0, grids.size());
+    }
 }

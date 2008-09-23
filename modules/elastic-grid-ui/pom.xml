@@ -20,6 +20,13 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Support for the Amazon EC2 Cloud Computing Platform -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
@@ -37,6 +44,12 @@
             <artifactId>spring-test</artifactId>
             <version>2.5.5</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
         </dependency>
 
     </dependencies>
