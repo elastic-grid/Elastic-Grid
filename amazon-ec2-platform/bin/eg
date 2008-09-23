@@ -44,10 +44,10 @@ if [ "$1" = "start" ]; then
 fi
 
 # Set local variables
-if [ -z "$RIO_HOME" ] ; then
-  RIO_HOME="$scriptDir/.."
+if [ -z "$EG_HOME" ] ; then
   EG_HOME="$scriptDir/.."
 fi
+RIO_HOME=$EG_HOME
 RIO_LIB=$RIO_HOME/lib
 
 # Check JINI_HOME
