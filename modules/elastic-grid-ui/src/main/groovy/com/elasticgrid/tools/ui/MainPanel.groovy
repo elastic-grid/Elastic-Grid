@@ -19,24 +19,24 @@
 
 package com.elasticgrid.tools.ui
 
+import com.elasticgrid.grid.GridLocator
 import com.elasticgrid.grid.GridManager
+import com.elasticgrid.model.GridMonitorNotFoundException
 import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.ec2.EC2Grid
 import com.elasticgrid.model.ec2.impl.EC2GridImpl
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl
 import groovy.swing.SwingBuilder
+import javax.swing.JOptionPane
 import javax.swing.ListSelectionModel
 import javax.swing.WindowConstants
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
-import java.awt.event.ActionEvent
-import java.awt.BorderLayout
 import org.rioproject.resources.util.XMLAndGroovyFileChooser
-import javax.swing.JTable
 
 class MainPanel {
 
-    def MainPanel(GridManager gridManager) {
+    def MainPanel(GridManager gridManager, GridLocator locator) {
         def builder = new SwingBuilder();
 
         // Test Data: comment the few lines below and uncomment the one using the Grid Manager
@@ -90,13 +90,18 @@ class MainPanel {
                     }
                 }
                 panel(constraints: SOUTH) {
-                    button('Deploy...', actionPerformed: {ActionEvent e ->
+                    button('Deploy...', actionPerformed: {
                         XMLAndGroovyFileChooser fileChooser = new XMLAndGroovyFileChooser(frame, null, "Choose OpString to deploy")
                         def opstring = fileChooser.file
                         def selectedGrid = grids[gridsTable.selectedRow]
-                        println "Should deploy OpString '$opstring' to grid '${selectedGrid.name}'"
+                        try {
+                            def monitor = locator.findMonitor(selectedGrid.name)
+                            println "Should deploy OpString '$opstring' to grid '${selectedGrid.name}' whose monitor is ${monitor}"
+                        } catch (GridMonitorNotFoundException e) {
+                            showError "<html>Monitor not found for grid '${selectedGrid.name}'.<br>No deployment can be made!</html>", frame
+                        }
                     })
-                    button('Undeploy...', actionPerformed: {ActionEvent e ->
+                    button('Undeploy...', actionPerformed: {
                         println "Should propose a list of deployed OpString and undeploy the selected one!"
                     })
                 }
@@ -105,6 +110,10 @@ class MainPanel {
         }        
         frame.pack()
         frame.show()
+    }
+
+    def showError(String message, window) {
+        JOptionPane.showMessageDialog(window, message, "Error", JOptionPane.ERROR_MESSAGE)
     }
 
 }
