@@ -29,6 +29,10 @@ import javax.swing.ListSelectionModel
 import javax.swing.WindowConstants
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
+import java.awt.event.ActionEvent
+import java.awt.BorderLayout
+import org.rioproject.resources.util.XMLAndGroovyFileChooser
+import javax.swing.JTable
 
 class MainPanel {
 
@@ -59,26 +63,42 @@ class MainPanel {
 
         def frame = builder.frame(
                 title: 'Elastic Grid Administration',
-                defaultCloseOperation: WindowConstants.EXIT_ON_CLOSE) {
-            gridLayout(cols: 1, rows: 4)
-
-            label = label(text: 'Grids')
-            scrollPane {
-                table(id: 'grids') {
-                    tableModel(gridsModel)
-                    current.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
-                    current.selectionModel.addListSelectionListener({ ListSelectionEvent e ->
-                        def row = e.source.leadIndex
-                        if (!e.valueIsAdjusting)
-                            nodesModel.nodes = grids[row].nodes
-                    } as ListSelectionListener)
+                defaultCloseOperation: WindowConstants.EXIT_ON_CLOSE) { frame ->
+            borderLayout()
+            panel(constraints: NORTH) {
+                borderLayout()
+                label = label(text: 'Grids', constraints: NORTH)
+                scrollPane(constraints: CENTER) {
+                    table(id: 'gridsTable') {
+                        tableModel(gridsModel)
+                        current.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
+                        current.selectionModel.addListSelectionListener({ ListSelectionEvent e ->
+                            def row = e.source.leadIndex
+                            if (!e.valueIsAdjusting)
+                                nodesModel.nodes = grids[row].nodes
+                        } as ListSelectionListener)
+                    }
                 }
             }
 
-            label = label(text: 'Nodes')
-            scrollPane {
-                table(id: 'nodes') {
-                    tableModel(nodesModel)
+            panel(constraints: SOUTH) {
+                borderLayout()
+                label = label(text: 'Nodes', constraints: NORTH)
+                scrollPane(constraints: CENTER) {
+                    table(id: 'nodes') {
+                        tableModel(nodesModel)
+                    }
+                }
+                panel(constraints: SOUTH) {
+                    button('Deploy...', actionPerformed: {ActionEvent e ->
+                        XMLAndGroovyFileChooser fileChooser = new XMLAndGroovyFileChooser(frame, null, "Choose OpString to deploy")
+                        def opstring = fileChooser.file
+                        def selectedGrid = grids[gridsTable.selectedRow]
+                        println "Should deploy OpString '$opstring' to grid '${selectedGrid.name}'"
+                    })
+                    button('Undeploy...', actionPerformed: {ActionEvent e ->
+                        println "Should propose a list of deployed OpString and undeploy the selected one!"
+                    })
                 }
             }
 
