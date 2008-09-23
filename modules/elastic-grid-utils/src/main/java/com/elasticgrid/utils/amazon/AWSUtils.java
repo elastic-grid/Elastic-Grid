@@ -32,6 +32,11 @@ public class AWSUtils {
     public static final String AWS_SECRET_KEY = "aws.secretKey";
     private static final Logger logger = Logger.getLogger(AWSUtils.class.getName());
 
+    public static boolean isEnvironmentProperlySet() {
+        return new File(System.getProperty("user.home") + File.separatorChar + ".eg", "aws.properties").exists()
+                || new File(System.getenv("EG_HOME") + File.separatorChar + "config", "eg.properties").exists();
+    }
+
     public static Properties loadEC2Configuration() throws IOException {
         // try to load properties from $HOME/.eg/aws.properties
         Properties awsProperties = new Properties();
