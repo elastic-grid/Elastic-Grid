@@ -46,8 +46,10 @@
         <property name="locations">
             <list>
                 <value>file:${EG_HOME}/config/eg.properties</value>
+                <value>file:${user.home}/.eg/eg.properties</value>
             </list>
         </property>
+        <property name="ignoreResourceNotFound" value="true"/>
     </bean>
 
 </beans>
