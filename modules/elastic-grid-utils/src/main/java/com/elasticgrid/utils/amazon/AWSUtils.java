@@ -41,7 +41,7 @@ public class AWSUtils {
         // try to load properties from $HOME/.eg/aws.properties
         Properties awsProperties = new Properties();
         File awsPropertiesFile = new File(System.getProperty("user.home") + File.separatorChar + ".eg",
-                "aws.properties");
+                "eg.properties");
         InputStream stream = null;
         try {
             stream = new FileInputStream(awsPropertiesFile);
