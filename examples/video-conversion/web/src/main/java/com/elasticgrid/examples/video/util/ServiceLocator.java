@@ -53,7 +53,6 @@ import java.util.logging.Logger;
 
 public class ServiceLocator {
     private static LookupCache lookupCache;
-    private static String egHome = System.getProperty("EG_HOME");
     private static final Logger logger = Logger.getLogger(ServiceLocator.class.getName());
 
     static {
