@@ -20,8 +20,9 @@
 package com.elasticgrid.examples.video.util;
 
 import com.elasticgrid.amazon.ec2.EC2GridLocatorImpl;
-import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.GridException;
+import com.elasticgrid.model.GridMonitorNotFoundException;
+import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
@@ -96,9 +97,9 @@ public class ServiceLocator {
         locator.setEc2(new Jec2(awsAccessId, awsSecretKey));
         EC2Node node = null;
         try {
-            node = locator.findMonitor("test");
+            node = (EC2Node) locator.findMonitor("test");
             return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress().getHostName() )};
-        } catch (GridException e) {
+        } catch (GridMonitorNotFoundException e) {
             logger.info("Could not find monitor host. Using localhost instead hoping we find the service there!");
             return new LookupLocator[] { new LookupLocator("jini://localhost" )};
         }

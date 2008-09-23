@@ -44,6 +44,10 @@
         <property name="ami32" value="${aws.ec2.ami32}"/>
         <property name="ami64" value="${aws.ec2.ami64}"/>
     </bean>
+
+    <bean id="gridLocator" class="com.elasticgrid.amazon.ec2.EC2GridLocatorImpl">
+        <property name="ec2" ref="jec2"/>
+    </bean>
     
     <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
         <constructor-arg index="0" value="${aws.accessId}"/>

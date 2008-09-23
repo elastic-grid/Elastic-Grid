@@ -22,6 +22,7 @@ package com.elasticgrid.amazon.ec2;
 import com.elasticgrid.grid.GridLocator;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridNotFoundException;
+import com.elasticgrid.model.GridMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
 import java.util.List;
 
@@ -47,8 +48,7 @@ public interface EC2GridLocator extends GridLocator<EC2Node> {
      * Locate a monitor instance in the specified grid.
      * @param gridName the name of the grid for whom a monitor instance should be found
      * @return a monitor {@link EC2Node}
-     * @throws GridNotFoundException if the grid can't be found
-     * @throws GridException if there is a technical error
+     * @throws GridMonitorNotFoundException if the monitor's grid can't be found
      */
-    EC2Node findMonitor(String gridName) throws GridNotFoundException, GridException;
+    EC2Node findMonitor(String gridName) throws GridMonitorNotFoundException;
 }
