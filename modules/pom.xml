@@ -164,15 +164,10 @@
                         <include>**/test/**</include>
                     </includes>
                     <excludes>
-                        <exclude>target/**</exclude>
+                        <exclude>**/target/**</exclude>
                         <exclude>.clover/**</exclude>
                     </excludes>
                     <useDefaultExcludes>true</useDefaultExcludes>
-                    <mapping>
-                        <jwc>xml</jwc>
-                        <application>xml</application>
-                        <myFileExtension>java</myFileExtension>
-                    </mapping>
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
                         <year>${project.inceptionYear}</year>
