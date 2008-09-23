@@ -22,6 +22,7 @@ package com.elasticgrid.grid;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridNotFoundException;
+import com.elasticgrid.model.GridMonitorNotFoundException;
 import java.util.List;
 
 public interface GridLocator <N extends Node> {
@@ -46,8 +47,7 @@ public interface GridLocator <N extends Node> {
      * Locate a monitor instance in the specified grid.
      * @param gridName the name of the grid for whom a monitor instance should be found
      * @return a monitor {@link Node}
-     * @throws GridNotFoundException if the grid can't be found
-     * @throws GridException if there is a technical error
+     * @throws GridMonitorNotFoundException if the monitor's grid can't be found
      */
-    N findMonitor(String gridName) throws GridNotFoundException, GridException;
+    N findMonitor(String gridName) throws GridMonitorNotFoundException;
 }

@@ -158,6 +158,16 @@
                             <goal>generateTestStubs</goal>
                             <goal>testCompile</goal>
                         </goals>
+                        <configuration>
+                            <sources>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

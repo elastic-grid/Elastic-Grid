@@ -33,7 +33,7 @@ public class Main {
             System.exit(-1);    // todo: instead provide a UI for entering this information and keep going
         }
         // setup Spring Application Context
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/grid/ec2/applicationContext.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/grid/applicationContext.xml");
         GridManager gridManager = (GridManager) ctx.getBean("gridManager", GridManager.class);
         GridLocator gridLocator = (GridLocator) ctx.getBean("gridLocator", GridLocator.class);
         // build the initial UI

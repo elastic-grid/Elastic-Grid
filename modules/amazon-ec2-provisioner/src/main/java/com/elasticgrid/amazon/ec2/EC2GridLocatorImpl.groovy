@@ -101,7 +101,7 @@ class EC2GridLocatorImpl implements EC2GridLocator {
         return nodes
     }
 
-    public EC2Node findMonitor(String gridName) throws GridNotFoundException, GridException {
+    public EC2Node findMonitor(String gridName) throws GridMonitorNotFoundException {
         logger.log Level.INFO, "Searching for monitor node in grid '$gridName'..."
         def List<EC2Node> nodes = findNodes(gridName)
         def found = false
