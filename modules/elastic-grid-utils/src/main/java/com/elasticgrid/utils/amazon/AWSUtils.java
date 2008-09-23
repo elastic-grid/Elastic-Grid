@@ -33,7 +33,7 @@ public class AWSUtils {
     private static final Logger logger = Logger.getLogger(AWSUtils.class.getName());
 
     public static boolean isEnvironmentProperlySet() {
-        return new File(System.getProperty("user.home") + File.separatorChar + ".eg", "aws.properties").exists()
+        return new File(System.getProperty("user.home") + File.separatorChar + ".eg", "eg.properties").exists()
                 || new File(System.getenv("EG_HOME") + File.separatorChar + "config", "eg.properties").exists();
     }
 
