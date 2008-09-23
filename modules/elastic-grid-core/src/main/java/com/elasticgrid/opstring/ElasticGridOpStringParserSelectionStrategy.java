@@ -27,7 +27,7 @@ import java.io.File;
 import java.net.URL;
 
 /**
- * {@link OpStringParserSelectionStrategy}Êselecting either the XML or Groovy parser.
+ * {@link OpStringParserSelectionStrategy} selecting either the XML or Groovy parser.
  */
 public class ElasticGridOpStringParserSelectionStrategy implements OpStringParserSelectionStrategy {
     public OpStringParser findParser(Object source) {

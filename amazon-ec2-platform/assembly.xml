@@ -74,6 +74,11 @@
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <include>com.xerox.amazonws:typica</include>
+                <include>javax.xml.bind:jaxb-impl</include>
+                <include>commons-httpclient:commons-httpclient</include>
+                <include>commons-logging:commons-logging</include>
+                <include>commons-io:commons-io</include>
+                <include>commons-codec:commons-codec</include>
                 <include>org.springframework:spring</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>

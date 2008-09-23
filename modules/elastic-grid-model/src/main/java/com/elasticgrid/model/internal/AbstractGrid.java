@@ -92,4 +92,14 @@ public abstract class AbstractGrid<N extends Node> implements Grid<N> {
         return this;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("AbstractGrid");
+        sb.append("{name='").append(name).append('\'');
+        sb.append(", nodes=").append(nodes.size());
+        sb.append(", applications=").append(applications.size());
+        sb.append('}');
+        return sb.toString();
+    }
 }

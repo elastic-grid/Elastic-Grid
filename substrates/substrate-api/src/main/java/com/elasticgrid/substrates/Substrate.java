@@ -35,7 +35,7 @@ public interface Substrate {
     /**
      * Enable the substrate to enrich the DSL.
      * @param builder the XML {@link MarkupBuilder}
-     * @param emc the {@link ExpandoMetaClass} to use in order to inject custom parsing logic
+     * @param emc the {@link ExpandoMetaClass} to use in order to inject custom parsing logic
      */
     void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc);
 
