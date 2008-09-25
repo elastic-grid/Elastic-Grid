@@ -11,7 +11,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <!--<fileSet>-->
-            <!--<directory>${env.RIO_HOME}</directory>-->
+            <!--<directory>${rio.home}</directory>-->
             <!--<outputDirectory>/</outputDirectory>-->
             <!--<includes>-->
                 <!--<include>bin/**/*</include>-->
@@ -20,7 +20,7 @@
             <!--<useDefaultExcludes>true</useDefaultExcludes>-->
         <!--</fileSet>-->
         <fileSet>
-            <directory>${env.RIO_HOME}</directory>
+            <directory>${rio.home}</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>lib/**/*</include>
