@@ -7,8 +7,10 @@ import org.apache.tools.ant.Project;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 import java.util.Iterator;
 import java.util.Map;
+import java.io.IOException;
 import java.io.File;
 
 public abstract class AbstractRioMojo extends AbstractMojo {
@@ -46,17 +48,40 @@ public abstract class AbstractRioMojo extends AbstractMojo {
         return antProject;
     }
 
+    protected String getEnvironmentValue(String name) {
+        String home = null;
+
+        // first try configuration
+        if (environment != null) {
+            home = (String) environment.get(name);
+        }
+
+        // fall back to existing external environment
+        if (home == null) {
+            try {
+                home = (String) CommandLineUtils.getSystemEnvVars().get(name);
+            }
+            catch (IOException ioex) {
+                // no cookie
+            }
+        }
+
+        return home;        
+    }
+    
     protected String getRioHome() {
-        String home = (String) environment.get("rio.home");
-        if (home == null)
-            home = (String) environment.get("RIO_HOME");
+        String home = getEnvironmentValue("rio.home");
+        if (home == null) {
+            home = getEnvironmentValue("RIO_HOME");
+        }
         return home;
     }
 
     protected String getJiniHome() {
-        String home = (String) environment.get("jini.home");
-        if (home == null)
-            home = (String) environment.get("JINI_HOME");
+        String home = getEnvironmentValue("jini.home");
+        if (home == null) {
+            home = getEnvironmentValue("JINI_HOME");
+        }
         return home;
     }
 
