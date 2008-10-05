@@ -37,7 +37,7 @@ public interface EC2Instantiator extends NodeInstantiator<EC2Node> {
      * @param userData the user data
      * @param keyName the name of the security keypair
      * @param publicAddress <tt>true</tt> if the instances should also have public IP addresses
-     * @param options the type of instance to start (small, large, extra large) as a {@link com.elasticgrid.grid.ec2.InstanceType}
+     * @param options the type of instance to start (small, large, extra large) as a {@link InstanceType}
      * @return the IDs of the instances
      * @throws RemoteException if there is a network failure
      */

@@ -19,7 +19,7 @@
 
 package com.elasticgrid.examples.video.util;
 
-import com.elasticgrid.amazon.ec2.EC2GridLocatorImpl;
+import com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsGridLocator;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.GridMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
@@ -91,7 +91,7 @@ public class ServiceLocator {
     private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception, GridException {
         System.out.printf("Searching for Elastic Grid monitor host...\n");
         Properties egProps = AWSUtils.loadEC2Configuration();
-        EC2GridLocatorImpl locator = new EC2GridLocatorImpl();
+        EC2SecurityGroupsGridLocator locator = new EC2SecurityGroupsGridLocator();
         String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
         String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
         locator.setEc2(new Jec2(awsAccessId, awsSecretKey));

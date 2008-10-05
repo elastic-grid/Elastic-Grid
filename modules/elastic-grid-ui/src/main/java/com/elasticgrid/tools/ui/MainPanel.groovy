@@ -19,7 +19,7 @@
 
 package com.elasticgrid.tools.ui
 
-import com.elasticgrid.grid.GridLocator
+import com.elasticgrid.grid.discovery.GridLocator
 import com.elasticgrid.grid.GridManager
 import com.elasticgrid.model.GridMonitorNotFoundException
 import com.elasticgrid.model.NodeProfile

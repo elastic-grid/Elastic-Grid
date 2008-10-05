@@ -87,6 +87,21 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.5</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -144,7 +159,7 @@
                     </implementationIns>
                     <implementationTopclasses>
                         <implementationTopclass>com.elasticgrid.monitor.EC2ProvisionMonitorImpl</implementationTopclass>
-                        <implementationTopclass>com.elasticgrid.amazon.ec2.core.EC2SmallInstanceCostModel</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.amazon.ec2.costmodel.EC2SmallInstanceCostModel</implementationTopclass>
                         <implementationTopclass>com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler</implementationTopclass>
                     </implementationTopclasses>
 

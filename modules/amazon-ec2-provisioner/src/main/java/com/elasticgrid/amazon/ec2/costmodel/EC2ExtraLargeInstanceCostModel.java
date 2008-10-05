@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.core;
+package com.elasticgrid.amazon.ec2.costmodel;
 
 import org.rioproject.costmodel.ResourceCostModel;
 
@@ -25,8 +25,8 @@ import org.rioproject.costmodel.ResourceCostModel;
  * {@link ResourceCostModel} for EC2 service.
  * @author Jerome Bernard
  */
-public class EC2SmallInstanceCostModel extends AbstractEC2InstanceCostModel implements ResourceCostModel {
-    private static final double COST_PER_HOUR = .10;        // in dollars
+public class EC2ExtraLargeInstanceCostModel extends AbstractEC2InstanceCostModel implements ResourceCostModel {
+    private static final double COST_PER_HOUR = .80;        // in dollars
 
     public double getCostPerHour() {
         return COST_PER_HOUR;
@@ -37,6 +37,6 @@ public class EC2SmallInstanceCostModel extends AbstractEC2InstanceCostModel impl
      * @return String the description of the ResourceCostModel
      */
     public String getDescription() {
-        return "EC2 Small Instance Cost Model";
+        return "EC2 Extra Large Instance Cost Model";
     }
 }

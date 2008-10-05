@@ -17,11 +17,31 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.grid;
+package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.model.Node;
+/**
+ * Enum of the type of Amazon EC2 instances.
+ */
+public enum InstanceType {
+    SMALL("m1.small"),
+	LARGE("m1.large"),
+	EXTRA_LARGE("m1.xlarge"),
+	MEDIUM_HIGH_CPU("c1.medium"),
+	EXTRA_LARGE_HIGH_CPU("c1.xlarge");
 
-public interface GridListener<N extends Node> {
-    void nodeAdded(N node);
-    void nodeRemoved(N node);
+    private String name;
+
+    InstanceType(String name) {
+        this.name = name;
+    }
+
+    public Object getName() {
+        return name;
+    }
+
+    public String toString() {
+        return "InstanceType{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

@@ -20,8 +20,8 @@
 package com.elasticgrid.amazon.ec2.sla;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
-import com.elasticgrid.amazon.ec2.FakeEC2Instantiator;
-import com.elasticgrid.grid.ec2.InstanceType;
+import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.amazon.ec2.EC2InstantiatorImpl;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
@@ -75,11 +75,6 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
                     "/com/elasticgrid/amazon/ec2/applicationContext.xml",
             });
             ec2 = (EC2Instantiator) ctx.getBean("ec2", EC2Instantiator.class);
-            if (ec2 == null) {
-                logger.log(Level.WARNING, "No EC2 instantiator specified. Using {0} implementation.",
-                        FakeEC2Instantiator.class.getName());
-                ec2 = new FakeEC2Instantiator();
-            }
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -87,6 +82,10 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
 
     @Override
     protected void doIncrement() {
+        if (ec2 == null) {
+            logger.warning("No EC2Instantiator has been set, hence no increase of EC2 instances will occur");
+            return;
+        }
         try {
             Properties egProps = AWSUtils.loadEC2Configuration();
             // todo: find a way to make this information more manageable
@@ -109,6 +108,10 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     @Override
     protected void doDecrement() {
         super.doDecrement();
+        if (ec2 == null) {
+            logger.warning("No EC2Instantiator has been set, hence no decrease of EC2 instances will occur");
+            return;
+        }
         String instanceID = (String) context.getServiceBeanConfig().getInitParameters().get(AMAZON_INSTANCE_ID_PARAMETER);
         try {
             ec2.shutdownInstance(instanceID);
