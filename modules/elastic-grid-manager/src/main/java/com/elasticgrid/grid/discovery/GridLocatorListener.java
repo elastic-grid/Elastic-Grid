@@ -17,13 +17,14 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.discovery;
+package com.elasticgrid.grid.discovery;
 
-import com.elasticgrid.grid.discovery.AbstractGridLocator;
-import com.elasticgrid.model.ec2.EC2Node;
+import java.util.EventListener;
 
 /**
- * EC2 Grid discovery.
+ * Grid discovery listener.
+ * This listener permits to react to changed of the grid topology.
  */
-public abstract class EC2GridLocator extends AbstractGridLocator<EC2Node> {
+public interface GridLocatorListener extends EventListener {
+    void gridChanged(GridChangedEvent event);
 }

@@ -32,13 +32,17 @@ import java.util.logging.Logger
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import com.elasticgrid.model.GridMonitorNotFoundException
+import com.elasticgrid.grid.discovery.AbstractGridLocator
+import com.elasticgrid.grid.discovery.GridChangedEvent
+import com.elasticgrid.model.Grid
+import com.elasticgrid.model.ec2.impl.EC2GridImpl
 
 /**
  * {@GridLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
 @Service("gridLocator")
-class EC2SecurityGroupsGridLocator implements EC2GridLocator {
+class EC2SecurityGroupsGridLocator extends EC2GridLocator {
     def Jec2 ec2
     public static final String EG_GROUP_MONITOR = "eg-monitor"
     public static final String EG_GROUP_AGENT = "eg-agent"
@@ -102,6 +106,9 @@ class EC2SecurityGroupsGridLocator implements EC2GridLocator {
             }
         }.flatten()
         logger.log Level.INFO, "Found ${nodes.size()} nodes in grid '$gridName'..."
+        // notify listeners of potential grid topology changes
+        Grid<EC2Node> grid = new EC2GridImpl(name: gridName).addNodes(nodes)
+        fireGridChangedEvent new GridChangedEvent(this, grid)
         return nodes
     }
 
