@@ -21,7 +21,7 @@ package com.elasticgrid.tools.ui;
 
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.elasticgrid.grid.GridManager;
-import com.elasticgrid.grid.GridLocator;
+import com.elasticgrid.grid.discovery.GridLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

@@ -17,11 +17,12 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.grid.ec2;
+package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.grid.GridLocator;
+import com.elasticgrid.grid.discovery.GridLocator;
 import com.elasticgrid.grid.GridManager;
 import com.elasticgrid.grid.NodeInstantiator;
+import com.elasticgrid.amazon.ec2.InstanceType;
 import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.GridAlreadyRunningException;
 import com.elasticgrid.model.GridException;

@@ -19,7 +19,7 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.amazon.ec2.EC2GridLocator;
+import com.elasticgrid.amazon.ec2.discovery.EC2GridLocator;
 import com.elasticgrid.model.GridException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.xerox.amazonws.ec2.EC2Exception;

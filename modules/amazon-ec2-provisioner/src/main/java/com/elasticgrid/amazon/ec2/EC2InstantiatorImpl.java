@@ -19,7 +19,7 @@
 
 package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.grid.ec2.InstanceType;
+import com.elasticgrid.amazon.ec2.InstanceType;
 import com.elasticgrid.model.NodeProfile;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;

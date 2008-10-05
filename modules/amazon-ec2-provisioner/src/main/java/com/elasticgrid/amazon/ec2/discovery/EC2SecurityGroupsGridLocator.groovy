@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2
+package com.elasticgrid.amazon.ec2.discovery
 
 import com.elasticgrid.model.GridException
 import com.elasticgrid.model.GridNotFoundException
@@ -33,8 +33,12 @@ import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import com.elasticgrid.model.GridMonitorNotFoundException
 
+/**
+ * {@GridLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
+ * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
+ */
 @Service("gridLocator")
-class EC2GridLocatorImpl implements EC2GridLocator {
+class EC2SecurityGroupsGridLocator implements EC2GridLocator {
     def Jec2 ec2
     public static final String EG_GROUP_MONITOR = "eg-monitor"
     public static final String EG_GROUP_AGENT = "eg-agent"
