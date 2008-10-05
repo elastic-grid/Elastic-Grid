@@ -24,6 +24,7 @@ import com.elasticgrid.model.ec2.EC2Grid;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.internal.AbstractGrid;
 import java.net.InetAddress;
+import java.util.Set;
 
 /**
  * @author Jerome Bernard
@@ -35,5 +36,15 @@ public class EC2GridImpl extends AbstractGrid<EC2Node> implements EC2Grid {
 
     public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
         return node(profile, address).instanceID(instanceID);
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof EC2Grid))
+            return false;
+        EC2Grid anotherGrid = (EC2Grid) o;
+        if (!anotherGrid.getName().equals(getName()))
+            return false;
+        Set<EC2Node> otherNodes = anotherGrid.getNodes();
+        return getNodes().equals(otherNodes);
     }
 }

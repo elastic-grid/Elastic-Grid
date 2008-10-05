@@ -44,6 +44,7 @@ import com.elasticgrid.model.ec2.impl.EC2GridImpl
 @Service("gridLocator")
 class EC2SecurityGroupsGridLocator extends EC2GridLocator {
     def Jec2 ec2
+    def Map<String, Grid> oldGridDefinitions = new HashMap<String, Grid>()
     public static final String EG_GROUP_MONITOR = "eg-monitor"
     public static final String EG_GROUP_AGENT = "eg-agent"
     private static final Logger logger = Logger.getLogger(EC2GridLocator.class.name)
@@ -108,6 +109,16 @@ class EC2SecurityGroupsGridLocator extends EC2GridLocator {
         logger.log Level.INFO, "Found ${nodes.size()} nodes in grid '$gridName'..."
         // notify listeners of potential grid topology changes
         Grid<EC2Node> grid = new EC2GridImpl(name: gridName).addNodes(nodes)
+        if (oldGridDefinitions.containsKey(gridName)) {
+            Grid old = oldGridDefinitions.get(gridName)
+            if (!old.equals(grid)) {
+                oldGridDefinitions.put(gridName, grid)
+                fireGridChangedEvent new GridChangedEvent(this, grid)
+            }
+        } else {
+            oldGridDefinitions.put(gridName, grid)
+            fireGridChangedEvent new GridChangedEvent(this, grid)
+        }
         fireGridChangedEvent new GridChangedEvent(this, grid)
         return nodes
     }
