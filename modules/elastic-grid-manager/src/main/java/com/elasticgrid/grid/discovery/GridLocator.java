@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Grid discovery.
  */
-public interface GridLocator <N extends Node> {
+public interface GridLocator<N extends Node> {
 
     /**
      * Locate all grids.
@@ -41,7 +41,7 @@ public interface GridLocator <N extends Node> {
      * Locate nodes which are part of a grid.
      * @param gridName the name of the grid for whom nodes should be found
      * @return the list of {@link Node}s
-     * @throws com.elasticgrid.model.GridNotFoundException if the grid can't be found
+     * @throws GridNotFoundException if the grid can't be found
      * @throws GridException if there is a technical error
      */
     List<N> findNodes(String gridName) throws GridNotFoundException, GridException;
@@ -53,4 +53,16 @@ public interface GridLocator <N extends Node> {
      * @throws GridMonitorNotFoundException if the monitor's grid can't be found
      */
     N findMonitor(String gridName) throws GridMonitorNotFoundException;
+
+    /**
+     * Add a {@link GridLocatorListener} to be notified of grid topology changes.
+     * @param listener the listener to be notified
+     */
+    void addGridLocatorListener(GridLocatorListener listener);
+
+    /**
+     * Unsubscribe a {@link GridLocatorListener}.
+     * @param listener the listener to unsubscribe
+     */
+    void removeGridLocatorListener(GridLocatorListener listener);
 }
