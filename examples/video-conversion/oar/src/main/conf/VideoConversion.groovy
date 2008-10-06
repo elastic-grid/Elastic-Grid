@@ -21,7 +21,7 @@ import java.util.logging.Level
 
 deployment(name:'Video Conversion Example') {
     groups('rio')
-    //codebase('https://elastic-grid-examples.s3.amazonaws.com/')
+    codebase('https://elastic-grid-examples.s3.amazonaws.com/')
 
     systemRequirements(id: 'Elastic Grid Platform') {
         software name: 'Elastic Grid Kernel', version: '1.0'

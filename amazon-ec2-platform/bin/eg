@@ -28,7 +28,7 @@ if [ -e "$EG_HOME/config/monitor-host" ] ; then
 else
     export MONITOR_HOST=`hostname`
 fi
-LOCAL_HOST=`cat /tmp/public-hostname`
+export LOCAL_HOST=`cat /tmp/public-hostname`
 
 export RIO_OPTS="-DMONITOR_HOST=$MONITOR_HOST"
 
@@ -109,7 +109,7 @@ fi
 
 
 #DEBUG=-Dorg.rioproject.tools.webster.debug
-NETWORK=-Djava.rmi.server.hostname=$LOCAL_HOST
+#NETWORK=-Djava.rmi.server.hostname=$LOCAL_HOST
 if [ -z "$NET_ADDR" ] ; then
   NETWORK="-Djava.rmi.server.hostname="`hostname`
 else
