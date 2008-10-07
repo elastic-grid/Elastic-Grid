@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 	   	<groupId>com.elasticgrid</groupId>
-	    <artifactId>elastic-grid</artifactId>
+	    <artifactId>elastic-grid-platforms</artifactId>
 	    <version>0.8.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>private-lan-platform</artifactId>
+	<artifactId>amazon-ec2-platform</artifactId>
     <packaging>pom</packaging>
-    <name>Private LAN Platform</name>
+    <name>Platforms :: EC2 Platform</name>
     <prerequisites>
         <maven>2.0.8</maven>
     </prerequisites>
