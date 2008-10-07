@@ -76,7 +76,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
                 }
             } catch (InterruptedException e) {
                 String message = format("Couldn't start properly %d Amazon EC2 instances." +
-                        "Make sure instances of reservation ID %s are started and used properly within your grid",
+                        "Make sure instances of reservation ID %s are started and used properly within your cluster",
                         minCount, reservation.getReservationId());
                 logger.log(Level.SEVERE, message, e);
                 throw new RemoteException(message, e);
@@ -115,11 +115,11 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         return groupNames;
     }
 
-    public void createGridGroup(String gridName) throws RemoteException {
+    public void createClusterGroup(String clusterName) throws RemoteException {
         try {
-            jec2.createSecurityGroup("elastic-grid-cluster-" + gridName, "Grid " + gridName);
+            jec2.createSecurityGroup("elastic-grid-cluster-" + clusterName, "Cluster " + clusterName);
         } catch (EC2Exception e) {
-            throw new RemoteException("Can't create security group 'elastic-grid-cluster-" + gridName + "'", e);
+            throw new RemoteException("Can't create security group 'elastic-grid-cluster-" + clusterName + "'", e);
         }
     }
 

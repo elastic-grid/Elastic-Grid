@@ -44,7 +44,7 @@ public class MockEC2Instantiator implements EC2Instantiator {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void createGridGroup(String gridName) throws RemoteException {
+    public void createClusterGroup(String clusterName) throws RemoteException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

@@ -19,7 +19,7 @@
 
 package com.elasticgrid.tools.cli
 
-import com.elasticgrid.model.Grid
+import com.elasticgrid.model.Cluster
 import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.ec2.EC2Node
 import net.jini.core.discovery.LookupLocator
@@ -28,12 +28,13 @@ import net.jini.discovery.DiscoveryManagement
 
 class Formatter {
 
-    def static printGrids(List<Grid> grids, BufferedReader br, PrintStream out) {
-        out.println "total: ${grids.size()}"
-        grids.eachWithIndex { Grid grid, index ->
-            out.println "[${index + 1}]\t${grid.name}"
+
+    def static printClusters(List<Cluster> clusters, BufferedReader br, PrintStream out) {
+        out.println "total: ${clusters.size()}"
+        clusters.eachWithIndex { Cluster cluster, index ->
+            out.println "[${index + 1}]\t${cluster.name}"
             def locators = []
-            grid.nodes.eachWithIndex { com.elasticgrid.model.Node node, nodeIndex ->
+            cluster.nodes.eachWithIndex { Node node, nodeIndex ->
                 def profile
                 if (NodeProfile.MONITOR == node.profile) {
                     profile = "Monitor"

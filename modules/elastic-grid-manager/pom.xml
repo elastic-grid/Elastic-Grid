@@ -13,7 +13,7 @@
 
     <dependencies>
 
-        <!-- Elastic Grid model -->
+        <!-- Elastic Cluster model -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-model</artifactId>

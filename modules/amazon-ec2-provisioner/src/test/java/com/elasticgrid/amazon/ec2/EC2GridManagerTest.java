@@ -19,10 +19,10 @@
 
 package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.grid.NodeInstantiator;
-import com.elasticgrid.grid.discovery.GridLocator;
-import com.elasticgrid.model.GridAlreadyRunningException;
-import com.elasticgrid.model.GridException;
+import com.elasticgrid.cluster.NodeInstantiator;
+import com.elasticgrid.cluster.discovery.ClusterLocator;
+import com.elasticgrid.model.ClusterAlreadyRunningException;
+import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import org.easymock.EasyMock;
@@ -35,16 +35,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class EC2GridManagerTest {
-    private EC2GridManager gridManager;
+    private EC2ClusterManager clusterManager;
     private NodeInstantiator mockEC2;
-    private GridLocator mockLocator;
+    private ClusterLocator mockLocator;
 
-    @Test(expectedExceptions = GridAlreadyRunningException.class)
-    public void testStartingARunningGrid() throws GridException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    @Test(expectedExceptions = ClusterAlreadyRunningException.class)
+    public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(null);
         EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "elastic-grid"),
-                "GRID_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
+                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
                 null, true, InstanceType.SMALL))
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
@@ -53,17 +53,17 @@ public class EC2GridManagerTest {
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123")));
         EasyMock.replay(mockEC2, mockLocator);
-        gridManager.startGrid("test");
-        gridManager.startGrid("test");
+        clusterManager.startCluster("test");
+        clusterManager.startCluster("test");
     }
 
     @BeforeTest
-    public void setUpGridManager() {
-        gridManager = new EC2GridManager();
+    public void setUpClusterManager() {
+        clusterManager = new EC2ClusterManager();
         mockEC2 = EasyMock.createMock(NodeInstantiator.class);
-        mockLocator = EasyMock.createMock(GridLocator.class);
-        gridManager.setNodeInstantiator(mockEC2);
-        gridManager.setGridLocator(mockLocator);
+        mockLocator = EasyMock.createMock(ClusterLocator.class);
+        clusterManager.setNodeInstantiator(mockEC2);
+        clusterManager.setClusterLocator(mockLocator);
     }
 
     @AfterTest

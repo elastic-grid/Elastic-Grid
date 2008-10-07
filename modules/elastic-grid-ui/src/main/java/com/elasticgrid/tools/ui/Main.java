@@ -20,8 +20,8 @@
 package com.elasticgrid.tools.ui;
 
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.grid.GridManager;
-import com.elasticgrid.grid.discovery.GridLocator;
+import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.cluster.discovery.ClusterLocator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -33,11 +33,11 @@ public class Main {
             System.exit(-1);    // todo: instead provide a UI for entering this information and keep going
         }
         // setup Spring Application Context
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/grid/applicationContext.xml");
-        GridManager gridManager = (GridManager) ctx.getBean("gridManager", GridManager.class);
-        GridLocator gridLocator = (GridLocator) ctx.getBean("gridLocator", GridLocator.class);
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/cluster/applicationContext.xml");
+        ClusterManager clusterManager = (ClusterManager) ctx.getBean("clusterManager", ClusterManager.class);
+        ClusterLocator clusterLocator = (ClusterLocator) ctx.getBean("clusterLocator", ClusterLocator.class);
         // build the initial UI
-        new MainPanel(gridManager, gridLocator);
+        new MainPanel(clusterManager, clusterLocator);
     }
 
     public static void main(String[] args) {

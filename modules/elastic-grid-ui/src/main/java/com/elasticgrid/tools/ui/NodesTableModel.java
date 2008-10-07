@@ -19,7 +19,6 @@
 
 package com.elasticgrid.tools.ui;
 
-import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.NodeProfile;
 import javax.swing.table.AbstractTableModel;

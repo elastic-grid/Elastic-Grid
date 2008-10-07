@@ -41,9 +41,9 @@
     </mapping>
 
     <mapping class="com.elasticgrid.model.internal.AbstractStore" abstract="true">
-        <collection name="grids" field="grids" item-type="java.lang.String" usage="optional"
-                    factory="com.elasticgrid.model.internal.AbstractStore.setOfGrids">
-            <structure name="grid">
+        <collection name="clusters" field="clusters" item-type="java.lang.String" usage="optional"
+                    factory="com.elasticgrid.model.internal.AbstractStore.setOfClusters">
+            <structure name="cluster">
                 <value name="name" style="attribute"/>
             </structure>
         </collection>
@@ -55,19 +55,18 @@
         </collection>
     </mapping>
 
-
-    <mapping class="com.elasticgrid.model.internal.AbstractGrid" abstract="true">
+    <mapping class="com.elasticgrid.model.internal.AbstractCluster" abstract="true">
         <value name="name" field="name" style="attribute"/>
         <collection name="applications" field="applications"
                     item-type="com.elasticgrid.model.internal.ApplicationImpl"
                     factory="com.elasticgrid.model.internal.Factories.listOfApplications"/>
     </mapping>
-    <mapping name="grid" class="com.elasticgrid.model.ec2.impl.EC2GridImpl" extends="com.elasticgrid.model.internal.AbstractGrid">
+    <mapping name="cluster" class="com.elasticgrid.model.ec2.impl.EC2ClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
         <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
-        <structure map-as="com.elasticgrid.model.internal.AbstractGrid"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractCluster"/>
         <collection name="nodes" get-method="getNodes" set-method="setNodes"
                     item-type="com.elasticgrid.model.ec2.impl.EC2NodeImpl"
-                    factory="com.elasticgrid.model.internal.AbstractGrid.setOfNodes"/>
+                    factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
     </mapping>
 
     <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">

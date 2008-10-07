@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    This file is part of Elastic Grid.
+    
+    Elastic Grid is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or any later version.
+    
+    Elastic Grid is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/utils/spring-util-2.5.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="com.elasticgrid.amazon.ec2"/>
+    <context:component-scan base-package="com.elasticgrid.cluster.ec2"/>
+
+    <bean id="clusterManager" class="com.elasticgrid.amazon.ec2.EC2ClusterManager">
+        <property name="awsAccessID" value="${aws.accessId}"/>
+        <property name="awsSecretKey" value="${aws.secretKey}"/>
+        <property name="awsSecured" value="${aws.ec2.secured}"/>
+        <property name="keyName" value="${aws.ec2.key}"/>
+        <property name="ami32" value="${aws.ec2.ami32}"/>
+        <property name="ami64" value="${aws.ec2.ami64}"/>
+    </bean>
+
+    <bean id="clusterLocator" class="com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsClusterLocator">
+        <property name="ec2" ref="jec2"/>
+    </bean>
+    
+    <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
+        <constructor-arg index="0" value="${aws.accessId}"/>
+        <constructor-arg index="1" value="${aws.secretKey}"/>
+        <constructor-arg index="2" value="${aws.ec2.secured}"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${EG_HOME}/config/eg.properties</value>
+                <value>file:${user.home}/.eg/eg.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+</beans>
+

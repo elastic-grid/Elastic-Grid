@@ -19,12 +19,12 @@
 
 package com.elasticgrid.tools.ui
 
-import com.elasticgrid.grid.discovery.GridLocator
-import com.elasticgrid.grid.GridManager
-import com.elasticgrid.model.GridMonitorNotFoundException
+import com.elasticgrid.cluster.discovery.ClusterLocator
+import com.elasticgrid.cluster.ClusterManager
+import com.elasticgrid.model.ClusterMonitorNotFoundException
 import com.elasticgrid.model.NodeProfile
-import com.elasticgrid.model.ec2.EC2Grid
-import com.elasticgrid.model.ec2.impl.EC2GridImpl
+import com.elasticgrid.model.ec2.EC2Cluster
+import com.elasticgrid.model.ec2.impl.EC2ClusterImpl
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl
 import groovy.swing.SwingBuilder
 import javax.swing.JOptionPane
@@ -33,21 +33,25 @@ import javax.swing.WindowConstants
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import org.rioproject.resources.util.XMLAndGroovyFileChooser
+import com.elasticgrid.model.ec2.impl.EC2ClusterImpl
+import com.elasticgrid.model.ClusterMonitorNotFoundException
+import com.elasticgrid.cluster.discovery.ClusterLocator
+import com.elasticgrid.cluster.ClusterManager
 
 class MainPanel {
 
-    def MainPanel(GridManager gridManager, GridLocator locator) {
+    def MainPanel(ClusterManager clusterManager, ClusterLocator locator) {
         def builder = new SwingBuilder();
 
-        // Test Data: comment the few lines below and uncomment the one using the Grid Manager
-        def EC2Grid grid1 = new EC2GridImpl(
+        // Test Data: comment the few lines below and uncomment the one using the Cluster Manager
+        def EC2Cluster cluster1 = new EC2ClusterImpl(
                 name: 'test',
                 nodes: [
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR, address: InetAddress.localHost),
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.AGENT, address: InetAddress.localHost)
                 ] as Set
         )
-        def EC2Grid grid2 = new EC2GridImpl(
+        def EC2Cluster cluster2 = new EC2ClusterImpl(
                 name: 'another',
                 nodes: [
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR, address: InetAddress.localHost),
@@ -55,27 +59,27 @@ class MainPanel {
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.AGENT, address: InetAddress.localHost)
                 ] as Set
         )
-        def grids = [ grid1, grid2 ]
+        def clusters = [ cluster1, cluster2 ]
 
-        //def grids = gridManager.grids
-        def GridsTableModel gridsModel = new GridsTableModel(grids: grids)
+        //def clusters = clusterManager.clusters
+        def ClustersTableModel clustersModel = new ClustersTableModel(clusters: clusters)
         def NodesTableModel nodesModel = new NodesTableModel()
 
         def frame = builder.frame(
-                title: 'Elastic Grid Administration',
+                title: 'Elastic Cluster Administration',
                 defaultCloseOperation: WindowConstants.EXIT_ON_CLOSE) { frame ->
             borderLayout()
             panel(constraints: NORTH) {
                 borderLayout()
-                label = label(text: 'Grids', constraints: NORTH)
+                label = label(text: 'Clusters', constraints: NORTH)
                 scrollPane(constraints: CENTER) {
-                    table(id: 'gridsTable') {
-                        tableModel(gridsModel)
+                    table(id: 'clustersTable') {
+                        tableModel(clustersModel)
                         current.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
                         current.selectionModel.addListSelectionListener({ ListSelectionEvent e ->
                             def row = e.source.leadIndex
                             if (!e.valueIsAdjusting)
-                                nodesModel.nodes = grids[row].nodes
+                                nodesModel.nodes = clusters[row].nodes
                         } as ListSelectionListener)
                     }
                 }
@@ -93,12 +97,12 @@ class MainPanel {
                     button('Deploy...', actionPerformed: {
                         XMLAndGroovyFileChooser fileChooser = new XMLAndGroovyFileChooser(frame, null, "Choose OpString to deploy")
                         def opstring = fileChooser.file
-                        def selectedGrid = grids[gridsTable.selectedRow]
+                        def selectedCluster = clusters[clustersTable.selectedRow]
                         try {
-                            def monitor = locator.findMonitor(selectedGrid.name)
-                            println "Should deploy OpString '$opstring' to grid '${selectedGrid.name}' whose monitor is ${monitor}"
-                        } catch (GridMonitorNotFoundException e) {
-                            showError "<html>Monitor not found for grid '${selectedGrid.name}'.<br>No deployment can be made!</html>", frame
+                            def monitor = locator.findMonitor(selectedCluster.name)
+                            println "Should deploy OpString '$opstring' to cluster '${selectedCluster.name}' whose monitor is ${monitor}"
+                        } catch (ClusterMonitorNotFoundException e) {
+                            showError "<html>Monitor not found for cluster '${selectedCluster.name}'.<br>No deployment can be made!</html>", frame
                         }
                     })
                     button('Undeploy...', actionPerformed: {

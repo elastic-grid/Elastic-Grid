@@ -19,8 +19,8 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.amazon.ec2.discovery.EC2GridLocator;
-import com.elasticgrid.model.GridException;
+import com.elasticgrid.amazon.ec2.discovery.EC2ClusterLocator;
+import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
@@ -43,7 +43,7 @@ import java.util.Properties;
  * @author Jerome Bernard
  */
 public class Bootstrapper {
-    public static final String GRID_NAME = "GRID_NAME";
+    public static final String CLUSTER_NAME = "CLUSTER_NAME";
     public static final String LAUNCH_PARAMETER_ACCESS_ID = "AWS_ACCESS_ID";
     public static final String LAUNCH_PARAMETER_SECRET_KEY = "AWS_SECRET_KEY";
     public static final String LAUNCH_PARAMETER_SQS_SECURED = "AWS_SQS_SECURED";
@@ -68,16 +68,16 @@ public class Bootstrapper {
 
         // save configuration
         File file = saveConfiguration(egParameters);
-        System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
+        System.out.printf("Elastic Cluster configuration file generated in '%s'\n", file.getAbsolutePath());
 
         // start Spring context
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
 
         // locate monitor node
-        EC2GridLocator locator = (EC2GridLocator) ctx.getBean("gridLocator", EC2GridLocator.class);
-        String gridName = launchParameters.getProperty(GRID_NAME);
+        EC2ClusterLocator locator = (EC2ClusterLocator) ctx.getBean("clusterLocator", EC2ClusterLocator.class);
+        String clusterName = launchParameters.getProperty(CLUSTER_NAME);
         try {
-            EC2Node monitor = locator.findMonitor(gridName);
+            EC2Node monitor = locator.findMonitor(clusterName);
             InetAddress monitorHost = monitor.getAddress();
             String monitorHostAddress = monitorHost.getHostAddress();
             if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
@@ -87,7 +87,7 @@ public class Bootstrapper {
                 egParameters.put(EG_MONITOR_HOST, monitorHost.getHostName());
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
-        } catch (GridException e) {
+        } catch (ClusterException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
         }
@@ -134,7 +134,7 @@ public class Bootstrapper {
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(config);
-            egParameters.store(stream, "Elastic Grid Configuration File - Generated file, please do NOT edit!");
+            egParameters.store(stream, "Elastic Cluster Configuration File - Generated file, please do NOT edit!");
         } finally {
             IOUtils.closeQuietly(stream);
         }
@@ -142,7 +142,7 @@ public class Bootstrapper {
     }
 
     public static void main(String[] args) throws IOException, EC2Exception {
-        System.out.printf("Preparing Elastic Grid environment...\n");
+        System.out.printf("Preparing Elastic Cluster environment...\n");
         new Bootstrapper();
     }
 }
