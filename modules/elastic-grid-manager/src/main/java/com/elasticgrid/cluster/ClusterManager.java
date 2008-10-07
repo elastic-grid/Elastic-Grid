@@ -64,7 +64,7 @@ public interface ClusterManager<G extends Cluster> {
      * @throws ClusterException if there is a cluster failure
      * @throws RemoteException if there is a network failure
      */
-    List<Cluster> getClusters() throws ClusterException, RemoteException;
+    List<Cluster> findClusters() throws ClusterException, RemoteException;
 
     /**
      * Retrieve cluster details.

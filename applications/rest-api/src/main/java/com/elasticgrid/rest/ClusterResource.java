@@ -19,39 +19,39 @@
 
 package com.elasticgrid.rest;
 
-import org.restlet.resource.Resource;
-import org.restlet.resource.Variant;
-import org.restlet.resource.Representation;
-import org.restlet.resource.ResourceException;
-import org.restlet.data.MediaType;
-import org.restlet.data.Response;
-import org.restlet.data.Request;
-import org.restlet.Context;
-import org.restlet.ext.jibx.JibxRepresentation;
-import com.elasticgrid.model.internal.Clusters;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
+import org.restlet.Context;
+import org.restlet.data.MediaType;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Status;
+import org.restlet.ext.jibx.JibxRepresentation;
+import org.restlet.resource.Representation;
+import org.restlet.resource.Resource;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.Variant;
 
-public class ClustersResource extends Resource {
+public class ClusterResource extends Resource {
+    private String clusterName;
     private ClusterManager clusterManager;
 
-    public ClustersResource(Context context, Request request, Response response) {
+    public ClusterResource(Context context, Request request, Response response) {
         super(context, request, response);
+        clusterName = (String) getRequest().getAttributes().get("clusterName");
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
     }
 
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        Clusters clusters = new Clusters();
-        clusters.addCluster(new EC2ClusterImpl().name("cluster1"));
-        clusters.addCluster(new EC2ClusterImpl().name("cluster2"));
-        clusters.addCluster(new EC2ClusterImpl().name("cluster3"));
-        return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, clusters, "ElasticGridREST");
-//        List<Cluster> clusters = null;
+        Cluster cluster = new EC2ClusterImpl().name(clusterName);
+        return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
 //        try {
-//            clusters = clusterManager.findClusters();
-//            return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, new Clusters(clusters), "ElasticGridREST");
+//            Cluster cluster = clusterManager.cluster(clusterName);
+//            return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
 //        } catch (Exception e) {
+//            e.printStackTrace();
 //            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
 //        }
     }

@@ -118,7 +118,7 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
         }
     }
 
-    public List<Cluster> getClusters() throws ClusterException, RemoteException {
+    public List<Cluster> findClusters() throws ClusterException, RemoteException {
         List<String> clustersNames = clusterLocator.findClusters();
         List<Cluster> clusters = new ArrayList<Cluster>(clustersNames.size());
         for (String cluster : clustersNames) {
