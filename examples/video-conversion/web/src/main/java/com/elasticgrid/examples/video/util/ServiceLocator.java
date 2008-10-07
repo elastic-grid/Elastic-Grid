@@ -19,9 +19,9 @@
 
 package com.elasticgrid.examples.video.util;
 
-import com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsGridLocator;
-import com.elasticgrid.model.GridException;
-import com.elasticgrid.model.GridMonitorNotFoundException;
+import com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsClusterLocator;
+import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ClusterMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Exception;
@@ -83,15 +83,15 @@ public class ServiceLocator {
             e.printStackTrace();
         } catch (EC2Exception e) {
             e.printStackTrace();
-        } catch (GridException e) {
+        } catch (ClusterException e) {
             e.printStackTrace();
         }
     }
 
-    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception, GridException {
-        System.out.printf("Searching for Elastic Grid monitor host...\n");
+    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception, ClusterException {
+        System.out.printf("Searching for Elastic Cluster monitor host...\n");
         Properties egProps = AWSUtils.loadEC2Configuration();
-        EC2SecurityGroupsGridLocator locator = new EC2SecurityGroupsGridLocator();
+        EC2SecurityGroupsClusterLocator locator = new EC2SecurityGroupsClusterLocator();
         String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
         String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
         locator.setEc2(new Jec2(awsAccessId, awsSecretKey));
@@ -99,7 +99,7 @@ public class ServiceLocator {
         try {
             node = (EC2Node) locator.findMonitor("test");
             return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress().getHostName() )};
-        } catch (GridMonitorNotFoundException e) {
+        } catch (ClusterMonitorNotFoundException e) {
             logger.info("Could not find monitor host. Using localhost instead hoping we find the service there!");
             return new LookupLocator[] { new LookupLocator("jini://localhost" )};
         }

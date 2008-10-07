@@ -14,7 +14,7 @@
 
     <dependencies>
 
-        <!-- Elastic Grid manager -->
+        <!-- Elastic Cluster manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>

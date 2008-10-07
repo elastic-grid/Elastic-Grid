@@ -28,13 +28,13 @@ import java.util.Set;
  * @author Jerome Bernard
  */
 public abstract class AbstractStore {
-    private Set<String> grids = setOfGrids();
+    private Set<String> clusters = setOfClusters();
     private Set<String> applications = setOfApplications();
 
     public AbstractStore() {
     }
 
-    private static Set<String> setOfGrids() {
+    private static Set<String> setOfClusters() {
         return Collections.synchronizedSet(new HashSet<String>());
     }
 
@@ -42,8 +42,8 @@ public abstract class AbstractStore {
         return Collections.synchronizedSet(new HashSet<String>());
     }
 
-    public AbstractStore grid(String name) {
-        getGrids().add(name);
+    public AbstractStore cluster(String name) {
+        getClusters().add(name);
         return this;
     }
 
@@ -52,12 +52,12 @@ public abstract class AbstractStore {
         return this;
     }
 
-    public Set<String> getGrids() {
-        return grids;
+    public Set<String> getClusters() {
+        return clusters;
     }
 
-    public void setGrids(Set<String> grids) {
-        this.grids = grids;
+    public void setClusters(Set<String> clusters) {
+        this.clusters = clusters;
     }
 
     public Set<String> getApplications() {

@@ -19,7 +19,7 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.grid.GridManager;
+import com.elasticgrid.cluster.ClusterManager;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
@@ -49,10 +49,10 @@ public class CLI extends org.rioproject.tools.cli.CLI {
     protected void loadOptionHandlers(Configuration config) throws ConfigurationException {
         List<OptionHandlerDesc> optionHandlers = new LinkedList<OptionHandlerDesc>();
         optionHandlers.addAll(Arrays.asList(
-                new OptionHandlerDesc("list-grids", ListGridsHandler.class.getName()),
-                new OptionHandlerDesc("start-grid", StartGridHandler.class.getName()),
-                new OptionHandlerDesc("stop-grid", StopGridHandler.class.getName()),
-                new OptionHandlerDesc("resize-grid", ResizeGridHandler.class.getName()),
+                new OptionHandlerDesc("list-clusters", ListClustersHandler.class.getName()),
+                new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
+                new OptionHandlerDesc("stop-cluster", StopClusterHandler.class.getName()),
+                new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
               new OptionHandlerDesc("list", ListHandler.class.getName()),
               new OptionHandlerDesc("destroy", StopHandler.class.getName()),
               new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),
@@ -73,7 +73,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
         }
     }
 
-    public static GridManager getGridManager() {
-        return (GridManager) ctx.getBean("gridManager");
+    public static ClusterManager getClusterManager() {
+        return (ClusterManager) ctx.getBean("clusterManager");
     }
 }

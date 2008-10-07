@@ -19,11 +19,11 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.grid.GridManager;
+import com.elasticgrid.cluster.ClusterManager;
 import org.rioproject.tools.cli.OptionHandler;
 
 abstract class AbstractHandler implements OptionHandler {
-    public GridManager getGridManager() {
-        return CLI.getGridManager();
+    public ClusterManager getClusterManager() {
+        return CLI.getClusterManager();
     }
 }

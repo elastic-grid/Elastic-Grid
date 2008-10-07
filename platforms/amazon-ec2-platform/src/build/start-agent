@@ -18,10 +18,10 @@
 # along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
 
 if [ "$1" = "" ]; then
-    echo "You must specify a grid name."
-    echo "start-agent GRID_NAME"
+    echo "You must specify a cluster name."
+    echo "start-agent CLUSTER_NAME"
     exit -1
 fi
 
-echo "Starting agent for grid $1"
+echo "Starting agent for cluster $1"
 ec2run ami-16cd297f -g eg-monitor -g elastic-grid -g eg-agent -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config

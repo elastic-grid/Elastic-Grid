@@ -21,7 +21,6 @@ package com.elasticgrid.amazon.ec2.sla;
 
 import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.amazon.ec2.InstanceType;
-import com.elasticgrid.amazon.ec2.EC2InstantiatorImpl;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
@@ -90,7 +89,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
             Properties egProps = AWSUtils.loadEC2Configuration();
             // todo: find a way to make this information more manageable
             String userdata = String.format(
-                    "GRID_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=true",
+                    "CLUSTER_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=true",
                     "test", "mencoder",     // todo: find a way to not hardcode this!
                     egProps.getProperty(AWSUtils.AWS_ACCESS_ID), egProps.getProperty(AWSUtils.AWS_SECRET_KEY));
             InstanceType instanceType = InstanceType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
