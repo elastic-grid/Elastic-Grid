@@ -82,6 +82,10 @@
                 <version>1.1.6a</version>
                 <configuration>
                     <directory>src/main/conf</directory>
+                    <includes>
+                        <include>binding.xml</include>
+                        <include>binding-REST.xml</include>
+                    </includes>
                     <load>true</load>
                     <validate>true</validate>
                     <verbose>true</verbose>

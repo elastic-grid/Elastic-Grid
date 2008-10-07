@@ -23,6 +23,7 @@ import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.model.internal.LocalStore;
 import com.elasticgrid.model.internal.RemoteStore;
+import com.elasticgrid.model.internal.Clusters;
 import com.elasticgrid.utils.jibx.ObjectXmlMappingException;
 import com.elasticgrid.utils.jibx.XmlUtils;
 import static org.testng.Assert.assertEquals;
@@ -39,6 +40,14 @@ import java.net.UnknownHostException;
  */
 public class JiBXTest {
     private ClusterFactory clusterFactory;
+
+    @Test
+    public void testRoundtripOfClusters() throws ObjectXmlMappingException, UnknownHostException {
+        Clusters clusters = new Clusters();
+        clusters.addCluster(clusterFactory.createCluster().name("cluster"));
+        String xml = XmlUtils.convertObjectToXml("ElasticGridREST", clusters, "UTF-8");
+        System.out.printf("XML is: %s\n", xml);
+    }
 
     @Test
     public void testRoundtripOfLocalStore() throws ObjectXmlMappingException, UnknownHostException {

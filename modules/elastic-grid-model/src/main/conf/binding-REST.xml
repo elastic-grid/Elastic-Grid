@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+    
+    This file is part of Elastic Grid.
+    
+    Elastic Grid is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or any later version.
+    
+    Elastic Grid is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public License
+    along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<binding name="ElasticGridREST"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="binding.xsd">
+
+    <namespace uri="http://aws.amazon.com/s3" prefix="s3"/>
+
+    <format type="java.net.InetAddress"
+            serializer="com.elasticgrid.utils.jibx.Conversion.serializeInetAddress"
+            deserializer="com.elasticgrid.utils.jibx.Conversion.deserializeInetAddress"/>
+
+    <mapping name="clusters" class="com.elasticgrid.model.internal.Clusters">
+        <collection field="clusters" item-type="com.elasticgrid.model.ec2.impl.EC2ClusterImpl"/>
+    </mapping>
+
+    <mapping class="com.elasticgrid.model.internal.AbstractCluster" abstract="true">
+        <value name="name" field="name" style="attribute"/>
+        <!--<collection name="applications" field="applications"-->
+                    <!--item-type="com.elasticgrid.model.internal.ApplicationImpl"-->
+                    <!--factory="com.elasticgrid.model.internal.Factories.listOfApplications"/>-->
+    </mapping>
+    <mapping name="cluster" class="com.elasticgrid.model.ec2.impl.EC2ClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
+        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractCluster"/>
+        <collection name="nodes" get-method="getNodes" set-method="setNodes"
+                    item-type="com.elasticgrid.model.ec2.impl.EC2NodeImpl"
+                    factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
+    </mapping>
+
+    <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">
+        <value name="address" field="address"/>
+    </mapping>
+    <mapping name="node" class="com.elasticgrid.model.ec2.impl.EC2NodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
+        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
+        <value name="instanceID" field="instanceID"/>
+    </mapping>
+
+    <!--<mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">-->
+        <!--<value name="name" field="name" style="attribute"/>-->
+        <!--<structure field="oar" type="com.elasticgrid.model.internal.OARImpl"/>-->
+    <!--</mapping>-->
+
+    <!--<mapping name="oar" class="com.elasticgrid.model.internal.OARImpl">-->
+        <!--<value name="name" field="name"/>-->
+        <!--<value name="version" field="version" usage="optional"/>-->
+        <!--<value name="opstring-name" field="opStringName" usage="optional"/>-->
+        <!--<value name="deploy-directory" field="deployDir" usage="optional"/>-->
+        <!--<value name="activation-type" field="activationType" usage="optional"/>-->
+    <!--</mapping>-->
+
+</binding>
