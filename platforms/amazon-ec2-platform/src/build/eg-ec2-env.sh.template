@@ -1,5 +1,4 @@
-# Set environment variables for running Hadoop on Amazon EC2 here. All are required.
-
+#
 # Copyright (C) 2007-2008 Elastic Grid, LLC.
 #
 # This file is part of Elastic Grid.
@@ -16,6 +15,7 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
+#
 
 
 # Create a Elastic Grid AMI. Runs on the EC2 instance.

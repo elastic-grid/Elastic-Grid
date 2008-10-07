@@ -46,10 +46,9 @@
 
     <modules>
         <module>modules</module>
-        <module>private-lan-platform</module>
-        <module>amazon-ec2-platform</module>
         <module>substrates</module>
         <module>examples</module>
+		<module>platforms</module>
     </modules>
 
     <distributionManagement>

@@ -30,7 +30,7 @@
         <!--module>elastic-grid-oar</module-->
         <!--module>examples</module-->
         <!--<module>jabber-cli</module>-->
-        <module>jxta-discovery</module>
+        <!--module>jxta-discovery</module-->
     </modules>
 
     <reporting>
