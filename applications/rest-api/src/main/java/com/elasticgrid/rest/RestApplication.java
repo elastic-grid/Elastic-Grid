@@ -24,13 +24,15 @@ import org.restlet.Router;
 import org.restlet.Restlet;
 import org.restlet.Component;
 import org.restlet.data.Protocol;
+import com.elasticgrid.model.internal.Clusters;
 
 public class RestApplication extends Application {
 
     @Override
     public synchronized Restlet createRoot() {
         Router router = new Router(getContext());
-        router.attachDefault(ClustersResource.class);
+        router.attach("/eg", ClustersResource.class);
+        router.attach("/eg/{clusterName}", ClusterResource.class);
         return router;
     }
 
