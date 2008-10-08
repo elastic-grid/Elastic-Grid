@@ -28,11 +28,12 @@ import org.restlet.data.Response;
 import org.restlet.data.Request;
 import org.restlet.Context;
 import org.restlet.ext.jibx.JibxRepresentation;
+import org.restlet.ext.wadl.WadlResource;
 import com.elasticgrid.model.internal.Clusters;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.cluster.ClusterManager;
 
-public class ClustersResource extends Resource {
+public class ClustersResource extends WadlResource {
     private ClusterManager clusterManager;
 
     public ClustersResource(Context context, Request request, Response response) {

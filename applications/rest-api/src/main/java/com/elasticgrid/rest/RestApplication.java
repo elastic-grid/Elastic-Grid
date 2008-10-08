@@ -23,10 +23,11 @@ import org.restlet.Application;
 import org.restlet.Router;
 import org.restlet.Restlet;
 import org.restlet.Component;
+import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.data.Protocol;
 import com.elasticgrid.model.internal.Clusters;
 
-public class RestApplication extends Application {
+public class RestApplication extends WadlApplication {
 
     @Override
     public synchronized Restlet createRoot() {
