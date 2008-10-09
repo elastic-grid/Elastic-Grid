@@ -95,9 +95,8 @@ public class ServiceLocator {
         String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
         String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
         locator.setEc2(new Jec2(awsAccessId, awsSecretKey));
-        EC2Node node = null;
         try {
-            node = (EC2Node) locator.findMonitor("test");
+            EC2Node node = (EC2Node) locator.findMonitor("test");
             return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress().getHostName() )};
         } catch (ClusterMonitorNotFoundException e) {
             logger.info("Could not find monitor host. Using localhost instead hoping we find the service there!");
