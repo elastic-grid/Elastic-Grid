@@ -42,7 +42,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Rio 3.3 dependencies -->
+        <!-- Rio 4.0 dependencies -->
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
