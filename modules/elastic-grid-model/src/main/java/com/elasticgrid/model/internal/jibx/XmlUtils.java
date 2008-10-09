@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.utils.jibx;
+package com.elasticgrid.model.internal.jibx;
 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;

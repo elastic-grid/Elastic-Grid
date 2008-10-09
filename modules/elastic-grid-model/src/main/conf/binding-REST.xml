@@ -27,8 +27,8 @@
     <namespace uri="http://aws.amazon.com/s3" prefix="s3"/>
 
     <format type="java.net.InetAddress"
-            serializer="com.elasticgrid.utils.jibx.Conversion.serializeInetAddress"
-            deserializer="com.elasticgrid.utils.jibx.Conversion.deserializeInetAddress"/>
+            serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeInetAddress"
+            deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeInetAddress"/>
 
     <mapping name="clusters" class="com.elasticgrid.model.internal.Clusters">
         <collection field="clusters" item-type="com.elasticgrid.model.ec2.impl.EC2ClusterImpl"/>

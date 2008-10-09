@@ -13,13 +13,6 @@
 
     <dependencies>
 
-        <!-- Elastic Cluster Utilities -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-utils</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
         <!-- Object/XML mapping dependencies -->
         <dependency>
             <groupId>org.jibx</groupId>

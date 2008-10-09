@@ -19,13 +19,11 @@
 
 package com.elasticgrid.rest;
 
-import org.restlet.Application;
-import org.restlet.Router;
-import org.restlet.Restlet;
 import org.restlet.Component;
-import org.restlet.ext.wadl.WadlApplication;
+import org.restlet.Restlet;
+import org.restlet.Router;
 import org.restlet.data.Protocol;
-import com.elasticgrid.model.internal.Clusters;
+import org.restlet.ext.wadl.WadlApplication;
 
 public class RestApplication extends WadlApplication {
 

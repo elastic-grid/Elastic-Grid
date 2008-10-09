@@ -33,10 +33,6 @@ import javax.swing.WindowConstants
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import org.rioproject.resources.util.XMLAndGroovyFileChooser
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl
-import com.elasticgrid.model.ClusterMonitorNotFoundException
-import com.elasticgrid.cluster.discovery.ClusterLocator
-import com.elasticgrid.cluster.ClusterManager
 
 class MainPanel {
 
