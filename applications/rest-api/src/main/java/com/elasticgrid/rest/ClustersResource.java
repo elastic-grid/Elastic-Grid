@@ -26,9 +26,13 @@ import org.restlet.resource.ResourceException;
 import org.restlet.data.MediaType;
 import org.restlet.data.Response;
 import org.restlet.data.Request;
+import org.restlet.data.Method;
 import org.restlet.Context;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.DocumentationInfo;
+import org.restlet.ext.wadl.ResourceInfo;
 import com.elasticgrid.model.internal.Clusters;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.cluster.ClusterManager;
@@ -38,9 +42,15 @@ public class ClustersResource extends WadlResource {
 
     public ClustersResource(Context context, Request request, Response response) {
         super(context, request, response);
+        // Allow modifications of this resource via POST requests
+        setModifiable(true);
+        // Declare the kind of representations supported by this resource
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
     }
 
+    /**
+     * Handle GET requests: describe all clusters.
+     */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
         Clusters clusters = new Clusters();
@@ -57,4 +67,25 @@ public class ClustersResource extends WadlResource {
 //        }
     }
 
+    /**
+     * Handle POST requests: start a new cluster.
+     * @param entity
+     * @throws ResourceException
+     */
+    @Override
+    public void acceptRepresentation(Representation entity) throws ResourceException {
+        super.acceptRepresentation(entity);
+    }
+
+    @Override
+    protected void describeGet(MethodInfo info) {
+        super.describeGet(info);
+        info.setDocumentation("Describe all Elastic Grid clusters.");
+    }
+
+    @Override
+    protected void describePost(MethodInfo info) {
+        super.describePost(info);
+        info.setDocumentation("Start a new cluster.");
+    }
 }

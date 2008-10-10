@@ -29,6 +29,7 @@ import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
@@ -43,7 +44,7 @@ public class ClusterResource extends WadlResource {
         clusterName = (String) getRequest().getAttributes().get("clusterName");
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
     }
-
+   
     @Override
     public Representation represent(Variant variant) throws ResourceException {
         Cluster cluster = new EC2ClusterImpl().name(clusterName);
@@ -55,6 +56,12 @@ public class ClusterResource extends WadlResource {
 //            e.printStackTrace();
 //            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
 //        }
+    }
+
+    @Override
+    protected void describeGet(MethodInfo info) {
+        super.describeGet(info);
+        info.setDocumentation("Describes cluster {clusterName}");
     }
 
 }
