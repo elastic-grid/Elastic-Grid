@@ -22,8 +22,12 @@ package com.elasticgrid.rest;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.Router;
+import org.restlet.service.TunnelService;
 import org.restlet.data.Protocol;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
 import org.restlet.ext.wadl.WadlApplication;
+import org.restlet.ext.wadl.ApplicationInfo;
 
 public class RestApplication extends WadlApplication {
 
@@ -48,10 +52,33 @@ public class RestApplication extends WadlApplication {
 
             // Start the component.
             component.start();
+
+            // Start the tunnel
+            TunnelService tunnel = new TunnelService(true, true);
+            tunnel.start();
         } catch (Exception e) {
             // Something is wrong.
             e.printStackTrace();
         }
     }
 
+    @Override
+    public String getName() {
+        return "Elastic Grid REST API";
+    }
+
+    @Override
+    public String getOwner() {
+        return "Elastic Grid, LLC.";
+    }
+
+    @Override
+    public String getAuthor() {
+        return "Elastic Grid, LLC.";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Elastic Grid REST API";
+    }
 }
