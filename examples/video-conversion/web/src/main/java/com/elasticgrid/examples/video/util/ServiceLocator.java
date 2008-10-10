@@ -24,6 +24,7 @@ import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;
+import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.Jec2;
 import net.jini.config.ConfigurationException;
@@ -83,18 +84,16 @@ public class ServiceLocator {
             e.printStackTrace();
         } catch (EC2Exception e) {
             e.printStackTrace();
-        } catch (ClusterException e) {
-            e.printStackTrace();
         }
     }
 
-    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception, ClusterException {
+    private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception {
         System.out.printf("Searching for Elastic Cluster monitor host...\n");
         Properties egProps = AWSUtils.loadEC2Configuration();
-        EC2SecurityGroupsClusterLocator locator = new EC2SecurityGroupsClusterLocator();
+        ClusterLocator locator = new EC2SecurityGroupsClusterLocator();
         String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
         String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
-        locator.setEc2(new Jec2(awsAccessId, awsSecretKey));
+        ((EC2SecurityGroupsClusterLocator) locator).setEc2(new Jec2(awsAccessId, awsSecretKey));
         try {
             EC2Node node = (EC2Node) locator.findMonitor("test");
             return new LookupLocator[] { new LookupLocator("jini://" + node.getAddress().getHostName() )};

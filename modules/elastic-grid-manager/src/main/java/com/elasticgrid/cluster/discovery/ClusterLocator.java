@@ -44,7 +44,7 @@ public interface ClusterLocator<N extends Node> {
      * @throws ClusterNotFoundException if the cluster can't be found
      * @throws ClusterException if there is a technical error
      */
-    List<N> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException;
+    List<N> findNodes(String clusterName) throws ClusterException;
 
     /**
      * Locate a monitor instance in the specified cluster.
