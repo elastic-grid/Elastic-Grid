@@ -27,25 +27,22 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.data.Reference;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.WadlResource;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.ParameterInfo;
-import org.restlet.ext.wadl.ParameterStyle;
-import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import java.util.Arrays;
 
-public class ClusterResource extends WadlResource {
+public class ApplicationResource extends WadlResource {
     private String clusterName;
+    private String applicationName;
     private ClusterManager clusterManager;
 
-    public ClusterResource(Context context, Request request, Response response) {
+    public ApplicationResource(Context context, Request request, Response response) {
         super(context, request, response);
         // Allow modifications of this resource via POST requests
         setModifiable(true);
@@ -54,6 +51,7 @@ public class ClusterResource extends WadlResource {
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
         // Extract URI variables
         clusterName = (String) getRequest().getAttributes().get("clusterName");
+        applicationName = (String) getRequest().getAttributes().get("applicationName");
     }
 
     /**
@@ -61,15 +59,7 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        Cluster cluster = new EC2ClusterImpl().name(clusterName);
-        return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
-//        try {
-//            Cluster cluster = clusterManager.cluster(clusterName);
-//            return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
-//        }
+        return null;
     }
 
     /**
@@ -77,7 +67,6 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
-        // TODO: update the cluster!
     }
 
     /**
@@ -85,42 +74,29 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public void removeRepresentations() throws ResourceException {
-        // TODO: stop the cluster!
     }
 
     @Override
     protected void describeGet(MethodInfo info) {
         super.describeGet(info);
-        info.setDocumentation("Describe cluster {clusterName}.");
-        info.getResponse().setDocumentation("The cluster.");
+        info.setDocumentation("Describes application {applicationName} running on {clusterName}");
+        info.getResponse().setDocumentation("The application.");
         RepresentationInfo representation = new RepresentationInfo();
-        representation.setDocumentation("This resource exposes cluster {clusterName}.");
-        representation.getDocumentations().get(0).setTitle("cluster");
+        representation.setDocumentation("Application");
         representation.setMediaType(MediaType.APPLICATION_XML);
-        representation.getDocumentations().addAll(Arrays.asList(
-                new DocumentationInfo("Example of output:<pre><![CDATA[" +
-                        "<cluster name=\"cluster1\">\n" +
-                        "  <node profile=\"monitor\">ec2-75...</node>\n" +
-                        "  <node profile=\"monitor\">ec2-77...</node>\n" +
-                        "  <node profile=\"agent\">ec2-37...</node>\n" +
-                        "  <node profile=\"agent\">ec2-33...</node>\n" +
-                        "  <node profile=\"agent\">ec2-32...</node>\n" +
-                        "</cluster>" +
-                        "]]></pre>")
-        ));
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 
     @Override
     protected void describePost(MethodInfo info) {
         super.describePut(info);
-        info.setDocumentation("Update {clusterName} cluster.");
+        info.setDocumentation("Update {applicationName} cluster on cluster {clusterName}.");
     }
 
     @Override
     protected void describeDelete(MethodInfo info) {
         super.describeDelete(info);
-        info.setDocumentation("Stop {clusterName} cluster.");
+        info.setDocumentation("Stop {applicationName} application running on cluster {clusterName}.");
     }
 
     @Override

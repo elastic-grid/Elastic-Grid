@@ -27,6 +27,11 @@
             <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet.ext.jetty</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.jibx</artifactId>
             <version>1.1-SNAPSHOT</version>

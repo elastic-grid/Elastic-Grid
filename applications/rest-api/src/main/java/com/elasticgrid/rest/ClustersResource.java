@@ -19,23 +19,26 @@
 
 package com.elasticgrid.rest;
 
-import org.restlet.resource.Resource;
-import org.restlet.resource.Variant;
+import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
+import com.elasticgrid.model.internal.Clusters;
+import org.restlet.Context;
+import org.restlet.data.MediaType;
+import org.restlet.data.Request;
+import org.restlet.data.Response;
+import org.restlet.data.Reference;
+import org.restlet.data.Status;
+import org.restlet.ext.jibx.JibxRepresentation;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.data.MediaType;
-import org.restlet.data.Response;
-import org.restlet.data.Request;
-import org.restlet.data.Method;
-import org.restlet.Context;
-import org.restlet.ext.jibx.JibxRepresentation;
-import org.restlet.ext.wadl.WadlResource;
-import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.DocumentationInfo;
-import org.restlet.ext.wadl.ResourceInfo;
-import com.elasticgrid.model.internal.Clusters;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
-import com.elasticgrid.cluster.ClusterManager;
+import org.restlet.resource.Variant;
+import org.apache.commons.lang.StringUtils;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class ClustersResource extends WadlResource {
     private ClusterManager clusterManager;
@@ -68,12 +71,10 @@ public class ClustersResource extends WadlResource {
     }
 
     /**
-     * Handle POST requests: start a new cluster.
-     * @param entity
-     * @throws ResourceException
+     * Handle PUT requests: start a new cluster.
      */
     @Override
-    public void acceptRepresentation(Representation entity) throws ResourceException {
+    public void storeRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);
     }
 
@@ -81,11 +82,61 @@ public class ClustersResource extends WadlResource {
     protected void describeGet(MethodInfo info) {
         super.describeGet(info);
         info.setDocumentation("Describe all Elastic Grid clusters.");
+        info.getResponse().setDocumentation("The clusters.");
+        RepresentationInfo representation = new RepresentationInfo();
+        representation.setDocumentation("This representation exposes all running Elastic Grid Clusters.");
+        representation.getDocumentations().get(0).setTitle("clusters");
+        representation.setMediaType(MediaType.APPLICATION_XML);
+        representation.getDocumentations().addAll(Arrays.asList(
+                new DocumentationInfo("Example of output:<pre><![CDATA[" +
+                        "<clusters>\n" +
+                        "  <cluster name=\"cluster1\">\n" +
+                        "    <node profile=\"monitor\">ec2-75...</node>\n" +
+                        "    <node profile=\"monitor\">ec2-77...</node>\n" +
+                        "    <node profile=\"agent\">ec2-37...</node>\n" +
+                        "  </cluster>\n" +
+                        "  <cluster name=\"cluster2\">\n" +
+                        "    <node profile=\"monitor\">ec2-57...</node>\n" +
+                        "    <node profile=\"monitor\">ec2-63...</node>\n" +
+                        "    <node profile=\"agent\">ec2-31...</node>\n" +
+                        "  </cluster>\n" +
+                        "</clusters>" +
+                        "]]></pre>")
+        ));
+        info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 
     @Override
-    protected void describePost(MethodInfo info) {
+    protected void describePut(MethodInfo info) {
         super.describePost(info);
         info.setDocumentation("Start a new cluster.");
+        info.getRequest().setDocumentation("The cluster to start.");
+        RepresentationInfo representation = new RepresentationInfo();
+        representation.setDocumentation("This representation exposes a request for starting a new Elastic Grid Cluster.");
+        representation.getDocumentations().get(0).setTitle("cluster-request");
+        representation.setMediaType(MediaType.APPLICATION_XML);
+        representation.getDocumentations().addAll(Arrays.asList(
+                new DocumentationInfo("Example of input:<pre><![CDATA[" +
+                        "<cluster name=\"my-cluster\">\n" +
+                        "  <provisioning>\n" +
+                        "    <!-- Start 2 monitors -->\n" +
+                        "    <monitors>2</monitors>\n" +
+                        "    <!-- Start 3 agents -->\n" +
+                        "    <agents>3</agents>\n" +
+                        "  </provisioning>\n" +
+                        "</cluster>" +
+                        "]]></pre>")
+        ));
+        info.getRequest().setRepresentations(Arrays.asList(representation));
+    }
+
+    @Override
+    public boolean allowDelete() {
+        return false;
+    }
+
+    @Override
+    public boolean allowPost() {
+        return false;
     }
 }
