@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    Copyright (C) 2007-2008 Elastic Grid, LLC.
+
+    This file is part of Elastic Grid.
+
+    Elastic Grid is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or any later version.
+
+    Elastic Grid is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="clusters">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="cluster"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cluster">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:sequence maxOccurs="unbounded" minOccurs="1">
+                    <xs:element ref="node"/>
+                </xs:sequence>
+                <xs:element ref="applications" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="node" xml:base="xs:string">
+        <xs:complexType mixed="true">
+            <xs:attribute name="profile" use="required">
+                <xs:simpleType xml:base="xs:string">
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="monitor"/>
+                        <xs:enumeration value="agent"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="applications">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="application"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="application">
+
+    </xs:element>
+
+</xs:schema>

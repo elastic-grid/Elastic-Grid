@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<clusters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="elastic-grid.xsd">
+    <cluster name="cluster1">
+        <node profile="monitor">ec2-75...</node>
+        <node profile="monitor">ec2-77...</node>
+        <node profile="agent">ec2-37...</node>
+    </cluster>
+    <cluster name="cluster2">
+        <node profile="monitor">ec2-57...</node>
+        <node profile="monitor">ec2-63...</node>
+        <node profile="agent">ec2-31...</node>
+    </cluster>
+</clusters>

@@ -22,12 +22,17 @@ package com.elasticgrid.rest;
 import org.restlet.Component;
 import org.restlet.Restlet;
 import org.restlet.Router;
-import org.restlet.service.TunnelService;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Reference;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.GrammarsInfo;
+import org.restlet.ext.wadl.IncludeInfo;
+import org.restlet.service.TunnelService;
+import com.noelios.restlet.ext.jetty.HttpServerHelper;
+import java.util.HashMap;
 
 public class RestApplication extends WadlApplication {
 
@@ -36,6 +41,10 @@ public class RestApplication extends WadlApplication {
         Router router = new Router(getContext());
         router.attach("/eg", ClustersResource.class);
         router.attach("/eg/{clusterName}", ClusterResource.class);
+        router.attach("/eg/{clusterName}/applications", ApplicationsResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}", ApplicationResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}/services", ServicesResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}/services/{serviceName}", ServiceResource.class);
         return router;
     }
 
@@ -61,6 +70,17 @@ public class RestApplication extends WadlApplication {
             e.printStackTrace();
         }
     }
+
+//    @Override
+//    public ApplicationInfo getApplicationInfo(Request request, Response response) {
+//        ApplicationInfo applicationInfo = super.getApplicationInfo(request, response);
+//        GrammarsInfo grammarsInfo = new GrammarsInfo();
+//        IncludeInfo includeInfo = new IncludeInfo();
+//        includeInfo.setTargetRef(new Reference("http://www.elastic-grid.com/schema/elastic-grid-0.8.2.xsd"));
+//        grammarsInfo.getIncludes().add(includeInfo);
+//        applicationInfo.setGrammars(grammarsInfo);
+//        return applicationInfo;
+//    }
 
     @Override
     public String getName() {
