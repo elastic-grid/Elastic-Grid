@@ -19,7 +19,6 @@
 
 package com.elasticgrid.opstring;
 
-import org.rioproject.opstring.GroovyDSLOpStringParser;
 import org.rioproject.opstring.OpStringParser;
 import org.rioproject.opstring.OpStringParserSelectionStrategy;
 import org.rioproject.opstring.XmlOpStringParser;
