@@ -20,31 +20,36 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
+import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.internal.Clusters;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.jibx.JibxRepresentation;
+import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
-import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 
+@Component
+@Scope("prototype")
 public class ClustersResource extends WadlResource {
+    @Autowired
     private ClusterManager clusterManager;
 
-    public ClustersResource(Context context, Request request, Response response) {
-        super(context, request, response);
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
         // Allow modifications of this resource via POST requests
         setModifiable(true);
         // Declare the kind of representations supported by this resource
@@ -56,18 +61,14 @@ public class ClustersResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        Clusters clusters = new Clusters();
-        clusters.addCluster(new EC2ClusterImpl().name("cluster1"));
-        clusters.addCluster(new EC2ClusterImpl().name("cluster2"));
-        clusters.addCluster(new EC2ClusterImpl().name("cluster3"));
-        return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, clusters, "ElasticGridREST");
-//        List<Cluster> clusters = null;
-//        try {
-//            clusters = clusterManager.findClusters();
-//            return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, new Clusters(clusters), "ElasticGridREST");
-//        } catch (Exception e) {
-//            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
-//        }
+        List<Cluster> clusters = null;
+        try {
+            clusters = clusterManager.findClusters();
+            return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, new Clusters(clusters), "ElasticGridREST");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
+        }
     }
 
     /**

@@ -35,23 +35,30 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import java.util.Arrays;
 
+@Component
+@Scope("prototype")
 public class ApplicationResource extends WadlResource {
     private String clusterName;
     private String applicationName;
+    @Autowired
     private ClusterManager clusterManager;
 
-    public ApplicationResource(Context context, Request request, Response response) {
-        super(context, request, response);
+    @Override
+    public void init(Context context, Request request, Response response) {
+        super.init(context, request, response);
         // Allow modifications of this resource via POST requests
         setModifiable(true);
         setAutoDescribed(true);
         // Declare the kind of representations supported by this resource
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
         // Extract URI variables
-        clusterName = (String) getRequest().getAttributes().get("clusterName");
-        applicationName = (String) getRequest().getAttributes().get("applicationName");
+        clusterName = (String) request.getAttributes().get("clusterName");
+        applicationName = (String) request.getAttributes().get("applicationName");
     }
 
     /**

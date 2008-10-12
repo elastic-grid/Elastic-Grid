@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+    <import resource="classpath:/com/elasticgrid/cluster/applicationContext.xml"/>
+
+    <context:component-scan base-package="com.elasticgrid.rest"/>
+
+    <bean id="application" class="com.elasticgrid.rest.RestApplication">
+        <property name="name" value="Elastic Grid REST API"/>
+        <property name="author" value="Elastic Grid, LLC."/>
+        <property name="root" ref="root"/>
+    </bean>
+
+    <bean id="root" class="org.restlet.ext.spring.SpringRouter">
+        <property name="attachments">
+            <map>
+                <entry key="/eg" value-ref="clustersFinder"/>
+                <entry key="/eg/{clusterName}" value-ref="clusterFinder"/>
+                <entry key="/eg/{clusterName}/applications" value-ref="applicationsFinder"/>
+                <entry key="/eg/{clusterName}/applications/{applicationName}" value-ref="applicationFinder"/>
+                <entry key="/eg/{clusterName}/applications/{applicationName}/services" value-ref="servicesFinder"/>
+                <entry key="/eg/{clusterName}/applications/{applicationName}/services/{serviceName}" value-ref="serviceFinder"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="clustersFinder" class="org.restlet.ext.spring.SpringFinder">
+        <lookup-method name="createResource" bean="clustersResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ClustersResource"/>
+    </bean>
+    <bean id="clusterFinder" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="createResource" bean="clusterResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ClusterResource"/>
+	</bean>
+    <bean id="applicationsFinder" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="createResource" bean="applicationsResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ApplicationsResource"/>
+	</bean>
+    <bean id="applicationFinder" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="createResource" bean="applicationResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ApplicationResource"/>
+	</bean>
+    <bean id="servicesFinder" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="createResource" bean="servicesResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ServicesResource"/>
+	</bean>
+    <bean id="serviceFinder" class="org.restlet.ext.spring.SpringFinder">
+		<lookup-method name="createResource" bean="serviceResource"/>
+        <property name="targetClass" value="com.elasticgrid.rest.ServiceResource"/>
+	</bean>
+
+</beans>
