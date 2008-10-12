@@ -190,7 +190,10 @@ public class ClusterResource extends WadlResource {
     @Override
     protected void describeDelete(MethodInfo info) {
         super.describeDelete(info);
-        info.setDocumentation("Stop {clusterName} cluster.");
+        info.setDocumentations(Arrays.asList(
+                new DocumentationInfo("Stop {clusterName} cluster."),
+                new DocumentationInfo("All nodes in the cluster will be shut down.")
+        ));
     }
 
     @Override

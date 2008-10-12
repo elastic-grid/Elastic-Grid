@@ -27,6 +27,8 @@ import org.restlet.data.Response;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.DocumentationInfo;
+import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
@@ -69,23 +71,43 @@ public class ApplicationsResource extends WadlResource {
     @Override
     protected void describeGet(MethodInfo info) {
         super.describeGet(info);
-        info.setDocumentation("Describe all applications running on the cluster.");
-        info.getResponse().setDocumentation("The applications.");
+        info.setDocumentation("Describe all applications running on the cluster {clusterName}.");
+        info.getResponse().setDocumentation("The cluster.");
         RepresentationInfo representation = new RepresentationInfo();
-        representation.setDocumentation("Applications");
+        representation.setDocumentation("This resource exposes applications running on cluster {clusterName}.");
+        representation.getDocumentations().get(0).setTitle("applications");
         representation.setMediaType(MediaType.APPLICATION_XML);
+        representation.getDocumentations().addAll(Arrays.asList(
+                new DocumentationInfo("Example of output:<pre><![CDATA[" +
+                        "<applications>\n" +
+                        "  <application name=\"myapp\" cluster=\"cluster2\">\n" +
+                        "    <service name=\"My First Service\">\n" +
+                        "      <provisioning planned=\"1\" deployed=\"1\" pending=\"0\"/>\n" +
+                        "    </service>\n" +
+                        "    <service name=\"My Second Service\">\n" +
+                        "      <provisioning planned=\"1\" deployed=\"1\" pending=\"0\"/>\n" +
+                        "    </service>\n" +
+                        "  </application>\n" +
+                        "</applications>" +
+                        "]]></pre>")
+        ));
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 
     @Override
     protected void describePut(MethodInfo info) {
-        super.describePost(info);
-        info.setDocumentation("Provision a new application.");
+        super.describePut(info);
+        info.setDocumentation("Provision a new application on {clusterName}.");
         info.getRequest().setDocumentation("The application to provision.");
-        RepresentationInfo representation = new RepresentationInfo();
-        representation.setDocumentation("Application");
-        representation.setMediaType(MediaType.APPLICATION_XML);
-        info.getRequest().setRepresentations(Arrays.asList(representation));
+        RepresentationInfo xmlRepresentation = new RepresentationInfo();
+        xmlRepresentation.setDocumentation("This representation exposes an OpString in XML format.");
+        xmlRepresentation.getDocumentations().get(0).setTitle("OpString in XML format");
+        xmlRepresentation.setMediaType(MediaType.APPLICATION_XML);
+        RepresentationInfo dslReprentation = new RepresentationInfo();
+        dslReprentation.setDocumentation("This representation exposes an OpString in DSL format.");
+        dslReprentation.getDocumentations().get(0).setTitle("OpString in DSL format");
+        dslReprentation.setMediaType(new MediaType("text/x-groovy", "Groovy"));
+        info.getRequest().setRepresentations(Arrays.asList(xmlRepresentation, dslReprentation));
     }
 
     @Override
