@@ -20,24 +20,19 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.data.Status;
-import org.restlet.ext.jibx.JibxRepresentation;
-import org.restlet.ext.wadl.WadlResource;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.ext.wadl.WadlResource;
 import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Component

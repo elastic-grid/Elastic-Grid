@@ -21,28 +21,31 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
+import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ClusterProvisioning;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.data.Reference;
+import org.restlet.data.Form;
 import org.restlet.ext.jibx.JibxRepresentation;
-import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.ext.wadl.WadlResource;
 import org.restlet.ext.wadl.ParameterInfo;
-import org.restlet.ext.wadl.ParameterStyle;
-import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.jibx.runtime.JiBXException;
 import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
+import java.rmi.RemoteException;
+import java.io.IOException;
 
 @Component
 @Scope("prototype")
@@ -82,7 +85,39 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
-        // TODO: update the cluster!
+        String clusterName = null;
+        int numberOfMonitors = 1;
+        int numberOfAgents = 0;
+        if (MediaType.APPLICATION_XML.equals(entity.getMediaType())) {
+            try {
+                JibxRepresentation<ClusterProvisioning> representation =
+                        new JibxRepresentation<ClusterProvisioning>(entity, ClusterProvisioning.class, "ElasticGridREST");
+                ClusterProvisioning clusterProvisioning = representation.getObject();
+                clusterName = clusterProvisioning.getClusterName();
+                numberOfMonitors = clusterProvisioning.getNumberOfMonitors();
+                numberOfAgents = clusterProvisioning.getNumberOfAgents();
+            } catch (JiBXException e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+            }
+        } else if (MediaType.APPLICATION_WWW_FORM.equals(entity.getMediaType())) {
+            Form form = new Form(entity);
+            clusterName = form.getFirstValue("clusterName");
+            numberOfMonitors = Integer.parseInt(form.getFirstValue("numberOfMonitors"));
+            numberOfAgents = Integer.parseInt(form.getFirstValue("numberOfAgents"));
+        }
+        try {
+            clusterManager.resizeCluster(clusterName, numberOfMonitors, numberOfAgents);
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_GATEWAY_TIMEOUT, e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        }
     }
 
     /**
@@ -90,7 +125,12 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public void removeRepresentations() throws ResourceException {
-        // TODO: stop the cluster!
+        try {
+            clusterManager.stopCluster(clusterName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Could not stop cluster " + clusterName, e);
+        }
     }
 
     @Override
@@ -119,7 +159,32 @@ public class ClusterResource extends WadlResource {
     @Override
     protected void describePost(MethodInfo info) {
         super.describePut(info);
-        info.setDocumentation("Update {clusterName} cluster.");
+        info.setDocumentation("Update Elastic Grid Cluster {clusterName}.");
+        info.getRequest().setDocumentation("The cluster to update.");
+        RepresentationInfo xmlRepresentation = new RepresentationInfo();
+        xmlRepresentation.setDocumentation("This representation exposes a provisioning request for updating an Elastic Grid Cluster.");
+        xmlRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
+        xmlRepresentation.setMediaType(MediaType.APPLICATION_XML);
+        xmlRepresentation.getDocumentations().addAll(Arrays.asList(
+                new DocumentationInfo("Example of input:<pre><![CDATA[" +
+                        "<cluster-provisioning name=\"my-cluster\" xmlns=\"http://aws.amazon.com/ec2\">\n" +
+                        "\t<!-- Start 2 monitors -->\n" +
+                        "\t<monitors>2</monitors>\n" +
+                        "\t<!-- Start 3 agents -->\n" +
+                        "\t<agents>3</agents>\n" +
+                        "</cluster-provisioning>" +
+                        "]]></pre>")
+        ));
+        RepresentationInfo formRepresentation = new RepresentationInfo();
+        formRepresentation.setDocumentation("This representation exposes a provisioning request for updating an Elastic Grid Cluster.");
+        formRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
+        formRepresentation.setMediaType(MediaType.APPLICATION_WWW_FORM);
+        formRepresentation.setParameters(Arrays.asList(
+                new ParameterInfo("clusterName", true, "xs:string", "The name of the Elastic Grid Cluster to start."),
+                new ParameterInfo("numberOfMonitors", true, "xs:integer", "The number of monitors to start in the cluster."),
+                new ParameterInfo("numberOfAgents", true, "xs:integer", "The number of agents to start in the cluster.")
+        ));
+        info.getRequest().setRepresentations(Arrays.asList(xmlRepresentation, formRepresentation));
     }
 
     @Override

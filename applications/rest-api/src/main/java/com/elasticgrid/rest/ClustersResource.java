@@ -23,36 +23,27 @@ import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterProvisioning;
 import com.elasticgrid.model.ec2.EC2Cluster;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.model.internal.Clusters;
 import org.jibx.runtime.JiBXException;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.data.Form;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
-import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.restlet.resource.InputRepresentation;
-import org.restlet.resource.XmlRepresentation;
-import org.restlet.resource.DomRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import javax.xml.namespace.QName;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -61,7 +52,7 @@ import java.util.concurrent.TimeoutException;
 @Scope("prototype")
 public class ClustersResource extends WadlResource {
     @Autowired
-    private ClusterManager clusterManager;
+    private ClusterManager<EC2Cluster> clusterManager;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -77,7 +68,7 @@ public class ClustersResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        List<Cluster> clusters = null;
+        List<Cluster> clusters;
         try {
             clusters = clusterManager.findClusters();
             return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, new Clusters(clusters), "ElasticGridREST");
@@ -91,8 +82,8 @@ public class ClustersResource extends WadlResource {
      * Handle PUT requests: start a new cluster.
      */
     @Override
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
     public void acceptRepresentation(Representation entity) throws ResourceException {
-        System.out.println("Received entity of type: " + entity.getMediaType());
         String clusterName = null;
         int numberOfMonitors = 1;
         int numberOfAgents = 0;
@@ -118,7 +109,6 @@ public class ClustersResource extends WadlResource {
             numberOfAgents = Integer.parseInt(form.getFirstValue("numberOfAgents"));
         }
         try {
-            System.out.println("Should start cluster " + clusterName);
             clusterManager.startCluster(clusterName, numberOfMonitors, numberOfAgents);
         } catch (TimeoutException e) {
             e.printStackTrace();
@@ -160,7 +150,7 @@ public class ClustersResource extends WadlResource {
     @Override
     protected void describePost(MethodInfo info) {
         super.describePost(info);
-        info.setDocumentation("Start a new cluster.");
+        info.setDocumentation("Start a new Elastic Grid Cluster.");
         info.getRequest().setDocumentation("The cluster to start.");
         RepresentationInfo xmlRepresentation = new RepresentationInfo();
         xmlRepresentation.setDocumentation("This representation exposes a provisioning request for starting a new Elastic Grid Cluster.");

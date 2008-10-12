@@ -66,6 +66,22 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
         return nodes;
     }
 
+    public Set<N> getMonitorNodes() {
+        Set<N> matches = new HashSet<N>();
+        for (N node : nodes)
+            if (NodeProfile.MONITOR.equals(node.getProfile()))
+                matches.add(node);
+        return matches;
+    }
+
+    public Set<N> getAgentNodes() {
+        Set<N> matches = new HashSet<N>();
+        for (N node : nodes)
+            if (NodeProfile.AGENT.equals(node.getProfile()))
+                matches.add(node);
+        return matches;
+    }
+
     @SuppressWarnings("unchecked")
     public N node(NodeProfile profile, InetAddress address) {
         N node = (N) createNode(profile).address(address);

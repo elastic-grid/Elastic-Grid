@@ -31,9 +31,11 @@ public interface Cluster<N extends Node> extends Serializable {
     Cluster<N> name(String name);
     boolean isRunning();
     Set<N> getNodes();
+    Set<N> getMonitorNodes();
+    Set<N> getAgentNodes();
+    Cluster<N> addNodes(List<N> nodes);
     List<Application> getApplications();
     Application application(String name);
-    Cluster<N> addNodes(List<N> nodes);
 
     enum Status {
         RUNNING, STOPPED

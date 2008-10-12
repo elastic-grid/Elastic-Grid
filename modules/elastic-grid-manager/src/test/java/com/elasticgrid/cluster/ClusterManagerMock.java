@@ -22,6 +22,7 @@ package com.elasticgrid.cluster;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
@@ -55,6 +56,18 @@ public class ClusterManagerMock implements ClusterManager {
         for (int i = 0; i < numberOfMonitors; i++) {
             EC2NodeImpl node = new EC2NodeImpl();
             node.instanceID(clusterName + '-' + i);
+            node.profile(NodeProfile.MONITOR);
+            try {
+                node.address(InetAddress.getLocalHost());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            cluster.getNodes().add(node);
+        }
+        for (int i = 0; i < numberOfAgents; i++) {
+            EC2NodeImpl node = new EC2NodeImpl();
+            node.instanceID(clusterName + '-' + i);
+            node.profile(NodeProfile.AGENT);
             try {
                 node.address(InetAddress.getLocalHost());
             } catch (UnknownHostException e) {
@@ -66,7 +79,7 @@ public class ClusterManagerMock implements ClusterManager {
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
-        // do nothing
+        clusters.remove(clusterName);
     }
 
     public List<Cluster> findClusters() throws ClusterException, RemoteException {
@@ -78,6 +91,33 @@ public class ClusterManagerMock implements ClusterManager {
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        // do nothing
+        resizeCluster(clusterName, newSize, 0);
+    }
+
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        Cluster cluster = clusters.get(clusterName);
+        cluster.getNodes().clear();
+        for (int i = 0; i < numberOfMonitors; i++) {
+            EC2NodeImpl node = new EC2NodeImpl();
+            node.instanceID(clusterName + '-' + i);
+            node.profile(NodeProfile.MONITOR);
+            try {
+                node.address(InetAddress.getLocalHost());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            cluster.getNodes().add(node);
+        }
+        for (int i = 0; i < numberOfAgents; i++) {
+            EC2NodeImpl node = new EC2NodeImpl();
+            node.instanceID(clusterName + '-' + i);
+            node.profile(NodeProfile.AGENT);
+            try {
+                node.address(InetAddress.getLocalHost());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            cluster.getNodes().add(node);
+        }
     }
 }

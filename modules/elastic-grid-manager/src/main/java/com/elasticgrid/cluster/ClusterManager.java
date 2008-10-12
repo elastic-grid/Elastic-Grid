@@ -45,7 +45,7 @@ public interface ClusterManager<G extends Cluster> {
 
     /**
      * Start a cluster with a specified name and a specified number of instances.
-     * This method will both start monitors and agents as appropriate for the <tt>size</tt> parameter.
+     * This method will both start monitors and agents as appropriate depending on the <tt>size</tt> parameter.
      * @param clusterName the name of the cluster to start
      * @param size the number of nodes to start for this cluster
      * @throws InterruptedException if the cluster was not started before timeout
@@ -96,6 +96,7 @@ public interface ClusterManager<G extends Cluster> {
 
     /**
      * Resize a cluster.
+     * This method will both start monitors and agents as appropriate depending on the <tt>size</tt> parameter.
      * @param clusterName the name of the cluster to resize
      * @param newSize the new size of the cluster
      * @throws ClusterNotFoundException if the cluster can't be found
@@ -106,5 +107,20 @@ public interface ClusterManager<G extends Cluster> {
      * @throws TimeoutException
      */
     void resizeCluster(String clusterName, int newSize)
+            throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
+
+    /**
+     * Resize a cluster.
+     * @param clusterName the name of the cluster to resize
+     * @param numberOfMonitors the number of monitor nodes to reach for this cluster
+     * @param numberOfAgents the number of agents nodes to reach for this cluster
+     * @throws ClusterNotFoundException if the cluster can't be found
+     * @throws ClusterException if there is a cluster failure
+     * @throws InterruptedException if the cluster was not started before timeout
+     * @throws RemoteException if there is a network failure
+     * @throws ExecutionException
+     * @throws TimeoutException
+     */
+    void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents)
             throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
 }
