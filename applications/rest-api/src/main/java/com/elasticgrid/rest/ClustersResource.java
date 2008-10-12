@@ -21,7 +21,9 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ClusterProvisioning;
 import com.elasticgrid.model.ec2.EC2Cluster;
+import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.model.internal.Clusters;
 import org.jibx.runtime.JiBXException;
 import org.restlet.Context;
@@ -29,18 +31,28 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import org.restlet.data.Form;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
+import org.restlet.resource.InputRepresentation;
+import org.restlet.resource.XmlRepresentation;
+import org.restlet.resource.DomRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import javax.xml.namespace.QName;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -79,17 +91,40 @@ public class ClustersResource extends WadlResource {
      * Handle PUT requests: start a new cluster.
      */
     @Override
-    public void storeRepresentation(Representation entity) throws ResourceException {
-        try {            
-            Cluster cluster = (Cluster) new JibxRepresentation(entity, EC2Cluster.class).getObject();
-            clusterManager.startCluster(cluster.getName());
-        } catch (JiBXException e) {
-            throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
-        } catch (IOException e) {
-            throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+    public void acceptRepresentation(Representation entity) throws ResourceException {
+        System.out.println("Received entity of type: " + entity.getMediaType());
+        String clusterName = null;
+        int numberOfMonitors = 1;
+        int numberOfAgents = 0;
+        if (MediaType.APPLICATION_XML.equals(entity.getMediaType())) {
+            try {
+                JibxRepresentation<ClusterProvisioning> representation =
+                        new JibxRepresentation<ClusterProvisioning>(entity, ClusterProvisioning.class, "ElasticGridREST");
+                ClusterProvisioning clusterProvisioning = representation.getObject();
+                clusterName = clusterProvisioning.getClusterName();
+                numberOfMonitors = clusterProvisioning.getNumberOfMonitors();
+                numberOfAgents = clusterProvisioning.getNumberOfAgents();
+            } catch (JiBXException e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+            }
+        } else if (MediaType.APPLICATION_WWW_FORM.equals(entity.getMediaType())) {
+            Form form = new Form(entity);
+            clusterName = form.getFirstValue("clusterName");
+            numberOfMonitors = Integer.parseInt(form.getFirstValue("numberOfMonitors"));
+            numberOfAgents = Integer.parseInt(form.getFirstValue("numberOfAgents"));
+        }
+        try {
+            System.out.println("Should start cluster " + clusterName);
+            clusterManager.startCluster(clusterName, numberOfMonitors, numberOfAgents);
         } catch (TimeoutException e) {
+            e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_GATEWAY_TIMEOUT, e);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
         }
     }
@@ -123,27 +158,34 @@ public class ClustersResource extends WadlResource {
     }
 
     @Override
-    protected void describePut(MethodInfo info) {
+    protected void describePost(MethodInfo info) {
         super.describePost(info);
         info.setDocumentation("Start a new cluster.");
         info.getRequest().setDocumentation("The cluster to start.");
-        RepresentationInfo representation = new RepresentationInfo();
-        representation.setDocumentation("This representation exposes a request for starting a new Elastic Grid Cluster.");
-        representation.getDocumentations().get(0).setTitle("cluster-request");
-        representation.setMediaType(MediaType.APPLICATION_XML);
-        representation.getDocumentations().addAll(Arrays.asList(
+        RepresentationInfo xmlRepresentation = new RepresentationInfo();
+        xmlRepresentation.setDocumentation("This representation exposes a provisioning request for starting a new Elastic Grid Cluster.");
+        xmlRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
+        xmlRepresentation.setMediaType(MediaType.APPLICATION_XML);
+        xmlRepresentation.getDocumentations().addAll(Arrays.asList(
                 new DocumentationInfo("Example of input:<pre><![CDATA[" +
-                        "<cluster name=\"my-cluster\">\n" +
-                        "  <provisioning>\n" +
-                        "    <!-- Start 2 monitors -->\n" +
-                        "    <monitors>2</monitors>\n" +
-                        "    <!-- Start 3 agents -->\n" +
-                        "    <agents>3</agents>\n" +
-                        "  </provisioning>\n" +
-                        "</cluster>" +
+                        "<cluster-provisioning name=\"my-cluster\" xmlns=\"http://aws.amazon.com/ec2\">\n" +
+                        "\t<!-- Start 2 monitors -->\n" +
+                        "\t<monitors>2</monitors>\n" +
+                        "\t<!-- Start 3 agents -->\n" +
+                        "\t<agents>3</agents>\n" +
+                        "</cluster-provisioning>" +
                         "]]></pre>")
         ));
-        info.getRequest().setRepresentations(Arrays.asList(representation));
+        RepresentationInfo formRepresentation = new RepresentationInfo();
+        formRepresentation.setDocumentation("This representation exposes a provisioning request for starting a new Elastic Grid Cluster.");
+        formRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
+        formRepresentation.setMediaType(MediaType.APPLICATION_WWW_FORM);
+        formRepresentation.setParameters(Arrays.asList(
+                new ParameterInfo("clusterName", true, "xs:string", "The name of the Elastic Grid Cluster to start."),
+                new ParameterInfo("numberOfMonitors", true, "xs:integer", "The number of monitors to start in the cluster."),
+                new ParameterInfo("numberOfAgents", true, "xs:integer", "The number of agents to start in the cluster.")
+        ));
+        info.getRequest().setRepresentations(Arrays.asList(xmlRepresentation, formRepresentation));
     }
 
     @Override
@@ -152,7 +194,7 @@ public class ClustersResource extends WadlResource {
     }
 
     @Override
-    public boolean allowPost() {
+    public boolean allowPut() {
         return false;
     }
 }

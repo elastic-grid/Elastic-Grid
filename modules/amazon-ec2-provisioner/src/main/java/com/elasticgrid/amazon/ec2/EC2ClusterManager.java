@@ -65,7 +65,17 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
     }
 
     public void startCluster(String clusterName, int size) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} node(s)...", new Object[] { clusterName, size });
+        // if no more than 2 nodes, only start monitors
+        if (size <= 2)
+            startCluster(clusterName, size, 0);
+        // if more than 2 nodes, start 2 monitors and the other nodes as agents
+        else
+            startCluster(clusterName, 2, size - 2);
+    }
+
+    public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} monitor(s) and {2} agent(s)...",
+                new Object[] { clusterName, numberOfMonitors, numberOfAgents });
         // ensure the cluster is not already running
         Cluster cluster = cluster(clusterName);
         if (cluster != null && cluster.isRunning()) {
@@ -93,14 +103,16 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
             default:
                 throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
         }
-        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(size);
-        for (int i = 0; i < size; i++) {
-            // first first two nodes are {@link NodeProfile.MONITOR}s
-            // and all the other ones are {@link NodeProfile.AGENT}s
-            NodeProfile profile = i < 2 ? NodeProfile.MONITOR : NodeProfile.AGENT;
-            // start the node
-            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, profile, instanceType, ami,
-                            awsAccessID, awsSecretKey, awsSecured)));
+        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(numberOfMonitors + numberOfAgents);
+        // start the monitors
+        for (int i = 0; i < numberOfMonitors; i++) {
+            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
+                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
+        }
+        // start the agents
+        for (int i = 0; i < numberOfAgents; i++) {
+            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.AGENT,
+                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
         }
         // wait for the threads to finish
         for (Future<List<String>> future : futures) {

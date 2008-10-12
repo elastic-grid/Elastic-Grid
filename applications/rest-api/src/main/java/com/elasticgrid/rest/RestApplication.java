@@ -25,6 +25,7 @@ import org.restlet.ext.wadl.WadlApplication;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class RestApplication extends WadlApplication implements InitializingBean {
 
@@ -49,6 +50,7 @@ public class RestApplication extends WadlApplication implements InitializingBean
 
     public static void main(String[] args) throws Exception {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
+        SLF4JBridgeHandler.install();
     }
 
 }
