@@ -21,7 +21,9 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.internal.Clusters;
+import org.jibx.runtime.JiBXException;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
@@ -38,8 +40,10 @@ import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @Component
 @Scope("prototype")
@@ -76,7 +80,18 @@ public class ClustersResource extends WadlResource {
      */
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
-        super.acceptRepresentation(entity);
+        try {            
+            Cluster cluster = (Cluster) new JibxRepresentation(entity, EC2Cluster.class).getObject();
+            clusterManager.startCluster(cluster.getName());
+        } catch (JiBXException e) {
+            throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+        } catch (IOException e) {
+            throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
+        } catch (TimeoutException e) {
+            throw new ResourceException(Status.SERVER_ERROR_GATEWAY_TIMEOUT, e);
+        } catch (Exception e) {
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        }
     }
 
     @Override

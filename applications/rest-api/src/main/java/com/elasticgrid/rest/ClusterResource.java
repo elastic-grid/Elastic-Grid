@@ -68,15 +68,13 @@ public class ClusterResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        Cluster cluster = new EC2ClusterImpl().name(clusterName);
-        return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
-//        try {
-//            Cluster cluster = clusterManager.cluster(clusterName);
-//            return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
-//        }
+        try {
+            Cluster cluster = clusterManager.cluster(clusterName);
+            return new JibxRepresentation<Cluster>(MediaType.APPLICATION_XML, cluster, "ElasticGridREST");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
+        }
     }
 
     /**
@@ -135,7 +133,4 @@ public class ClusterResource extends WadlResource {
         return false;
     }
 
-    public void setClusterManager(ClusterManager clusterManager) {
-        this.clusterManager = clusterManager;
-    }
 }
