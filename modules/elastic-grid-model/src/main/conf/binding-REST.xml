@@ -24,8 +24,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="binding.xsd">
 
-    <namespace uri="http://aws.amazon.com/s3" prefix="s3"/>
-
     <format type="java.net.InetAddress"
             serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeInetAddress"
             deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeInetAddress"/>

@@ -72,14 +72,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.5</version>
-            <classifier>jdk15</classifier>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -98,7 +90,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>5.5</version>
+            <version>5.8</version>
             <classifier>jdk15</classifier>
             <scope>test</scope>
         </dependency>
