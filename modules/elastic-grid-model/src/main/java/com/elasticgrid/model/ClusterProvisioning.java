@@ -17,20 +17,34 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.rest;
+package com.elasticgrid.model;
 
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.Test;
+public class ClusterProvisioning {
+    private String clusterName;
+    private int numberOfMonitors;
+    private int numberOfAgents;
 
-@ContextConfiguration(locations = {
-        "/com/elasticgrid/rest/applicationContext.xml"
-})
-public class RestTest extends AbstractTestNGSpringContextTests {
-
-    @Test
-    public void testRestAPI() {
-        // do nothing
+    public String getClusterName() {
+        return clusterName;
     }
 
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+    public int getNumberOfMonitors() {
+        return numberOfMonitors;
+    }
+
+    public void setNumberOfMonitors(int numberOfMonitors) {
+        this.numberOfMonitors = numberOfMonitors;
+    }
+
+    public int getNumberOfAgents() {
+        return numberOfAgents;
+    }
+
+    public void setNumberOfAgents(int numberOfAgents) {
+        this.numberOfAgents = numberOfAgents;
+    }
 }

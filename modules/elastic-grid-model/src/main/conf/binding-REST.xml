@@ -48,6 +48,13 @@
                     factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
     </mapping>
 
+    <mapping name="cluster-provisioning" class="com.elasticgrid.model.ClusterProvisioning">
+        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+        <value name="name" field="clusterName" style="attribute"/>
+        <value name="monitors" field="numberOfMonitors"/>
+        <value name="agents" field="numberOfAgents"/>
+    </mapping>
+
     <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">
         <value name="address" field="address"/>
     </mapping>
