@@ -22,10 +22,10 @@ package com.elasticgrid.rest;
 import org.restlet.data.Protocol;
 import org.restlet.ext.spring.SpringComponent;
 import org.restlet.ext.wadl.WadlApplication;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 public class RestApplication extends WadlApplication implements InitializingBean {
 

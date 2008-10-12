@@ -19,24 +19,25 @@
 
 package com.elasticgrid.amazon.ec2;
 
-import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.cluster.NodeInstantiator;
-import com.elasticgrid.amazon.ec2.InstanceType;
+import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -149,27 +150,27 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        // if no more than 2 nodes, only start monitors
+        if (newSize <= 2)
+            startCluster(clusterName, newSize, 0);
+        // if more than 2 nodes, start 2 monitors and the other nodes as agents
+        else
+            startCluster(clusterName, 2, newSize - 2);
+    }
+
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         EC2Cluster cluster = cluster(clusterName);
-        Set<EC2Node> nodes = cluster.getNodes();
-        if (nodes.size() == newSize) {
-            // same size -- do nothing
-            logger.log(Level.WARNING, "Cluster '{0}' is already made of {1} instances", new Object[] { clusterName, newSize });
-        } else if (nodes.size() < newSize) {
-            // increase cluster size
-            int toStart = newSize - nodes.size();
-            logger.log(Level.INFO,
-                    "Scaling cluster ''{0}'' with {1} additional node(s)...",
-                    new Object[] { clusterName, toStart });
-            int numberOfMonitors = 0;
-            for (EC2Node node : nodes) {
-                switch (node.getProfile()) {
-                    case MONITOR:
-                        numberOfMonitors++;
-                        break;
-                    case AGENT:
-                        break;
-                }
-            }
+
+        Set<EC2Node> monitors = cluster.getMonitorNodes();
+        Set<EC2Node> agents = cluster.getAgentNodes();
+        numberOfMonitors -= monitors.size();
+        numberOfAgents -= agents.size();
+
+        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(Math.abs(numberOfMonitors) + Math.abs(numberOfAgents));
+
+        if (numberOfMonitors > 0) {             // start new monitors
+            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional monitor(s)...",
+                    new Object[] { clusterName, numberOfMonitors });
             // todo: allow clients to specify which kind of EC2 instances to start
             InstanceType instanceType = InstanceType.SMALL;
             String ami;
@@ -186,62 +187,54 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
                 default:
                     throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
             }
-            List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(toStart);
-            // if there is less than two monitors, start some new ones
-            while (numberOfMonitors < 2) {
+            while (numberOfMonitors-- > 0) {
                 futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR, instanceType, ami,
                         awsAccessID, awsSecretKey, awsSecured)));
-                numberOfMonitors++;
-                toStart--;
             }
-            // otherwise start some new agents
-            while (toStart-- > 0) {
+        } else {                                // stop some monitors
+            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} monitor(s)...",
+                    new Object[] { clusterName, Math.abs(numberOfMonitors) });
+            Iterator<EC2Node> iterator = monitors.iterator();
+            while (numberOfMonitors++ < 0) {
+                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
+            }
+        }
+
+        if (numberOfAgents > 0) {               // start new agents
+            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional agent(s)...",
+                    new Object[] { clusterName, numberOfAgents });
+            // todo: allow clients to specify which kind of EC2 instances to start
+            InstanceType instanceType = InstanceType.SMALL;
+            String ami;
+            switch (instanceType) {
+                case SMALL:
+                case MEDIUM_HIGH_CPU:
+                    ami = ami32;
+                    break;
+                case LARGE:
+                case EXTRA_LARGE:
+                case EXTRA_LARGE_HIGH_CPU:
+                    ami = ami64;
+                    break;
+                default:
+                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
+            }
+            while (numberOfAgents-- > 0) {
                 futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.AGENT, instanceType, ami,
                         awsAccessID, awsSecretKey, awsSecured)));
             }
-            // wait for the threads to finish
-            for (Future<List<String>> future : futures) {
-                future.get(5 * 60, TimeUnit.SECONDS);
+        } else {                                // stop some agents
+            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} agent(s)...",
+                    new Object[] { clusterName, Math.abs(numberOfAgents) });
+            Iterator<EC2Node> iterator = agents.iterator();
+            while (numberOfAgents++ < 0) {
+                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
             }
-        } else {
-            // decrease cluster size
-            if (newSize < 1)
-                throw new IllegalArgumentException("newSize is invalid");
-            logger.log(Level.INFO,
-                    "Decreasing cluster ''{0}'' by {1} node(s)...",
-                    new Object[] { clusterName, nodes.size() - newSize });
-            if (newSize == 1) {
-                // locate a monitor and keep it only
-                boolean found = false;
-                for (EC2Node node : nodes) {
-                    if (NodeProfile.MONITOR.equals(node.getProfile())) {
-                        if (found)
-                            nodeInstantiator.shutdownInstance(node.getInstanceID());
-                        else
-                            found = true;
-                    } else {
-                        nodeInstantiator.shutdownInstance(node.getInstanceID());
-                    }
-                }
-            } else {
-                // kill some agents until we try to reach the count
-                int toKill = nodes.size() - newSize;
-                for (EC2Node node : nodes) {
-                    if (NodeProfile.AGENT.equals(node.getProfile())) {
-                        if (toKill-- > 0)
-                            nodeInstantiator.shutdownInstance(node.getInstanceID());
-                    }
-                }
-                // check if we need to kill some monitors too
-                if (toKill > 0) {
-                    for (EC2Node node : nodes) {
-                        if (NodeProfile.MONITOR.equals(node.getProfile())) {
-                            if (toKill-- > 0)
-                                nodeInstantiator.shutdownInstance(node.getInstanceID());
-                        }
-                    }
-                }
-            }
+        }
+
+        // wait for the threads to finish
+        for (Future<List<String>> future : futures) {
+            future.get(5 * 60, TimeUnit.SECONDS);
         }
     }
 
