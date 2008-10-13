@@ -37,6 +37,7 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
@@ -52,7 +53,7 @@ import java.util.concurrent.TimeoutException;
 @Scope("prototype")
 public class ClustersResource extends WadlResource {
     @Autowired
-    private ClusterManager<EC2Cluster> clusterManager;
+    private ClusterManager<Cluster> clusterManager;
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -171,9 +172,12 @@ public class ClustersResource extends WadlResource {
         formRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
         formRepresentation.setMediaType(MediaType.APPLICATION_WWW_FORM);
         formRepresentation.setParameters(Arrays.asList(
-                new ParameterInfo("clusterName", true, "xs:string", "The name of the Elastic Grid Cluster to start."),
-                new ParameterInfo("numberOfMonitors", true, "xs:integer", "The number of monitors to start in the cluster."),
-                new ParameterInfo("numberOfAgents", true, "xs:integer", "The number of agents to start in the cluster.")
+                new ParameterInfo("clusterName", true, "xs:string", ParameterStyle.PLAIN,
+                        "The name of the Elastic Grid Cluster to start."),
+                new ParameterInfo("numberOfMonitors", true, "xs:integer", ParameterStyle.PLAIN,
+                        "The number of monitors to start in the cluster."),
+                new ParameterInfo("numberOfAgents", true, "xs:integer", ParameterStyle.PLAIN,
+                        "The number of agents to start in the cluster.")
         ));
         info.getRequest().setRepresentations(Arrays.asList(xmlRepresentation, formRepresentation));
     }

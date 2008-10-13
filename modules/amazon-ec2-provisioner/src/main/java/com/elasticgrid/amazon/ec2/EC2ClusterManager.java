@@ -25,7 +25,6 @@ import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
@@ -52,8 +51,8 @@ import java.util.logging.Logger;
 
 @Service("clusterManager")
 public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
-    private NodeInstantiator nodeInstantiator;
-    private ClusterLocator clusterLocator;
+    private NodeInstantiator<EC2Node> nodeInstantiator;
+    private ClusterLocator<EC2Node> clusterLocator;
     private String keyName;
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
@@ -84,7 +83,7 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
         }
         // todo: allow clients to specify which kind of EC2 instances to start
         InstanceType instanceType = InstanceType.SMALL;
-        String ami = null;
+        String ami;
         switch (instanceType) {
             case SMALL:
                 ami = ami32;
@@ -131,9 +130,9 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
         }
     }
 
-    public List<Cluster> findClusters() throws ClusterException, RemoteException {
+    public List<EC2Cluster> findClusters() throws ClusterException, RemoteException {
         List<String> clustersNames = clusterLocator.findClusters();
-        List<Cluster> clusters = new ArrayList<Cluster>(clustersNames.size());
+        List<EC2Cluster> clusters = new ArrayList<EC2Cluster>(clustersNames.size());
         for (String cluster : clustersNames) {
             clusters.add(cluster(cluster));
         }
@@ -158,7 +157,7 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
             startCluster(clusterName, 2, newSize - 2);
     }
 
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         EC2Cluster cluster = cluster(clusterName);
 
         Set<EC2Node> monitors = cluster.getMonitorNodes();
@@ -239,12 +238,12 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
     }
 
     @Autowired(required = true)
-    public void setNodeInstantiator(NodeInstantiator nodeInstantiator) {
+    public void setNodeInstantiator(NodeInstantiator<EC2Node> nodeInstantiator) {
         this.nodeInstantiator = nodeInstantiator;
     }
 
     @Autowired(required = true)
-    public void setClusterLocator(ClusterLocator clusterLocator) {
+    public void setClusterLocator(ClusterLocator<EC2Node> clusterLocator) {
         this.clusterLocator = clusterLocator;
     }
 
@@ -279,15 +278,16 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
     }
 
     class StartInstanceTask implements Callable<List<String>> {
-        private NodeInstantiator nodeInstantiator;
+        private NodeInstantiator<EC2Node> nodeInstantiator;
         private String clusterName;
         private NodeProfile profile;
         private InstanceType instanceType;
         private String ami;
         private String userData;
 
-        public StartInstanceTask(NodeInstantiator nodeInstantiator, String clusterName, NodeProfile profile, InstanceType instanceType,
-                                 String ami, String awsAccessId, String awsSecretKey, boolean awsSecured) {
+        public StartInstanceTask(NodeInstantiator<EC2Node> nodeInstantiator, String clusterName, NodeProfile profile,
+                                 InstanceType instanceType, String ami,
+                                 String awsAccessId, String awsSecretKey, boolean awsSecured) {
             this.nodeInstantiator = nodeInstantiator;
             this.clusterName = clusterName;
             this.profile = profile;
