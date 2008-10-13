@@ -59,7 +59,6 @@ public class JsbMojo extends AbstractMojo {
 
     /**
      * @parameter
-     * @required
      */
     private List clientIns;
 
@@ -75,7 +74,6 @@ public class JsbMojo extends AbstractMojo {
 
     /**
      * @parameter
-     * @required
      */
     private List clientTopclasses;
 
@@ -86,7 +84,6 @@ public class JsbMojo extends AbstractMojo {
 
     /**
      * @parameter
-     * @required
      */
     private List downloadableIns;
 
@@ -102,7 +99,6 @@ public class JsbMojo extends AbstractMojo {
 
     /**
      * @parameter
-     * @required
      */
     private List downloadableTopclasses;
 
@@ -253,57 +249,61 @@ public class JsbMojo extends AbstractMojo {
         }
         classDepAndJarTask.execute();
 
-        getLog().info("Building service client jar (in " + jarClientName + ")...");
-        classDepAndJarTask = new ClassDepAndJarTask();
-        classDepAndJarTask.setProject(antProject);
-        classDepAndJarTask.setClasspath(classpath);
-        classDepAndJarTask.setFiles(true);
-        if (clientPreferredlist != null && !clientPreferredlist.equals(""))
-            classDepAndJarTask.setPreferredlist(new File(clientPreferredlist));
-        classDepAndJarTask.setJarfile(new File(jarClientName));
-        for (Iterator iterator = clientIns.iterator(); iterator.hasNext();) {
-            String in = (String) iterator.next();
-            classDepAndJarTask.setIn(in);
-        }
-        for (Iterator iterator = clientOuts.iterator(); iterator.hasNext();) {
-            String out = (String) iterator.next();
-            classDepAndJarTask.setIn(out);
-        }
-        for (Iterator iterator = clientSkips.iterator(); iterator.hasNext();) {
-            String skip = (String) iterator.next();
-            classDepAndJarTask.setSkip(skip);
-        }
-        for (Iterator iterator = clientTopclasses.iterator(); iterator.hasNext();) {
-            String topclass = (String) iterator.next();
-            classDepAndJarTask.setTopclass(topclass);
-        }
-        classDepAndJarTask.execute();
+		if (clientIns != null) {
+        	getLog().info("Building service client jar (in " + jarClientName + ")...");
+	        classDepAndJarTask = new ClassDepAndJarTask();
+	        classDepAndJarTask.setProject(antProject);
+	        classDepAndJarTask.setClasspath(classpath);
+	        classDepAndJarTask.setFiles(true);
+	        if (clientPreferredlist != null && !clientPreferredlist.equals(""))
+	            classDepAndJarTask.setPreferredlist(new File(clientPreferredlist));
+	        classDepAndJarTask.setJarfile(new File(jarClientName));
+	        for (Iterator iterator = clientIns.iterator(); iterator.hasNext();) {
+	            String in = (String) iterator.next();
+	            classDepAndJarTask.setIn(in);
+	        }
+	        for (Iterator iterator = clientOuts.iterator(); iterator.hasNext();) {
+	            String out = (String) iterator.next();
+	            classDepAndJarTask.setIn(out);
+	        }
+	        for (Iterator iterator = clientSkips.iterator(); iterator.hasNext();) {
+	            String skip = (String) iterator.next();
+	            classDepAndJarTask.setSkip(skip);
+	        }
+	        for (Iterator iterator = clientTopclasses.iterator(); iterator.hasNext();) {
+	            String topclass = (String) iterator.next();
+	            classDepAndJarTask.setTopclass(topclass);
+	        }
+	        classDepAndJarTask.execute();
+		}
 
-        getLog().info("Building downnloadable classes jar (in " + jarDownloadableName + ")...");
-        classDepAndJarTask = new ClassDepAndJarTask();
-        classDepAndJarTask.setProject(antProject);
-        classDepAndJarTask.setClasspath(classpath);
-        classDepAndJarTask.setFiles(true);
-        if (downloadablePreferredlist != null && !downloadablePreferredlist.equals(""))
-            classDepAndJarTask.setPreferredlist(new File(downloadablePreferredlist));
-        classDepAndJarTask.setJarfile(new File(jarDownloadableName));
-        for (Iterator iterator = downloadableIns.iterator(); iterator.hasNext();) {
-            String in = (String) iterator.next();
-            classDepAndJarTask.setIn(in);
-        }
-        for (Iterator iterator = downloadableOuts.iterator(); iterator.hasNext();) {
-            String out = (String) iterator.next();
-            classDepAndJarTask.setIn(out);
-        }
-        for (Iterator iterator = downloadableSkips.iterator(); iterator.hasNext();) {
-            String skip = (String) iterator.next();
-            classDepAndJarTask.setSkip(skip);
-        }
-        for (Iterator iterator = downloadableTopclasses.iterator(); iterator.hasNext();) {
-            String topclass = (String) iterator.next();
-            classDepAndJarTask.setTopclass(topclass);
-        }
-        classDepAndJarTask.execute();
+		if (downloadableIns != null) {
+        	getLog().info("Building downnloadable classes jar (in " + jarDownloadableName + ")...");
+	        classDepAndJarTask = new ClassDepAndJarTask();
+	        classDepAndJarTask.setProject(antProject);
+	        classDepAndJarTask.setClasspath(classpath);
+	        classDepAndJarTask.setFiles(true);
+	        if (downloadablePreferredlist != null && !downloadablePreferredlist.equals(""))
+	            classDepAndJarTask.setPreferredlist(new File(downloadablePreferredlist));
+	        classDepAndJarTask.setJarfile(new File(jarDownloadableName));
+	        for (Iterator iterator = downloadableIns.iterator(); iterator.hasNext();) {
+	            String in = (String) iterator.next();
+	            classDepAndJarTask.setIn(in);
+	        }
+	        for (Iterator iterator = downloadableOuts.iterator(); iterator.hasNext();) {
+	            String out = (String) iterator.next();
+	            classDepAndJarTask.setIn(out);
+	        }
+	        for (Iterator iterator = downloadableSkips.iterator(); iterator.hasNext();) {
+	            String skip = (String) iterator.next();
+	            classDepAndJarTask.setSkip(skip);
+	        }
+	        for (Iterator iterator = downloadableTopclasses.iterator(); iterator.hasNext();) {
+	            String topclass = (String) iterator.next();
+	            classDepAndJarTask.setTopclass(topclass);
+	        }
+	        classDepAndJarTask.execute();
+		}
 
         if (uiTopclasses != null && uiTopclasses.size() > 0) {
             getLog().info("Building service ui jar (in " + jarUiName + ")...");
@@ -334,10 +334,11 @@ public class JsbMojo extends AbstractMojo {
             projectHelper.attachArtifact(project, "jar", "ui", new File(jarUiName));
         }
 
-        project.getArtifact().setFile(new File(jarClientName));
-        projectHelper.attachArtifact(project, "jar", "", new File(jarClientName));
-        projectHelper.attachArtifact(project, "jar", "impl", new File(jarImplName));
-        projectHelper.attachArtifact(project, "jar", "dl", new File(jarDownloadableName));
+		projectHelper.attachArtifact(project, "jar", "impl", new File(jarImplName));
+		if (new File(jarClientName).exists())
+        	projectHelper.attachArtifact(project, "jar", "", new File(jarClientName));
+        if (new File(jarDownloadableName).exists())
+	        projectHelper.attachArtifact(project, "jar", "dl", new File(jarDownloadableName));
     }
 
 }
