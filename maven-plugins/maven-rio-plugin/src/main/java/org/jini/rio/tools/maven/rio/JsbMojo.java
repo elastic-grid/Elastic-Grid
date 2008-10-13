@@ -334,6 +334,7 @@ public class JsbMojo extends AbstractMojo {
             projectHelper.attachArtifact(project, "jar", "ui", new File(jarUiName));
         }
 
+		project.getArtifact().setFile(new File(jarImplName));
 		projectHelper.attachArtifact(project, "jar", "impl", new File(jarImplName));
 		if (new File(jarClientName).exists())
         	projectHelper.attachArtifact(project, "jar", "", new File(jarClientName));
