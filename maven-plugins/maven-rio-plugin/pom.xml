@@ -10,7 +10,7 @@
 	<artifactId>maven-rio-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Maven Rio Plugin</name>
-    <version>4.0-M1</version>
+    <version>4.0-M2-SNAPSHOT</version>
     <description>Maven 2 plugin for Rio</description>
     <inceptionYear>2007</inceptionYear>
     <prerequisites>
@@ -36,6 +36,11 @@
             <name>Elastic Grid Repository</name>
             <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
         </repository>
+		<snapshotRepository>
+            <id>elastic-grid</id>
+            <name>Elastic Grid Repository</name>
+            <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
+        </snapshotRepository>
         <!--<site>-->
             <!--<id>website</id>-->
             <!--<url>scp://shell.forge.objectweb.org/var/lib/gforge/chroot/home/groups/elastic-grid/htdocs</url>-->
@@ -73,12 +78,12 @@
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
-            <version>${pom.version}</version>
+            <version>${rio-version}</version>
         </dependency>
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>classdepandjar</artifactId>
-            <version>${pom.version}</version>
+            <version>${rio-version}</version>
         </dependency>
         <dependency>
             <groupId>net.jini</groupId>
@@ -192,6 +197,10 @@
             </plugin>
         </plugins>
     </build>
+
+	<properties>
+		<rio-version>4.0-M1</rio-version>
+	</properties>
 
     <reporting>
         <plugins>
