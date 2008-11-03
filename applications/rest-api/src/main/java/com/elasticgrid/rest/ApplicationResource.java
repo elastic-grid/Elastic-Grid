@@ -86,6 +86,7 @@ public class ApplicationResource extends WadlResource {
         RepresentationInfo representation = new RepresentationInfo();
         representation.setDocumentation("Application");
         representation.setMediaType(MediaType.APPLICATION_XML);
+        representation.setXmlElement("eg:application");
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 

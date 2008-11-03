@@ -78,7 +78,7 @@ public class ApplicationsResource extends WadlResource {
         representation.setMediaType(MediaType.APPLICATION_XML);
         representation.getDocumentations().addAll(Arrays.asList(
                 new DocumentationInfo("Example of output:<pre><![CDATA[" +
-                        "<applications>\n" +
+                        "<applications xmlns=\"urn:elastic-grid:eg\">\n" +
                         "  <application name=\"myapp\" cluster=\"cluster2\">\n" +
                         "    <service name=\"My First Service\">\n" +
                         "      <provisioning planned=\"1\" deployed=\"1\" pending=\"0\"/>\n" +
@@ -90,6 +90,7 @@ public class ApplicationsResource extends WadlResource {
                         "</applications>" +
                         "]]></pre>")
         ));
+        representation.setXmlElement("eg:applications");
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 

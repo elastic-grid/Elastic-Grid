@@ -20,14 +20,38 @@
 package com.elasticgrid.rest;
 
 import org.restlet.data.Protocol;
+import org.restlet.data.Reference;
+import org.restlet.data.Response;
+import org.restlet.data.Request;
+import org.restlet.data.LocalReference;
 import org.restlet.ext.spring.SpringComponent;
 import org.restlet.ext.wadl.WadlApplication;
+import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.IncludeInfo;
+import org.restlet.ext.wadl.GrammarsInfo;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class RestApplication extends WadlApplication implements InitializingBean {
+
+    @Override
+    public ApplicationInfo getApplicationInfo(Request request, Response response) {
+        ApplicationInfo appInfo = super.getApplicationInfo(request, response);
+        appInfo.getNamespaces().put("urn:elastic-grid:eg", "eg");
+        GrammarsInfo grammar = new GrammarsInfo();
+        IncludeInfo include = new IncludeInfo();
+        include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.8.2.xsd"));
+        grammar.getIncludes().add(include);
+        appInfo.setGrammars(grammar);
+        return appInfo;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Elastic Grid REST API";
+    }
 
     public void afterPropertiesSet() throws Exception {
         try {

@@ -24,6 +24,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="binding.xsd">
 
+    <namespace uri="urn:elastic-grid:eg" prefix="eg"/>
+
     <format type="java.net.InetAddress"
             serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeInetAddress"
             deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeInetAddress"/>
@@ -47,7 +49,6 @@
     </mapping>
 
     <mapping name="cluster-provisioning" class="com.elasticgrid.model.ClusterProvisioning">
-        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
         <value name="name" field="clusterName" style="attribute"/>
         <value name="monitors" field="numberOfMonitors"/>
         <value name="agents" field="numberOfAgents"/>
@@ -57,7 +58,6 @@
         <value name="address" field="address"/>
     </mapping>
     <mapping name="node" class="com.elasticgrid.model.ec2.impl.EC2NodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
-        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
         <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
         <value name="instanceID" field="instanceID"/>
     </mapping>

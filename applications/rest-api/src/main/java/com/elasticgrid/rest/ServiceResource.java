@@ -74,6 +74,7 @@ public class ServiceResource extends WadlResource {
         RepresentationInfo representation = new RepresentationInfo();
         representation.setDocumentation("Service");
         representation.setMediaType(MediaType.APPLICATION_XML);
+        representation.setXmlElement("eg:service");
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 

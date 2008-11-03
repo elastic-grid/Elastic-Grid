@@ -145,7 +145,7 @@ public class ClusterResource extends WadlResource {
         representation.setMediaType(MediaType.APPLICATION_XML);
         representation.getDocumentations().addAll(Arrays.asList(
                 new DocumentationInfo("Example of output:<pre><![CDATA[" +
-                        "<cluster name=\"cluster1\">\n" +
+                        "<cluster name=\"cluster1\" xmlns=\"urn:elastic-grid:eg\">\n" +
                         "  <node profile=\"monitor\">ec2-75...</node>\n" +
                         "  <node profile=\"monitor\">ec2-77...</node>\n" +
                         "  <node profile=\"agent\">ec2-37...</node>\n" +
@@ -154,6 +154,7 @@ public class ClusterResource extends WadlResource {
                         "</cluster>" +
                         "]]></pre>")
         ));
+        representation.setXmlElement("eg:cluster");
         info.getResponse().setRepresentations(Arrays.asList(representation));
     }
 
@@ -168,7 +169,7 @@ public class ClusterResource extends WadlResource {
         xmlRepresentation.setMediaType(MediaType.APPLICATION_XML);
         xmlRepresentation.getDocumentations().addAll(Arrays.asList(
                 new DocumentationInfo("Example of input:<pre><![CDATA[" +
-                        "<cluster-provisioning name=\"my-cluster\" xmlns=\"http://aws.amazon.com/ec2\">\n" +
+                        "<cluster-provisioning name=\"my-cluster\" xmlns=\"urn:elastic-grid:eg\">\n" +
                         "\t<!-- Start 2 monitors -->\n" +
                         "\t<monitors>2</monitors>\n" +
                         "\t<!-- Start 3 agents -->\n" +
@@ -176,6 +177,7 @@ public class ClusterResource extends WadlResource {
                         "</cluster-provisioning>" +
                         "]]></pre>")
         ));
+        xmlRepresentation.setXmlElement("eg:cluster-provisioning");
         RepresentationInfo formRepresentation = new RepresentationInfo();
         formRepresentation.setDocumentation("This representation exposes a provisioning request for updating an Elastic Grid Cluster.");
         formRepresentation.getDocumentations().get(0).setTitle("cluster-provisioning");
