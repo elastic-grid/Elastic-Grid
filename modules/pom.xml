@@ -27,6 +27,7 @@
         <module>amazon-sdb</module>
         <module>amazon-ec2-bootstrapper</module>
         <module>amazon-ec2-provisioner</module>
+        <module>private-lan-provisioner</module>
         <!--module>elastic-grid-oar</module-->
         <!--module>examples</module-->
         <!--<module>jabber-cli</module>-->

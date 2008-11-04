@@ -1,0 +1,224 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+    	<groupId>com.elasticgrid</groupId>
+	    <artifactId>elastic-grid-modules</artifactId>
+	    <version>0.8.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>private-lan-provisioner</artifactId>
+    <!--<packaging>jsb</packaging>-->
+    <packaging>jar</packaging>
+    <name>Modules :: Private LAN Provisioner</name>
+
+    <dependencies>
+
+        <!-- Elastic Cluster manager -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Grid Utils -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Jini 2.1 dependencies -->
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-lib</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-platform</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Rio 4.0 dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <version>4.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>2.5.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.8</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.3</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <forkMode>never</forkMode>
+                    <excludes>
+                        <exclude>**/EC2Test.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-rio-plugin</artifactId>
+                <version>4.0-M2-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <environment>
+                        <rio.home>${env.RIO_HOME}</rio.home>
+                        <jini.home>${env.JINI_HOME}</jini.home>
+                    </environment>
+
+                    <implementationIns>
+                        <implementationIn>com.elasticgrid</implementationIn>
+                        <implementationIn>com.xerox</implementationIn>
+                    </implementationIns>
+                    <implementationTopclasses>
+                        <implementationTopclass>com.elasticgrid.monitor.EC2ProvisionMonitorImpl</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.amazon.ec2.costmodel.EC2SmallInstanceCostModel</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler</implementationTopclass>
+                    </implementationTopclasses>
+
+                    <clientIns>
+                        <clientIn>com.elasticgrid.monitor</clientIn>
+                        <clientIn>com.elasticgrid.amazon.sla</clientIn>
+                    </clientIns>
+                    <clientTopclasses>
+                        <clientTopclass>com.elasticgrid.monitor.EC2ProvisionMonitor</clientTopclass>
+                        <clientTopclass>com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler</clientTopclass>
+                    </clientTopclasses>
+
+                    <downloadableIns>
+                        <downloadableIn>com.elasticgrid</downloadableIn>
+                    </downloadableIns>
+                    <downloadableTopclasses>
+                        <downloadableTopclass>com.elasticgrid.monitor.EC2ProvisionMonitor</downloadableTopclass>
+                    </downloadableTopclasses>
+                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+	    <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clover-plugin</artifactId>
+                <configuration>
+                    <forkMode>never</forkMode>
+                    <targetPercentage>0%</targetPercentage>
+                    <generateHistorical>true</generateHistorical>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>main</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>site</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+	    -->
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <threshold>Normal</threshold>
+                    <effort>Max</effort>
+                    <excludeFilterFile>src/main/conf/findbugs-exclude.xml</excludeFilterFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/1</url>
+            <layout>legacy</layout>
+        </repository>
+    </repositories>
+
+</project>

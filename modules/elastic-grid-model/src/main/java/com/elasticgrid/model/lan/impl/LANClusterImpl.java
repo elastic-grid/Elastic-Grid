@@ -17,34 +17,29 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.model.ec2.impl;
+package com.elasticgrid.model.lan.impl;
 
 import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.ec2.EC2Cluster;
-import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.internal.AbstractCluster;
-import java.net.InetAddress;
+import com.elasticgrid.model.lan.LANCluster;
+import com.elasticgrid.model.lan.LANNode;
 import java.util.Set;
 
 /**
  * @author Jerome Bernard
  */
-public class EC2ClusterImpl extends AbstractCluster<EC2Node> implements EC2Cluster {
-    protected EC2Node createNode(NodeProfile profile) {
-        return new EC2NodeImpl(profile);
-    }
-
-    public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
-        return node(profile, address).instanceID(instanceID);
+public class LANClusterImpl extends AbstractCluster<LANNode> implements LANCluster {
+    protected LANNode createNode(NodeProfile profile) {
+        return new LANNodeImpl(profile);
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof EC2Cluster))
+        if (!(o instanceof LANCluster))
             return false;
-        EC2Cluster anotherCluster = (EC2Cluster) o;
+        LANCluster anotherCluster = (LANCluster) o;
         if (!anotherCluster.getName().equals(getName()))
             return false;
-        Set<EC2Node> otherNodes = anotherCluster.getNodes();
+        Set<LANNode> otherNodes = anotherCluster.getNodes();
         return getNodes().equals(otherNodes);
     }
 }
