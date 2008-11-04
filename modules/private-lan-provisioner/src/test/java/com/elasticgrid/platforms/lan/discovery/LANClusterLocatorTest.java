@@ -34,7 +34,7 @@ public class LANClusterLocatorTest {
     }
 
     @BeforeClass
-    public void setupClusterLocator() {
+    public void setupClusterLocator() throws InterruptedException {
         System.setSecurityManager(new RMISecurityManager() {
             @Override
             public void checkPermission(Permission perm) {
@@ -42,6 +42,7 @@ public class LANClusterLocatorTest {
             }
         });
         locator = new JiniGroupsClusterLocator();
+        Thread.sleep(1000);     // in order to wait for the caches to warm up!
     }
 
 }
