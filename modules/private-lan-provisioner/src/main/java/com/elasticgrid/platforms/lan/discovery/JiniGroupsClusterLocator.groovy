@@ -31,6 +31,21 @@ import org.rioproject.core.provision.ServiceBeanInstantiator
 import org.rioproject.core.provision.ServiceStatement
 import org.rioproject.monitor.ProvisionMonitor
 import org.springframework.stereotype.Service
+import org.rioproject.resources.client.JiniClient
+import net.jini.lookup.LookupCache
+import net.jini.discovery.LookupDiscoveryManager
+import net.jini.lookup.ServiceDiscoveryManager
+import net.jini.core.discovery.LookupLocator
+import net.jini.lease.LeaseRenewalManager
+import net.jini.core.lookup.ServiceTemplate
+import org.rioproject.cybernode.Cybernode
+import net.jini.config.Configuration
+import net.jini.config.ConfigurationProvider
+import net.jini.core.lookup.ServiceItem
+import net.jini.core.entry.Entry
+import org.rioproject.cybernode.CybernodeAdmin
+import org.rioproject.core.ServiceElement
+import org.rioproject.core.ServiceBeanConfig
 
 /**
  * {@ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
@@ -42,38 +57,38 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
 //    def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
 //    public static final String EG_GROUP_MONITOR = "eg-monitor"
 //    public static final String EG_GROUP_AGENT = "eg-agent"
+    def JiniClient jiniClient
+    def ServiceDiscoveryManager sdm
+    def LookupCache monitorsCache
+    def LookupCache cybernodesCache
     private static final Logger logger = Logger.getLogger(JiniGroupsClusterLocator.class.name)
+
+    public JiniGroupsClusterLocator() {
+        String[] groups = JiniClient.parseGroups(System.getProperty('org.rioproject.groups', "all"));
+        LookupLocator[] locators = JiniClient.parseLocators(System.getProperty('org.rioproject.locator'));
+        Configuration config = ConfigurationProvider.getInstance(['-'] as String[])
+        jiniClient = new JiniClient(new LookupDiscoveryManager(groups, locators, null, config));
+        ServiceTemplate monitors = new ServiceTemplate(null, [ProvisionMonitor.class] as Class[], null);
+        ServiceTemplate cybernodes = new ServiceTemplate(null, [Cybernode.class] as Class[], null);
+        sdm = new ServiceDiscoveryManager(jiniClient.getDiscoveryManager(), new LeaseRenewalManager(), config);
+        monitorsCache = sdm.createLookupCache(monitors, null, null);
+        cybernodesCache = sdm.createLookupCache(cybernodes, null, null);
+    }
 
     public List<String> findClusters() {
         logger.info "Searching for all clusters..."
-        ProvisionMonitor monitor = findLocalMonitor()
-        logger.info "Found monitor $monitor of class ${monitor.getClass().name}"
 
-        ServiceBeanInstantiator[] instantiators = monitor.serviceBeanInstantiators
-        instantiators.each { ServiceBeanInstantiator cybernode ->
-            logger.info "Found cybernode ${cybernode.name}"
-            ServiceStatement[] services = cybernode.serviceStatements
-            logger.info "Services $services"
+        ServiceItem[] items = cybernodesCache.lookup(null, Integer.MAX_VALUE)
+
+        def Set clusters = new HashSet()
+        items.each { ServiceItem item ->
+            def CybernodeAdmin cybernode = item.service.admin
+            def ServiceElement serviceElement = cybernode.serviceElement
+            def ServiceBeanConfig config = serviceElement.serviceBeanConfig
+            config.groups.each { clusters << it }
         }
-
-//        List<ReservationDescription> reservations
-//        try {
-//            reservations = ec2.describeInstances(Collections.emptyList())
-//        } catch (EC2Exception e) {
-//            throw new ClusterException("Can't locate clusters", e)
-//        }
-        // extract cluster names
-//        def Set clusters = new HashSet()
-//        reservations.each { ReservationDescription reservation ->
-//            reservation.groups.each { String group ->
-//                if (group.startsWith("elastic-grid-cluster-")) {
-//                    if (reservation.instances.any { it.isRunning() })
-//                        clusters << group.substring("elastic-grid-cluster-".length(), group.length())
-//                }
-//            }
-//        }
-//        return clusters as List;
-        return null
+        logger.info "Found clusters $clusters"
+        return clusters as List;
     }
 
     public List<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
