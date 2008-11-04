@@ -23,7 +23,6 @@ import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Response;
 import org.restlet.data.Request;
-import org.restlet.data.LocalReference;
 import org.restlet.ext.spring.SpringComponent;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.ApplicationInfo;
@@ -33,6 +32,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.net.URL;
 
 public class RestApplication extends WadlApplication implements InitializingBean {
 
@@ -43,6 +43,10 @@ public class RestApplication extends WadlApplication implements InitializingBean
         GrammarsInfo grammar = new GrammarsInfo();
         IncludeInfo include = new IncludeInfo();
         include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.8.2.xsd"));
+//        include.setTargetRef(new Reference("applications/rest-api/src/main/resources/com/elasticgrid/rest/elastic-grid.xsd"));
+//        ClassLoader cl = getClass().getClassLoader();
+//        URL resource = cl.getResource("elastic-grid.xsd");
+//        include.setTargetRef(new Reference(resource.toString()));
         grammar.getIncludes().add(include);
         appInfo.setGrammars(grammar);
         return appInfo;

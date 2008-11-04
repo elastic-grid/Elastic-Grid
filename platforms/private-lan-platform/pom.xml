@@ -38,21 +38,26 @@
 		<!--</dependency>-->
 
         <!-- Framework dependencies -->
-		<dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>amazon-sqs</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>${pom.groupId}</groupId>-->
+			<!--<artifactId>amazon-sqs</artifactId>-->
+			<!--<version>${pom.version}</version>-->
+		<!--</dependency>-->
 		
 		<!-- Kernel dependencies -->
+        <!--<dependency>-->
+			<!--<groupId>${pom.groupId}</groupId>-->
+			<!--<artifactId>amazon-ec2-bootstrapper</artifactId>-->
+			<!--<version>${pom.version}</version>-->
+		<!--</dependency>-->
+        <!--<dependency>-->
+			<!--<groupId>${pom.groupId}</groupId>-->
+			<!--<artifactId>amazon-ec2-provisioner</artifactId>-->
+			<!--<version>${pom.version}</version>-->
+		<!--</dependency>-->
         <dependency>
 			<groupId>${pom.groupId}</groupId>
-			<artifactId>amazon-ec2-bootstrapper</artifactId>
-			<version>${pom.version}</version>
-		</dependency>
-        <dependency>
-			<groupId>${pom.groupId}</groupId>
-			<artifactId>amazon-ec2-provisioner</artifactId>
+			<artifactId>private-lan-provisioner</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>
