@@ -17,31 +17,26 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.platforms.ec2.costmodel;
+
+import org.rioproject.costmodel.ResourceCostModel;
 
 /**
- * Enum of the type of Amazon EC2 instances.
+ * {@link ResourceCostModel} for EC2 service.
+ * @author Jerome Bernard
  */
-public enum InstanceType {
-    SMALL("m1.small"),
-	LARGE("m1.large"),
-	EXTRA_LARGE("m1.xlarge"),
-	MEDIUM_HIGH_CPU("c1.medium"),
-	EXTRA_LARGE_HIGH_CPU("c1.xlarge");
+public class EC2SmallInstanceCostModel extends AbstractEC2InstanceCostModel implements ResourceCostModel {
+    private static final double COST_PER_HOUR = .10;        // in dollars
 
-    private String name;
-
-    InstanceType(String name) {
-        this.name = name;
+    public double getCostPerHour() {
+        return COST_PER_HOUR;
     }
 
-    public Object getName() {
-        return name;
-    }
-
-    public String toString() {
-        return "InstanceType{" +
-                "name='" + name + '\'' +
-                '}';
+    /**
+     * Get the description of the ResourceCostModel
+     * @return String the description of the ResourceCostModel
+     */
+    public String getDescription() {
+        return "EC2 Small Instance Cost Model";
     }
 }

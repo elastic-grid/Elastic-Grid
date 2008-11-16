@@ -19,8 +19,7 @@
 
 package com.elasticgrid.examples.video.util;
 
-import com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsClusterLocator;
-import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
 import com.elasticgrid.model.ClusterMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;

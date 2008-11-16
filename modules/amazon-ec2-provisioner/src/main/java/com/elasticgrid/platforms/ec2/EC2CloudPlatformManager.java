@@ -17,11 +17,11 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.cluster.discovery.ClusterLocator;
+import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
@@ -29,6 +29,7 @@ import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
+import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
@@ -49,29 +50,19 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service("clusterManager")
-public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
+@Service("ec2CloudPlatformManager")
+public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster> {
     private NodeInstantiator<EC2Node> nodeInstantiator;
-    private ClusterLocator<EC2Node> clusterLocator;
+
+    @Autowired(required = true)
+    private EC2ClusterLocator clusterLocator;
+    
     private String keyName;
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
     private String ami32, ami64;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
-    private static final Logger logger = Logger.getLogger(EC2ClusterManager.class.getName());
-
-    public void startCluster(String clusterName) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        startCluster(clusterName, 1);
-    }
-
-    public void startCluster(String clusterName, int size) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        // if no more than 2 nodes, only start monitors
-        if (size <= 2)
-            startCluster(clusterName, size, 0);
-        // if more than 2 nodes, start 2 monitors and the other nodes as agents
-        else
-            startCluster(clusterName, 2, size - 2);
-    }
+    private static final Logger logger = Logger.getLogger(EC2CloudPlatformManager.class.getName());
 
     public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} monitor(s) and {2} agent(s)...",
@@ -143,7 +134,7 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
         EC2Cluster cluster = new EC2ClusterImpl();
         List<EC2Node> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
-            return cluster;
+            return (EC2Cluster) cluster.name(name);
         else
             return (EC2Cluster) cluster.name(name).addNodes(nodes);
     }
@@ -242,11 +233,6 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
         this.nodeInstantiator = nodeInstantiator;
     }
 
-    @Autowired(required = true)
-    public void setClusterLocator(ClusterLocator<EC2Node> clusterLocator) {
-        this.clusterLocator = clusterLocator;
-    }
-
     @Required
     public void setAwsAccessID(String awsAccessID) {
         this.awsAccessID = awsAccessID;
@@ -275,6 +261,10 @@ public class EC2ClusterManager implements ClusterManager<EC2Cluster> {
     @Required
     public void setAmi64(String ami64) {
         this.ami64 = ami64;
+    }
+
+    public void setClusterLocator(EC2ClusterLocator clusterLocator) {
+        this.clusterLocator = clusterLocator;
     }
 
     class StartInstanceTask implements Callable<List<String>> {

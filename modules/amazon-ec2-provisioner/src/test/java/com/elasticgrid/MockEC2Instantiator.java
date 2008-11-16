@@ -19,8 +19,8 @@
 
 package com.elasticgrid;
 
-import com.elasticgrid.amazon.ec2.EC2Instantiator;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.platforms.ec2.EC2Instantiator;
 import net.jini.id.UuidFactory;
 import static java.lang.String.format;
 import java.rmi.RemoteException;

@@ -24,14 +24,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="binding.xsd">
 
-    <namespace uri="urn:elastic-grid:eg" prefix="eg"/>
+    <namespace prefix="eg"  uri="urn:elastic-grid:eg" default="elements"/>
+    <namespace prefix="ec2" uri="urn:elastic-grid:ec2" default="none"/>
+    <namespace prefix="lan" uri="urn:elastic-grid:lan" default="none"/>
 
     <format type="java.net.InetAddress"
             serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeInetAddress"
             deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeInetAddress"/>
 
+    <format type="com.elasticgrid.model.NodeProfile"
+            serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeNodeProfile"
+            deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeNodeProfile"/>
+
     <mapping name="clusters" class="com.elasticgrid.model.internal.Clusters">
-        <collection field="clusters" item-type="com.elasticgrid.model.ec2.impl.EC2ClusterImpl"/>
+        <collection field="clusters"/>
     </mapping>
 
     <mapping class="com.elasticgrid.model.internal.AbstractCluster" abstract="true">
@@ -40,11 +46,18 @@
                     <!--item-type="com.elasticgrid.model.internal.ApplicationImpl"-->
                     <!--factory="com.elasticgrid.model.internal.Factories.listOfApplications"/>-->
     </mapping>
-    <mapping name="cluster" class="com.elasticgrid.model.ec2.impl.EC2ClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
-        <namespace prefix="ec2" uri="http://aws.amazon.com/ec2" default="elements"/>
+    <mapping name="cluster" ns="urn:elastic-grid:ec2"
+             class="com.elasticgrid.model.ec2.impl.EC2ClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
         <structure map-as="com.elasticgrid.model.internal.AbstractCluster"/>
-        <collection name="nodes" get-method="getNodes" set-method="setNodes"
+        <collection get-method="getNodes" set-method="setNodes"
                     item-type="com.elasticgrid.model.ec2.impl.EC2NodeImpl"
+                    factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
+    </mapping>
+    <mapping name="cluster" ns="urn:elastic-grid:lan"
+             class="com.elasticgrid.model.lan.impl.LANClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
+        <structure map-as="com.elasticgrid.model.internal.AbstractCluster"/>
+        <collection get-method="getNodes" set-method="setNodes"
+                    item-type="com.elasticgrid.model.lan.impl.LANNodeImpl"
                     factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
     </mapping>
 
@@ -55,11 +68,18 @@
     </mapping>
 
     <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">
-        <value name="address" field="address"/>
+        <value name="profile" field="profile" style="attribute"/>
+        <value field="address" style="text"/>
     </mapping>
-    <mapping name="node" class="com.elasticgrid.model.ec2.impl.EC2NodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
+    <mapping name="node" ns="urn:elastic-grid:ec2"
+             class="com.elasticgrid.model.ec2.impl.EC2NodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
         <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
-        <value name="instanceID" field="instanceID"/>
+        <value name="id" field="instanceID" style="attribute"/>
+    </mapping>
+    <mapping name="node" ns="urn:elastic-grid:lan"
+             class="com.elasticgrid.model.lan.impl.LANNodeImpl" extends="com.elasticgrid.model.internal.AbstractNode">
+        <value name="id" field="instanceID" style="attribute"/>
+        <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
     </mapping>
 
     <!--<mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">-->

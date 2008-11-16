@@ -19,7 +19,7 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.amazon.ec2.discovery.EC2ClusterLocator;
+import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.xerox.amazonws.ec2.EC2Exception;
@@ -74,7 +74,7 @@ public class Bootstrapper {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
 
         // locate monitor node
-        EC2ClusterLocator locator = (EC2ClusterLocator) ctx.getBean("clusterLocator", EC2ClusterLocator.class);
+        EC2ClusterLocator locator = (EC2ClusterLocator) ctx.getBean("EC2SecurityGroupsClusterLocator", EC2ClusterLocator.class);
         String clusterName = launchParameters.getProperty(CLUSTER_NAME);
         try {
             EC2Node monitor = locator.findMonitor(clusterName);

@@ -24,7 +24,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <import resource="ec2/applicationContext.xml"/>    
+    <import resource="ec2/applicationContext.xml"/>
+    <import resource="lan/applicationContext.xml"/>
+
+    <bean id="clusterManager" class="com.elasticgrid.cluster.CloudFederationClusterManager">
+        <property name="clouds">
+            <list>
+                <ref bean="ec2CloudPlatformManager"/>
+                <ref bean="lanCloudPlatformManager"/>
+            </list>
+        </property>
+    </bean>
 
 </beans>
 

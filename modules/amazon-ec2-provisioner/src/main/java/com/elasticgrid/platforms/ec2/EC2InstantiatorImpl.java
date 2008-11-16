@@ -17,9 +17,8 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.amazon.ec2.InstanceType;
 import com.elasticgrid.model.NodeProfile;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;

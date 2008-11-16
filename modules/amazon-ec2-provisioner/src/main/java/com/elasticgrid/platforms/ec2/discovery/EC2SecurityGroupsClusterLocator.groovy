@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.discovery
+package com.elasticgrid.platforms.ec2.discovery
 
 import com.elasticgrid.cluster.discovery.ClusterChangedEvent
 import com.elasticgrid.model.Cluster
@@ -40,10 +40,11 @@ import org.springframework.stereotype.Service
  * {@ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
-@Service("clusterLocator")
+@Service
 class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
-
+    @Autowired(required = true)
     def Jec2 ec2
+
     def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
     public static final String EG_GROUP_MONITOR = "eg-monitor"
     public static final String EG_GROUP_AGENT = "eg-agent"

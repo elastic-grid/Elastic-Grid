@@ -20,11 +20,11 @@
 package com.elasticgrid.model.lan;
 
 import com.elasticgrid.model.Node;
-import com.elasticgrid.model.ec2.EC2Node;
-import java.net.InetAddress;
 
 /**
  * Private LAN node instance.
  */
 public interface LANNode extends Node {
+    String getInstanceID();
+    LANNode instanceID(String instanceID);
 }

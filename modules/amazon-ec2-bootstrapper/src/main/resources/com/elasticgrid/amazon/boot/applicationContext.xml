@@ -32,7 +32,7 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
-    <bean id="clusterLocator" class="com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsClusterLocator">
+    <bean id="clusterLocator" class="com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator">
         <property name="ec2" ref="jec2"/>
     </bean>
 
