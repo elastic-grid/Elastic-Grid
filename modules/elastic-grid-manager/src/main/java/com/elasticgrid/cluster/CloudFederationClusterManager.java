@@ -60,7 +60,11 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
     }
 
     public C cluster(String name) throws ClusterException, RemoteException {
-        return clouds.get(0).cluster(name);
+        C cluster = null;
+        int i = 0;
+        while (cluster == null || cluster.getNodes().size() == 0)
+            cluster = clouds.get(i++).cluster(name);
+        return cluster;
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
