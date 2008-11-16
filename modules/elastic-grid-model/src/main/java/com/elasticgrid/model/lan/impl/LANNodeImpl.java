@@ -20,6 +20,7 @@
 package com.elasticgrid.model.lan.impl;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.internal.AbstractNode;
 
@@ -27,6 +28,7 @@ import com.elasticgrid.model.internal.AbstractNode;
  * @author Jerome Bernard
  */
 public class LANNodeImpl extends AbstractNode implements LANNode {
+    private String instanceID;
 
     public LANNodeImpl() {
         super();
@@ -34,6 +36,19 @@ public class LANNodeImpl extends AbstractNode implements LANNode {
 
     public LANNodeImpl(NodeProfile profile) {
         super(profile);
+    }
+
+    public String getInstanceID() {
+        return instanceID;
+    }
+
+    public void setInstanceID(String instanceID) {
+        this.instanceID = instanceID;
+    }
+
+    public LANNode instanceID(String instanceID) {
+        this.instanceID = instanceID;
+        return this;
     }
 
 }

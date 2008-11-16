@@ -29,6 +29,7 @@ import org.joda.time.format.PeriodFormatter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Currency;
+import com.elasticgrid.model.NodeProfile;
 
 /**
  * Custom XML serializers/deserializers for JiBX.
@@ -93,6 +94,28 @@ public class Conversion {
         if (StringUtils.isEmpty(address))
             return null;
         return InetAddress.getByName(address);
+    }
+
+    public static String serializeNodeProfile(NodeProfile profile) {
+        if (profile == null)
+            return null;
+        switch (profile) {
+            case MONITOR:
+                return "monitor";
+            case AGENT:
+                return "agent";
+        }
+        throw new IllegalArgumentException("Unexpected profile " + profile);
+    }
+
+    public static NodeProfile deserializeNodeProfile(String profile) throws UnknownHostException {
+        if (StringUtils.isEmpty(profile))
+            return null;
+        if ("monitor".equals(profile))
+            return NodeProfile.MONITOR;
+        else if ("agent".equals(profile))
+            return NodeProfile.AGENT;
+        throw new IllegalArgumentException("Unexpected profile " + profile);
     }
 
 }

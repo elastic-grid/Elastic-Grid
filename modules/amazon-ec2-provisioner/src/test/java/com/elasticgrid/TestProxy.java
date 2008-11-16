@@ -19,8 +19,8 @@
 
 package com.elasticgrid;
 
-import org.rioproject.resources.servicecore.AbstractProxy;
 import net.jini.id.Uuid;
+import org.rioproject.resources.servicecore.AbstractProxy;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;

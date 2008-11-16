@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.exporters;
+package com.elasticgrid.platforms.ec2.exporters;
 
 import net.jini.core.constraint.InvocationConstraints;
 import net.jini.jeri.Endpoint;

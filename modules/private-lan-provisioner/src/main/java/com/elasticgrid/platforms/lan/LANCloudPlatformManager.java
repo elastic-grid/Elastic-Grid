@@ -19,13 +19,13 @@
 
 package com.elasticgrid.platforms.lan;
 
-import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.cluster.discovery.ClusterLocator;
-import com.elasticgrid.model.Cluster;
+import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.lan.impl.LANClusterImpl;
+import com.elasticgrid.platforms.lan.discovery.LANClusterLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.rmi.RemoteException;
@@ -35,19 +35,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-@Service("clusterManager")
-public class LANClusterManager implements ClusterManager<Cluster> {
-    private ClusterLocator<LANNode> clusterLocator;
-    private String keyName;
-    private static final Logger logger = Logger.getLogger(LANClusterManager.class.getName());
-
-    public void startCluster(String clusterName) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
-    }
-
-    public void startCluster(String clusterName, int size) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
-    }
+@Service("lanCloudPlatformManager")
+public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
+    @Autowired(required = true)
+    private LANClusterLocator clusterLocator;
+    
+    private static final Logger logger = Logger.getLogger(LANCloudPlatformManager.class.getName());
 
     public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
@@ -57,9 +50,9 @@ public class LANClusterManager implements ClusterManager<Cluster> {
         throw new UnsupportedOperationException("There is no way to stop a cluster on a private LAN.");
     }
 
-    public List<Cluster> findClusters() throws ClusterException, RemoteException {
+    public List<LANCluster> findClusters() throws ClusterException, RemoteException {
         List<String> clustersNames = clusterLocator.findClusters();
-        List<Cluster> clusters = new ArrayList<Cluster>(clustersNames.size());
+        List<LANCluster> clusters = new ArrayList<LANCluster>(clustersNames.size());
         for (String cluster : clustersNames) {
             clusters.add(cluster(cluster));
         }
@@ -70,7 +63,7 @@ public class LANClusterManager implements ClusterManager<Cluster> {
         LANCluster cluster = new LANClusterImpl();
         List<LANNode> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
-            return cluster;
+            return (LANCluster) cluster.name(name);
         else
             return (LANCluster) cluster.name(name).addNodes(nodes);
     }
@@ -81,11 +74,6 @@ public class LANClusterManager implements ClusterManager<Cluster> {
 
     public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to resize a cluster on a private LAN.");
-    }
-
-    @Autowired(required = true)
-    public void setClusterLocator(ClusterLocator<LANNode> clusterLocator) {
-        this.clusterLocator = clusterLocator;
     }
 
 }

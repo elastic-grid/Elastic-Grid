@@ -17,14 +17,15 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.NodeInstantiator;
-import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
+import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -35,9 +36,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class EC2GridManagerTest {
-    private EC2ClusterManager clusterManager;
-    private NodeInstantiator mockEC2;
-    private ClusterLocator mockLocator;
+    private EC2CloudPlatformManager cloudPlatformManager;
+    private NodeInstantiator<EC2Node> mockEC2;
+    private EC2ClusterLocator mockLocator;
 
     @Test(expectedExceptions = ClusterAlreadyRunningException.class)
     public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
@@ -52,23 +53,27 @@ public class EC2GridManagerTest {
                 .times(3);
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123")));
-        EasyMock.replay(mockEC2, mockLocator);
-        clusterManager.startCluster("test");
-        clusterManager.startCluster("test");
+        EasyMock.replay(mockEC2);
+        org.easymock.classextension.EasyMock.replay(mockLocator);
+        cloudPlatformManager.startCluster("test", 1, 0);
+        cloudPlatformManager.startCluster("test", 1, 0);
     }
 
     @BeforeTest
+    @SuppressWarnings("unchecked")
     public void setUpClusterManager() {
-        clusterManager = new EC2ClusterManager();
+        cloudPlatformManager = new EC2CloudPlatformManager();
         mockEC2 = EasyMock.createMock(NodeInstantiator.class);
-        mockLocator = EasyMock.createMock(ClusterLocator.class);
-        clusterManager.setNodeInstantiator(mockEC2);
-        clusterManager.setClusterLocator(mockLocator);
+        mockLocator = org.easymock.classextension.EasyMock.createMock(EC2ClusterLocator.class);
+        cloudPlatformManager.setNodeInstantiator(mockEC2);
+        cloudPlatformManager.setClusterLocator(mockLocator);
     }
 
     @AfterTest
     public void verifyMocks() {
-        EasyMock.verify(mockEC2, mockLocator);
-        EasyMock.reset(mockEC2, mockLocator);
+        EasyMock.verify(mockEC2);
+        org.easymock.classextension.EasyMock.verify(mockLocator);
+        EasyMock.reset(mockEC2);
+        org.easymock.classextension.EasyMock.reset(mockLocator);
     }
 }

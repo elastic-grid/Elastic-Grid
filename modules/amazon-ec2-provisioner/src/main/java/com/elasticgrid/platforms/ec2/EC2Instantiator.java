@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2;
+package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.model.ec2.EC2Node;

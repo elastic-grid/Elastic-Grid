@@ -17,26 +17,13 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.costmodel;
+package com.elasticgrid.platforms.ec2.discovery;
 
-import org.rioproject.costmodel.ResourceCostModel;
+import com.elasticgrid.cluster.discovery.AbstractClusterLocator;
+import com.elasticgrid.model.ec2.EC2Node;
 
 /**
- * {@link ResourceCostModel} for EC2 service.
- * @author Jerome Bernard
+ * EC2 Cluster discovery.
  */
-public class EC2ExtraLargeInstanceCostModel extends AbstractEC2InstanceCostModel implements ResourceCostModel {
-    private static final double COST_PER_HOUR = .80;        // in dollars
-
-    public double getCostPerHour() {
-        return COST_PER_HOUR;
-    }
-
-    /**
-     * Get the description of the ResourceCostModel
-     * @return String the description of the ResourceCostModel
-     */
-    public String getDescription() {
-        return "EC2 Extra Large Instance Cost Model";
-    }
+public abstract class EC2ClusterLocator extends AbstractClusterLocator<EC2Node> {
 }

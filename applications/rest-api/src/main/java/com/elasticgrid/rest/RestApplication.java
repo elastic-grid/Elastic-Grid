@@ -21,18 +21,19 @@ package com.elasticgrid.rest;
 
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
-import org.restlet.data.Response;
 import org.restlet.data.Request;
+import org.restlet.data.Response;
 import org.restlet.ext.spring.SpringComponent;
-import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.ApplicationInfo;
-import org.restlet.ext.wadl.IncludeInfo;
 import org.restlet.ext.wadl.GrammarsInfo;
+import org.restlet.ext.wadl.IncludeInfo;
+import org.restlet.ext.wadl.WadlApplication;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import java.net.URL;
+import java.rmi.RMISecurityManager;
+import java.security.Permission;
 
 public class RestApplication extends WadlApplication implements InitializingBean {
 
@@ -79,6 +80,16 @@ public class RestApplication extends WadlApplication implements InitializingBean
     public static void main(String[] args) throws Exception {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
         SLF4JBridgeHandler.install();
+    }
+
+    static {
+        // setup Jini security model
+        System.setSecurityManager(new RMISecurityManager() {
+            @Override
+            public void checkPermission(Permission perm) {
+                // do nothing -- allow everything
+            }
+        });
     }
 
 }

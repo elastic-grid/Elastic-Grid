@@ -28,10 +28,9 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="com.elasticgrid.amazon.ec2"/>
-    <context:component-scan base-package="com.elasticgrid.cluster.ec2"/>
+    <context:component-scan base-package="com.elasticgrid.platforms.ec2"/>
 
-    <bean id="clusterManager" class="com.elasticgrid.amazon.ec2.EC2ClusterManager">
+    <bean id="ec2CloudPlatformManager" class="com.elasticgrid.platforms.ec2.EC2CloudPlatformManager">
         <property name="awsAccessID" value="${aws.accessId}"/>
         <property name="awsSecretKey" value="${aws.secretKey}"/>
         <property name="awsSecured" value="${aws.ec2.secured}"/>
@@ -40,10 +39,6 @@
         <property name="ami64" value="${aws.ec2.ami64}"/>
     </bean>
 
-    <bean id="clusterLocator" class="com.elasticgrid.amazon.ec2.discovery.EC2SecurityGroupsClusterLocator">
-        <property name="ec2" ref="jec2"/>
-    </bean>
-    
     <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
         <constructor-arg index="0" value="${aws.accessId}"/>
         <constructor-arg index="1" value="${aws.secretKey}"/>

@@ -14,11 +14,18 @@
     <dependencies>
 
         <!-- Elastic Grid EC2 provisioner -->
-        <dependency>
+		<dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
+
+		<!-- Elastic Grid LAN provisioner -->
+		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>private-lan-provisioner</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
         <!-- Elastic Grid Cluster model -->
         <dependency>

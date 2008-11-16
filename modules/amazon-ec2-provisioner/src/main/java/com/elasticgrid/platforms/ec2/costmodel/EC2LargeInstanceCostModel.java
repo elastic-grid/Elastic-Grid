@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.costmodel;
+package com.elasticgrid.platforms.ec2.costmodel;
 
 import org.rioproject.costmodel.ResourceCostModel;
 

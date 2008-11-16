@@ -17,13 +17,31 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.amazon.ec2.discovery;
-
-import com.elasticgrid.cluster.discovery.AbstractClusterLocator;
-import com.elasticgrid.model.ec2.EC2Node;
+package com.elasticgrid.platforms.ec2;
 
 /**
- * EC2 Cluster discovery.
+ * Enum of the type of Amazon EC2 instances.
  */
-public abstract class EC2ClusterLocator extends AbstractClusterLocator<EC2Node> {
+public enum InstanceType {
+    SMALL("m1.small"),
+	LARGE("m1.large"),
+	EXTRA_LARGE("m1.xlarge"),
+	MEDIUM_HIGH_CPU("c1.medium"),
+	EXTRA_LARGE_HIGH_CPU("c1.xlarge");
+
+    private String name;
+
+    InstanceType(String name) {
+        this.name = name;
+    }
+
+    public Object getName() {
+        return name;
+    }
+
+    public String toString() {
+        return "InstanceType{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
