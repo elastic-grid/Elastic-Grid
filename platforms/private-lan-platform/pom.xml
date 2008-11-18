@@ -38,11 +38,11 @@
 		<!--</dependency>-->
 
         <!-- Framework dependencies -->
-		<!--<dependency>-->
-			<!--<groupId>${pom.groupId}</groupId>-->
-			<!--<artifactId>amazon-sqs</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>amazon-sqs</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 		
 		<!-- Kernel dependencies -->
         <!--<dependency>-->

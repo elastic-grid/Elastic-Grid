@@ -37,6 +37,7 @@ public class RestJSB extends ServiceBeanAdapter {
 
     @Override
     public void stop(boolean force) {
-        springContext.close();
+        if (springContext != null)
+            springContext.close();
     }
 }

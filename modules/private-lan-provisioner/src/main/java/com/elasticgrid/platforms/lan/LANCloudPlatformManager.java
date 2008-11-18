@@ -21,6 +21,7 @@ package com.elasticgrid.platforms.lan;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.Application;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
@@ -63,9 +64,13 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         LANCluster cluster = new LANClusterImpl();
         List<LANNode> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
-            return (LANCluster) cluster.name(name);
+            cluster.name(name);
         else
-            return (LANCluster) cluster.name(name).addNodes(nodes);
+            cluster.name(name).addNodes(nodes);
+        List<? extends Application> applications = clusterLocator.findApplications(name);
+        for (Application application : applications)
+            cluster.application(application.getName());
+        return cluster;
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {

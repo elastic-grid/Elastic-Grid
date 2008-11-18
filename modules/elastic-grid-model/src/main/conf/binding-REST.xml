@@ -42,10 +42,8 @@
 
     <mapping class="com.elasticgrid.model.internal.AbstractCluster" abstract="true">
         <value name="name" field="name" style="attribute"/>
-        <value name="href" field="name" style="attribute"/>
-        <!--<collection name="applications" field="applications"-->
-                    <!--item-type="com.elasticgrid.model.internal.ApplicationImpl"-->
-                    <!--factory="com.elasticgrid.model.internal.Factories.listOfApplications"/>-->
+        <!--<value name="href" field="name" style="attribute"/>-->
+        <collection field="applications"/>
     </mapping>
     <mapping name="cluster" ns="urn:elastic-grid:ec2"
              class="com.elasticgrid.model.ec2.impl.EC2ClusterImpl" extends="com.elasticgrid.model.internal.AbstractCluster">
@@ -83,10 +81,10 @@
         <structure map-as="com.elasticgrid.model.internal.AbstractNode"/>
     </mapping>
 
-    <!--<mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">-->
-        <!--<value name="name" field="name" style="attribute"/>-->
+    <mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">
+        <value name="name" field="name" style="attribute"/>
         <!--<structure field="oar" type="com.elasticgrid.model.internal.OARImpl"/>-->
-    <!--</mapping>-->
+    </mapping>
 
     <!--<mapping name="oar" class="com.elasticgrid.model.internal.OARImpl">-->
         <!--<value name="name" field="name"/>-->
