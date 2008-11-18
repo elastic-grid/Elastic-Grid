@@ -45,16 +45,11 @@
 		</dependency>
 		
 		<!-- Kernel dependencies -->
-        <!--<dependency>-->
-			<!--<groupId>${pom.groupId}</groupId>-->
-			<!--<artifactId>amazon-ec2-bootstrapper</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
-        <!--<dependency>-->
-			<!--<groupId>${pom.groupId}</groupId>-->
-			<!--<artifactId>amazon-ec2-provisioner</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
+        <dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>amazon-ec2-provisioner</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
         <dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>private-lan-provisioner</artifactId>

@@ -28,9 +28,8 @@ import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.GrammarsInfo;
 import org.restlet.ext.wadl.IncludeInfo;
 import org.restlet.ext.wadl.WadlApplication;
-import org.slf4j.bridge.SLF4JBridgeHandler;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.rmi.RMISecurityManager;
@@ -93,7 +92,7 @@ public class RestApplication extends WadlApplication implements InitializingBean
         });
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
-        SLF4JBridgeHandler.install();
+//        SLF4JBridgeHandler.install();
     }
 
 }
