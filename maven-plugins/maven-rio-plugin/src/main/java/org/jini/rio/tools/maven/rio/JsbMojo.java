@@ -223,7 +223,7 @@ public class JsbMojo extends AbstractMojo {
         classDepAndJarTask.setProject(antProject);
         classDepAndJarTask.setClasspath(classpath);
         classDepAndJarTask.setFiles(true);
-        File resourcesDirectory = new File("src" + File.separatorChar + "main" + File.separatorChar + "resources");
+        File resourcesDirectory = new File(project.getBasedir(), "src" + File.separatorChar + "main" + File.separatorChar + "resources");
         if (resourcesDirectory.exists()) {
             FileSet resourcesFileSet = new FileSet();
             resourcesFileSet.setDir(resourcesDirectory);
