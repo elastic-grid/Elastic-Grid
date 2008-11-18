@@ -23,6 +23,7 @@ import com.elasticgrid.model.Node;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.ClusterMonitorNotFoundException;
+import com.elasticgrid.model.Application;
 import java.util.List;
 
 /**
@@ -53,6 +54,15 @@ public interface ClusterLocator<N extends Node> {
      * @throws ClusterMonitorNotFoundException if the monitor's cluster can't be found
      */
     N findMonitor(String clusterName) throws ClusterMonitorNotFoundException;
+
+    /**
+     * Locate applications deployed on a cluster.
+     * @param clusterName the name of the cluster for whom applications should be found
+     * @return the list of {@link Application}s
+     * @throws ClusterNotFoundException if the cluster can't be found
+     * @throws ClusterException if there is a technical error
+     */
+    List<? extends Application> findApplications(String clusterName) throws ClusterException;
 
     /**
      * Add a {@link ClusterLocatorListener} to be notified of cluster topology changes.

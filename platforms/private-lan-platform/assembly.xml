@@ -10,15 +10,6 @@
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
-        <!--<fileSet>-->
-            <!--<directory>${rio.home}</directory>-->
-            <!--<outputDirectory>/</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>bin/**/*</include>-->
-            <!--</includes>-->
-            <!--<fileMode>0755</fileMode>-->
-            <!--<useDefaultExcludes>true</useDefaultExcludes>-->
-        <!--</fileSet>-->
         <fileSet>
             <directory>${rio.home}</directory>
             <outputDirectory>/</outputDirectory>
@@ -74,8 +65,8 @@
                 <include>com.elasticgrid:elastic-grid-manager</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
-                <!--<include>com.xerox.amazonws:typica</include>-->
-                <!--<include>javax.xml.bind:jaxb-impl</include>-->
+                <include>com.xerox.amazonws:typica</include>
+                <include>javax.xml.bind:jaxb-impl</include>
                 <include>commons-httpclient:commons-httpclient</include>
                 <include>commons-logging:commons-logging</include>
                 <include>commons-io:commons-io</include>

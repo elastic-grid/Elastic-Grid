@@ -30,12 +30,14 @@ import org.restlet.ext.wadl.IncludeInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.rmi.RMISecurityManager;
 import java.security.Permission;
 
-public class RestApplication extends WadlApplication implements InitializingBean {
+public class RestApplication extends WadlApplication implements InitializingBean, DisposableBean {
+    private SpringComponent component;
 
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
@@ -61,7 +63,7 @@ public class RestApplication extends WadlApplication implements InitializingBean
     public void afterPropertiesSet() throws Exception {
         try {
             // Create a new Component.
-            SpringComponent component = new SpringComponent();
+            component = new SpringComponent();
 
             // Add a new HTTP server listening on port 8182.
             component.getServers().add(Protocol.HTTP, 8182);
@@ -77,12 +79,11 @@ public class RestApplication extends WadlApplication implements InitializingBean
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
-        SLF4JBridgeHandler.install();
+    public void destroy() throws Exception {
+        component.stop();
     }
 
-    static {
+    public static void main(String[] args) throws Exception {
         // setup Jini security model
         System.setSecurityManager(new RMISecurityManager() {
             @Override
@@ -90,6 +91,9 @@ public class RestApplication extends WadlApplication implements InitializingBean
                 // do nothing -- allow everything
             }
         });
+
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
+        SLF4JBridgeHandler.install();
     }
 
 }

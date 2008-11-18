@@ -39,6 +39,8 @@ fi
 if [ -z "$EG_HOME" ] ; then
   EG_HOME="$scriptDir/.."
 fi
+# Convert to absolute path
+EG_HOME=$(cd "$EG_HOME" && pwd)
 RIO_HOME=$EG_HOME
 RIO_LIB=$RIO_HOME/lib
 

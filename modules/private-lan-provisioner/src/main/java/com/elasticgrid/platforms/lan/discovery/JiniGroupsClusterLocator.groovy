@@ -46,6 +46,8 @@ import org.rioproject.monitor.ProvisionMonitor
 import org.rioproject.resources.client.JiniClient
 import org.springframework.stereotype.Service
 import com.elasticgrid.model.NodeProfile
+import com.elasticgrid.model.Application
+import com.elasticgrid.model.internal.ApplicationImpl
 
 /**
  * {@ClusterLocator}  based on EC2 Security Groups, as described on Elastic Grid Blog post:
@@ -123,6 +125,14 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
             .instanceID(item.serviceID.toString())
             .profile(NodeProfile.MONITOR)
             .address(InetAddress.getByName(hostEntry.hostName))
+  }
+
+  public List<? extends Application> findApplications (String clusterName) throws ClusterException {
+    def applications = [
+            new ApplicationImpl().name('test'),
+            new ApplicationImpl().name('hello')
+    ]
+    return applications as List
   }
 
   private ProvisionMonitor findLocalMonitor() {
