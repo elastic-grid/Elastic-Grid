@@ -2,34 +2,34 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>com.elasticgrid</groupId>
-        <artifactId>elastic-grid-applications</artifactId>
+        <groupId>com.elasticgrid.applications</groupId>
+        <artifactId>rest-api</artifactId>
         <version>0.8.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>rest-api</artifactId>
+    <artifactId>rest-api-service</artifactId>
     <packaging>jsb</packaging>
-    <name>Applications :: REST API</name>
+    <name>Applications :: REST API :: Services</name>
 
     <dependencies>
 
         <!-- Elastic Grid EC2 provisioner -->
 		<dependency>
-            <groupId>${pom.groupId}</groupId>
+            <groupId>com.elasticgrid</groupId>
             <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
 		<!-- Elastic Grid LAN provisioner -->
 		<dependency>
-			<groupId>${pom.groupId}</groupId>
+			<groupId>com.elasticgrid</groupId>
 			<artifactId>private-lan-provisioner</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 
         <!-- Elastic Grid Cluster model -->
         <dependency>
-            <groupId>${pom.groupId}</groupId>
+            <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
@@ -131,7 +131,7 @@
 
         <!-- Test dependencies -->
         <dependency>
-            <groupId>${pom.groupId}</groupId>
+            <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
             <classifier>tests</classifier>
@@ -159,15 +159,8 @@
                         <rio.home>${env.RIO_HOME}</rio.home>
                         <jini.home>${env.JINI_HOME}</jini.home>
                     </environment>
-                    <opstring>${basedir}/src/main/conf/RestAPI.groovy</opstring>
-
                     <implementationIns>
                         <implementationIn>com.elasticgrid.rest</implementationIn>
-                        <!--<implementationIn>org.restlet</implementationIn>-->
-                        <!--<implementationIn>org.restlet.ext.spring</implementationIn>-->
-                        <!--<implementationIn>org.restlet.ext.jibx</implementationIn>-->
-                        <!--<implementationIn>com.noelios.restlet</implementationIn>-->
-                        <!--<implementationIn>com.noelios.restlet.ext.jetty</implementationIn>-->
                     </implementationIns>
                     <implementationTopclasses>
                         <implementationTopclass>com.elasticgrid.rest.RestJSB</implementationTopclass>
@@ -179,20 +172,6 @@
                         <implementationTopclass>com.elasticgrid.rest.ServicesResource</implementationTopclass>
                         <implementationTopclass>com.elasticgrid.rest.ServiceResource</implementationTopclass>
                     </implementationTopclasses>
-
-                    <!--<clientIns>-->
-                        <!--<clientIn>org.restlet</clientIn>-->
-                    <!--</clientIns>-->
-                    <!--<clientTopclasses>-->
-                        <!--<clientTopclass>org.restlet.Client</clientTopclass>-->
-                    <!--</clientTopclasses>-->
-
-                    <!--<downloadableIns>-->
-                        <!--<downloadableIn>com.elasticgrid.rest</downloadableIn>-->
-                    <!--</downloadableIns>-->
-                    <!--<downloadableTopclasses>-->
-                        <!--<downloadableTopclass>com.elasticgrid.rest.RestProxy</downloadableTopclass>-->
-                    <!--</downloadableTopclasses>-->
                 </configuration>
             </plugin>
             <plugin>
