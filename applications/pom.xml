@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elasticgrid</groupId>
-    <artifactId>elastic-grid-applications</artifactId>
+    <artifactId>applications</artifactId>
     <packaging>pom</packaging>
     <name>Modules</name>
     <prerequisites>
@@ -63,6 +63,19 @@
     </reporting>
 
     <dependencies>
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-ec2-platform</artifactId>
+            <version>${pom.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>private-lan-platform</artifactId>
+            <version>${pom.version}</version>
+            <type>pom</type>
+        </dependency>
+
         <!-- Groovy dependencies -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
