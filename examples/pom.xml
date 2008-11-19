@@ -16,6 +16,21 @@
         <module>video-conversion</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-ec2-platform</artifactId>
+            <version>${pom.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>private-lan-platform</artifactId>
+            <version>${pom.version}</version>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
