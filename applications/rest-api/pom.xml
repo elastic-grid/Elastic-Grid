@@ -9,50 +9,250 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elasticgrid.applications</groupId>
     <artifactId>rest-api</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>Applications :: REST API</name>
 
-    <modules>
-        <module>service</module>
-        <module>oar</module>
-    </modules>
+    <dependencies>
+
+        <!-- Elastic Grid EC2 provisioner -->
+		<dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+		<!-- Elastic Grid LAN provisioner -->
+		<dependency>
+			<groupId>com.elasticgrid</groupId>
+			<artifactId>private-lan-provisioner</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+
+        <!-- Elastic Grid Cluster model -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Restlet dependencies -->
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet.ext.jetty</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
+            <artifactId>org.restlet.ext.spring</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
+            <artifactId>org.restlet.ext.jibx</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jibx</groupId>
+                    <artifactId>jibx-run</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
+            <artifactId>org.restlet.ext.wadl</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>1.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.1_3</version>
+		</dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>jul-to-slf4j</artifactId>-->
+            <!--<version>1.5.3</version>-->
+        <!--</dependency>-->
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>2.5.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JiBX dependencies -->
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-run</artifactId>
+            <version>1.1.6a</version>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.8</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>com.mathieucarbou.mojo</groupId>-->
+                <!--<artifactId>maven-license-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<header>${basedir}/../../etc/header.txt</header>-->
+                    <!--<quiet>false</quiet>-->
+                    <!--<failIfMissing>true</failIfMissing>-->
+                    <!--<includes>-->
+                        <!--<include>src/**</include>-->
+                        <!--<include>**/test/**</include>-->
+                    <!--</includes>-->
+                    <!--<excludes>-->
+                        <!--<exclude>target/**</exclude>-->
+                        <!--<exclude>.clover/**</exclude>-->
+                    <!--</excludes>-->
+                    <!--<useDefaultExcludes>true</useDefaultExcludes>-->
+                    <!--<mapping>-->
+                        <!--<jwc>xml</jwc>-->
+                        <!--<application>xml</application>-->
+                        <!--<myFileExtension>java</myFileExtension>-->
+                    <!--</mapping>-->
+                    <!--<useDefaultMapping>true</useDefaultMapping>-->
+                    <!--<properties>-->
+                        <!--<year>${project.inceptionYear}</year>-->
+                    <!--</properties>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>check</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.mathieucarbou.mojo</groupId>
-                <artifactId>maven-license-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-2</version>
                 <configuration>
-                    <header>${basedir}/../../etc/header.txt</header>
-                    <quiet>false</quiet>
-                    <failIfMissing>true</failIfMissing>
-                    <includes>
-                        <include>src/**</include>
-                        <include>**/test/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>target/**</exclude>
-                        <exclude>.clover/**</exclude>
-                    </excludes>
-                    <useDefaultExcludes>true</useDefaultExcludes>
-                    <mapping>
-                        <jwc>xml</jwc>
-                        <application>xml</application>
-                        <myFileExtension>java</myFileExtension>
-                    </mapping>
-                    <useDefaultMapping>true</useDefaultMapping>
-                    <properties>
-                        <year>${project.inceptionYear}</year>
-                    </properties>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.elasticgrid.rest.RestApplication</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/elastic-grid/applications/rest-api</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <!--<archive>-->
+                        <!--<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>-->
+                    <!--</archive>-->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <forkMode>never</forkMode>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+        </repository>
+    </repositories>
 </project>
