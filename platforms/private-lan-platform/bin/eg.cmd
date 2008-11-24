@@ -66,7 +66,7 @@ set RIO_LOG_DIR="%RIO_HOME%"\logs\
 set RIO_NATIVE_DIR="%RIO_HOME%"\lib\native;"%RIO_HOME%"\lib\hyperic
 set PATH=%PATH%;"%RIO_NATIVE_DIR%
 
-set classpath=-cp %RIO_HOME%\lib\boot.jar;%JINI_HOME%\lib\start.jar;
+set classpath=-cp %RIO_HOME%\lib\boot.jar;%JINI_HOME%\lib\start.jar;%EG_HOME%\lib\elastic-grid\kernel\elastic-grid-core-${pom.version}.jar
 set agentpath=-javaagent:%RIO_HOME%\lib\boot.jar
 
 set launchTarget=com.sun.jini.start.ServiceStarter
