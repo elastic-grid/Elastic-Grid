@@ -103,11 +103,11 @@
 			<artifactId>cglib</artifactId>
 			<version>2.1_3</version>
 		</dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>1.5.3</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>jul-to-slf4j</artifactId>-->
+            <!--<version>1.5.3</version>-->
+        <!--</dependency>-->
 
         <!-- Spring dependencies -->
         <dependency>

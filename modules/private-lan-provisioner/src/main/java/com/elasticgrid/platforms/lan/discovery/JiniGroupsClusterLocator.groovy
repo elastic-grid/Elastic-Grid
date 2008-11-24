@@ -112,6 +112,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
                 .profile(NodeProfile.AGENT)
                 .address(InetAddress.getByName(hostEntry.hostName))
     }
+    logger.info "Found nodes $nodes"
     return nodes as List;
   }
 

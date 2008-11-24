@@ -51,4 +51,12 @@ public class LANNodeImpl extends AbstractNode implements LANNode {
         return this;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("LANNodeImpl");
+        sb.append("{instanceID='").append(instanceID).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

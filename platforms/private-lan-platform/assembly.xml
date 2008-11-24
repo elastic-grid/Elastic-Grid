@@ -20,6 +20,13 @@
                 <include>logs/*.txt</include>
                 <include>policy/**/*</include>
             </includes>
+            <excludes>
+                <exclude>config/start-all.config</exclude>
+                <exclude>config/start-cybernode.config</exclude>
+                <exclude>config/cybernode.config</exclude>
+                <exclude>config/start-monitor.config</exclude>
+                <exclude>config/monitor.config</exclude>
+            </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
         <fileSet>
@@ -27,6 +34,8 @@
 				<include>bin/**/*</include>
             </includes>
             <excludes>
+                <exclude>bin/eg</exclude>
+                <exclude>bin/eg.cmd</exclude>
                 <exclude>bin/Rio.app/**</exclude>
             </excludes>
             <fileMode>0755</fileMode>
@@ -52,6 +61,18 @@
 			<filtered>true</filtered>
             <fileMode>0644</fileMode>
 		</file>
+        <file>
+			<source>bin/eg</source>
+			<outputDirectory>/bin</outputDirectory>
+			<filtered>true</filtered>
+            <fileMode>0755</fileMode>
+		</file>
+        <file>
+			<source>bin/eg.cmd</source>
+			<outputDirectory>/bin</outputDirectory>
+			<filtered>true</filtered>
+            <fileMode>0755</fileMode>
+		</file>
     </files>
     <dependencySets>
 		<!-- Kernel dependencies -->
@@ -67,11 +88,17 @@
                 <include>com.xerox.amazonws:typica</include>
                 <include>javax.xml.bind:jaxb-api</include>
                 <include>javax.xml.bind:jaxb-impl</include>
+                <include>javax.activation:activation</include>
+                <include>stax:stax-api</include>
+                <include>org.jibx:jibx-run</include>
+                <include>org.jibx:jibx-extras</include>
+                <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>commons-lang:commons-lang</include>
                 <include>commons-httpclient:commons-httpclient</include>
                 <include>commons-logging:commons-logging</include>
                 <include>commons-io:commons-io</include>
                 <include>commons-codec:commons-codec</include>
-                <include>org.springframework:spring</include>
+                <!--<include>org.springframework:spring</include>-->
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
 			<outputDirectory>lib/elastic-grid/kernel</outputDirectory>

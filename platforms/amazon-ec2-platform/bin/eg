@@ -141,7 +141,7 @@ if [ "$start" = "1" ]; then
         fi
     fi
 
-    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$RIO_LIB/elastic-grid/kernel/amazon-ec2-provisioner-1.0-SNAPSHOT.jar)"
+    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$RIO_LIB/elastic-grid/kernel/amazon-ec2-provisioner-0.8.2.jar)"
     agentpath="-javaagent:$(toNative $RIO_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then

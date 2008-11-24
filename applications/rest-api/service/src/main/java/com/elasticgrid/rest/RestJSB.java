@@ -32,12 +32,14 @@ public class RestJSB extends ServiceBeanAdapter {
 
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {
+        super.initialize(context);
         springContext = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
     }
 
     @Override
-    public void stop(boolean force) {
+    public void destroy() {
         if (springContext != null)
             springContext.close();
+        super.destroy();
     }
 }

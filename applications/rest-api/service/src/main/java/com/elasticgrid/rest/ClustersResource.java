@@ -41,15 +41,11 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-@Component
-@Scope("prototype")
 public class ClustersResource extends WadlResource {
     @Autowired
     private ClusterManager<Cluster> clusterManager;
@@ -116,6 +112,8 @@ public class ClustersResource extends WadlResource {
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        } finally {
+            getResponse().redirectTemporary(clusterName);
         }
     }
 
