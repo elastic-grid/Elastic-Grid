@@ -44,11 +44,10 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
         String[] configArgs = getArray(restApiConfig, overrides);
-        String restApiClasspath = egHome + File.separator + "deploy" + File.separator + "rest-api-oar" + File.separator + "lib";
-        String restApiCodebase = BootUtil.getCodebase(new String[]{"cybernode-dl.jar",
-                                              "rio-dl.jar",
-                                              "jsk-dl.jar"},
-                                 hostAddress, port);
+        String restApiRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid" + File.separator + "applications" + File.separator + "rest-api";
+        String restApiClasspath = restApiRoot + File.separator + "rest-api-0.8.2.jar";
+        System.out.println("Classpath is: " + restApiClasspath);
+        String restApiCodebase = BootUtil.getCodebase(new String[] { "rio-dl.jar", "jsk-dl.jar"}, hostAddress, port);
         String implClass = "com.elasticgrid.rest.RestJSB";
         return new RioServiceDescriptor(restApiCodebase, policy, restApiClasspath, implClass, configArgs);
     }

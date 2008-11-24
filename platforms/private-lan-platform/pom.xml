@@ -15,6 +15,13 @@
     </prerequisites>
 
     <dependencies>
+        <!-- Applications dependencies -->
+		<dependency>
+			<groupId>com.elasticgrid.applications</groupId>
+			<artifactId>rest-api</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+
         <!-- Substrates dependencies -->
 		<!--<dependency>-->
 			<!--<groupId>com.elasticgrid.substrates</groupId>-->

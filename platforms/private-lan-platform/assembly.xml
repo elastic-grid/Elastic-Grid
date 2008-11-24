@@ -117,5 +117,13 @@
             </includes>
 			<outputDirectory>lib/elastic-grid/substrates</outputDirectory>
         </dependencySet>
+        <!-- REST API dependencies -->
+		<dependencySet>
+            <includes>
+                <include>com.elasticgrid.applications:*</include>
+                <include>*:*</include>
+            </includes>
+			<outputDirectory>lib/elastic-grid/applications/rest-api</outputDirectory>
+        </dependencySet>
     </dependencySets>
 </assembly>
