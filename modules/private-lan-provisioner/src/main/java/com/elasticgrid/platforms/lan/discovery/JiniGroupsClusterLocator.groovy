@@ -59,7 +59,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   def ServiceDiscoveryManager sdm
   def LookupCache monitorsCache
   def LookupCache cybernodesCache
-  private static final Logger logger = Logger.getLogger(JiniGroupsClusterLocator.class.name)
+  private final Logger logger = Logger.getLogger(JiniGroupsClusterLocator.getClass().getName())
 
   public JiniGroupsClusterLocator() {
     String[] groups = JiniClient.parseGroups(System.getProperty('org.rioproject.groups', "all"));

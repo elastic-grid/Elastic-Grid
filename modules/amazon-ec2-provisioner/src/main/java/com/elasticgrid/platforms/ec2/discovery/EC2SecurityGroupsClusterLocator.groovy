@@ -50,7 +50,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
   public static final String EG_GROUP_MONITOR = "eg-monitor"
   public static final String EG_GROUP_AGENT = "eg-agent"
-  private static final Logger logger = Logger.getLogger(EC2ClusterLocator.class.name)
+  private final Logger logger = Logger.getLogger(EC2SecurityGroupsClusterLocator.getClass().getName())
 
   public List<String> findClusters() {
     logger.info "Searching for all clusters..."
