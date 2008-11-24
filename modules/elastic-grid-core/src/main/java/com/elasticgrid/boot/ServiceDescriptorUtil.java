@@ -17,7 +17,7 @@
  * along with Elastic Grid.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.lan.boot;
+package com.elasticgrid.boot;
 
 import com.sun.jini.start.ServiceDescriptor;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
     }
 
     public static ServiceDescriptor getRestApi(String policy, String restApiConfig, String[] overrides) throws IOException {
-        return getRestApi(policy, restApiConfig, overrides, "8182");
+        return getRestApi(policy, restApiConfig, overrides, getAnonymousPort());
     }
 
     public static ServiceDescriptor getRestApi(String policy, String restApiConfig, String[] overrides, String port) throws IOException {

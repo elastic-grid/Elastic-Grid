@@ -98,7 +98,6 @@
                 <include>commons-logging:commons-logging</include>
                 <include>commons-io:commons-io</include>
                 <include>commons-codec:commons-codec</include>
-                <!--<include>org.springframework:spring</include>-->
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
 			<outputDirectory>lib/elastic-grid/kernel</outputDirectory>
@@ -123,6 +122,29 @@
                 <include>com.elasticgrid.applications:*</include>
                 <include>*:*</include>
             </includes>
+            <excludes>
+                <exclude>com.elasticgrid:amazon-ec2-provisioner</exclude>
+                <exclude>com.elasticgrid:private-lan-provisioner</exclude>
+                <exclude>com.elasticgrid:elastic-grid-core</exclude>
+                <exclude>com.elasticgrid:elastic-grid-model</exclude>
+                <exclude>com.elasticgrid:elastic-grid-manager</exclude>
+				<exclude>com.elasticgrid:elastic-grid-utils</exclude>
+				<exclude>com.elasticgrid:elastic-grid-cli</exclude>
+                <exclude>com.xerox.amazonws:typica</exclude>
+                <exclude>javax.xml.bind:jaxb-api</exclude>
+                <exclude>javax.xml.bind:jaxb-impl</exclude>
+                <exclude>javax.activation:activation</exclude>
+                <exclude>stax:stax-api</exclude>
+                <exclude>org.jibx:jibx-run</exclude>
+                <exclude>org.jibx:jibx-extras</exclude>
+                <exclude>org.codehaus.woodstox:wstx-asl</exclude>
+                <exclude>commons-lang:commons-lang</exclude>
+                <exclude>commons-httpclient:commons-httpclient</exclude>
+                <exclude>commons-logging:commons-logging</exclude>
+                <exclude>commons-io:commons-io</exclude>
+                <exclude>commons-codec:commons-codec</exclude>
+                <exclude>com.elasticgrid.substrates:substrate-api</exclude>
+            </excludes>
 			<outputDirectory>lib/elastic-grid/applications/rest-api</outputDirectory>
         </dependencySet>
     </dependencySets>

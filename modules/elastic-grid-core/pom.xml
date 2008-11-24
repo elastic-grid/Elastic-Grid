@@ -27,6 +27,32 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>boot</artifactId>
+            <version>4.0-M2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <version>4.0-M2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>monitor</artifactId>
+            <version>4.0-M2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jini</groupId>
+            <artifactId>tools</artifactId>
+            <version>2.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Jini dependencies -->
         <dependency>
             <groupId>net.jini</groupId>
@@ -67,24 +93,6 @@
             <groupId>javax.xml.stream</groupId>
             <artifactId>stax-api</artifactId>
             <version>1.0-2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio</artifactId>
-            <version>4.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>boot</artifactId>
-            <version>4.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>monitor</artifactId>
-            <version>4.0-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
