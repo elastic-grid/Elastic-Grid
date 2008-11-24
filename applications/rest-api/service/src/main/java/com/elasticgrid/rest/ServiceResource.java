@@ -31,12 +31,8 @@ import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
-@Component
-@Scope("prototype")
 public class ServiceResource extends WadlResource {
     private String clusterName;
     private String applicationName;

@@ -52,4 +52,11 @@ public class EC2NodeImpl extends AbstractNode implements EC2Node {
         return this;
     }
 
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("EC2NodeImpl");
+        sb.append("{instanceID='").append(instanceID).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

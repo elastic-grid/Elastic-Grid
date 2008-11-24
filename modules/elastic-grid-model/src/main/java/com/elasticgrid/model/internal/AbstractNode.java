@@ -61,4 +61,14 @@ public abstract class AbstractNode implements Node {
     public void setAddress(InetAddress address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("AbstractNode");
+        sb.append("{profile=").append(profile);
+        sb.append(", address=").append(address);
+        sb.append('}');
+        return sb.toString();
+    }
 }

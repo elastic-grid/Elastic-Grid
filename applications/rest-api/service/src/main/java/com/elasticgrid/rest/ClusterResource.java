@@ -21,35 +21,29 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterProvisioning;
+import org.jibx.runtime.JiBXException;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.data.Form;
 import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.WadlResource;
 import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
+import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.ext.wadl.WadlResource;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.jibx.runtime.JiBXException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.TimeoutException;
-import java.rmi.RemoteException;
-import java.io.IOException;
 
-@Component
-@Scope("prototype")
 public class ClusterResource extends WadlResource {
     private String clusterName;
     @Autowired
