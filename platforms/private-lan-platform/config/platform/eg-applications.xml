@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Elastic Grid Core platform.
+	Copyright Elastic Grid, LLC.
+-->
+
+<platform>
+
+	<capability name="Elastic Grid REST API" common="yes">
+		<description>Elastic Grid REST API</description>
+		<version>1.0</version>
+		<manufacturer>Elastic Grid, LLC.</manufacturer>
+		<classpath>${RIO_HOME}/lib/elastic-grid/applications/rest-api</classpath>        
+	</capability>
+
+</platform>
