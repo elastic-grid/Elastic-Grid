@@ -28,7 +28,6 @@ import net.jini.discovery.DiscoveryManagement
 
 class Formatter {
 
-
     def static printClusters(List<Cluster> clusters, BufferedReader br, PrintStream out) {
         out.println "total: ${clusters.size()}"
         clusters.eachWithIndex { Cluster cluster, index ->
