@@ -30,7 +30,7 @@
         <description>Amazon EC2</description>
         <version>1.0</version>
         <manufacturer>Amazon</manufacturer>
-	    <classpath>${RIO_HOME}/deploy/elastic-grid/lib/amazon-ec2-provisioner-0.8.2.jar</classpath>
+	    <classpath>${RIO_HOME}/deploy/elastic-grid/lib/amazon-ec2-provisioner-0.8.3.jar</classpath>
 	    <costmodel>com.kalixia.partners.amazon.ec2.core.EC2CostModel</costmodel>
     </capability>
 

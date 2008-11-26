@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>com.elasticgrid</groupId>
-        <artifactId>elastic-grid-applications</artifactId>
-        <version>0.8.2</version>
+        <artifactId>applications</artifactId>
+        <version>0.8.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elasticgrid.applications</groupId>
@@ -28,7 +28,7 @@
 			<version>${pom.version}</version>
 		</dependency>
 
-        <!-- Elastic Grid Cluster model -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>

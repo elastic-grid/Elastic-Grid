@@ -4,7 +4,7 @@
 	<parent>
 	   	<groupId>com.elasticgrid</groupId>
 	    <artifactId>elastic-grid-platforms</artifactId>
-	    <version>0.8.2</version>
+	    <version>0.8.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>amazon-ec2-platform</artifactId>
@@ -15,6 +15,13 @@
     </prerequisites>
 
     <dependencies>
+        <!-- Applications dependencies -->
+		<dependency>
+			<groupId>com.elasticgrid.applications</groupId>
+			<artifactId>rest-api</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+
         <!-- Substrates dependencies -->
 		<!--<dependency>-->
 			<!--<groupId>com.elasticgrid.substrates</groupId>-->
@@ -47,12 +54,17 @@
 		<!-- Kernel dependencies -->
         <dependency>
 			<groupId>${pom.groupId}</groupId>
-			<artifactId>amazon-ec2-bootstrapper</artifactId>
+			<artifactId>private-lan-provisioner</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
         <dependency>
 			<groupId>${pom.groupId}</groupId>
 			<artifactId>amazon-ec2-provisioner</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+        <dependency>
+			<groupId>${pom.groupId}</groupId>
+			<artifactId>amazon-ec2-bootstrapper</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>
@@ -72,12 +84,15 @@
 		</dependency>
 
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.8</version>
-            <classifier>jdk15</classifier>
-            <scope>test</scope>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>1.0.1</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.jibx</groupId>-->
+            <!--<artifactId>jibx-run</artifactId>-->
+            <!--<version></version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>

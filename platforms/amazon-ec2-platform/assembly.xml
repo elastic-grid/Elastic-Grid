@@ -10,15 +10,6 @@
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
-        <!--<fileSet>-->
-            <!--<directory>${rio.home}</directory>-->
-            <!--<outputDirectory>/</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>bin/**/*</include>-->
-            <!--</includes>-->
-            <!--<fileMode>0755</fileMode>-->
-            <!--<useDefaultExcludes>true</useDefaultExcludes>-->
-        <!--</fileSet>-->
         <fileSet>
             <directory>${rio.home}</directory>
             <outputDirectory>/</outputDirectory>
@@ -29,6 +20,13 @@
                 <include>logs/*.txt</include>
                 <include>policy/**/*</include>
             </includes>
+            <excludes>
+                <exclude>config/start-all.config</exclude>
+                <exclude>config/start-cybernode.config</exclude>
+                <exclude>config/cybernode.config</exclude>
+                <exclude>config/start-monitor.config</exclude>
+                <exclude>config/monitor.config</exclude>
+            </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
         <fileSet>
@@ -36,6 +34,7 @@
 				<include>bin/**/*</include>
             </includes>
             <excludes>
+                <exclude>bin/eg</exclude>
                 <exclude>bin/Rio.app/**</exclude>
             </excludes>
             <fileMode>0755</fileMode>
@@ -61,6 +60,12 @@
 			<filtered>true</filtered>
             <fileMode>0644</fileMode>
 		</file>
+        <file>
+			<source>bin/eg</source>
+			<outputDirectory>/bin</outputDirectory>
+			<filtered>true</filtered>
+            <fileMode>0755</fileMode>
+		</file>
     </files>
     <dependencySets>
 		<!-- Kernel dependencies -->
@@ -68,18 +73,25 @@
             <includes>
                 <include>com.elasticgrid:amazon-ec2-bootstrapper</include>
                 <include>com.elasticgrid:amazon-ec2-provisioner</include>
+                <include>com.elasticgrid:private-lan-provisioner</include>
 				<include>com.elasticgrid:elastic-grid-core</include>
                 <include>com.elasticgrid:elastic-grid-model</include>
                 <include>com.elasticgrid:elastic-grid-manager</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <include>com.xerox.amazonws:typica</include>
+                <include>javax.xml.bind:jaxb-api</include>
                 <include>javax.xml.bind:jaxb-impl</include>
+                <include>javax.activation:activation</include>
+                <include>stax:stax-api</include>
+                <include>org.jibx:jibx-run</include>
+                <include>org.jibx:jibx-extras</include>
+                <include>org.codehaus.woodstox:wstx-asl</include>
+                <include>commons-lang:commons-lang</include>
                 <include>commons-httpclient:commons-httpclient</include>
                 <include>commons-logging:commons-logging</include>
                 <include>commons-io:commons-io</include>
                 <include>commons-codec:commons-codec</include>
-                <include>org.springframework:spring</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
 			<outputDirectory>lib/elastic-grid/kernel</outputDirectory>
@@ -97,6 +109,37 @@
                 <include>com.elasticgrid.substrates:substrate-tomcat6</include>
             </includes>
 			<outputDirectory>lib/elastic-grid/substrates</outputDirectory>
+        </dependencySet>
+        <!-- REST API dependencies -->
+		<dependencySet>
+            <includes>
+                <include>com.elasticgrid.applications:*</include>
+                <include>*:*</include>
+            </includes>
+            <excludes>
+                <exclude>com.elasticgrid:amazon-ec2-provisioner</exclude>
+                <exclude>com.elasticgrid:private-lan-provisioner</exclude>
+                <exclude>com.elasticgrid:elastic-grid-core</exclude>
+                <exclude>com.elasticgrid:elastic-grid-model</exclude>
+                <exclude>com.elasticgrid:elastic-grid-manager</exclude>
+				<exclude>com.elasticgrid:elastic-grid-utils</exclude>
+				<exclude>com.elasticgrid:elastic-grid-cli</exclude>
+                <exclude>com.xerox.amazonws:typica</exclude>
+                <exclude>javax.xml.bind:jaxb-api</exclude>
+                <exclude>javax.xml.bind:jaxb-impl</exclude>
+                <exclude>javax.activation:activation</exclude>
+                <exclude>stax:stax-api</exclude>
+                <exclude>org.jibx:jibx-run</exclude>
+                <exclude>org.jibx:jibx-extras</exclude>
+                <exclude>org.codehaus.woodstox:wstx-asl</exclude>
+                <exclude>commons-lang:commons-lang</exclude>
+                <exclude>commons-httpclient:commons-httpclient</exclude>
+                <exclude>commons-logging:commons-logging</exclude>
+                <exclude>commons-io:commons-io</exclude>
+                <exclude>commons-codec:commons-codec</exclude>
+                <exclude>com.elasticgrid.substrates:substrate-api</exclude>
+            </excludes>
+			<outputDirectory>lib/elastic-grid/applications/rest-api</outputDirectory>
         </dependencySet>
     </dependencySets>
 </assembly>

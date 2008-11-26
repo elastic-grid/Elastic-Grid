@@ -44,7 +44,7 @@ public class RestApplication extends WadlApplication implements InitializingBean
         appInfo.getNamespaces().put("urn:elastic-grid:eg", "eg");
         GrammarsInfo grammar = new GrammarsInfo();
         IncludeInfo include = new IncludeInfo();
-        include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.8.2.xsd"));
+        include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.8.3.xsd"));
 //        include.setTargetRef(new Reference("applications/rest-api/src/main/resources/com/elasticgrid/rest/elastic-grid.xsd"));
 //        ClassLoader cl = getClass().getClassLoader();
 //        URL resource = cl.getResource("elastic-grid.xsd");
