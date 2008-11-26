@@ -141,7 +141,7 @@ if [ "$start" = "1" ]; then
         fi
     fi
 
-    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$RIO_LIB/elastic-grid/kernel/amazon-ec2-provisioner-0.8.2.jar)"
+    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$RIO_LIB/elastic-grid/kernel/elastic-grid-core-${pom.version}.jar)"
     agentpath="-javaagent:$(toNative $RIO_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then
@@ -166,11 +166,11 @@ if [ "$start" = "1" ]; then
         -DRIO_LOG_DIR=$RIO_HOME/logs/ \
         -Drio.script.path="$scriptPath" \
         -Drio.script.args="$ARGS" \
-        $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/rio-$starter_arg.log
+        $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
     PROPS="-DRIO_HOME=$RIO_HOME -DJINI_HOME=$JINI_HOME"
-    #cliExt="$RIO_HOME/config/rio-cli.config"
+    #cliExt="$RIO_HOME/config/eg-cli.config"
     cliExt=""
     launchTarget=com.elasticgrid.tools.cli.CLI
     for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
@@ -184,7 +184,7 @@ else
     classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6-beta-2.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $RIO_OPTS \
         -Djava.security.policy=$RIO_HOME/policy/policy.all \
-        -Djava.util.logging.config.file=$EG_HOME/config/rio-cli.logging.properties \
+        -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
         $PROPS \
         $NETWORK \
         $DEBUG \

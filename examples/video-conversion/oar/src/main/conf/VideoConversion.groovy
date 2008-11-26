@@ -37,15 +37,15 @@ deployment(name:'Video Conversion Example') {
     service(name: 'Video Converter') {
         interfaces {
             classes 'com.elasticgrid.examples.video.VideoConverter'
-            resources 'video-conversion-oar/lib-dl/video-conversion-converter-0.8.2-dl.jar',
-                      'elastic-cluster/framework/amazon-sqs-0.8.2.jar',
+            resources 'video-conversion-oar/lib-dl/video-conversion-converter-0.8.3-dl.jar',
+                      'elastic-cluster/framework/amazon-sqs-0.8.3.jar',
                       'elastic-cluster/kernel/typica-1.4.1.jar',
                       'elastic-cluster/kernel/jets3t-0.6.1.jar'
 
         }
         implementation(class: 'com.elasticgrid.examples.video.VideoConverterJSB') {
-            resources 'video-conversion-oar/lib/video-conversion-converter-0.8.2-impl.jar',
-                      'video-conversion-oar/lib/video-conversion-converter-0.8.2.jar'
+            resources 'video-conversion-oar/lib/video-conversion-converter-0.8.3-impl.jar',
+                      'video-conversion-oar/lib/video-conversion-converter-0.8.3.jar'
         }
 
         configuration(
@@ -75,7 +75,7 @@ deployment(name:'Video Conversion Example') {
     }
 
     tomcat(version:'6.0.16', removeOnDestroy: true) {
-        webapp source:'https://elastic-cluster-examples.s3.amazonaws.com/video-conversion-oar/video-conversion-web-0.8.2.war'
+        webapp source:'https://elastic-cluster-examples.s3.amazonaws.com/video-conversion-oar/video-conversion-web-0.8.3.war'
     }
 
 }

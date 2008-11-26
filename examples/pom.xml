@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.elasticgrid</groupId>
         <artifactId>elastic-grid</artifactId>
-        <version>0.8.2</version>
+        <version>0.8.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elasticgrid.examples</groupId>
