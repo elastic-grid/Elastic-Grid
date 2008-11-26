@@ -57,11 +57,6 @@ S3_BUCKET=elastic-grid-distributions
 # Enable public access to JobTracker and TaskTracker web interfaces
 ENABLE_WEB_PORTS=true
 
-# Boot parameters
-MAX_MAP_TASKS=2
-MAX_REDUCE_TASKS=2
-COMPRESS=true
-
 # The EC2 instance type: m1.small, m1.large, m1.xlarge
 INSTANCE_TYPE="m1.small"
 #INSTANCE_TYPE="m1.large"
@@ -72,7 +67,7 @@ INSTANCE_TYPE="m1.small"
 #
 
 # The version number of the installed JDK.
-JAVA_VERSION=1.6.0_07
+JAVA_VERSION=1.6.0_10
 
 # SUPPORTED_ARCHITECTURES = ['i386', 'x86_64']
 # The download URL for the Sun JDK. Visit http://java.sun.com/javase/downloads/index.jsp and get the URL for the "Linux self-extracting file".
