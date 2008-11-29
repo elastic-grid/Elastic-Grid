@@ -9,26 +9,32 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jabber-cli</artifactId>
     <packaging>jsb</packaging>
-    <name>Elastic Grid :: Jabber CLI</name>
+    <name>Modules :: Jabber CLI</name>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.jivesoftware.smack</groupId>
-            <artifactId>smack</artifactId>
-            <version>3.0.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jivesoftware.smack</groupId>
-            <artifactId>smackx</artifactId>
-            <version>3.0.4</version>
-        </dependency>
 
         <dependency>
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-core</artifactId>
             <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-cli</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jivesoftware</groupId>
+            <artifactId>smack</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jivesoftware</groupId>
+            <artifactId>smackx</artifactId>
+            <version>3.0.4</version>
         </dependency>
 
         <dependency>

@@ -30,7 +30,7 @@
         <module>private-lan-provisioner</module>
         <!--module>elastic-grid-oar</module-->
         <!--module>examples</module-->
-        <!--<module>jabber-cli</module>-->
+        <module>jabber-cli</module>
         <!--module>jxta-discovery</module-->
     </modules>
 

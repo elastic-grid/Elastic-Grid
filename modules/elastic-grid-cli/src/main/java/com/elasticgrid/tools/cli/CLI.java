@@ -30,12 +30,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class CLI extends org.rioproject.tools.cli.CLI {
     private static ApplicationContext ctx;
 
     static {
-//        SLF4JBridgeHandler.install();
         instance = new CLI();
         ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
     }
@@ -47,27 +48,51 @@ public class CLI extends org.rioproject.tools.cli.CLI {
     }
 
     protected void loadOptionHandlers(Configuration config) throws ConfigurationException {
-        List<OptionHandlerDesc> optionHandlers = new LinkedList<OptionHandlerDesc>();
-        optionHandlers.addAll(Arrays.asList(
-                new OptionHandlerDesc("list-clusters", ListClustersHandler.class.getName()),
-                new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
-                new OptionHandlerDesc("stop-cluster", StopClusterHandler.class.getName()),
-                new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
-              new OptionHandlerDesc("list", ListHandler.class.getName()),
-              new OptionHandlerDesc("destroy", StopHandler.class.getName()),
-              new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),
-              new OptionHandlerDesc("redeploy", MonitorControl.RedeployHandler.class.getName()),
-              new OptionHandlerDesc("undeploy", MonitorControl.UndeployHandler.class.getName()),
-                new OptionHandlerDesc("set", SettingsHandler.class.getName()),
-                new OptionHandlerDesc("ls", DirHandler.class.getName()),
-                new OptionHandlerDesc("dir", DirHandler.class.getName()),
-                new OptionHandlerDesc("pwd", DirHandler.class.getName()),
-                new OptionHandlerDesc("cd", DirHandler.class.getName()),
-                new OptionHandlerDesc("jconsole", JConsoleHandler.class.getName()),
-                new OptionHandlerDesc("stats", StatsHandler.class.getName()),
-                new OptionHandlerDesc("http", HttpHandler.class.getName()),
-                new OptionHandlerDesc("help", HelpHandler.class.getName())
-        ));
+        OptionHandlerDesc[] defaultHandlers =
+                new OptionHandlerDesc[] {
+                        // Elastic Grid handlers
+                        new OptionHandlerDesc("list-clusters", ListClustersHandler.class.getName()),
+                        new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
+                        new OptionHandlerDesc("stop-cluster", StopClusterHandler.class.getName()),
+                        new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
+                        // Rio handlers
+                        new OptionHandlerDesc("list", ListHandler.class.getName()),
+                        new OptionHandlerDesc("destroy", StopHandler.class.getName()),
+                        new OptionHandlerDesc("deploy", MonitorControl.DeployHandler.class.getName()),
+                        new OptionHandlerDesc("redeploy", MonitorControl.RedeployHandler.class.getName()),
+                        new OptionHandlerDesc("undeploy", MonitorControl.UndeployHandler.class.getName()),
+                        new OptionHandlerDesc("set", SettingsHandler.class.getName()),
+                        new OptionHandlerDesc("ls", DirHandler.class.getName()),
+                        new OptionHandlerDesc("dir", DirHandler.class.getName()),
+                        new OptionHandlerDesc("pwd", DirHandler.class.getName()),
+                        new OptionHandlerDesc("cd", DirHandler.class.getName()),
+                        new OptionHandlerDesc("jconsole", JConsoleHandler.class.getName()),
+                        new OptionHandlerDesc("stats", StatsHandler.class.getName()),
+                        new OptionHandlerDesc("http", HttpHandler.class.getName()),
+                        new OptionHandlerDesc("help", HelpHandler.class.getName())
+                };
+        OptionHandlerDesc[] optionHandlers =
+                (OptionHandlerDesc[]) config.getEntry(COMPONENT,
+                        "optionHandlers", OptionHandlerDesc[].class, defaultHandlers);
+        OptionHandlerDesc[] addOptionHandlers =
+                (OptionHandlerDesc[]) config.getEntry(COMPONENT,
+                        "addOptionHandlers", OptionHandlerDesc[].class, new OptionHandlerDesc[0]);
+        if (addOptionHandlers.length > 0) {
+            if (logger.isLoggable(Level.CONFIG)) {
+                StringBuffer buffer = new StringBuffer();
+                for (int i = 0; i < addOptionHandlers.length; i++) {
+                    if (i > 0)
+                        buffer.append("\n");
+                    buffer.append("    ").append(addOptionHandlers[i].toString());
+                }
+                logger.config("addOptionHandlers\n" + buffer.toString());
+            }
+            List<OptionHandlerDesc> list = new ArrayList<OptionHandlerDesc>();
+            list.addAll(Arrays.asList(optionHandlers));
+            list.addAll(Arrays.asList(addOptionHandlers));
+            optionHandlers = list.toArray(new OptionHandlerDesc[list.size()]);
+        }
+
         for (OptionHandlerDesc optionHandler : optionHandlers) {
             optionMap.put(optionHandler.getName(), optionHandler);
         }
