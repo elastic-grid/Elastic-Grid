@@ -44,13 +44,20 @@
             <includes>
                 <include>COPYING.txt</include>
                 <include>COPYING.LESSER.txt</include>
-				<include>config/**/*</include>
 				<include>lib/**</include>
             </includes>
-            <excludes>
-                <exclude>config/eg.properties</exclude>
-            </excludes>
 			<useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>config</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>eg.properties</exclude>
+            </excludes>
+            <filtered>true</filtered>
+            <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
 	<files>

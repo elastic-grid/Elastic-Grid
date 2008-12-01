@@ -8,7 +8,7 @@
 
 	<capability name="Elastic Grid Framework" common="yes">
 		<description>Elastic Grid Framework</description>
-		<version>1.0</version>
+		<version>${pom.version}</version>
 		<manufacturer>Elastic Grid, LLC.</manufacturer>
 		<classpath>${RIO_HOME}/lib/elastic-grid/framework</classpath>        
 	</capability>
