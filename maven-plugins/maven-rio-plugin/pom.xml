@@ -34,12 +34,12 @@
         <repository>
             <id>elastic-grid</id>
             <name>Elastic Grid Repository</name>
-            <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
+            <url>scp://elastic-grid.com/home/55056/domains/maven.elastic-grid.com/html</url>
         </repository>
 		<snapshotRepository>
             <id>elastic-grid</id>
             <name>Elastic Grid Repository</name>
-            <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
+            <url>scp://elastic-grid.com/home/55056/domains/maven.elastic-grid.com/html</url>
         </snapshotRepository>
         <!--<site>-->
             <!--<id>website</id>-->
