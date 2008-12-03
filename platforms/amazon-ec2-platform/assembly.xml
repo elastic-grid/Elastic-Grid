@@ -50,6 +50,7 @@
         </fileSet>
         <fileSet>
             <directory>config</directory>
+            <outputDirectory>/config</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
