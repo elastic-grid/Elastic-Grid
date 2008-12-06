@@ -101,17 +101,6 @@
             <version>2.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.scannotation</groupId>
-            <artifactId>scannotation</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.6.ga</version>
-        </dependency>
-
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
