@@ -39,17 +39,17 @@
         <dependency>
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet.ext.jetty</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.spring</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.jibx</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jibx</groupId>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.wadl</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
