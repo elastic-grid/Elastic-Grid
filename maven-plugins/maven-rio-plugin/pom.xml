@@ -199,7 +199,7 @@
     </build>
 
 	<properties>
-		<rio-version>4.0-M1</rio-version>
+		<rio-version>4.0-M2-SNAPSHOT</rio-version>
 	</properties>
 
     <reporting>
