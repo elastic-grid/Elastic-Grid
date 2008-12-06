@@ -14,6 +14,7 @@ deployment(name: 'Spring DM') {
 //    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip',
 //         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
+    // monitor number of threads and scale Spring dm Server instances
     sla(id: 'thread-count', low: 80, high: 200) {
       policy type: 'scaling', max: 3
       monitor name: 'Thread Count',
@@ -21,6 +22,7 @@ deployment(name: 'Spring DM') {
               attribute: 'ThreadCount', period: 5000
     }
 
+    // monitor maximum time spent on a HTTP call
     sla(id: 'http-max-time', high: 5000) {
       policy type: 'notify'
       monitor name: 'HTTP Max Time',
