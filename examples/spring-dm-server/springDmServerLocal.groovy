@@ -1,3 +1,5 @@
+import java.lang.management.ManagementFactory
+
 deployment(name: 'Spring DM') {
   groups('rio')
 
@@ -11,6 +13,13 @@ deployment(name: 'Spring DM') {
     // deploy Spring Travel Sample
 //    data source: 'file://${EG_HOME}/deploy/spring-travel-1.2.0.zip',
 //         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
+
+    sla(id: 'thread-count', high: 1000) {
+      policy type: 'notify'
+      monitor name: 'Thread Count',
+              objectName: ManagementFactory.THREAD_MXBEAN_NAME,
+              attribute: 'ThreadCount', period: 5000
+    }
 
     execute command: 'bin/startup.sh'
     maintain 1                          // we want at least 1 instance to be running in our cluster
