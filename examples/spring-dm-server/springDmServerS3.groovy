@@ -5,13 +5,13 @@ deployment(name: 'Spring DM') {
 
   serviceExec(name: 'DM Server') {
     software(name: 'Spring DM', version: '1.0.1', removeOnDestroy: true) {
-      install source: 'file://${RIO_HOME}/deploy/springsource-dm-server-1.0.1.RELEASE.zip',
+      install source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/springsource-dm-server-1.0.1.RELEASE.zip',
               target: 'springsource-dm-server',
               unarchive: true
     }
 
     // deploy Spring Travel Sample
-//    data source: 'file://${EG_HOME}/deploy/spring-travel-1.2.0.zip',
+//    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip',
 //         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
     sla(id: 'thread-count', low: 80, high: 200) {
