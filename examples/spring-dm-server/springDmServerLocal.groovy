@@ -14,18 +14,25 @@ deployment(name: 'Spring DM') {
 //    data source: 'file://${EG_HOME}/deploy/spring-travel-1.2.0.zip',
 //         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
-//    sla(id: 'thread-count', high: 1000) {
-//      policy type: 'notify'
-//      monitor name: 'Thread Count',
-//              objectName: ManagementFactory.THREAD_MXBEAN_NAME,
-//              attribute: 'ThreadCount', period: 5000
-//    }
-
-    sla(id: 'http-max-time', high: 1000) {
+    sla(id: 'thread-count', high: 1000) {
       policy type: 'notify'
-      monitor name: 'HTTP Max Tome',
+      monitor name: 'Thread Count',
+              objectName: ManagementFactory.THREAD_MXBEAN_NAME,
+              attribute: 'ThreadCount', period: 5000
+    }
+
+    sla(id: 'http-max-time', high: 5000) {
+      policy type: 'notify'
+      monitor name: 'HTTP Max Time',
               objectName: 'springsource.server.catalina:type=GlobalRequestProcessor,name=http-8080',
               attribute: 'maxTime', period: 1000
+    }
+
+    sla(id: 'catalina-thread-pool-backlog', high: 500) {
+      policy type: 'notify'
+      monitor name: 'Catalina ThreadPool Backlog',
+              objectName: 'springsource.server.catalina:type=ThreadPool,name=http-8080',
+              attribute: 'backlog', period: 1000
     }
 
     execute command: 'bin/startup.sh'
