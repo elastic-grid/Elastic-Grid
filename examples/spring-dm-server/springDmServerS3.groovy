@@ -1,18 +1,22 @@
 import java.lang.management.ManagementFactory
 
-deployment(name: 'Spring DM') {
+deployment(name: 'Spring DM Server') {
   groups('rio')
 
-  serviceExec(name: 'DM Server') {
-    software(name: 'Spring DM', version: '1.0.1', removeOnDestroy: true) {
+  serviceExec(name: 'Spring DM Server') {
+    software(name: 'Spring DM Server', version: '1.0.1', removeOnDestroy: true) {
       install source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/springsource-dm-server-1.0.1.RELEASE.zip',
               target: 'springsource-dm-server',
               unarchive: true
     }
 
     // deploy Spring Travel Sample
-//    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip',
-//         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
+    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip', unarchive: true,
+         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
+
+    // deploy Form Tags Sample
+    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/formtags-1.4.0.zip', unarchive: true,
+         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
     // monitor number of threads and scale Spring dm Server instances
     sla(id: 'thread-count', low: 80, high: 200) {
