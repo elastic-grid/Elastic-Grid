@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.6-beta-2</version>
+            <version>1.6-RC-1</version>
         </dependency>
 
         <!-- Object/XML mapping dependencies -->
