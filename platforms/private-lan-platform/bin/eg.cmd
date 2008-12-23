@@ -44,7 +44,7 @@ rem set cliExt=%RIO_HOME%\config\rio_cli.config
 rem set cliExt=""
 set command_line=%*
 set launchTarget=org.rioproject.tools.cli.CLI
-set classpath=-cp %RIO_HOME%\lib\rio-cli.jar;%JINI_LIB%\jsk-lib.jar;%JINI_LIB%\jsk-platform.jar;%RIO_HOME%\lib\spring\spring.jar;%RIO_HOME%\lib\jakarta-commons\commons-logging.jar;%RIO_HOME%\lib\groovy\groovy-all-1.6-beta-2.jar
+set classpath=-cp %RIO_HOME%\lib\rio-cli.jar;%JINI_LIB%\jsk-lib.jar;%JINI_LIB%\jsk-platform.jar;%RIO_HOME%\lib\spring\spring.jar;%RIO_HOME%\lib\jakarta-commons\commons-logging.jar;%RIO_HOME%\lib\groovy\groovy-all-1.6-RC-1.jar
 set props="-DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME%"
 "%JAVACMD%" %classpath% -Xms256m -Xmx256m ^
     -Djava.util.logging.config.file=%RIO_HOME%/config/rio-cli.logging.properties ^
