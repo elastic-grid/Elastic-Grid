@@ -20,6 +20,7 @@ package com.elasticgrid.platforms.ec2.sla;
 
 import com.elasticgrid.platforms.ec2.EC2Instantiator;
 import com.elasticgrid.platforms.ec2.InstanceType;
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
@@ -35,18 +36,25 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
+/**
+ * EC2 Scaling Policy Handler.
+ * @author Jerome Bernard
+ */
 public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     private EC2Instantiator ec2;
     private String amazonImageID;
     private String keyName;
     private List<String> groups;
     private Boolean publicAddress;
+    private final Properties egProps;
     private static final String AMAZON_INSTANCE_ID_PARAMETER = "amazonInstanceID";
     private static final Logger logger = Logger.getLogger(EC2ScalingPolicyHandler.class.getName());
 
-    public EC2ScalingPolicyHandler(SLA sla) {
+    public EC2ScalingPolicyHandler(SLA sla) throws IOException {
         super(sla);
+        egProps = AWSUtils.loadEC2Configuration();
     }
 
     @Override
@@ -54,23 +62,13 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     public void initialize(Object eventSource, EventHandler eventHandler, ServiceBeanContext context) {
         super.initialize(eventSource, eventHandler, context);
         try {
-            /* This stuff actually will make sense for Cloud Bursting!
-            amazonImageID = (String) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
-                    "amazonImageID", String.class);
-            keyName = (String) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
-                    "keyName", String.class);
-            groups = (List<String>) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
-                    "groups", List.class, Collections.emptyList());
-            publicAddress = (Boolean) context.getConfiguration().getEntry("com.elasticgrid.amazon.ec2",
-                    "publicAddress", Boolean.class, Boolean.TRUE);
-            */
-            amazonImageID = EC2Utils.getInstanceMetadata("ami-id");
-            keyName = EC2Utils.getInstanceMetadata("eg-keypair");   // todo: write the real key
-            groups = Arrays.asList("default", "elastic-grid",
-                    "eg-agent", "elastic-grid-cluster-test");       // todo: retreive this from the existing instance
-            publicAddress = Boolean.parseBoolean(EC2Utils.getInstanceMetadata("??"));   // todo: write the real key
+            amazonImageID = EC2Utils.getInstanceMetadata("ami-id"); // we clone ourselves
+            keyName = egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR);
+            groups = Arrays.asList("default", "elastic-grid",       // todo: retreive this from the existing instance
+                    "eg-agent", "elastic-grid-cluster-" + egProps.getProperty(EC2Configuration.EG_CLUSTER_NAME));
+            publicAddress = Boolean.TRUE;   // todo: fetch this from somewhere!
             ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
-                    "/com/elasticgrid/amazon/ec2/applicationContext.xml",
+                    "/com/elasticgrid/cluster/applicationContext.xml",
             });
             ec2 = (EC2Instantiator) ctx.getBean("ec2", EC2Instantiator.class);
         } catch(Exception e) {
@@ -85,12 +83,16 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
             return;
         }
         try {
-            Properties egProps = AWSUtils.loadEC2Configuration();
             // todo: find a way to make this information more manageable
             String userdata = String.format(
-                    "CLUSTER_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=true",
-                    "test", "mencoder",     // todo: find a way to not hardcode this!
-                    egProps.getProperty(AWSUtils.AWS_ACCESS_ID), egProps.getProperty(AWSUtils.AWS_SECRET_KEY));
+                    "CLUSTER_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_EC2_SECURED=%s,AWS_SQS_SECURED=%s",
+                    egProps.getProperty(EC2Configuration.EG_CLUSTER_NAME),
+                    egProps.getProperty(EC2Configuration.REDHAT_YUM_PACKAGES, ""),
+                    egProps.getProperty(EC2Configuration.AWS_ACCESS_ID),
+                    egProps.getProperty(EC2Configuration.AWS_SECRET_KEY),
+                    egProps.getProperty(EC2Configuration.AWS_EC2_SECURED, "true"),
+                    egProps.getProperty(EC2Configuration.AWS_SQS_SECURED, "true")
+            );
             InstanceType instanceType = InstanceType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
             List<String> instances = ec2.startInstances(amazonImageID, 1, 1, groups,
                     userdata, keyName, publicAddress, instanceType);

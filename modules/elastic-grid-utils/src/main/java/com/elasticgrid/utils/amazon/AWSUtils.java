@@ -23,12 +23,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AWSUtils {
-    public static final String AWS_ACCESS_ID = "aws.accessId";
-    public static final String AWS_SECRET_KEY = "aws.secretKey";
     private static final Logger logger = Logger.getLogger(AWSUtils.class.getName());
 
     public static boolean isEnvironmentProperlySet() {

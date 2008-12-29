@@ -14,10 +14,17 @@
 
     <dependencies>
 
-        <!-- Elastic Cluster manager -->
+        <!-- Elastic Grid manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Gruid core -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-core</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
