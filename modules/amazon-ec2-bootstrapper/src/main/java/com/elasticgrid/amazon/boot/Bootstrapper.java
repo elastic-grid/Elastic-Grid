@@ -18,10 +18,12 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.xerox.amazonws.ec2.EC2Exception;
+import com.xerox.amazonws.ec2.EC2Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
@@ -42,15 +44,15 @@ import java.util.Properties;
  * @author Jerome Bernard
  */
 public class Bootstrapper {
-    public static final String CLUSTER_NAME = "CLUSTER_NAME";
-    public static final String LAUNCH_PARAMETER_ACCESS_ID = "AWS_ACCESS_ID";
-    public static final String LAUNCH_PARAMETER_SECRET_KEY = "AWS_SECRET_KEY";
-    public static final String LAUNCH_PARAMETER_SQS_SECURED = "AWS_SQS_SECURED";
-
-    public static final String EG_PARAMETER_ACCESS_ID = "aws.accessId";
-    public static final String EG_PARAMETER_SECRET_KEY = "aws.secretKey";
-    public static final String EG_PARAMETER_SQS_SECURED = "aws.sqs.secured";
-    public static final String EG_MONITOR_HOST = "eg.monitor.host";
+    public static final String LAUNCH_PARAMETER_CLUSTER_NAME = "CLUSTER_NAME";
+    public static final String LAUNCH_PARAMETER_YUM_PACKAGES = "YUM_PACKAGES";
+    public static final String LAUNCH_PARAMETER_ACCESS_ID    = "AWS_ACCESS_ID";
+    public static final String LAUNCH_PARAMETER_SECRET_KEY   = "AWS_SECRET_KEY";
+    public static final String LAUNCH_PARAMETER_EC2_SECURED  = "AWS_EC2_SECURED";
+    public static final String LAUNCH_PARAMETER_SQS_SECURED  = "AWS_SQS_SECURED";
+    public static final String LAUNCH_PARAMETER_EC2_KEYPAIR  = "AWS_EC2_KEYPAIR";
+    public static final String LAUNCH_PARAMETER_EC2_AMI32    = "AWS_EC2_AMI32";
+    public static final String LAUNCH_PARAMETER_EC2_AMI64    = "AWS_EC2_AMI32";
 
     public static final String EG_GROUP_MONITOR = "eg-monitor";
     public static final String EG_GROUP_AGENT = "eg-agent";
@@ -61,20 +63,20 @@ public class Bootstrapper {
     private String egHome = System.getProperty("EG_HOME");
 
     public Bootstrapper() throws IOException, EC2Exception {
-        // retreive EC2 parameters
+        // retreive EC2 launch parameters
         Properties launchParameters = fetchLaunchParameters();
         Properties egParameters = translateProperties(launchParameters);
 
-        // save configuration
+        // save configuration into an Elastic Grid configuration file
         File file = saveConfiguration(egParameters);
-        System.out.printf("Elastic Cluster configuration file generated in '%s'\n", file.getAbsolutePath());
+        System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
 
         // start Spring context
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
 
-        // locate monitor node
+        // locate monitor node and write the location of the found monitor into $EG_HOME/config/monitor-host
         EC2ClusterLocator locator = (EC2ClusterLocator) ctx.getBean("clusterLocator", EC2ClusterLocator.class);
-        String clusterName = launchParameters.getProperty(CLUSTER_NAME);
+        String clusterName = launchParameters.getProperty(LAUNCH_PARAMETER_CLUSTER_NAME);
         try {
             EC2Node monitor = locator.findMonitor(clusterName);
             InetAddress monitorHost = monitor.getAddress();
@@ -83,7 +85,7 @@ public class Bootstrapper {
                 System.out.println("This host is going to be the new monitor!");
             } else {
                 System.out.printf("Using monitor host: %s\n", monitorHost.getHostName());
-                egParameters.put(EG_MONITOR_HOST, monitorHost.getHostName());
+                egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
         } catch (ClusterException e) {
@@ -92,6 +94,12 @@ public class Bootstrapper {
         }
     }
 
+    /**
+     * At boot time, a file is generated into {@link #LAUNCH_PARAMETERS_FILE}.
+     * This method retreive the content of the file and parse it as if it was a Java configuration file.
+     * @return the {@link Properties} object
+     * @throws IOException if the file generated at boot time can't be found or read
+     */
     private Properties fetchLaunchParameters() throws IOException {
         Properties launchProperties = new Properties();
         InputStream launchFile = null;
@@ -104,25 +112,49 @@ public class Bootstrapper {
         }
     }
 
-    private Properties translateProperties(Properties launchParameters) {
+    /**
+     * This method translate EC2 lauch parameters into {@link Properties} which can be used through
+     * all Elastic Grid code.
+     * @param launchParameters the EC2 launch paraameters
+     * @return the Elastic Grid parameters
+     * @throws IOException if the metadata can't be fetched
+     */
+    private Properties translateProperties(Properties launchParameters) throws IOException {
         // translate properties
         Properties egParameters = new Properties();
         for (Map.Entry property : launchParameters.entrySet()) {
             String key = (String) property.getKey();
             if (LAUNCH_PARAMETER_ACCESS_ID.equals(key))
-                egParameters.put(EG_PARAMETER_ACCESS_ID, property.getValue());
+                egParameters.put(EC2Configuration.AWS_ACCESS_ID, property.getValue());
             if (LAUNCH_PARAMETER_SECRET_KEY.equals(key))
-                egParameters.put(EG_PARAMETER_SECRET_KEY, property.getValue());
+                egParameters.put(EC2Configuration.AWS_SECRET_KEY, property.getValue());
+            if (LAUNCH_PARAMETER_CLUSTER_NAME.equals(key))
+                egParameters.put(EC2Configuration.EG_CLUSTER_NAME, property.getValue());
+            if (LAUNCH_PARAMETER_EC2_SECURED.equals(key))
+                egParameters.put(EC2Configuration.AWS_EC2_SECURED, property.getValue());
             if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
-                egParameters.put(EG_PARAMETER_SQS_SECURED, property.getValue());
+                egParameters.put(EC2Configuration.AWS_SQS_SECURED, property.getValue());
+            if (LAUNCH_PARAMETER_EC2_KEYPAIR.equals(key))
+                egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, property.getValue());
+            else
+                egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, EC2Utils.getInstanceMetadata("keypair"));    // todo: check the value of the metadata property
+            if (LAUNCH_PARAMETER_EC2_AMI32.equals(key))
+                egParameters.put(EC2Configuration.AWS_EC2_AMI32, property.getValue());
+            if (LAUNCH_PARAMETER_EC2_AMI64.equals(key))
+                egParameters.put(EC2Configuration.AWS_EC2_AMI64, property.getValue());
+
+            if (LAUNCH_PARAMETER_YUM_PACKAGES.equals(key))
+                egParameters.put(EC2Configuration.REDHAT_YUM_PACKAGES, property.getValue());
         }
-        egParameters.put("aws.ec2.secured", Boolean.TRUE.toString());
-        egParameters.put("aws.ec2.key", "eg-key");  // todo: replace this with some dynamic!!
-        egParameters.put("aws.ec2.ami32", "??");    // todo: replace this with some dynamic!!
-        egParameters.put("aws.ec2.ami64", "??");    // todo: replace this with some dynamic!!
         return egParameters;
     }
 
+    /**
+     * Dump Elastic Grid properties into a configuration file.
+     * @param egParameters the properties to dump in a file
+     * @return the file where the properties have been dumped into.
+     * @throws IOException if there is an error when generating the configuration file
+     */
     private File saveConfiguration(Properties egParameters) throws IOException {
         // write EG configuration
         if (egHome == null) {
