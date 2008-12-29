@@ -62,6 +62,12 @@ echo "echo 'Starting Elastic Grid...'" >> /etc/rc.d/rc.local
 echo "/root/eg-init" >> /etc/rc.d/rc.local
 echo "alias eg='rlwrap /usr/local/elastic-grid-${EG_VERSION}/bin/eg'" >> /root/.bashrc
 
+# Setup environment profiles
+echo "export JAVA_HOME=/usr/local/jdk${JAVA_VERSION}" >> /etc/profile
+echo "export EG_HOME=/usr/local/elastic-grid-${EG_VERSION}" >> /etc/profile
+echo "export RIO_HOME=/usr/local/elastic-grid-${EG_VERSION}" >> /etc/profile
+echo 'export PATH=$JAVA_HOME/bin:$EG_HOME/bin:$PATH' >> /etc/profile
+
 # Setup root user bash environment
 echo "export JAVA_HOME=/usr/local/jdk${JAVA_VERSION}" >> /root/.bash_profile
 echo "export EG_HOME=/usr/local/elastic-grid-${EG_VERSION}" >> /root/.bash_profile
