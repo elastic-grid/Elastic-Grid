@@ -14,6 +14,12 @@
 
         <dependency>
             <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-utils</artifactId>
             <version>${pom.version}</version>
         </dependency>

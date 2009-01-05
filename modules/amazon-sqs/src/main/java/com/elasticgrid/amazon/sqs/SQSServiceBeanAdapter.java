@@ -18,16 +18,17 @@
 
 package com.elasticgrid.amazon.sqs;
 
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import org.rioproject.core.jsb.ServiceBeanContext;
-import org.rioproject.jsb.ServiceBeanAdapter;
-import org.rioproject.watch.Calculable;
-import org.rioproject.watch.PeriodicWatch;
 import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueService;
 import com.xerox.amazonws.sqs2.SQSException;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
+import org.rioproject.core.jsb.ServiceBeanContext;
+import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.watch.Calculable;
+import org.rioproject.watch.PeriodicWatch;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.util.Properties;
@@ -54,8 +55,8 @@ public abstract class SQSServiceBeanAdapter extends ServiceBeanAdapter implement
         try {
             // try to load properties from $HOME/.eg/aws.properties
             Properties awsProperties = AWSUtils.loadEC2Configuration();
-            awsAccessId = (String) awsProperties.get(AWSUtils.AWS_ACCESS_ID);
-            awsSecretKey = (String) awsProperties.get(AWSUtils.AWS_SECRET_KEY);
+            awsAccessId = (String) awsProperties.get(EC2Configuration.AWS_ACCESS_ID);
+            awsSecretKey = (String) awsProperties.get(EC2Configuration.AWS_SECRET_KEY);
             Boolean secured = Boolean.parseBoolean((String) awsProperties.get("aws.sqs.secured"));
             // fall-back to JSB configuration
             Configuration config = context.getConfiguration();
