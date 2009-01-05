@@ -19,6 +19,7 @@
 package com.elasticgrid.examples.video.util;
 
 import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.model.ClusterMonitorNotFoundException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;
@@ -89,8 +90,8 @@ public class ServiceLocator {
         System.out.printf("Searching for Elastic Cluster monitor host...\n");
         Properties egProps = AWSUtils.loadEC2Configuration();
         ClusterLocator locator = new EC2SecurityGroupsClusterLocator();
-        String awsAccessId = egProps.getProperty(AWSUtils.AWS_ACCESS_ID);
-        String awsSecretKey = egProps.getProperty(AWSUtils.AWS_SECRET_KEY);
+        String awsAccessId = egProps.getProperty(EC2Configuration.AWS_ACCESS_ID);
+        String awsSecretKey = egProps.getProperty(EC2Configuration.AWS_SECRET_KEY);
         ((EC2SecurityGroupsClusterLocator) locator).setEc2(new Jec2(awsAccessId, awsSecretKey));
         try {
             EC2Node node = (EC2Node) locator.findMonitor("test");
