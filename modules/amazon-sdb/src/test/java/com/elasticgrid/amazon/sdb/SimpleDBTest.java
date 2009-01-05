@@ -20,6 +20,7 @@ package com.elasticgrid.amazon.sdb;
 
 import com.elasticgrid.amazon.sdb.impl.SimpleDBImpl;
 import com.elasticgrid.utils.amazon.AWSUtils;
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -60,8 +61,8 @@ public class SimpleDBTest {
     public void setupSimpleDB() throws Exception {
         sdb = new SimpleDBImpl();
         Properties awsProps = AWSUtils.loadEC2Configuration();
-        ((SimpleDBImpl) sdb).setAwsAccessID((String) awsProps.get(AWSUtils.AWS_ACCESS_ID));
-        ((SimpleDBImpl) sdb).setAwsSecretKey((String) awsProps.get(AWSUtils.AWS_SECRET_KEY));
+        ((SimpleDBImpl) sdb).setAwsAccessID((String) awsProps.get(EC2Configuration.AWS_ACCESS_ID));
+        ((SimpleDBImpl) sdb).setAwsSecretKey((String) awsProps.get(EC2Configuration.AWS_SECRET_KEY));
         ((SimpleDBImpl) sdb).afterPropertiesSet();
     }
 
