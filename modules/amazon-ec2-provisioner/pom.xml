@@ -57,6 +57,13 @@
             <version>1.0.4</version>
         </dependency>
 
+        <!-- Amazon S3 integration -->
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+
         <!-- Jini 2.1 dependencies -->
         <dependency>
             <groupId>net.jini</groupId>

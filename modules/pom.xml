@@ -16,6 +16,7 @@
     </prerequisites>
 
     <modules>
+	<module>elastic-grid-dsl</module>
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
@@ -36,10 +37,10 @@
 
     <reporting>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
+            <!--</plugin>-->
 
             <plugin>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -143,17 +144,17 @@
                     <outputEncoding>utf-8</outputEncoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>clean</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>com.mathieucarbou.mojo</groupId>
                 <artifactId>maven-license-plugin</artifactId>
