@@ -16,7 +16,6 @@
     </prerequisites>
 
     <modules>
-	<module>elastic-grid-dsl</module>
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
