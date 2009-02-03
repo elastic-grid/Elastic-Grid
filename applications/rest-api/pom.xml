@@ -115,6 +115,14 @@
             <!--<version>1.5.3</version>-->
         <!--</dependency>-->
 
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject.tools</groupId>
+            <artifactId>cli</artifactId>
+            <version>4.0-M2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>

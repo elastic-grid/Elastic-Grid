@@ -1,6 +1,6 @@
 /**
  * Elastic Grid
- * Copyright (C) 2007-2008 Elastic Grid, LLC.
+ * Copyright (C) 2008-2009 Elastic Grid, LLC.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,20 +18,32 @@
 
 package com.elasticgrid.rest;
 
+import com.sun.jini.start.LifeCycle;
+import org.rioproject.associations.Association;
+import org.rioproject.associations.AssociationDescriptor;
+import org.rioproject.associations.AssociationListener;
+import org.rioproject.associations.AssociationType;
+import org.rioproject.associations.AssociationManagement;
+import org.rioproject.associations.AssociationMgmt;
 import org.rioproject.core.jsb.ServiceBeanContext;
-import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.core.OperationalStringManager;
 import org.rioproject.jsb.ServiceBeanActivation;
+import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.monitor.ProvisionMonitor;
+import org.rioproject.monitor.DeployAdmin;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import com.sun.jini.start.LifeCycle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
+import java.util.Arrays;
+import java.rmi.RemoteException;
 
 /**
  * JSB exposing the underlying REST API.
  */
 public class RestJSB extends ServiceBeanAdapter {
-    private LifeCycle lifeCycle;
+    private static ProvisionMonitor provisionMonitor;
     private ConfigurableApplicationContext springContext;
     /** Component name we use to find items in the Configuration */
     static final String RIO_CONFIG_COMPONENT = "com.elasticgrid";
@@ -54,7 +66,6 @@ public class RestJSB extends ServiceBeanAdapter {
      */
     public RestJSB(String[] configArgs, LifeCycle lifeCycle) throws Exception {
         super();
-        this.lifeCycle = lifeCycle;
         bootstrap(configArgs);
     }
 
@@ -81,6 +92,19 @@ public class RestJSB extends ServiceBeanAdapter {
             } else {
                 logger.log(Level.WARNING, "LifeCycleManager is null, unable to register");
             }
+
+            // build the association with the provision monitor to fulfill
+            AssociationDescriptor provisionMonitorAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+            provisionMonitorAssociation.setMatchOnName(false);
+            provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
+            provisionMonitorAssociation.setGroups("rio");
+
+            // register the association listener
+            AssociationMgmt assocMgt = new AssociationMgmt();
+            assocMgt.register(new ProvisionMonitorListener());
+
+            // search for the provision monitor
+            assocMgt.addAssociationDescriptors(provisionMonitorAssociation);
         } catch(Exception e) {
             logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
             throw e;
@@ -107,5 +131,41 @@ public class RestJSB extends ServiceBeanAdapter {
         if (springContext != null)
             springContext.close();
         super.destroy(force);
+    }
+
+    /**
+     * An AssociationListener for Provision Monitor instances
+     */
+    static class ProvisionMonitorListener implements AssociationListener<ProvisionMonitor> {
+        public void discovered(Association association, ProvisionMonitor provisionMonitor) {
+            setProvisionMonitor(provisionMonitor);
+        }
+
+        public void changed(Association association, ProvisionMonitor provisionMonitor) {
+        }
+
+        public void broken(Association association, ProvisionMonitor provisionMonitor) {
+            setProvisionMonitor(null);
+        }
+    }
+
+    public static ProvisionMonitor getProvisionMonitor() {
+        return provisionMonitor;
+    }
+
+    public static List<OperationalStringManager> getOperationalStringManagers() throws RemoteException {
+        DeployAdmin dAdmin = (DeployAdmin) provisionMonitor.getAdmin();
+        OperationalStringManager[] operationalStringMgrs = dAdmin.getOperationalStringManagers();
+        for (int i = 0; i < operationalStringMgrs.length; i++) {
+            OperationalStringManager operationalStringMgr = operationalStringMgrs[i];
+            logger.info("found opstring mgr " + operationalStringMgr);
+        }
+        logger.info("found " + operationalStringMgrs.length + " opstrings");
+        return Arrays.asList(operationalStringMgrs);
+    }
+
+    public static void setProvisionMonitor(ProvisionMonitor provisionMonitor) {
+        logger.info("Setting provision monitor");
+        RestJSB.provisionMonitor = provisionMonitor;
     }
 }
