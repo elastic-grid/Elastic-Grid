@@ -1,6 +1,6 @@
 /**
  * Elastic Grid
- * Copyright (C) 2007-2008 Elastic Grid, LLC.
+ * Copyright (C) 2008-2009 Elastic Grid, LLC.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,27 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.model.Cluster;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
+import org.restlet.resource.StringRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.rioproject.core.OperationalStringManager;
+import org.rioproject.core.OperationalString;
 import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class ApplicationsResource extends WadlResource {
     @Autowired
@@ -51,7 +59,17 @@ public class ApplicationsResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        return null;
+        try {
+            List<OperationalStringManager> opstringMgrs = RestJSB.getOperationalStringManagers();
+            for (OperationalStringManager opstringMgr : opstringMgrs) {
+                OperationalString opstring = opstringMgr.getOperationalString();
+                Logger.getLogger(getClass().getName()).info(opstring.getName());
+            }
+            return new StringRepresentation("so???");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
+        }
     }
 
     /**
