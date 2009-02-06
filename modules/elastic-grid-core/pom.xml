@@ -31,19 +31,19 @@
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>boot</artifactId>
-            <version>4.0-M2-SNAPSHOT</version>
+            <version>4.0-M3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
-            <version>4.0-M2-SNAPSHOT</version>
+            <version>4.0-M3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>monitor</artifactId>
-            <version>4.0-M2-SNAPSHOT</version>
+            <version>4.0-M3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

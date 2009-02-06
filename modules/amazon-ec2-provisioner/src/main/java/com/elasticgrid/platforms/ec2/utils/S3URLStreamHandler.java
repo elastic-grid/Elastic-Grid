@@ -47,7 +47,7 @@ public class S3URLStreamHandler extends URLStreamHandler {
     protected URLConnection openConnection(URL url) throws IOException {
         Properties awsConfig = AWSUtils.loadEC2Configuration();
         String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
-        String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);;
+        String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);
         if (awsAccessID == null) {
             throw new IllegalArgumentException("Could not find AWS Access ID");
         }
@@ -55,7 +55,6 @@ public class S3URLStreamHandler extends URLStreamHandler {
             throw new IllegalArgumentException("Could not find AWS Secret Key");
         }
         AWSCredentials credentials = new AWSCredentials(awsAccessID, awsSecretKey);
-        logger.log(Level.INFO, "Using {0} with {1}", new Object[] { awsAccessID, awsSecretKey });
 
         S3Service s3;
         try {

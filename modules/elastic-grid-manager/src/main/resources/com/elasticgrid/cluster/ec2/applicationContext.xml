@@ -25,7 +25,8 @@
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    
+
+    <context:annotation-config />
     <context:component-scan base-package="com.elasticgrid.platforms.ec2"/>
 
     <bean id="ec2CloudPlatformManager" class="com.elasticgrid.platforms.ec2.EC2CloudPlatformManager">
@@ -36,6 +37,10 @@
         <property name="ami32" value="${aws.ec2.ami32}"/>
         <property name="ami64" value="${aws.ec2.ami64}"/>
     </bean>
+
+    <!--<bean id="ec2SecurityGroupsClusterLocator" class="com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator">-->
+        <!--<property name="ec2" ref="jec2"/>-->
+    <!--</bean>-->
 
     <bean id="jec2" class="com.xerox.amazonws.ec2.Jec2">
         <constructor-arg index="0" value="${aws.accessId}"/>

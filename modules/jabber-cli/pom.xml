@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
-            <version>4.0-M2-SNAPSHOT</version>
+            <version>4.0-M3-SNAPSHOT</version>
         </dependency>
         
     </dependencies>
@@ -59,7 +59,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M2-SNAPSHOT</version>
+                <version>4.0-M3-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <environment>
