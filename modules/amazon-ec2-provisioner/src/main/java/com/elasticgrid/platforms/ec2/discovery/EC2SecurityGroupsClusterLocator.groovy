@@ -43,7 +43,6 @@ import org.springframework.stereotype.Service
  */
 @Service
 class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
-  @Autowired (required = true)
   def Jec2 ec2
 
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
@@ -138,7 +137,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     return Collections.emptyList();
   }
 
-  @Autowired
+  @Autowired(required = true)
   public void setEc2(Jec2 ec2) {
     this.ec2 = ec2;
   }

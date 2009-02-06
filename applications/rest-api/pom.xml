@@ -119,7 +119,7 @@
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
-            <version>4.0-M2-SNAPSHOT</version>
+            <version>4.0-M3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
