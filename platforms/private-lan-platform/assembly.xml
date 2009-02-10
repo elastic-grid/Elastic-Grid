@@ -57,6 +57,7 @@
             </includes>
             <excludes>
                 <exclude>eg.properties</exclude>
+                <exclude>platform/**/*</exclude>
             </excludes>
             <filtered>true</filtered>
             <useDefaultExcludes>true</useDefaultExcludes>
@@ -93,11 +94,15 @@
                 <include>com.elasticgrid:elastic-grid-manager</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
+                <!-- Typica dependencies -->
                 <include>com.xerox.amazonws:typica</include>
                 <include>javax.xml.bind:jaxb-api</include>
                 <include>javax.xml.bind:jaxb-impl</include>
                 <include>javax.activation:activation</include>
                 <include>stax:stax-api</include>
+                <!-- JetS3t dependencies -->
+                <include>net.java.dev.jets3t:jets3t</include>
+                <!-- JiBX dependencies -->
                 <include>org.jibx:jibx-run</include>
                 <include>org.jibx:jibx-extras</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
