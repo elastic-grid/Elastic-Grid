@@ -129,8 +129,8 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         }
     }
 
-    @Autowired
-    public void setJec2(Jec2 jec2) {
+    @Autowired(required = true)
+    public void setEc2(Jec2 jec2) {
         this.jec2 = jec2;
     }
 }
