@@ -140,7 +140,7 @@ if [ "$start" = "1" ]; then
         fi
     fi
 
-    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$RIO_LIB/elastic-grid/kernel/elastic-grid-core-${pom.version}.jar)"
+    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$RIO_LIB/groovy/groovy-all-1.6-RC-1.jar:$RIO_LIB/elastic-grid/kernel/elastic-grid-core-${pom.version}.jar)"
     agentpath="-javaagent:$(toNative $RIO_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then
