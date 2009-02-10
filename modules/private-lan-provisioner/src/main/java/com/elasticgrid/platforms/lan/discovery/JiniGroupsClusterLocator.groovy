@@ -47,9 +47,10 @@ import org.springframework.stereotype.Service
 import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.Application
 import com.elasticgrid.model.internal.ApplicationImpl
+import com.elasticgrid.cluster.discovery.ClusterLocator
 
 /**
- * {@ClusterLocator}  based on EC2 Security Groups, as described on Elastic Grid Blog post:
+ * {@link ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
 @Service
