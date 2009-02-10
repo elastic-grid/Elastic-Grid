@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 
 @Service("lanCloudPlatformManager")
 public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
-    @Autowired(required = true)
     private LANClusterLocator clusterLocator;
     
     private static final Logger logger = Logger.getLogger(LANCloudPlatformManager.class.getName());
@@ -80,4 +79,8 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         throw new UnsupportedOperationException("There is no way to resize a cluster on a private LAN.");
     }
 
+    @Autowired(required = true)
+    public void setClusterLocator(LANClusterLocator clusterLocator) {
+        this.clusterLocator = clusterLocator;
+    }
 }
