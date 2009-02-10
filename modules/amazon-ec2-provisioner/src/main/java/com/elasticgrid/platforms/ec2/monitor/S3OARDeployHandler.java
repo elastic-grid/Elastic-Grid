@@ -19,6 +19,7 @@
 package com.elasticgrid.platforms.ec2.monitor;
 
 import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.platforms.ec2.utils.AWSURLStreamHandlerFactory;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -58,6 +59,10 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
     private String dropBucket;
     private File installDirectory;
     private S3Service s3;
+
+    static {
+        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
+    }
 
     /**
      * Create a S3OARDeployHandler with drop bucket and install directory
@@ -130,7 +135,7 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
                                     "[" + installDirectory.getAbsolutePath() + "]");
                 } catch (IOException e) {
                     logger.log(Level.WARNING,
-                            "Exracting [" + object.getKey() + "] to [" + installDirectory.getName() + "]", e);
+                            "Extracting [" + object.getKey() + "] to [" + installDirectory.getName() + "]", e);
                 }
             }
             // parse the OAR file
