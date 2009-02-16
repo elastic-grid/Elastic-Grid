@@ -243,6 +243,20 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <addExtensions/>
+                            <!--<classpathPrefix>../../kernel</classpathPrefix>-->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

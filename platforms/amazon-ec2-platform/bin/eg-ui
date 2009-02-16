@@ -21,11 +21,7 @@ scriptDir="$(dirname $0)"
 RIO_HOME=$EG_HOME
 
 CP="$EG_HOME/lib/rio-ui.jar:$EG_HOME/lib/apache-river/lib/jsk-platform.jar:$EG_HOME/lib/apache-river/lib/jsk-lib.jar:$EG_HOME/lib/prefuse/prefuse.jar"
-for j in $(find $EG_HOME/lib/elastic-grid/kernel -name "*.jar")
-do
-    CP=$CP:$j
-done
-for j in $(find $EG_HOME/lib/elastic-grid/substrates -name "*.jar")
+for j in $(find $EG_HOME/lib/elastic-grid -name "*.jar")
 do
     CP=$CP:$j
 done

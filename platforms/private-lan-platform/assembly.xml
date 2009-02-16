@@ -113,21 +113,21 @@
                 <include>commons-codec:commons-codec</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
-			<outputDirectory>lib/elastic-grid/kernel</outputDirectory>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
 		<!-- Framework dependencies -->
 		<dependencySet>
             <includes>
                 <include>*:amazon-sqs</include>
             </includes>
-			<outputDirectory>lib/elastic-grid/framework</outputDirectory>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
         <!-- Substrates dependencies -->
 		<dependencySet>
             <includes>
                 <include>com.elasticgrid.substrates:substrate-tomcat6</include>
             </includes>
-			<outputDirectory>lib/elastic-grid/substrates</outputDirectory>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
         <!-- REST API dependencies -->
 		<dependencySet>
@@ -158,7 +158,7 @@
                 <exclude>commons-codec:commons-codec</exclude>
                 <exclude>com.elasticgrid.substrates:substrate-api</exclude>
             </excludes>
-			<outputDirectory>lib/elastic-grid/applications/rest-api</outputDirectory>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
     </dependencySets>
 </assembly>
