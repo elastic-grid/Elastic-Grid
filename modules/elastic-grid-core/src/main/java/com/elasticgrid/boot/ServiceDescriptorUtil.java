@@ -116,14 +116,12 @@ public class ServiceDescriptorUtil
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
-
         String monitorClasspath =
             egHome + File.separator + "lib" + File.separator + "monitor.jar"
             + File.pathSeparator +
             // TODO: get rid of this version number!
             egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + "kernel" + File.separator +
-            "amazon-ec2-provisioner-0.8.3.jar";
+            File.separator + "amazon-ec2-provisioner-0.8.3.jar";
         String monitorCodebase = BootUtil.getCodebase(new String[]{
             "monitor-dl.jar",
             "rio-dl.jar",
@@ -141,7 +139,7 @@ public class ServiceDescriptorUtil
     public static ServiceDescriptor getRestApi(String policy,
                                                String restApiConfig) throws
                                                                      IOException {
-        return getRestApi(policy, restApiConfig, null);
+        return getRestApi(policy, getAnonymousPort(), restApiConfig);
     }
 
     public static ServiceDescriptor getRestApi(String policy,
@@ -167,8 +165,7 @@ public class ServiceDescriptorUtil
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
         String restApiRoot =
-            egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + "applications" + File.separator + "rest-api";
+            egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String restApiClasspath = restApiRoot + File.separator +
                                   "rest-api-0.8.3.jar";      // TODO: get rid of this version number!
         String restApiCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
