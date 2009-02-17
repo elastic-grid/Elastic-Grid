@@ -31,13 +31,6 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Amazon S3 integration -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
-            <version>0.6.1</version>
-        </dependency>
-
         <!-- Various dependencies -->
         <dependency>
             <groupId>commons-io</groupId>

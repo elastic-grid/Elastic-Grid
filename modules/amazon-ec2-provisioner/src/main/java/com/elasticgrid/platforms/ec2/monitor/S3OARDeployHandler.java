@@ -39,8 +39,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -117,9 +117,9 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
             // get a handle to the S3 bucket
             S3Bucket bucket = s3.getBucket(dropBucket);
             // retrieve the list of objects in the bucket
-            List<S3Object> objects = Arrays.asList(s3.listObjects(bucket));
+            List<S3Object> objects = new ArrayList<S3Object>(Arrays.asList(s3.listObjects(bucket)));
             // filter the list so that only OARs are kept
-            for (Iterator<S3Object> iterator = objects.iterator(); iterator.hasNext();) {
+            for (ListIterator<S3Object> iterator = objects.listIterator(); iterator.hasNext();) {
                 S3Object object = iterator.next();
                 if (!object.getKey().endsWith("oar"))
                     iterator.remove();

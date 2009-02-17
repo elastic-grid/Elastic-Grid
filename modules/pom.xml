@@ -77,12 +77,99 @@
         </plugins>
     </reporting>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Groovy dependencies -->
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>1.6-RC-1</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Typica dependencies -->
+            <dependency>
+                <groupId>com.google.code.typica</groupId>
+                <artifactId>typica</artifactId>
+                <version>1.5</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.1.6</version>
+            </dependency>
+            <!-- Amazon S3 dependencies -->
+            <dependency>
+                <groupId>net.java.dev.jets3t</groupId>
+                <artifactId>jets3t</artifactId>
+                <version>0.6.1</version>
+            </dependency>
+            <!-- Rio dependencies -->
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>rio</artifactId>
+                <version>4.0-M3-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>monitor</artifactId>
+                <version>4.0-M3-SNAPSHOT</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Jini 2.1 dependencies -->
+            <dependency>
+                <groupId>net.jini</groupId>
+                <artifactId>jsk-lib</artifactId>
+                <version>2.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.jini</groupId>
+                <artifactId>jsk-platform</artifactId>
+                <version>2.1</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Spring dependencies -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring</artifactId>
+                <version>2.5.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>2.5.5</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!-- Groovy dependencies -->
+        <!-- Tests dependencies -->
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>1.6-RC-1</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.8</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -77,10 +77,9 @@
 		</file>
     </files>
     <dependencySets>
-		<!-- Kernel dependencies -->
+		<!-- Core dependencies -->
         <dependencySet>
             <includes>
-                <include>com.elasticgrid:amazon-ec2-bootstrapper</include>
                 <include>com.elasticgrid:amazon-ec2-provisioner</include>
                 <include>com.elasticgrid:private-lan-provisioner</include>
 				<include>com.elasticgrid:elastic-grid-core</include>
@@ -89,21 +88,21 @@
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <!-- Typica dependencies -->
-                <include>com.xerox.amazonws:typica</include>
-                <include>javax.xml.bind:jaxb-api</include>
-                <include>javax.xml.bind:jaxb-impl</include>
-                <include>javax.activation:activation</include>
-                <include>stax:stax-api</include>
-                <!-- JetS3t dependencies -->
+                <include>com.google.code.typica:typica</include>
+                <include>javax.xml.bind:*</include>
+                <!--<include>javax.activation:activation</include>-->
+                <!--<include>stax:stax-api</include>-->
+                <!-- Amazon S3 dependencies -->
                 <include>net.java.dev.jets3t:jets3t</include>
                 <!-- JiBX dependencies -->
                 <include>org.jibx:jibx-run</include>
                 <include>org.jibx:jibx-extras</include>
+                <include>joda-time:*</include>
                 <include>org.codehaus.woodstox:wstx-asl</include>
                 <include>commons-lang:commons-lang</include>
                 <include>commons-httpclient:commons-httpclient</include>
                 <include>commons-logging:commons-logging</include>
-                <include>commons-io:commons-io</include>
+                <!--<include>commons-io:commons-io</include>-->
                 <include>commons-codec:commons-codec</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
@@ -117,41 +116,25 @@
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
         <!-- Substrates dependencies -->
-		<dependencySet>
-            <includes>
-                <include>com.elasticgrid.substrates:substrate-tomcat6</include>
-            </includes>
-			<outputDirectory>lib/elastic-grid</outputDirectory>
-        </dependencySet>
-        <!-- REST API dependencies -->
+		<!--<dependencySet>-->
+            <!--<includes>-->
+                <!--<include>com.elasticgrid.substrates:substrate-tomcat6</include>-->
+            <!--</includes>-->
+			<!--<outputDirectory>lib/elastic-grid</outputDirectory>-->
+        <!--</dependencySet>-->
+        <!-- Applicationss (REST API) dependencies -->
 		<dependencySet>
             <includes>
                 <include>com.elasticgrid.applications:*</include>
-                <include>*:*</include>
+                <include>org.restlet.ext.wadl:*</include>
+                <include>org.restlet.ext.jibx:*</include>
+                <include>org.restlet.ext.spring:*</include>
+                <include>com.noelios.restlet:*</include>
+                <include>org.restlet:*</include>
+                <include>org.mortbay.jetty:*</include>
+                <include>org.slf4j:slf4j-api</include>
+                <include>org.slf4j:slf4j-jdk14</include>
             </includes>
-            <excludes>
-                <exclude>com.elasticgrid:amazon-ec2-provisioner</exclude>
-                <exclude>com.elasticgrid:private-lan-provisioner</exclude>
-                <exclude>com.elasticgrid:elastic-grid-core</exclude>
-                <exclude>com.elasticgrid:elastic-grid-model</exclude>
-                <exclude>com.elasticgrid:elastic-grid-manager</exclude>
-				<exclude>com.elasticgrid:elastic-grid-utils</exclude>
-				<exclude>com.elasticgrid:elastic-grid-cli</exclude>
-                <exclude>com.xerox.amazonws:typica</exclude>
-                <exclude>javax.xml.bind:jaxb-api</exclude>
-                <exclude>javax.xml.bind:jaxb-impl</exclude>
-                <exclude>javax.activation:activation</exclude>
-                <exclude>stax:stax-api</exclude>
-                <exclude>org.jibx:jibx-run</exclude>
-                <exclude>org.jibx:jibx-extras</exclude>
-                <exclude>org.codehaus.woodstox:wstx-asl</exclude>
-                <exclude>commons-lang:commons-lang</exclude>
-                <exclude>commons-httpclient:commons-httpclient</exclude>
-                <exclude>commons-logging:commons-logging</exclude>
-                <exclude>commons-io:commons-io</exclude>
-                <exclude>commons-codec:commons-codec</exclude>
-                <exclude>com.elasticgrid.substrates:substrate-api</exclude>
-            </excludes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
     </dependencySets>
