@@ -24,6 +24,11 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+
         <!-- Elastic Grid Core -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
