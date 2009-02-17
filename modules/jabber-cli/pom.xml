@@ -40,7 +40,6 @@
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
-            <version>4.0-M3-SNAPSHOT</version>
         </dependency>
         
     </dependencies>
