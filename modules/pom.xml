@@ -79,13 +79,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Groovy dependencies -->
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>1.6-RC-1</version>
-                <scope>provided</scope>
-            </dependency>
             <!-- Typica dependencies -->
             <dependency>
                 <groupId>com.google.code.typica</groupId>
@@ -151,6 +144,13 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Groovy dependencies -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.6-RC-1</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- Tests dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
