@@ -20,11 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-core</artifactId>
             <version>${tapestry-release-version}</version>
@@ -39,7 +34,7 @@
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>t5c-commons</artifactId>
-            <version>0.5.15-SNAPSHOT</version>
+            <version>0.5.18</version>
         </dependency>
 
         <dependency>
@@ -55,11 +50,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.8</version>
-            <classifier>jdk15</classifier>
-            <scope>test</scope>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
         </dependency>
 
     </dependencies>
@@ -157,19 +149,19 @@
     </reporting>
 
     <repositories>
-        <repository>
-            <id>tapestry-snapshots</id>
-            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
-        </repository>
-        <repository>
-            <id>codehaus.snapshots</id>
-            <url>http://snapshots.repository.codehaus.org</url>
-        </repository>
-        <repository>
-            <id>openqa</id>
-            <name>OpenQA Maven Repository</name>
-            <url>http://maven.openqa.org/</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>tapestry-snapshots</id>-->
+            <!--<url>http://tapestry.formos.com/maven-snapshot-repository/</url>-->
+        <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>codehaus.snapshots</id>-->
+            <!--<url>http://snapshots.repository.codehaus.org</url>-->
+        <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>openqa</id>-->
+            <!--<name>OpenQA Maven Repository</name>-->
+            <!--<url>http://maven.openqa.org/</url>-->
+        <!--</repository>-->
         <repository>
             <id>t5components</id>
             <name>T5Components Maven Repository</name>
@@ -177,15 +169,15 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>tapestry-snapshots</id>
-            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>tapestry-snapshots</id>-->
+            <!--<url>http://tapestry.formos.com/maven-snapshot-repository/</url>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
 
     <properties>
-        <tapestry-release-version>5.0.15-SNAPSHOT</tapestry-release-version>
+        <tapestry-release-version>5.0.18</tapestry-release-version>
     </properties>
 
 </project>

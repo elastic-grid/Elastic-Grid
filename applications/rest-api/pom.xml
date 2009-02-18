@@ -117,6 +117,10 @@
 
         <!-- Rio dependencies -->
         <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
         </dependency>
@@ -143,6 +147,27 @@
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.8</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>2.4</version>
             <scope>test</scope>
         </dependency>
 
