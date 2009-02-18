@@ -91,7 +91,7 @@
                 <configuration>
                     <threshold>Normal</threshold>
                     <effort>Max</effort>
-                    <excludeFilterFile>src/main/conf/findbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${basedir}/src/main/conf/findbugs-exclude.xml</excludeFilterFile>
                 </configuration>
             </plugin>
         </plugins>
