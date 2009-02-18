@@ -13,7 +13,7 @@
 
     <dependencies>
 
-        <!-- Elastic Cluster Manager dependencies -->
+        <!-- Elastic Grid Manager dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>

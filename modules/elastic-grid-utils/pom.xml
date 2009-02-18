@@ -11,20 +11,6 @@
     <packaging>jar</packaging>
     <name>Modules :: Elastic Grid Utilities</name>
 
-    <dependencies>
-
-        <!-- Object/XML mapping dependencies -->
-        <dependency>
-            <groupId>org.jibx</groupId>
-            <artifactId>jibx-run</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jibx</groupId>
-            <artifactId>jibx-extras</artifactId>
-        </dependency>
-
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
