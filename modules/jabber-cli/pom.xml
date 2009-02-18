@@ -41,6 +41,11 @@
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
         
     </dependencies>
 
