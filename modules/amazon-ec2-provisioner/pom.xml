@@ -47,6 +47,14 @@
             <groupId>com.google.code.typica</groupId>
             <artifactId>typica</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+        </dependency>
         <!-- Amazon S3 integration -->
         <dependency>
             <groupId>net.java.dev.jets3t</groupId>
