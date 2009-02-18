@@ -20,6 +20,19 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Substrates API -->
+        <dependency>
+            <groupId>com.elasticgrid.substrates</groupId>
+            <artifactId>substrate-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -51,18 +64,30 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <!--
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${basedir}/src/test/conf/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
-            -->
         </plugins>
     </build>
 </project>
