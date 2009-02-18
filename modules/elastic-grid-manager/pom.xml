@@ -13,7 +13,7 @@
 
     <dependencies>
 
-        <!-- Elastic Cluster model -->
+        <!-- Elastic Grid model -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-model</artifactId>
@@ -38,16 +38,9 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-
-        <!-- Various dependencies -->
         <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-log4j12</artifactId>-->
-            <!--<version>1.4.3</version>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-test</artifactId>-->
         <!--</dependency>-->
 
     </dependencies>
