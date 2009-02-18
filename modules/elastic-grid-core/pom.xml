@@ -18,14 +18,7 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-utils</artifactId>
             <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Elastic Grid Substrates API -->
-        <dependency>
-            <groupId>com.elasticgrid.substrates</groupId>
-            <artifactId>substrate-api</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
+        </dependency>        
 
         <!-- Rio dependencies -->
         <dependency>
