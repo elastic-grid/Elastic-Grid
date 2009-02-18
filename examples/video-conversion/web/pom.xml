@@ -20,6 +20,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-core</artifactId>
             <version>${tapestry-release-version}</version>

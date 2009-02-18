@@ -22,24 +22,13 @@ import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.SQSException;
 import com.xerox.amazonws.sqs2.SQSUtils;
 import net.jini.id.Uuid;
-import org.jets3t.service.S3Service;
-import org.jets3t.service.S3ServiceException;
-import org.jets3t.service.impl.rest.httpclient.RestS3Service;
-import org.jets3t.service.model.S3Bucket;
-import org.jets3t.service.model.S3Object;
-import org.jets3t.service.security.AWSCredentials;
 import org.rioproject.resources.servicecore.AbstractProxy;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.rmi.Remote;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Date;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Proxy based on local storage of videos.
