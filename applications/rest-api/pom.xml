@@ -35,21 +35,28 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Model -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-model</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Restlet dependencies -->
         <dependency>
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet</artifactId>
-            <version>1.1.1</version>
+            <version>${restlet-release-version}</version>
         </dependency>
         <dependency>
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet.ext.jetty</artifactId>
-            <version>1.1.1</version>
+            <version>${restlet-release-version}</version>
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.spring</artifactId>
-            <version>1.1.1</version>
+            <version>${restlet-release-version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -75,8 +82,13 @@
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>${restlet-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.jibx</artifactId>
-            <version>1.1.1</version>
+            <version>${restlet-release-version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jibx</groupId>
@@ -86,8 +98,13 @@
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
+            <artifactId>org.restlet.ext.fileupload</artifactId>
+            <version>${restlet-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.wadl</artifactId>
-            <version>1.1.1</version>
+            <version>${restlet-release-version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -109,20 +126,16 @@
 			<artifactId>cglib</artifactId>
 			<version>2.1_3</version>
 		</dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>jul-to-slf4j</artifactId>-->
-            <!--<version>1.5.3</version>-->
-        <!--</dependency>-->
 
         <!-- Rio dependencies -->
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
         </dependency>
+        <!-- Jini 2.1 dependencies -->
         <dependency>
-            <groupId>org.rioproject.tools</groupId>
-            <artifactId>cli</artifactId>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-lib</artifactId>
         </dependency>
 
         <!-- Spring dependencies -->
@@ -215,29 +228,6 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-2</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>assembly.xml</descriptor>
-                    </descriptors>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.elasticgrid.rest.RestApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-					</execution>
-				</executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.1</version>
@@ -279,4 +269,8 @@
             <url>http://maven.restlet.org</url>
         </repository>
     </repositories>
+
+    <properties>
+        <restlet-release-version>1.1.2</restlet-release-version>
+    </properties>
 </project>

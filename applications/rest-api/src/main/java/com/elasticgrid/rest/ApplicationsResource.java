@@ -30,13 +30,17 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
 import org.restlet.ext.jibx.JibxRepresentation;
+import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.restlet.resource.StringRepresentation;
+import org.restlet.resource.FileRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.rioproject.core.OperationalStringManager;
 import org.rioproject.core.OperationalString;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,6 +48,8 @@ import java.util.logging.Logger;
 public class ApplicationsResource extends WadlResource {
     @Autowired
     private ClusterManager clusterManager;
+
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void init(Context context, Request request, Response response) {
@@ -78,6 +84,15 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);
+        logger.info("Received " + entity.getMediaType());
+        try {
+            List<FileItem> files = new RestletFileUpload().parseRepresentation(entity);
+            for (FileItem item : files)
+                logger.info("found file: " + item);
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        }
     }
 
     @Override
@@ -111,16 +126,11 @@ public class ApplicationsResource extends WadlResource {
     protected void describePut(MethodInfo info) {
         super.describePut(info);
         info.setDocumentation("Provision a new application on {clusterName}.");
-        info.getRequest().setDocumentation("The application to provision.");
-        RepresentationInfo xmlRepresentation = new RepresentationInfo();
-        xmlRepresentation.setDocumentation("This representation exposes an OpString in XML format.");
-        xmlRepresentation.getDocumentations().get(0).setTitle("OpString in XML format");
-        xmlRepresentation.setMediaType(MediaType.APPLICATION_XML);
-        RepresentationInfo dslReprentation = new RepresentationInfo();
-        dslReprentation.setDocumentation("This representation exposes an OpString in DSL format.");
-        dslReprentation.getDocumentations().get(0).setTitle("OpString in DSL format");
-        dslReprentation.setMediaType(new MediaType("text/x-groovy", "Groovy"));
-        info.getRequest().setRepresentations(Arrays.asList(xmlRepresentation, dslReprentation));
+        info.getRequest().setDocumentation("The application to provision packaged as an OAR.");
+        RepresentationInfo formRepresentation = new RepresentationInfo();
+        formRepresentation.setDocumentation("HTML form with file uploads.");
+        formRepresentation.setMediaType(MediaType.MULTIPART_FORM_DATA);
+        info.getRequest().setRepresentations(Arrays.asList(formRepresentation));
     }
 
     @Override
