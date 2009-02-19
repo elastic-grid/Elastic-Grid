@@ -1,0 +1,1 @@
+curl -H "content-type:application/oar" -T $RIO_HOME/examples/bean/bean.oar http://localhost:8182/eg/rio/applications
