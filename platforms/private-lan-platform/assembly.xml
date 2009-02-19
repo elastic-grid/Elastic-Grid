@@ -141,6 +141,8 @@
                 <include>org.mortbay.jetty:*</include>
                 <include>org.slf4j:slf4j-api</include>
                 <include>org.slf4j:slf4j-jdk14</include>
+                <include>xalan:*</include>
+                <include>commons-fileupload:commons-fileupload</include>
             </includes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
