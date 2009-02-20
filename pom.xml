@@ -47,7 +47,7 @@
     <modules>
         <module>modules</module>
         <module>substrates</module>
-        <module>examples</module>
+        <!--module>examples</module-->
 		<module>applications</module>
 		<module>platforms</module>
     </modules>
