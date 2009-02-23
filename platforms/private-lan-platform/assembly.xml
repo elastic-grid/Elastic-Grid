@@ -109,7 +109,6 @@
                 <include>commons-lang:commons-lang</include>
                 <include>commons-httpclient:commons-httpclient</include>
                 <include>commons-logging:commons-logging</include>
-                <!--<include>commons-io:commons-io</include>-->
                 <include>commons-codec:commons-codec</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
@@ -143,6 +142,8 @@
                 <include>org.slf4j:slf4j-jdk14</include>
                 <include>xalan:*</include>
                 <include>commons-fileupload:commons-fileupload</include>
+                <include>commons-io:commons-io</include>
+                <include>org.freemarker:freemarker</include>
             </includes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>

@@ -79,4 +79,23 @@
     <bean id="servicesResource" class="com.elasticgrid.rest.ServicesResource" scope="prototype"/>
     <bean id="serviceResource" class="com.elasticgrid.rest.ServiceResource" scope="prototype"/>
 
+    <bean id="s3" class="org.jets3t.service.impl.rest.httpclient.RestS3Service">
+        <constructor-arg>
+            <bean class="org.jets3t.service.security.AWSCredentials">
+                <constructor-arg index="0" value="${aws.accessId}"/>
+                <constructor-arg index="1" value="${aws.secretKey}"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:${EG_HOME}/config/eg.properties</value>
+                <value>file:${user.home}/.eg/eg.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
 </beans>
