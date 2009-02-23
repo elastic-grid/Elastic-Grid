@@ -19,33 +19,46 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.model.Cluster;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import org.restlet.ext.fileupload.RestletFileUpload;
+import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
-import org.restlet.ext.jibx.JibxRepresentation;
-import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
 import org.restlet.resource.StringRepresentation;
-import org.restlet.resource.FileRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.rioproject.core.OperationalStringManager;
+import org.restlet.resource.Variant;
 import org.rioproject.core.OperationalString;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
+import org.rioproject.core.OperationalStringManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.jets3t.service.S3Service;
+import org.jets3t.service.model.S3Object;
+import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ApplicationsResource extends WadlResource {
+    private String clusterName;
+
+    @Autowired
+    private S3Service s3;
+
     @Autowired
     private ClusterManager clusterManager;
 
@@ -58,6 +71,8 @@ public class ApplicationsResource extends WadlResource {
         setModifiable(true);
         // Declare the kind of representations supported by this resource
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
+        // Extract URI variables
+        clusterName = (String) request.getAttributes().get("clusterName");
     }
 
     /**
@@ -71,11 +86,30 @@ public class ApplicationsResource extends WadlResource {
                 OperationalString opstring = opstringMgr.getOperationalString();
                 Logger.getLogger(getClass().getName()).info(opstring.getName());
             }
-            return new StringRepresentation("so???");
+
+            logger.log(Level.INFO, "Requested variant {0}", variant.getMediaType());
+            if (MediaType.TEXT_HTML.equals(variant.getMediaType())
+                    || MediaType.APPLICATION_XML.equals(variant.getMediaType())) {
+                Configuration config = new Configuration();
+                config.setClassForTemplateLoading(getClass(), "");
+                config.setObjectWrapper(new DefaultObjectWrapper());
+                Template template = config.getTemplate("applications.ftl");
+                Map<String, Object> model = new HashMap<String, Object>();
+                model.put("cluster", clusterManager.cluster(clusterName));
+                return new TemplateRepresentation(template, model, MediaType.TEXT_HTML);
+            } else {
+                return new StringRepresentation("so???");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_SERVICE_UNAVAILABLE, e);
         }
+    }
+
+    @Override
+    public void acceptRepresentation(Representation entity) throws ResourceException {
+        super.acceptRepresentation(entity);
+        storeRepresentation(entity);
     }
 
     /**
@@ -84,12 +118,35 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);
-        logger.info("Received " + entity.getMediaType());
         try {
-            List<FileItem> files = new RestletFileUpload().parseRepresentation(entity);
-            for (FileItem item : files)
-                logger.info("found file: " + item);
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            factory.setSizeThreshold(1000240);
+            RestletFileUpload upload = new RestletFileUpload(factory);
+            List<FileItem> files = upload.parseRequest(getRequest());
+
+            logger.info("Found " + files.size() + " items");
+            for (FileItem fi : files) {
+                if (fi.getFieldName().equals("oar")) {
+                    // download it as a temp file
+                    File file = File.createTempFile("elastic-grid", "oar");
+                    logger.info("Writing file " + file.getAbsolutePath());
+                    fi.write(file);
+                    // upload it to S3
+                    String bucketName = "elastic-grid-drop-target";     // TODO: make this dynamic!
+                    logger.info("Uploading OAR to S3 bucket " + bucketName);
+                    S3Object object = new S3Object(fi.getName());
+                    object.setDataInputFile(file);
+                    s3.putObject(bucketName, object);
+                }
+            }
+
+            // Set the status of the response.
+            logger.info("Redirecting to " + getRequest().getOriginalRef());
+            getResponse().setLocationRef(getRequest().getOriginalRef());
         } catch (FileUploadException e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
         }
@@ -138,8 +195,8 @@ public class ApplicationsResource extends WadlResource {
         return false;
     }
 
-    @Override
-    public boolean allowPost() {
-        return false;
-    }
+//    @Override
+//    public boolean allowPost() {
+//        return false;
+//    }
 }

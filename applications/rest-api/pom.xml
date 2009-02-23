@@ -103,6 +103,11 @@
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
+            <artifactId>org.restlet.ext.freemarker</artifactId>
+            <version>${restlet-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet</groupId>
             <artifactId>org.restlet.ext.wadl</artifactId>
             <version>${restlet-release-version}</version>
         </dependency>
@@ -126,6 +131,11 @@
 			<artifactId>cglib</artifactId>
 			<version>2.1_3</version>
 		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
