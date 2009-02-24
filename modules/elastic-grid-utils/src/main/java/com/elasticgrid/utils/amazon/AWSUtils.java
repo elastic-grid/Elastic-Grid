@@ -77,4 +77,7 @@ public class AWSUtils {
         return awsProperties;
     }
 
+    public static String getDropBucket() throws IOException {
+        return (String) loadEC2Configuration().get("eg.s3.dropBucket");
+    }
 }

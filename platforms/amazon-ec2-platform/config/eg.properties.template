@@ -1,3 +1,4 @@
+eg.s3.dropBucket=
 aws.accessId=
 aws.secretKey=
 aws.ec2.key=eg-keypair

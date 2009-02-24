@@ -74,7 +74,9 @@
 
     <bean id="clustersResource" class="com.elasticgrid.rest.ClustersResource" scope="prototype"/>
     <bean id="clusterResource" class="com.elasticgrid.rest.ClusterResource" scope="prototype"/>
-    <bean id="applicationsResource" class="com.elasticgrid.rest.ApplicationsResource" scope="prototype"/>
+    <bean id="applicationsResource" class="com.elasticgrid.rest.ApplicationsResource" scope="prototype">
+        <property name="dropBucket" value="${eg.s3.dropBucket}"/>
+    </bean>
     <bean id="applicationResource" class="com.elasticgrid.rest.ApplicationResource" scope="prototype"/>
     <bean id="servicesResource" class="com.elasticgrid.rest.ServicesResource" scope="prototype"/>
     <bean id="serviceResource" class="com.elasticgrid.rest.ServiceResource" scope="prototype"/>
