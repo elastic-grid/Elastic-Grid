@@ -43,6 +43,7 @@ import org.restlet.resource.Variant;
 import org.rioproject.core.OperationalString;
 import org.rioproject.core.OperationalStringManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.model.S3Object;
 import java.io.File;
@@ -55,6 +56,7 @@ import java.util.logging.Logger;
 
 public class ApplicationsResource extends WadlResource {
     private String clusterName;
+    private String dropBucket;
 
     @Autowired
     private S3Service s3;
@@ -129,14 +131,13 @@ public class ApplicationsResource extends WadlResource {
                 if (fi.getFieldName().equals("oar")) {
                     // download it as a temp file
                     File file = File.createTempFile("elastic-grid", "oar");
-                    logger.info("Writing file " + file.getAbsolutePath());
                     fi.write(file);
                     // upload it to S3
-                    String bucketName = "elastic-grid-drop-target";     // TODO: make this dynamic!
-                    logger.info("Uploading OAR to S3 bucket " + bucketName);
+                    logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
+                            new Object[] { fi.getName(), dropBucket });
                     S3Object object = new S3Object(fi.getName());
                     object.setDataInputFile(file);
-                    s3.putObject(bucketName, object);
+                    s3.putObject(dropBucket, object);
                 }
             }
 
@@ -195,8 +196,8 @@ public class ApplicationsResource extends WadlResource {
         return false;
     }
 
-//    @Override
-//    public boolean allowPost() {
-//        return false;
-//    }
+    @Required
+    public void setDropBucket(String dropBucket) {
+        this.dropBucket = dropBucket;
+    }
 }
