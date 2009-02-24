@@ -197,7 +197,7 @@
                 <artifactId>izpack-maven-plugin</artifactId>
                 <configuration>
                     <izpackBasedir>${staging.dir}</izpackBasedir>
-                    <!--<customPanelDirectory>${staging.dir}</customPanelDirectory>-->
+                    <customPanelDirectory>${staging.dir}</customPanelDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -205,6 +205,9 @@
                         <goals>
                             <goal>izpack</goal>
                         </goals>
+                        <configuration>
+                            <installerFile>${project.build.directory}/elastic-grid-${pom.version}-installer.jar</installerFile>
+                        </configuration>
                     </execution>
                 </executions>
                 <dependencies>
