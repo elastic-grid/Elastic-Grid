@@ -17,22 +17,13 @@ import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler;
  */
 @Component('org.rioproject.monitor')
 class MonitorConfig {
+    String serviceName = 'Elastic Grid Monitor'
+    String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
+    long deployMonitorPeriod = 30000
 
     String[] getInitialLookupGroups() {
         def groups = ['rio']
         return (String[])groups
-    }
-
-    String getServiceName() {
-        return 'Elastic Grid Monitor'
-    }
-
-    String getServiceComment() {
-        return 'Elastic Grid Dynamic Provisioning Agent'
-    }
-
-    String getJmxName() {
-        return 'com.elasticgrid.monitor:type=Monitor'
     }
 
     ServiceResourceSelector getServiceResourceSelector() {
@@ -40,7 +31,7 @@ class MonitorConfig {
     }
 
     /*
-     * Use a JrmpExporter here.
+     * Use a JrmpExporter for the OpStringManager.
      */
     Exporter getOpStringManagerExporter() {
         return new JrmpExporter()
@@ -60,18 +51,11 @@ class MonitorConfig {
         return (LoggerConfig[])loggers
     }
 
-    /* Configure a FaultDetectionHandler for the ProvisionMonitor */
     ClassBundle getFaultDetectionHandler() {
         def fdh = org.rioproject.fdh.HeartbeatFaultDetectionHandler.class.name
         def fdhConf = ['-', fdh+'.heartbeatPeriod=10000', fdh+'heartbeatGracePeriod=10000']
-        ClassBundle bundle = new ClassBundle(fdh);
-        bundle.addMethod("setConfiguration", (Object[])fdhConf);
-        return bundle
-    }
-
-    long getDeployMonitorPeriod() {
-        return 30000
-    }
+        return FaultDetectionHandlerFactory.getClassBundle(fdh, fdhConf)
+    } 
 
     /* Configure DeployHandlers for the Monitor to use */
     // TODO: make sure the S3 bucket is parameterized
