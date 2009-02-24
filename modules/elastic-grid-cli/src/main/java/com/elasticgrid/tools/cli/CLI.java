@@ -54,6 +54,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
                         new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
                         new OptionHandlerDesc("stop-cluster", StopClusterHandler.class.getName()),
                         new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
+                        new OptionHandlerDesc("install", InstallHandler.class.getName()),
                         // Rio handlers
                         new OptionHandlerDesc("list", ListHandler.class.getName()),
                         new OptionHandlerDesc("destroy", StopHandler.class.getName()),

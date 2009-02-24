@@ -20,6 +20,14 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Utils -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Rio dependencies -->
         <dependency>
             <groupId>org.rioproject.tools</groupId>
             <artifactId>cli</artifactId>
@@ -31,6 +39,13 @@
         <dependency>
             <groupId>net.jini</groupId>
             <artifactId>jsk-lib</artifactId>
+        </dependency>
+
+        <!-- Restlet dependencies -->
+        <dependency>
+            <groupId>com.noelios.restlet</groupId>
+            <artifactId>com.noelios.restlet</artifactId>
+            <version>${restlet-release-version}</version>
         </dependency>
 
         <!-- Command line parsing -->
@@ -140,5 +155,9 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <properties>
+        <restlet-release-version>1.1.2</restlet-release-version>
+    </properties>
 
 </project>

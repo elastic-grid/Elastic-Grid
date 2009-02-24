@@ -25,6 +25,8 @@ import freemarker.template.Template;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.jets3t.service.S3Service;
+import org.jets3t.service.model.S3Object;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
@@ -44,8 +46,6 @@ import org.rioproject.core.OperationalString;
 import org.rioproject.core.OperationalStringManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-import org.jets3t.service.S3Service;
-import org.jets3t.service.model.S3Object;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -120,36 +120,54 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);
-        try {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            factory.setSizeThreshold(1000240);
-            RestletFileUpload upload = new RestletFileUpload(factory);
-            List<FileItem> files = upload.parseRequest(getRequest());
+        if (MediaType.MULTIPART_ALL.equals(entity.getMediaType())
+                || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType())) {
+            try {
+                DiskFileItemFactory factory = new DiskFileItemFactory();
+                factory.setSizeThreshold(1000240);
+                RestletFileUpload upload = new RestletFileUpload(factory);
+                List<FileItem> files = upload.parseRequest(getRequest());
 
-            logger.info("Found " + files.size() + " items");
-            for (FileItem fi : files) {
-                if (fi.getFieldName().equals("oar")) {
-                    // download it as a temp file
-                    File file = File.createTempFile("elastic-grid", "oar");
-                    fi.write(file);
-                    // upload it to S3
-                    logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
-                            new Object[] { fi.getName(), dropBucket });
-                    S3Object object = new S3Object(fi.getName());
-                    object.setDataInputFile(file);
-                    s3.putObject(dropBucket, object);
+                logger.info("Found " + files.size() + " items");
+                for (FileItem fi : files) {
+                    if (fi.getFieldName().equals("oar")) {
+                        // download it as a temp file
+                        File file = File.createTempFile("elastic-grid", "oar");
+                        fi.write(file);
+                        // upload it to S3
+                        logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
+                                new Object[]{fi.getName(), dropBucket});
+                        S3Object object = new S3Object(fi.getName());
+                        object.setDataInputFile(file);
+                        s3.putObject(dropBucket, object);
+                    }
                 }
-            }
 
-            // Set the status of the response.
-            logger.info("Redirecting to " + getRequest().getOriginalRef());
-            getResponse().setLocationRef(getRequest().getOriginalRef());
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+                // Set the status of the response.
+                logger.info("Redirecting to " + getRequest().getOriginalRef());
+                getResponse().setLocationRef(getRequest().getOriginalRef());
+            } catch (FileUploadException e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+            }
+        } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
+            try {
+                // upload it to S3
+                String fileName = "temp.oar";
+                logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
+                        new Object[]{fileName, dropBucket});
+                S3Object object = new S3Object(fileName);
+                object.setDataInputStream(entity.getStream());
+                s3.putObject(dropBucket, object);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+            }
+        } else {
+            throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
         }
     }
 
