@@ -100,7 +100,7 @@ Rio installation file.
 	<packs>
 		<pack name="Base" installGroups="All,Rio Core" required="yes">
 			<description>Base Files</description>
-			<fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
+			<fileset dir="../elastic-grid-${pom.version}" targetdir="$INSTALL_PATH" defaultexcludes="yes">
 				<!--<include name="bin/*.cmd" os="windows"/>-->
 				<!--<include name="bin/rio" os="unix"/>-->
 				<!--<include name="bin/rio-ui" os="unix"/>-->

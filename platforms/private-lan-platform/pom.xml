@@ -114,6 +114,8 @@
                         <descriptor>assembly.xml</descriptor>
                     </descriptors>
                     <finalName>elastic-grid-${pom.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
                 </configuration>
 				<executions>
 					<execution>
