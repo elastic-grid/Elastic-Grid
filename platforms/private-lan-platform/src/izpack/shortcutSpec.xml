@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<shortcuts>
+	<skipIfNotSupported/>
+	<programGroup defaultName="Rio" location="applications"/>
+
+	<shortcut
+		name="Start All Rio Services"
+		target="$INSTALL_PATH\bin\startall.cmd"
+		workingDirectory="$INSTALL_PATH\bin"
+		description="This starts all services of Rio"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"/>
+
+	<shortcut
+		name="Rio UI"
+		target="$INSTALL_PATH\bin\rio-ui.cmd"
+		workingDirectory="$INSTALL_PATH\bin"
+		description="This starts the Rio UI"
+		initialState="noShow"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"/>
+
+	<shortcut
+		name="Documentation"
+		target="$INSTALL_PATH\docs\index.html"
+		commandline=""
+		description="Rio Documentation"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no">
+		<createForPack name="Rio Docs"/>
+	</shortcut>
+
+	<shortcut
+		name="API Documentation"
+		target="$INSTALL_PATH\docs\apidocs\index.html"
+		commandline=""
+		description="Rio API Documentation"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no">
+		<createForPack name="Rio Docs"/>
+	</shortcut>
+
+	<shortcut
+		name="Manual"
+		target="$INSTALL_PATH\docs\rio\manual\pdf\rio-manual.pdf"
+		commandline=""
+		description="Rio Manual"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"
+		iconFile="%SystemRoot%\system32\SHELL32.dll"
+		iconIndex="23">
+		<createForPack name="Rio Docs"/>
+	</shortcut>
+
+	<shortcut
+		name="Uninstall Rio"
+		target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+		commandline=""
+		description="Uninstalls Rio"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"
+		iconFile="%SystemRoot%\system32\SHELL32.dll"
+		iconIndex="31"/>
+
+</shortcuts>

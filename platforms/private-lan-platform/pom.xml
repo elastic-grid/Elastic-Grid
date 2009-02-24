@@ -8,7 +8,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>private-lan-platform</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>Platforms :: Private LAN Platform</name>
     <prerequisites>
         <maven>2.0.8</maven>
@@ -89,6 +89,13 @@
             <!--<version></version>-->
         <!--</dependency>-->
 
+        <!-- IzPack dependencies -->
+        <dependency>
+            <groupId>org.codehaus.izpack</groupId>
+            <artifactId>izpack-standalone-compiler</artifactId>
+            <version>${izpack-release}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -159,7 +166,60 @@
                     <excludedGroups>qa</excludedGroups>
                 </configuration>
             </plugin>
+            <!--  copy other checked resource into staging area, expected by install.xml -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>create-staging-area</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${staging.dir}">
+                                    <fileset dir="${basedir}/src/izpack"/>
+                                    <filterset>
+                                        <filter token="VERSION" value="${pom.version}"/>
+                                    </filterset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <configuration>
+                    <izpackBasedir>${staging.dir}</izpackBasedir>
+                    <!--<customPanelDirectory>${staging.dir}</customPanelDirectory>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>izpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.izpack</groupId>
+                        <artifactId>izpack-standalone-compiler</artifactId>
+                        <version>${izpack-release}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <staging.dir>${project.build.directory}/staging</staging.dir>
+        <izpack-release>4.2.1</izpack-release>
+    </properties>
+
 
 </project>
