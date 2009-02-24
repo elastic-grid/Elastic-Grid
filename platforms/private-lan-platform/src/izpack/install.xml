@@ -78,8 +78,8 @@ Rio installation file.
 	We indicate here which panels we want to use. The order will be respected.
 	-->
 	<panels>
-		<panel classname="HelloPanel"/>
-        <!--<panel classname="com.elasticgrid.tools.installer.ElasticGridHelloPanel"/>-->
+		<!--<panel classname="HelloPanel"/>-->
+        <panel classname="com.elasticgrid.tools.installer.ElasticGridHelloPanel"/>
 		<panel classname="HTMLInfoPanel"/>
 		<panel classname="LicencePanel"/>
 		<panel classname="TargetPanel"/>
@@ -92,6 +92,9 @@ Rio installation file.
 		<panel classname="FinishPanel"/>
 		<panel classname="SimpleFinishPanel"/>
 	</panels>
+
+    <jar src="../private-lan-platform-${pom.version}.jar"/>
+    
 
 	<!-- 
 	The packs section.
