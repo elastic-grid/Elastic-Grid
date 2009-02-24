@@ -18,6 +18,9 @@
 
 package com.elasticgrid.tools.cli;
 
+import com.elasticgrid.cluster.discovery.ClusterLocator;
+import com.elasticgrid.model.ClusterMonitorNotFoundException;
+import com.elasticgrid.model.Node;
 import com.noelios.restlet.application.EncodeRepresentation;
 import org.restlet.Client;
 import org.restlet.data.Encoding;
@@ -68,11 +71,13 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
         }
     }
 
-    private void install(String clusterName, String oarName) {
+    private void install(String clusterName, String oarName) throws ClusterMonitorNotFoundException {
         FileRepresentation rep = new FileRepresentation(oarName, new MediaType("application/oar"), 0);
         EncodeRepresentation encodedRep = new EncodeRepresentation(Encoding.GZIP, rep);
         Client client = new Client(Protocol.HTTP);
-        Response response = client.put("http://localhost:8182/eg/" + clusterName + "/applications", encodedRep);
+        Node monitor = CLI.getClusterLocator().findMonitor(clusterName);
+        System.out.println("Found monitor at " + monitor.getAddress());
+        Response response = client.put("http://" + monitor.getAddress() +":8182/eg/" + clusterName + "/applications", encodedRep);
         System.out.println("Received status " + response.getStatus());
     }
 
