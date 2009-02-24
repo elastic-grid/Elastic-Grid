@@ -4,9 +4,9 @@
     <id>bin</id>
     <formats>
         <format>dir</format>
-		<format>tar.gz</format>
-		<format>tar.bz2</format>
-		<format>zip</format>
+		<!--<format>tar.gz</format>-->
+		<!--<format>tar.bz2</format>-->
+		<!--<format>zip</format>-->
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
@@ -64,12 +64,10 @@
         </fileSet>
     </fileSets>
 	<files>
-		<file>
-			<source>README.txt</source>
+        <file>
+            <source>LICENSE.txt</source>
 			<outputDirectory>/</outputDirectory>
-			<filtered>true</filtered>
-            <fileMode>0644</fileMode>
-		</file>
+        </file>
         <file>
 			<source>bin/eg</source>
 			<outputDirectory>/bin</outputDirectory>

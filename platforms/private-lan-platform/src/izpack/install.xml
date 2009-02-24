@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<!-- 
+Rio installation file.
+-->
+<installation version="1.0">
+
+	<!-- 
+	The info section.
+	The meaning of the tags should be natural ...
+	-->
+	<info>
+		<appname>Elastic Grid</appname>
+		<appversion>${pom.version}</appversion>
+		<authors>
+			<author name="Jérôme Bernard (Elastic Grid, LLC.)" email="jerome.bernard@elastic-grid.com"/>
+            <author name="Dennis Reedy (Elastic Grid, LLC.)" email="dennis.reedy@elastic-grid.com"/>
+        </authors>
+		<url>http://www.elastic-grid.com</url>
+		<javaversion>1.5</javaversion>
+		<webdir>http://www.elastic-grid.com</webdir>
+	</info>
+
+	<variables>
+		<variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+	</variables>
+
+	<!-- 
+	The gui preferences indication.
+	Sets the installer window to 640x480. It will not be able to change the size.
+	-->
+	<guiprefs width="640" height="480" resizable="no"/>
+
+	<!-- The locale section. -->
+	<locale>
+		<langpack iso3="eng"/>
+		<langpack iso3="fra"/>
+	</locale>
+
+	<native type="izpack" name="ShellLink.dll"/>
+
+	<!-- 
+	The resources section.
+	The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
+	-->
+	<resources>
+		<res id="HTMLInfoPanel.info" src="README.html"/>
+		<res id="LicencePanel.licence" src="../../LICENSE.txt"/>
+		<res id="installer.langsel.img" src="../../src/izpack/Elastic-Grid-Logo.png"/>
+		<!--<res id="shortcutSpec.xml" src="../../../src/izpack/shortcutSpec.xml"/>-->
+		<!--<res id="userInputSpec.xml" src="../../../src/izpack/userInputSpec.xml"/>-->
+		<!--<res id="userInputLang.xml_eng" src="../../../src/izpack/userInputLang.xml_eng"/>-->
+		<!--<res id="userInputLang.xml_fra" src="../../../src/izpack/userInputLang.xml_fra"/>-->
+		<!--<res id="userInputLang.xml_heb" src="../../../src/izpack/userInputLang.xml_heb"/>-->
+	</resources>
+
+	<!-- 
+	The panels section.
+	We indicate here which panels we want to use. The order will be respected.
+	-->
+	<panels>
+		<panel classname="HelloPanel"/>
+        <!--<panel classname="com.elasticgrid.tools.installer.ElasticGridHelloPanel"/>-->
+		<panel classname="HTMLInfoPanel"/>
+		<panel classname="LicencePanel"/>
+		<panel classname="TargetPanel"/>
+		<!--panel classname="InstallationGroupPanel"/-->
+		<!--<panel classname="PacksPanel"/>-->
+		<!--panel classname="UserInputPanel"/-->
+		<!--<panel classname="SummaryPanel"/>-->
+		<panel classname="InstallPanel"/>
+		<!--<panel classname="ShortcutPanel"/>-->
+		<panel classname="FinishPanel"/>
+		<panel classname="SimpleFinishPanel"/>
+	</panels>
+
+	<!-- 
+	The packs section.
+	We specify here our packs.
+	-->
+	<packs>
+		<pack name="Base" installGroups="All,Rio Core" required="yes">
+			<description>Base Files</description>
+			<fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
+				<!--<include name="bin/*.cmd" os="windows"/>-->
+				<!--<include name="bin/rio" os="unix"/>-->
+				<!--<include name="bin/rio-ui" os="unix"/>-->
+				<!--<include name="bin/cybernode" os="unix"/>-->
+				<!--<include name="bin/monitor" os="unix"/>-->
+				<!--<include name="bin/startall" os="unix"/>-->
+				<!--<include name="bin/stop-activatables" os="unix"/>-->
+				<!--<include name="bin/webster" os="unix"/>-->
+				<!--<include name="config/**/*"/>-->
+				<!--<include name="deploy/readme.txt"/>-->
+				<!--<include name="policy/**/*"/>-->
+				<!--<include name="lib/**/*"/>-->
+				<!--<include name="logs/readme.txt"/>-->
+				<!--<include name="NOTICE"/>-->
+				<!--<include name="LICENSE"/>-->
+				<!--<include name="index.html"/> -->
+                <include name="**/*"/>
+			</fileset>
+			<executable targetfile="$INSTALL_PATH/bin/eg" os="unix"/>
+			<executable targetfile="$INSTALL_PATH/bin/eg-ui" os="unix"/>
+		</pack>
+		<!--<pack name="Docs" installGroups="All,Rio Core" required="no">-->
+			<!--<description>Rio documentation</description>-->
+			<!--<fileset dir="docs" targetdir="$INSTALL_PATH/docs" defaultexcludes="yes"/>-->
+		<!--</pack>-->
+		<!--<pack name="Rio Sources" installGroups="All,Rio Core" required="no">-->
+			<!--<description>Rio sources</description>-->
+			<!--<file src="src.zip" targetdir="$INSTALL_PATH"/>-->
+		<!--</pack>-->
+		<!--<pack name="Rio Examples" installGroups="All,Rio Examples" required="no">-->
+			<!--<description>Rio examples</description>-->
+			<!--<fileset dir="examples" targetdir="$INSTALL_PATH/examples" defaultexcludes="yes"/>-->
+		<!--</pack>-->
+	</packs>
+
+</installation>
