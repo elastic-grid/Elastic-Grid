@@ -30,7 +30,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.mathieucarbou.mojo</groupId>
+                <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
                 <configuration>
                     <header>${basedir}/../etc/header.txt</header>
