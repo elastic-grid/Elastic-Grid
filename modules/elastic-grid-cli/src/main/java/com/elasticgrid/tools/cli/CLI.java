@@ -19,6 +19,7 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.cluster.discovery.ClusterLocator;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
@@ -100,5 +101,9 @@ public class CLI extends org.rioproject.tools.cli.CLI {
 
     public static ClusterManager getClusterManager() {
         return (ClusterManager) ctx.getBean("clusterManager");
+    }
+
+    public static ClusterLocator getClusterLocator() {
+        return (ClusterLocator) ctx.getBean("clusterLocator");
     }
 }
