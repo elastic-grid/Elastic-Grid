@@ -1,9 +1,8 @@
 /*
  * Configuration for a Provision Monitor
  */
-import java.io.File
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
+import com.elasticgrid.utils.amazon.AWSUtils
+import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
 import org.rioproject.core.ClassBundle
 import org.rioproject.config.Component
 import org.rioproject.log.LoggerConfig
@@ -13,10 +12,11 @@ import org.rioproject.monitor.DeployHandler
 import org.rioproject.monitor.FileSystemOARDeployHandler
 import org.rioproject.monitor.ServiceResourceSelector
 import org.rioproject.monitor.LeastActiveSelector
-import com.elasticgrid.utils.amazon.AWSUtils
-import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
 import net.jini.export.Exporter
 import net.jini.jrmp.JrmpExporter
+import java.io.File
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 
 /*
  * Declare Provision Monitor properties
