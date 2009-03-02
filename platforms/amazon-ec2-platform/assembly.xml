@@ -9,6 +9,17 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
+            <directory>${basedir}/target/private-lan-platform</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>config/eg.properties.template</exclude>
+            </excludes>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
             <directory>config</directory>
             <outputDirectory>/config</outputDirectory>
             <includes>
@@ -22,15 +33,4 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
-    <!--<moduleSets>-->
-        <!--<moduleSet>-->
-            <!--<includes>-->
-                <!--<include>${pom.groupId}:private-lan-platform</include>-->
-            <!--</includes>-->
-            <!--<binaries>-->
-                <!--<attachmentClassifier>bin</attachmentClassifier>-->
-                <!--<-->
-            <!--</binaries>-->
-        <!--</moduleSet>-->
-    <!--</moduleSets>-->
 </assembly>
