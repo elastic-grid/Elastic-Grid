@@ -57,7 +57,7 @@ goto end
 rem Get the service starter
 shift
 if "%1"=="" goto noService
-set starterConfig=%RIO_HOME%\config\start-%1.config
+set starterConfig=%RIO_HOME%\config\start-%1.groovy
 if not exist "%starterConfig%" goto noStarter
 shift
 
