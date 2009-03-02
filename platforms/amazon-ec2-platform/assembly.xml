@@ -5,49 +5,9 @@
     <formats>
         <format>dir</format>
 		<format>tar.gz</format>
-		<format>tar.bz2</format>
-		<format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
-        <fileSet>
-            <directory>${rio.home}</directory>
-            <outputDirectory>/</outputDirectory>
-            <includes>
-                <include>lib/**/*</include>
-                <include>config/**/*</include>
-                <include>deploy/*.txt</include>
-                <include>logs/*.txt</include>
-                <include>policy/**/*</include>
-            </includes>
-            <excludes>
-                <exclude>config/start-all.groovy</exclude>
-                <exclude>config/start-cybernode.groovy</exclude>
-                <exclude>config/cybernode.groovy</exclude>
-                <exclude>config/start-monitor.groovy</exclude>
-                <exclude>config/monitor.groovy</exclude>
-            </excludes>
-            <useDefaultExcludes>true</useDefaultExcludes>
-        </fileSet>
-        <fileSet>
-            <includes>
-				<include>bin/**/*</include>
-            </includes>
-            <excludes>
-                <exclude>bin/eg</exclude>
-                <exclude>bin/Rio.app/**</exclude>
-            </excludes>
-            <fileMode>0755</fileMode>
-			<useDefaultExcludes>true</useDefaultExcludes>
-        </fileSet>
-        <fileSet>
-            <includes>
-                <include>COPYING.txt</include>
-                <include>COPYING.LESSER.txt</include>
-				<include>lib/**</include>
-            </includes>
-			<useDefaultExcludes>true</useDefaultExcludes>
-        </fileSet>
         <fileSet>
             <directory>config</directory>
             <outputDirectory>/config</outputDirectory>
@@ -62,84 +22,15 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
-	<files>
-		<file>
-			<source>README.txt</source>
-			<outputDirectory>/</outputDirectory>
-			<filtered>true</filtered>
-            <fileMode>0644</fileMode>
-		</file>
-        <file>
-			<source>bin/eg</source>
-			<outputDirectory>/bin</outputDirectory>
-			<filtered>true</filtered>
-            <fileMode>0755</fileMode>
-		</file>
-    </files>
-    <dependencySets>
-		<!-- Core dependencies -->
-        <dependencySet>
-            <includes>
-                <include>com.elasticgrid:amazon-ec2-provisioner</include>
-                <include>com.elasticgrid:private-lan-provisioner</include>
-				<include>com.elasticgrid:elastic-grid-core</include>
-                <include>com.elasticgrid:elastic-grid-model</include>
-                <include>com.elasticgrid:elastic-grid-manager</include>
-				<include>com.elasticgrid:elastic-grid-utils</include>
-				<include>com.elasticgrid:elastic-grid-cli</include>
-                <!-- Typica dependencies -->
-                <include>com.google.code.typica:typica</include>
-                <include>javax.xml.bind:*</include>
-                <!--<include>javax.activation:activation</include>-->
-                <!--<include>stax:stax-api</include>-->
-                <!-- Amazon S3 dependencies -->
-                <include>net.java.dev.jets3t:jets3t</include>
-                <!-- JiBX dependencies -->
-                <include>org.jibx:jibx-run</include>
-                <include>org.jibx:jibx-extras</include>
-                <include>joda-time:*</include>
-                <include>org.codehaus.woodstox:wstx-asl</include>
-                <include>commons-lang:commons-lang</include>
-                <include>commons-httpclient:commons-httpclient</include>
-                <include>commons-logging:commons-logging</include>
-                <include>commons-io:commons-io</include>
-                <include>commons-codec:commons-codec</include>
-                <include>com.elasticgrid.substrates:substrate-api</include>
-            </includes>
-			<outputDirectory>lib/elastic-grid</outputDirectory>
-        </dependencySet>
-		<!-- Framework dependencies -->
-		<dependencySet>
-            <includes>
-                <include>*:amazon-sqs</include>
-            </includes>
-			<outputDirectory>lib/elastic-grid</outputDirectory>
-        </dependencySet>
-        <!-- Substrates dependencies -->
-		<!--<dependencySet>-->
+    <!--<moduleSets>-->
+        <!--<moduleSet>-->
             <!--<includes>-->
-                <!--<include>com.elasticgrid.substrates:substrate-tomcat6</include>-->
+                <!--<include>${pom.groupId}:private-lan-platform</include>-->
             <!--</includes>-->
-			<!--<outputDirectory>lib/elastic-grid</outputDirectory>-->
-        <!--</dependencySet>-->
-        <!-- Applicationss (REST API) dependencies -->
-		<dependencySet>
-            <includes>
-                <include>com.elasticgrid.applications:*</include>
-                <include>org.restlet.ext.wadl:*</include>
-                <include>org.restlet.ext.jibx:*</include>
-                <include>org.restlet.ext.spring:*</include>
-                <include>com.noelios.restlet:*</include>
-                <include>org.restlet:*</include>
-                <include>org.mortbay.jetty:*</include>
-                <include>org.slf4j:slf4j-api</include>
-                <include>org.slf4j:slf4j-jdk14</include>
-                <include>xalan:*</include>
-                <include>commons-fileupload:commons-fileupload</include>
-                <include>commons-io:commons-io</include>
-                <include>org.freemarker:freemarker</include>
-            </includes>
-			<outputDirectory>lib/elastic-grid</outputDirectory>
-        </dependencySet>
-    </dependencySets>
+            <!--<binaries>-->
+                <!--<attachmentClassifier>bin</attachmentClassifier>-->
+                <!--<-->
+            <!--</binaries>-->
+        <!--</moduleSet>-->
+    <!--</moduleSets>-->
 </assembly>
