@@ -1,17 +1,19 @@
 /*
  * Configuration for a Cybernode
  */
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
 import org.rioproject.config.Component
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
 import org.rioproject.boot.BootUtil
+import org.rioproject.core.ClassBundle
 import net.jini.core.discovery.LookupLocator
+import net.jini.export.Exporter
 import net.jini.jeri.BasicILFactory
 import net.jini.jeri.BasicJeriExporter
 import net.jini.jeri.tcp.TcpServerEndpoint
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 
 /*
  * Declare Agent properties
@@ -25,11 +27,11 @@ class AgentConfig {
 
     String[] getInitialLookupGroups() {
         def groups = ['rio']
-        return (String[])groups
+        return groups as String[]
     }
 
     Boolean getProvisionEnabled() {
-        return Boolean.valueOf(true);
+        return Boolean.TRUE
     }
 
     LoggerConfig[] getLoggerConfigs() {
@@ -54,7 +56,6 @@ class AgentConfig {
  */
 @Component('org.rioproject')
 class ExporterConfig {
-
     Exporter getDefaultExporter() {
         String host = BootUtil.getHostAddressFromProperty("java.rmi.server.hostname");
         return new BasicJeriExporter(TcpServerEndpoint.getInstance(host, 0),
