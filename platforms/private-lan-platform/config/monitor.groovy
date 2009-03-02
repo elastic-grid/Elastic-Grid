@@ -11,8 +11,12 @@ import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
 import org.rioproject.monitor.DeployHandler
 import org.rioproject.monitor.FileSystemOARDeployHandler
+import org.rioproject.monitor.ServiceResourceSelector
+import org.rioproject.monitor.LeastActiveSelector
 import com.elasticgrid.utils.amazon.AWSUtils
 import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
+import net.jini.export.Exporter
+import net.jini.export.JrmpExporter
 
 /*
  * Declare Provision Monitor properties
