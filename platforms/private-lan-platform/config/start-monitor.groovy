@@ -29,7 +29,9 @@ class StartAllConfig {
             /* Jini Lookup Service */
             ServiceDescriptorUtil.getLookup(policyFile, reggieConfig),
             /* Elastic Grid Provision Monitor */
-            ServiceDescriptorUtil.getMonitor(policyFile, monitorConfig)
+            ServiceDescriptorUtil.getMonitor(policyFile, monitorConfig),
+            /* Elastic Grid REST API */
+            ServiceDescriptorUtil.getRestApi(policyFile, restApiConfig)
         ]
 
         return (ServiceDescriptor[])serviceDescriptors
