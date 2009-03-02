@@ -34,9 +34,11 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
         <fileSet>
+            <directory>bin</directory>
             <includes>
-				<include>bin/**/*</include>
+				<include>*</include>
             </includes>
+            <filtered>true</filtered>
             <fileMode>0755</fileMode>
 			<useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
