@@ -1,16 +1,17 @@
 /*
  * Configuration for a Provision Monitor
  */
-import java.io.File;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import org.rioproject.core.ClassBundle;
-import org.rioproject.log.LoggerConfig;
-import org.rioproject.log.LoggerConfig.LogHandlerConfig;
-import org.rioproject.fdh.FaultDetectionHandlerFactory;
-import org.rioproject.monitor.DeployHandler;
-import org.rioproject.monitor.FileSystemOARDeployHandler;
-import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler;
+import java.io.File
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
+import org.rioproject.core.ClassBundle
+import org.rioproject.log.LoggerConfig
+import org.rioproject.log.LoggerConfig.LogHandlerConfig
+import org.rioproject.fdh.FaultDetectionHandlerFactory
+import org.rioproject.monitor.DeployHandler
+import org.rioproject.monitor.FileSystemOARDeployHandler
+import com.elasticgrid.utils.amazon.AWSUtils
+import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
 
 /*
  * Declare Provision Monitor properties
@@ -58,12 +59,11 @@ class MonitorConfig {
     } 
 
     /* Configure DeployHandlers for the Monitor to use */
-    // TODO: make sure the S3 bucket is parameterized
     DeployHandler[] getDeployHandlers() {
         deployDir = System.getProperty('RIO_HOME')+'/deploy'
         def deployHandlers =
             [new FileSystemOARDeployHandler(new File(deployDir)),
-             new S3OARDeployHandler("elastic-grid-drop-target", new File(deployDir))]
+             new S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))]
         return (DeployHandler[])deployHandlers
     }
 
