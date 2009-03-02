@@ -160,7 +160,7 @@
                         <configuration>
                             <tasks>
                                 <gunzip dest="${basedir}/target/elastic-grid-${pom.version}.tar"
-                                        src="${user.home}/.m2/repository/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}-bin.tar.gz"/>
+                                        src="${user.home}/.m2/repository/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}.jar"/>
                                 <untar dest="${basedir}/target/private-lan-platform"
                                        src="${basedir}/target/elastic-grid-${pom.version}.tar"/>
                             </tasks>

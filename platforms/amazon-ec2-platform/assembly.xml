@@ -15,6 +15,7 @@
                 <include>**/*</include>
             </includes>
             <excludes>
+                <exclude>bin/*</exclude>
                 <exclude>config/eg.properties.template</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
@@ -31,6 +32,13 @@
             </excludes>
             <filtered>true</filtered>
             <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <includes>
+				<include>bin/**/*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+			<useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
 </assembly>
