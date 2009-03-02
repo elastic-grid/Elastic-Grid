@@ -61,8 +61,9 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
     public C cluster(String name) throws ClusterException, RemoteException {
         C cluster = null;
         int i = 0;
-        while (cluster == null || cluster.getNodes().size() == 0)
+        while ((cluster == null || cluster.getNodes().size() == 0) && clouds.size() < i) {
             cluster = clouds.get(i++).cluster(name);
+        }
         return cluster;
     }
 
