@@ -1,11 +1,13 @@
 /*
  * Configuration for the REST service
  */
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
 import org.rioproject.config.Component
+import org.rioproject.core.ClassBundle
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
+import org.rioproject.fdh.FaultDetectionHandlerFactory
+import java.util.logging.ConsoleHandler
+import java.util.logging.Level
 
 /*
  * Declare REST API properties
@@ -18,18 +20,19 @@ class RestServiceConfig {
 
     String[] getInitialLookupGroups() {
         def groups = ['rio']
-        return (String[])groups
+        return groups as String[]
     }
 
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
         ['com.elasticgrid' : Level.FINE,
-         'org.springframework' : Level.FINEST,
-         'com.noelios.restlet' : Level.FINEST].each { name, level ->
+         'org.springframework' : Level.SEVERE,
+         'com.noelios.restlet' : Level.SEVERE].each { name, level ->
             loggers.add(new LoggerConfig(name,
                                          level,
                                          new LogHandlerConfig(new ConsoleHandler())))
         }
         return (LoggerConfig[])loggers
     }
+
 }
