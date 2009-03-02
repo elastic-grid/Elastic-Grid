@@ -22,6 +22,6 @@ class EC2AgentConfig extends AgentConfig {
     LookupLocator[] getInitialLookupLocators() {
         String masterHost = 'jini://'+System.getProperty('MONITOR_HOST')
         def initialLookupLocators = [new LookupLocator(masterHost)]
-        return (LookupLocator[])initialLookupLocators
+        return initialLookupLocators as LookupLocator[]
     }
 }
