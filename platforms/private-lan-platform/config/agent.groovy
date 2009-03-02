@@ -7,12 +7,11 @@ import org.rioproject.config.Component
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
-
+import org.rioproject.boot.BootUtil
 import net.jini.core.discovery.LookupLocator
 import net.jini.jeri.BasicILFactory
 import net.jini.jeri.BasicJeriExporter
 import net.jini.jeri.tcp.TcpServerEndpoint
-import org.rioproject.boot.BootUtil
 
 /*
  * Declare Agent properties

@@ -26,8 +26,8 @@ class RestServiceConfig {
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
         ['com.elasticgrid' : Level.FINE,
-         'org.springframework' : Level.SEVERE,
-         'com.noelios.restlet' : Level.SEVERE].each { name, level ->
+         'org.springframework' : Level.FINEST,
+         'com.noelios.restlet' : Level.FINEST].each { name, level ->
             loggers.add(new LoggerConfig(name,
                                          level,
                                          new LogHandlerConfig(new ConsoleHandler())))

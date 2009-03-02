@@ -5,6 +5,7 @@ import java.io.File
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 import org.rioproject.core.ClassBundle
+import org.rioproject.config.Component
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
