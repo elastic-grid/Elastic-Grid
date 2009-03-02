@@ -16,7 +16,7 @@ import org.rioproject.monitor.LeastActiveSelector
 import com.elasticgrid.utils.amazon.AWSUtils
 import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
 import net.jini.export.Exporter
-import net.jini.export.JrmpExporter
+import net.jini.jrmp.JrmpExporter
 
 /*
  * Declare Provision Monitor properties
@@ -29,7 +29,7 @@ class MonitorConfig {
 
     String[] getInitialLookupGroups() {
         def groups = ['rio']
-        return (String[])groups
+        return groups as String[]
     }
 
     ServiceResourceSelector getServiceResourceSelector() {
