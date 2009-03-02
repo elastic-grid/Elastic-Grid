@@ -18,7 +18,8 @@ class StartAgentConfig {
                             egHome+'/lib']
 
         String policyFile = egHome+'/policy/policy.all'
-        def configArgs = [egHome+'/config/agent.groovy',
+        def configArgs = [egHome+'/config/ec2agent.groovy',
+                          egHome+'/config/agent.groovy',
                           egHome+'/config/compute_resource.groovy']
 
         def serviceDescriptors = [

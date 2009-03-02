@@ -6,7 +6,7 @@ rem
 
 title Elastic Grid UI
 set EG_HOME="%~dp0.."
-set CONFIG=%EG_HOME%\config\ui.config
+set CONFIG=%EG_HOME%\config\ui.groovy
 set command_line=%*
 
 "%JAVA_HOME%\bin\java" -jar "%~dp0../lib/rio-ui.jar" %CONFIG% %command_line%

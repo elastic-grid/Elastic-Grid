@@ -1,4 +1,7 @@
-org.rioproject.tools.ui {
+import org.rioproject.config.Component
+
+@Component('org.rioproject.tools.ui')
+class UI {
     waitMessage="Waiting to discover the Elastic Grid ...";
     title="Elastic Grid Management Console";
     bannerIcon="com/elasticgrid/tools/ui/Elastic-Grid-Logo.png";
