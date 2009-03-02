@@ -32,6 +32,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
+import org.restlet.data.Form;
 import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
@@ -155,8 +156,10 @@ public class ApplicationsResource extends WadlResource {
             }
         } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
             try {
+                // extract filename information
+                Form form = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
                 // upload it to S3
-                String fileName = "temp.oar";
+                String fileName = form.getFirstValue("x-filename");
                 logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
                         new Object[]{fileName, dropBucket});
                 S3Object object = new S3Object(fileName);

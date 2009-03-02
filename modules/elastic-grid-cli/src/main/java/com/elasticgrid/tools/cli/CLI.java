@@ -102,8 +102,4 @@ public class CLI extends org.rioproject.tools.cli.CLI {
     public static ClusterManager getClusterManager() {
         return (ClusterManager) ctx.getBean("clusterManager");
     }
-
-    public static ClusterLocator getClusterLocator() {
-        return (ClusterLocator) ctx.getBean("clusterLocator");
-    }
 }

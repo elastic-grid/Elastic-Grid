@@ -18,20 +18,26 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.cluster.discovery.ClusterLocator;
-import com.elasticgrid.model.ClusterMonitorNotFoundException;
+import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Node;
 import com.noelios.restlet.application.EncodeRepresentation;
 import org.restlet.Client;
 import org.restlet.data.Encoding;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
+import org.restlet.data.Method;
 import org.restlet.data.Protocol;
+import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.resource.FileRepresentation;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.PrintStream;
+import java.rmi.RemoteException;
 import java.util.StringTokenizer;
+import java.util.Set;
 
 /**
  * Install an OAR through the REST API.
@@ -71,13 +77,29 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
         }
     }
 
-    private void install(String clusterName, String oarName) throws ClusterMonitorNotFoundException {
+    private void install(String clusterName, String oarName) throws ClusterException, RemoteException {
+        Cluster<Node> cluster = CLI.getClusterManager().cluster(clusterName);
+        if (cluster == null) {
+            System.err.println("Could not locate cluster '" + clusterName + "'");
+            return;
+        }
+        Set<Node> monitors = cluster.getMonitorNodes();
+        if (monitors.size() == 0) {
+            System.err.println("Could not find any monitor");
+            return;
+        }
+        Node monitor = monitors.iterator().next();
+        System.out.println("Found monitor at " + monitor.getAddress());
+
         FileRepresentation rep = new FileRepresentation(oarName, new MediaType("application/oar"), 0);
         EncodeRepresentation encodedRep = new EncodeRepresentation(Encoding.GZIP, rep);
         Client client = new Client(Protocol.HTTP);
-        Node monitor = CLI.getClusterLocator().findMonitor(clusterName);
-        System.out.println("Found monitor at " + monitor.getAddress());
-        Response response = client.put("http://" + monitor.getAddress() +":8182/eg/" + clusterName + "/applications", encodedRep);
+        Request request = new Request(Method.PUT, "http://" + monitor.getAddress() +":8182/eg/" + clusterName + "/applications");
+        request.setEntity(encodedRep);
+        Form form = new Form();
+        form.add("x-filename", new File(oarName).getName());
+        request.getAttributes().put("org.restlet.http.headers", form);
+        Response response = client.handle(request);
         System.out.println("Received status " + response.getStatus());
     }
 
