@@ -1,7 +1,7 @@
-eg.s3.dropBucket=
-aws.accessId=
-aws.secretKey=
-aws.ec2.key=eg-keypair
+eg.s3.dropBucket=${eg.dropBucket}
+aws.accessId=${aws.accessId}
+aws.secretKey=${aws.secretKey}
+aws.ec2.key=${aws.ec2.key}
 aws.ec2.ami32=
 aws.ec2.ami64=
 aws.ec2.secured=true

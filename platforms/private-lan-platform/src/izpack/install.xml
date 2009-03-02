@@ -48,9 +48,18 @@ Rio installation file.
 	The gui preferences indication.
 	Sets the installer window to 640x480. It will not be able to change the size.
 	-->
-	<guiprefs width="640" height="480" resizable="no"/>
+	<guiprefs width="640" height="480" resizable="no">
+        <modifier key="useHeadingPanel" value="yes"/>
+        <modifier key="useHeadingForSummary" value="yes"/>
+        <modifier key="headingImageOnLeft" value="yes"/>
+        <modifier key="headingLineCount" value="1"/>
+        <modifier key="headingFontSize" value="1.5"/>
+        <modifier key="headingBackgroundColor" value="0x00ffffff"/>
+        <modifier key="headingPanelCounter" value="text"/>
+        <modifier key="headingPanelCounterPos" value="inHeading"/>
+    </guiprefs>
 
-	<!-- The locale section. -->
+    <!-- The locale section. -->
 	<locale>
 		<langpack iso3="eng"/>
 		<langpack iso3="fra"/>
@@ -67,34 +76,46 @@ Rio installation file.
 		<res id="LicencePanel.licence" src="../../LICENSE.txt"/>
 		<res id="installer.langsel.img" src="../../src/izpack/Elastic-Grid-Logo.png"/>
 		<!--<res id="shortcutSpec.xml" src="../../../src/izpack/shortcutSpec.xml"/>-->
-		<!--<res id="userInputSpec.xml" src="../../../src/izpack/userInputSpec.xml"/>-->
-		<!--<res id="userInputLang.xml_eng" src="../../../src/izpack/userInputLang.xml_eng"/>-->
-		<!--<res id="userInputLang.xml_fra" src="../../../src/izpack/userInputLang.xml_fra"/>-->
+		<res id="userInputSpec.xml" src="userInputSpec.xml"/>
+		<res id="userInputLang.xml_eng" src="userInputLang.xml_eng"/>
+		<res id="userInputLang.xml_fra" src="userInputLang.xml_fra"/>
 		<!--<res id="userInputLang.xml_heb" src="../../../src/izpack/userInputLang.xml_heb"/>-->
+        <!--<res id="AWSCredentialsPanel.xml_en" src="AWSCredentialsPanel.xml_en"/>-->
+        <!--<res id="CustomLangpack.xml_en" src="CustomLangpack.xml_en"/>-->
 	</resources>
+
+    <!--<jar src="bin/panels/com.elasticgrid.tools.installer.ElasticGridHelloPanel.jar"/>-->
+    <!--<jar src="bin/panels/com.elasticgrid.tools.installer.AWSCredentialsPanel.jar"/>-->
+    <!--<jar src="../elastic-grid-${pom.version}/lib/elastic-grid/typica-1.5.jar"/>-->
+    <!--<jar src="../elastic-grid-${pom.version}/lib/elastic-grid/jaxb-api-2.1.jar"/>-->
+    <!--<jar src="../elastic-grid-${pom.version}/lib/elastic-grid/jaxb-impl-2.1.6.jar"/>-->
+    <!--<jar src="../elastic-grid-${pom.version}/lib/elastic-grid/commons-httpclient-3.1.jar"/>-->
+    <!--<jar src="../elastic-grid-${pom.version}/lib/elastic-grid/commons-logging-1.1.1.jar"/>-->
 
 	<!-- 
 	The panels section.
 	We indicate here which panels we want to use. The order will be respected.
 	-->
 	<panels>
-		<!--<panel classname="HelloPanel"/>-->
-        <panel classname="com.elasticgrid.tools.installer.ElasticGridHelloPanel"/>
+		<panel classname="HelloPanel"/>
+        <!--<panel classname="com.elasticgrid.tools.installer.ElasticGridHelloPanel"/>-->
 		<panel classname="HTMLInfoPanel"/>
 		<panel classname="LicencePanel"/>
 		<panel classname="TargetPanel"/>
+
+        <!--<panel classname="com.elasticgrid.tools.installer.AWSCredentialsPanel"/>-->
+
 		<!--panel classname="InstallationGroupPanel"/-->
 		<!--<panel classname="PacksPanel"/>-->
-		<!--panel classname="UserInputPanel"/-->
+		<panel classname="UserInputPanel" id="UserInputPanel.0"/>
+		<panel classname="UserInputPanel" id="UserInputPanel.1"/>
+		<panel classname="UserInputPanel" id="UserInputPanel.2"/>
 		<!--<panel classname="SummaryPanel"/>-->
 		<panel classname="InstallPanel"/>
 		<!--<panel classname="ShortcutPanel"/>-->
 		<panel classname="FinishPanel"/>
 		<panel classname="SimpleFinishPanel"/>
 	</panels>
-
-    <jar src="../private-lan-platform-${pom.version}.jar"/>
-    
 
 	<!-- 
 	The packs section.
@@ -121,7 +142,11 @@ Rio installation file.
 				<!--<include name="LICENSE"/>-->
 				<!--<include name="index.html"/> -->
                 <include name="**/*"/>
+                <exclude name="config/eg.properties.template"/>
 			</fileset>
+            <singlefile src="../elastic-grid-${pom.version}/config/eg.properties.template"
+                        target="$INSTALL_PATH/config/eg.properties" overwrite="true"/>
+            <parsable type="javaprop" targetfile="$INSTALL_PATH/config/eg.properties"/>
 			<executable targetfile="$INSTALL_PATH/bin/eg" os="unix"/>
 			<executable targetfile="$INSTALL_PATH/bin/eg-ui" os="unix"/>
 		</pack>
