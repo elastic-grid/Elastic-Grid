@@ -1,5 +1,14 @@
 <langpack>
-	<str id="description.jini.title" txt="Intégration avec Jini"/>
-	<str id="description.jini.header" txt="Sélectionnez le répertoire où est installé Jini :"/>
-	<str id="description.jini.directory" txt="Répertoire d'installation de Jini :"/>
+	<str id="aws.ec2.title" txt="Intégration avec Amazon EC2"/>
+    <str id="aws.ec2.credentials.intro" txt="Elastic Grid a besoin de vos accès AWS pour qu'il puisse démarrer des serveurs EC2 pour vous en fonction de vos pré-requis et pour qu'il puisse déposer sur Amazon S3 vos applications à fin de les déployer."/>
+    <str id="aws.ec2.key.intro" txt="Elastic Grid a besoin d'une KeyPair EC2 valide pour que vous puissiez vous connecter par SSH sur les serveurs."/>
+    <str id="eg.dropBucket.intro" txt="Elastic Grid a besoin de connaître le nom de la bucket S3 où vos applications seront déposées."/>
+	<str id="aws.accessId" txt="ID d'accès"/>
+	<str id="aws.accessId.empty" txt="Votre ID d'accès doit être renseignée !"/>
+	<str id="aws.secretKey" txt="Clé secrète"/>
+	<str id="aws.secretKey.empty" txt="Votre clé secrète doit être renseignée !"/>
+    <str id="aws.ec2.key" txt="EC2 KeyPair"/>
+	<str id="aws.ec2.key.empty" txt="Votre EC2 KeyPair doit être renseignée !"/>
+    <str id="eg.dropBucket" txt="Nom de la Bucket S3"/>
+	<str id="eg.dropBucket.empty" txt="Le nom de la Bucket S3 doit être renseigné !"/>
 </langpack>

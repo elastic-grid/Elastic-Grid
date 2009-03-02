@@ -1,0 +1,5 @@
+<langpack>
+	<str id="AWSCredentialsPanel.welcome" txt="Amazon EC2 Account Setup"/>
+	<str id="AWSCredentialsPanel.accessID" txt="AWS Access ID"/>
+	<str id="AWSCredentialsPanel.secretKey" txt="AWS Secret Key"/>
+</langpack>
