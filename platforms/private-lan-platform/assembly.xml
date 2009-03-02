@@ -21,11 +21,11 @@
                 <include>policy/**/*</include>
             </includes>
             <excludes>
-                <exclude>config/start-all.config</exclude>
-                <exclude>config/start-cybernode.config</exclude>
-                <exclude>config/cybernode.config</exclude>
-                <exclude>config/start-monitor.config</exclude>
-                <exclude>config/monitor.config</exclude>
+                <exclude>config/start-all.groovy</exclude>
+                <exclude>config/start-cybernode.groovy</exclude>
+                <exclude>config/cybernode.groovy</exclude>
+                <exclude>config/start-monitor.groovy</exclude>
+                <exclude>config/monitor.groovy</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>

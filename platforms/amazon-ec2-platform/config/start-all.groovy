@@ -4,7 +4,7 @@
  * Lookup Service
  */
 import org.rioproject.boot.BootUtil
-import org.rioproject.boot.ServiceDescriptorUtil
+import com.elasticgrid.boot.ServiceDescriptorUtil
 import org.rioproject.config.Component
 import com.sun.jini.start.ServiceDescriptor;
 

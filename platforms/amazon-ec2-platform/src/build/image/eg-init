@@ -50,7 +50,6 @@ echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
 if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
   # Elastic Grid
   echo Starting Elastic Grid monitor | logger -t elastic-grid
-  cat $EG_HOME/config/monitor-agent.config > $EG_HOME/config/agent.config
   "$EG_HOME"/bin/eg start monitor 2>&1 > /var/log/eg/eg-monitor.log &
   echo Starting Elastic Grid REST API | logger -t elastic-grid
   "$EG_HOME"/bin/eg start rest-api 2>&1 > /var/log/eg/eg-rest-api.log &
@@ -59,6 +58,5 @@ if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
 else
   # Elastic Grid
   echo Starting Elastic Grid agent | logger -t elastic-grid
-  cat $EG_HOME/config/agent-agent.config > $EG_HOME/config/agent.config
   "$EG_HOME"/bin/eg start agent 2>&1 > /var/log/eg/eg-agent.log &
 fi
