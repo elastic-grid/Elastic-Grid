@@ -104,26 +104,26 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<artifactId>maven-assembly-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<descriptors>-->
-                        <!--<descriptor>assembly.xml</descriptor>-->
-                    <!--</descriptors>-->
-                    <!--<finalName>elastic-grid-${pom.version}</finalName>-->
-                    <!--<appendAssemblyId>false</appendAssemblyId>-->
-                    <!--<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>-->
-                <!--</configuration>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<id>make-assembly</id> --><!-- this is used for inheritance merges -->
-						<!--<phase>package</phase> --><!-- append to the packaging phase. -->
-						<!--<goals>-->
-							<!--<goal>attached</goal> --><!-- goals == mojos -->
-						<!--</goals>-->
-					<!--</execution>-->
-				<!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                    <finalName>elastic-grid-${pom.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+                </configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -153,14 +153,16 @@
                 <executions>
                     <execution>
                         <id>unzip-private-lan-platform</id>
-                        <phase>package</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <tasks>
-                                <unzip dest="${basedir}/target/elastic-grid-${pom.version}"
-                                       src="${user.home}/.m2/repository/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-0.8.3-bin.tar.gz"/>
+                                <gunzip dest="${basedir}/target/elastic-grid-${pom.version}.tar"
+                                        src="${user.home}/.m2/repository/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}-bin.tar.gz"/>
+                                <untar dest="${basedir}/target/private-lan-platform"
+                                       src="${basedir}/target/elastic-grid-${pom.version}.tar"/>
                             </tasks>
                         </configuration>
                     </execution>
