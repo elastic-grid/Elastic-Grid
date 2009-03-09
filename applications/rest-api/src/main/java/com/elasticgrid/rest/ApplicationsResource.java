@@ -109,14 +109,8 @@ public class ApplicationsResource extends WadlResource {
         }
     }
 
-    @Override
-    public void acceptRepresentation(Representation entity) throws ResourceException {
-        super.acceptRepresentation(entity);
-        storeRepresentation(entity);
-    }
-
     /**
-     * Handle PUT requests: provision a new application.
+     * Handle POST requests: provision a new application.
      */
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
@@ -202,14 +196,19 @@ public class ApplicationsResource extends WadlResource {
     }
 
     @Override
-    protected void describePut(MethodInfo info) {
-        super.describePut(info);
+    protected void describePost(MethodInfo info) {
+        super.describePost(info);
         info.setDocumentation("Provision a new application on {clusterName}.");
         info.getRequest().setDocumentation("The application to provision packaged as an OAR.");
         RepresentationInfo formRepresentation = new RepresentationInfo();
         formRepresentation.setDocumentation("HTML form with file uploads.");
         formRepresentation.setMediaType(MediaType.MULTIPART_FORM_DATA);
         info.getRequest().setRepresentations(Arrays.asList(formRepresentation));
+    }
+
+    @Override
+    public boolean allowPut() {
+        return false;
     }
 
     @Override
