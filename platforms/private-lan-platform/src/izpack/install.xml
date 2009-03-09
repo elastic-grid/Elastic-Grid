@@ -124,7 +124,7 @@ Rio installation file.
 	<packs>
 		<pack name="Base" installGroups="All,Rio Core" required="yes">
 			<description>Base Files</description>
-			<fileset dir="../elastic-grid-${pom.version}" targetdir="$INSTALL_PATH" defaultexcludes="yes">
+			<fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
 				<!--<include name="bin/*.cmd" os="windows"/>-->
 				<!--<include name="bin/rio" os="unix"/>-->
 				<!--<include name="bin/rio-ui" os="unix"/>-->
@@ -144,7 +144,7 @@ Rio installation file.
                 <include name="**/*"/>
                 <exclude name="config/eg.properties.template"/>
 			</fileset>
-            <singlefile src="../elastic-grid-${pom.version}/config/eg.properties.template"
+            <singlefile src="../elastic-grid-${pom.version}-bin/config/eg.properties.template"
                         target="$INSTALL_PATH/config/eg.properties" overwrite="true"/>
             <parsable type="javaprop" targetfile="$INSTALL_PATH/config/eg.properties"/>
 			<executable targetfile="$INSTALL_PATH/bin/eg" os="unix"/>
