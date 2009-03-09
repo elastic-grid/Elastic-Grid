@@ -161,9 +161,8 @@
                         <configuration>
                             <tasks>
                                 <mkdir dir="${basedir}/target"/>
-                                <echo>${settings.localRepository}/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}.tar.gz</echo>
                                 <gunzip dest="${basedir}/target/elastic-grid-${pom.version}.tar"
-                                        src="${settings.localRepository}/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}.tar.gz"/>
+                                        src="${settings.localRepository}/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}-bin.tar.gz"/>
                                 <untar dest="${basedir}/target/private-lan-platform"
                                        src="${basedir}/target/elastic-grid-${pom.version}.tar"/>
                             </tasks>
