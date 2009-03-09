@@ -34,7 +34,7 @@
 </ul>
 
 
-<form method="post" action="/eg/rio/applications" enctype="multipart/form-data">
+<form method="post" action="/eg/${cluster.getName()}/applications" enctype="multipart/form-data">
     <label for="oar">OAR to deploy:</label>
     <input id="oar" name="oar" type="file"/>
     <input type="submit" value="Deploy"/>
