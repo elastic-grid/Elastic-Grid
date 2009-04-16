@@ -106,11 +106,14 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     }
 
     @Override
-    protected void doDecrement() {
+    /*
+     * Only return true if the decrement needs to be rescheduled
+     */
+    protected boolean doDecrement() {
         super.doDecrement();
         if (ec2 == null) {
             logger.warning("No EC2Instantiator has been set, hence no decrease of EC2 instances will occur");
-            return;
+            return false;
         }
         String instanceID = (String) context.getServiceBeanConfig().getInitParameters().get(AMAZON_INSTANCE_ID_PARAMETER);
         try {
@@ -119,6 +122,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
         } catch (RemoteException e) {
             logger.log(Level.SEVERE, format("Can't shutdown EC2 instance %s", instanceID), e);
         }
+        return false;
     }
 
     @Override
