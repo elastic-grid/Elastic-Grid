@@ -13,8 +13,8 @@ if "%JINI_HOME%" == "" goto noJiniHome
 goto haveJiniHome
 
 :noJiniHome
-if not exist "%RIO_HOME%\lib\apache-river" goto jiniNotFound
-set JINI_HOME=%RIO_HOME%\lib\apache-river
+if not exist "%EG_HOME%\lib\apache-river" goto jiniNotFound
+set JINI_HOME=%EG_HOME%\lib\apache-river
 goto haveJiniHome
 
 :jiniNotFound
@@ -31,7 +31,7 @@ goto endOfJavaHome
 
 :noJavaHome
 set JAVACMD=java.exe
-:endOfJavaHome  
+:endOfJavaHome
 
 if "%JAVA_MEM_OPTIONS%" == "" set JAVA_MEM_OPTIONS=-Xms256m -Xmx256m
 
@@ -40,15 +40,15 @@ if "%1"=="" goto interactive
 if "%1"=="start" goto start
 
 :interactive
-rem set cliExt=%RIO_HOME%\config\rio_cli.config
+rem set cliExt=%EG_HOME%\config\rio_cli.config
 rem set cliExt=""
 set command_line=%*
-set launchTarget=org.rioproject.tools.cli.CLI
-set classpath=-cp %RIO_HOME%\lib\rio-cli.jar;%JINI_LIB%\jsk-lib.jar;%JINI_LIB%\jsk-platform.jar;%RIO_HOME%\lib\spring\spring.jar;%RIO_HOME%\lib\jakarta-commons\commons-logging.jar;%RIO_HOME%\lib\groovy\groovy-all-1.6.0.jar
+set launchTarget=com.elasticgrid.tools.cli.CLI
+set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar"
 set props="-DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME%"
 "%JAVACMD%" %classpath% -Xms256m -Xmx256m ^
-    -Djava.util.logging.config.file=%RIO_HOME%/config/rio-cli.logging.properties ^
-    -DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME% -Djava.security.policy=%RIO_HOME%\policy\policy.all ^
+    -Djava.util.logging.config.file="%EG_HOME%\config\eg-cli.logging.properties" ^
+    -DRIO_HOME="%EG_HOME%" -DJINI_HOME="%JINI_HOME%" -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
     %launchTarget% %cliExt% %command_line%
 goto end
 
@@ -57,28 +57,28 @@ goto end
 rem Get the service starter
 shift
 if "%1"=="" goto noService
-set starterConfig=%RIO_HOME%\config\start-%1.groovy
+set starterConfig="%EG_HOME%\config\start-%1.groovy"
 if not exist "%starterConfig%" goto noStarter
 shift
 
 echo "starter config [%starterConfig%]"
-set RIO_LOG_DIR="%RIO_HOME%"\logs\
-set RIO_NATIVE_DIR="%RIO_HOME%"\lib\native;"%RIO_HOME%"\lib\hyperic
-set PATH=%PATH%;"%RIO_NATIVE_DIR%
+set RIO_LOG_DIR="%EG_HOME%\logs"
+set RIO_NATIVE_DIR="%EG_HOME%\lib\native";"%EG_HOME%\lib\hyperic"
+set PATH=%PATH%;%RIO_NATIVE_DIR%
 
-set classpath=-cp %RIO_HOME%\lib\boot.jar;%JINI_HOME%\lib\start.jar;%JAVA_HOME%\lib\tools.jar;%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar
-set agentpath=-javaagent:%RIO_HOME%\lib\boot.jar
+set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar"
+set agentpath=-javaagent:"%EG_HOME%\lib\boot.jar"
 
 set launchTarget=com.sun.jini.start.ServiceStarter
 
 "%JAVA_HOME%\bin\java" -server %JAVA_MEM_OPTIONS% %classpath% %agentpath% ^
-    -Djava.security.policy=%RIO_HOME%\policy\policy.all ^
+    -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
     -Djava.protocol.handler.pkgs=net.jini.url ^
     -Djava.library.path=%RIO_NATIVE_DIR% ^
-    -DJINI_HOME=%JINI_HOME% ^
-    -DRIO_HOME=%EG_HOME% ^
-    -DEG_HOME=%EG_HOME% ^
-    -Dorg.rioproject.home=%RIO_HOME% ^
+    -DJINI_HOME="%JINI_HOME%" ^
+    -DRIO_HOME="%EG_HOME%" ^
+    -DEG_HOME="%EG_HOME%" ^
+    -Dorg.rioproject.home="%EG_HOME%" ^
     -DRIO_NATIVE_DIR=%RIO_NATIVE_DIR% ^
     -DRIO_LOG_DIR=%RIO_LOG_DIR% ^
     %launchTarget% ^
@@ -86,7 +86,7 @@ set launchTarget=com.sun.jini.start.ServiceStarter
 goto end
 
 :noStarter
-echo Cannot locate expected service starter file [start-%1.config] in [%RIO_HOME%\config], exiting"
+echo Cannot locate expected service starter file [start-%1.config] in [%EG_HOME%\config], exiting"
 goto exitWithError
 
 :noService

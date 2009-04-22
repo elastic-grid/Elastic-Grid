@@ -53,6 +53,8 @@ public class AWSCredentialsPanel extends AbstractInstallerPanel {
         tfAwsAccessId.requestFocus();
         tfAwsSecretKey = textField("AWS Secret Key");
 
+        space().space().text("You can find your AWS credentials on the Amazon Web Site Access Identifiers page.");
+
         getLayoutHelper().completeLayout();
     }
 

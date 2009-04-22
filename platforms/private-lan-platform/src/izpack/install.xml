@@ -75,7 +75,7 @@ Rio installation file.
 		<res id="HTMLInfoPanel.info" src="README.html"/>
 		<res id="LicencePanel.licence" src="../../LICENSE.txt"/>
 		<res id="installer.langsel.img" src="../../src/izpack/Elastic-Grid-Logo.png"/>
-		<!--<res id="shortcutSpec.xml" src="../../../src/izpack/shortcutSpec.xml"/>-->
+		<res id="shortcutSpec.xml" src="../../src/izpack/ShortcutSpec.xml"/>
         <!--<res id="AWSCredentialsPanel.xml_en" src="../../src/izpack/AWSCredentialsPanel.xml_en"/>-->
         <!--<res id="CustomLangpack.xml_en" src="../../src/izpack/CustomLangpack.xml_en"/>-->
 	</resources>
@@ -108,7 +108,7 @@ Rio installation file.
 		<panel classname="PacksPanel"/>
 		<!--<panel classname="SummaryPanel"/>-->
 		<panel classname="InstallPanel"/>
-		<!--<panel classname="ShortcutPanel"/>-->
+		<panel classname="ShortcutPanel"/>
 		<panel classname="FinishPanel"/>
 		<!--<panel classname="SimpleFinishPanel"/>-->
 	</panels>
