@@ -95,6 +95,12 @@
             <version>2.1.6</version>
         </dependency>
 
+        <!-- Amazon S3 integration -->
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
@@ -207,21 +213,21 @@
                             </tasks>
                         </configuration>
                     </execution>
-                    <!--<execution>-->
-                        <!--<id>create-izpack-panels</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<copy file="${project.build.directory}/private-lan-platform-0.8.3.jar"-->
-                                      <!--tofile="${staging.dir}/bin/panels/com.elasticgrid.tools.installer.AWSCredentialsPanel.jar"/>-->
+                    <execution>
+                        <id>create-izpack-panels</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/private-lan-platform-0.8.3.jar"
+                                      tofile="${staging.dir}/bin/panels/com.elasticgrid.tools.installer.AWSCredentialsPanel.jar"/>
                                 <!--<copy file="${project.build.directory}/private-lan-platform-0.8.3.jar"-->
                                       <!--tofile="${staging.dir}/bin/panels/com.elasticgrid.tools.installer.ElasticGridHelloPanel.jar"/>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
+                            </tasks>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
