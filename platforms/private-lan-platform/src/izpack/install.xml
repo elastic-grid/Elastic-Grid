@@ -123,6 +123,7 @@ Rio installation file.
 			<description>Elastic Grid Base Files.</description>
 			<fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
                 <include name="**/*"/>
+                <exclude name="lib/hyperic/*"/>
                 <exclude name="config/eg.properties.template"/>
 			</fileset>
             <singlefile src="../elastic-grid-${pom.version}-bin/config/eg.properties.template"
@@ -131,6 +132,12 @@ Rio installation file.
 			<executable targetfile="$INSTALL_PATH/bin/eg" os="unix"/>
 			<executable targetfile="$INSTALL_PATH/bin/eg-ui" os="unix"/>
 		</pack>
+        <pack name="Improved System Metrics" installGroups="All" required="no">
+            <description>Improved System Metrics through the help of Hyperic Sigar Library.</description>
+            <fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
+                <include name="lib/hyperic/*"/>
+			</fileset>
+        </pack>
         <pack name="Amazon EC2 API Tools" installGroups="All" required="no">
             <description>Official Amazon EC2 API Tools (version 1.3-34128) pre-configured.</description>
             <fileset dir="../staging/ec2-api-tools-1.3-34128" targetdir="$INSTALL_PATH/ec2-api-tools">
