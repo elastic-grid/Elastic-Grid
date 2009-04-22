@@ -104,13 +104,13 @@ Rio installation file.
         <panel classname="com.elasticgrid.tools.installer.AWSKeyPairPanel"/>
         <panel classname="com.elasticgrid.tools.installer.AWSDropBucketPanel"/>
 
-		<!--panel classname="InstallationGroupPanel"/-->
-		<!--<panel classname="PacksPanel"/>-->
+		<!--<panel classname="InstallationGroupPanel"/>-->
+		<panel classname="PacksPanel"/>
 		<!--<panel classname="SummaryPanel"/>-->
 		<panel classname="InstallPanel"/>
 		<!--<panel classname="ShortcutPanel"/>-->
 		<panel classname="FinishPanel"/>
-		<panel classname="SimpleFinishPanel"/>
+		<!--<panel classname="SimpleFinishPanel"/>-->
 	</panels>
 
 	<!-- 
@@ -118,8 +118,8 @@ Rio installation file.
 	We specify here our packs.
 	-->
 	<packs>
-		<pack name="Base" installGroups="All,Rio Core" required="yes">
-			<description>Base Files</description>
+		<pack name="Elastic Grid Base Files" installGroups="All" required="yes">
+			<description>Elastic Grid Base Files.</description>
 			<fileset dir="../elastic-grid-${pom.version}-bin" targetdir="$INSTALL_PATH" defaultexcludes="yes">
                 <include name="**/*"/>
                 <exclude name="config/eg.properties.template"/>
@@ -130,6 +130,12 @@ Rio installation file.
 			<executable targetfile="$INSTALL_PATH/bin/eg" os="unix"/>
 			<executable targetfile="$INSTALL_PATH/bin/eg-ui" os="unix"/>
 		</pack>
+        <pack name="Amazon EC2 API Tools" installGroups="All" required="no">
+            <description>Official Amazon EC2 API Tools (version 1.3-34128) pre-configured.</description>
+            <fileset dir="../staging/ec2-api-tools-1.3-34128" targetdir="$INSTALL_PATH/ec2-api-tools">
+                <include name="**/*"/>
+            </fileset>
+        </pack>
 		<!--<pack name="Docs" installGroups="All,Rio Core" required="no">-->
 			<!--<description>Rio documentation</description>-->
 			<!--<fileset dir="docs" targetdir="$INSTALL_PATH/docs" defaultexcludes="yes"/>-->
