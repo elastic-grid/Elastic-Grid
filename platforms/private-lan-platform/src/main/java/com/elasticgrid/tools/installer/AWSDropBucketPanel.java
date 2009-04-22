@@ -33,7 +33,7 @@ import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
 
 /**
- * Custom IzPanel panel asking for EC2 credentials.
+ * Custom IzPanel panel asking for S3 drop bucket.
  * @author Jerome Bernard
  */
 public class AWSDropBucketPanel extends AbstractInstallerPanel {
@@ -54,7 +54,7 @@ public class AWSDropBucketPanel extends AbstractInstallerPanel {
 
         // setup AWS buckets field
         cbBuckets = combo("Drop Buckets", buckets, true);
-        cbBuckets.requestFocus();
+        cbBuckets.requestFocusInWindow();
 
         getLayoutHelper().completeLayout();
     }

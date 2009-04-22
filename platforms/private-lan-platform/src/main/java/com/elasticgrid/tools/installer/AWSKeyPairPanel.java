@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Custom IzPanel panel asking for EC2 credentials.
+ * Custom IzPanel panel asking for EC2 keypair.
  * @author Jerome Bernard
  */
 public class AWSKeyPairPanel extends AbstractInstallerPanel {
@@ -49,7 +49,7 @@ public class AWSKeyPairPanel extends AbstractInstallerPanel {
 
         // setup AWS keypairs field
         cbKeyPairs = combo("EC2 KeyPair", keypairs, true);
-        cbKeyPairs.requestFocus();
+        cbKeyPairs.requestFocusInWindow();
 
         getLayoutHelper().completeLayout();
     }

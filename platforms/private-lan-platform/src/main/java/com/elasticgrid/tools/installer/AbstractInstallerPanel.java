@@ -101,6 +101,21 @@ public abstract class AbstractInstallerPanel extends IzPanel {
         return comboBox;
     }
 
+    protected JList list(String message, List<String> options) {
+        JLabel label = new JLabel(message);
+        TwoColumnConstraints constraints = new TwoColumnConstraints();
+        constraints.position = TwoColumnConstraints.WEST;
+        add(label, constraints);
+
+        JList list = new JList();
+        list.setModel(new DefaultComboBoxModel(options.toArray(new Object[options.size()])));
+        constraints.stretch = true;
+        constraints.position = TwoColumnConstraints.EAST;
+        add(list, constraints);
+
+        return list;
+    }
+
     protected AbstractInstallerPanel space() {
         TwoColumnConstraints constraints = new TwoColumnConstraints();
         constraints.position = TwoColumnConstraints.BOTH;

@@ -50,7 +50,7 @@ public class AWSCredentialsPanel extends AbstractInstallerPanel {
 
         // setup AWS access ID field
         tfAwsAccessId = textField("AWS Access ID");
-        tfAwsAccessId.requestFocus();
+        tfAwsAccessId.requestFocusInWindow();
         tfAwsSecretKey = textField("AWS Secret Key");
 
         space().space().text("You can find your AWS credentials on the Amazon Web Site Access Identifiers page.");

@@ -102,6 +102,7 @@ Rio installation file.
 
         <panel classname="com.elasticgrid.tools.installer.AWSCredentialsPanel"/>
         <panel classname="com.elasticgrid.tools.installer.AWSKeyPairPanel"/>
+        <panel classname="com.elasticgrid.tools.installer.AWSSecurityGroupsPanel"/>
         <panel classname="com.elasticgrid.tools.installer.AWSDropBucketPanel"/>
 
 		<!--<panel classname="InstallationGroupPanel"/>-->
