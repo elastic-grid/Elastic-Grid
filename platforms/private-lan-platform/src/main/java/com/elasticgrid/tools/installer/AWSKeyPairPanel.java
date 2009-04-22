@@ -80,7 +80,7 @@ public class AWSKeyPairPanel extends AbstractInstallerPanel {
             String keypair = o.toString();
             Jec2 ec2 = (Jec2) idata.getAttribute("ec2");
             try {
-                List<KeyPairInfo> keypairInfo = ec2.describeKeyPairs(new String[]{keypair});
+                ec2.describeKeyPairs(new String[]{keypair});
                 idata.setVariable(Constants.AWS_KEYPAIR, keypair);
                 return true;
             } catch (EC2Exception e) {

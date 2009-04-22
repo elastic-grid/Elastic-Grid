@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<shortcuts>
+	<skipIfNotSupported/>
+	<programGroup defaultName="Elastic Grid" location="applications"/>
+
+	<shortcut
+		name="Start Elastic Grid Monitor"
+		target="$INSTALL_PATH\bin\eg.cmd"
+        commandLine="start monitor"
+		workingDirectory="$INSTALL_PATH\bin"
+		description="This starts Elastic Grid Monitor"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"/>
+
+	<shortcut
+		name="Start Elastic Grid Agent"
+		target="$INSTALL_PATH\bin\eg.cmd"
+        commandLine="start agent"
+		workingDirectory="$INSTALL_PATH\bin"
+		description="This starts Elastic Grid Agent"
+		initialState="noShow"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"/>
+
+	<shortcut
+		name="Start Elastic Grid Administration Console"
+		target="$INSTALL_PATH\bin\eg-ui.cmd"
+        workingDirectory="$INSTALL_PATH\bin"
+		description="This starts the Elastic Grid administration console"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no">
+	</shortcut>
+
+	<shortcut
+		name="Uninstall Elastic Grid"
+		target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+		commandline=""
+		description="Uninstalls Elastic Grid"
+		programGroup="yes"
+		desktop="no"
+		applications="no"
+		startMenu="no"
+		startup="no"
+		iconFile="%SystemRoot%\system32\SHELL32.dll"
+		iconIndex="31"/>
+
+</shortcuts>
