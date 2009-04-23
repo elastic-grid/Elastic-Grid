@@ -26,7 +26,7 @@ class AgentConfig {
     String provisionRoot = '/mnt'
 
     String[] getInitialLookupGroups() {
-        def groups = ['rio']
+        def groups = ['elastic-grid']
         return groups as String[]
     }
 
