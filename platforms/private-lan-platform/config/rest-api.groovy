@@ -32,7 +32,7 @@ class RestServiceConfig {
                                          level,
                                          new LogHandlerConfig(new ConsoleHandler())))
         }
-        return (LoggerConfig[])loggers
+        return loggers as LoggerConfig[]
     }
 
 }

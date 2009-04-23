@@ -8,7 +8,7 @@ import org.rioproject.config.Component
 import com.sun.jini.start.ServiceDescriptor
 
 @Component('com.sun.jini.start')
-class StartAllConfig {
+class StartMonitorConfig {
     ServiceDescriptor[] getServiceDescriptors() {
         String jiniHome = System.getProperty('JINI_HOME')
         String egHome = System.getProperty('EG_HOME')

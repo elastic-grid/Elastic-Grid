@@ -18,19 +18,19 @@
 
 package com.elasticgrid.cluster;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ClusterNotFoundException;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.stereotype.Service;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.List;
-import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Cloud Federation Cluster Manager.
@@ -42,6 +42,8 @@ import java.util.LinkedList;
 @Service("clusterManager")
 public class CloudFederationClusterManager<C extends Cluster> extends AbstractClusterManager<C> implements ClusterManager<C> {
     private List<CloudPlatformManager<C>> clouds;
+
+    private static final Logger logger = Logger.getLogger(CloudFederationClusterManager.class.getName());
 
     public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         clouds.get(0).startCluster(clusterName, numberOfMonitors, numberOfAgents);
@@ -61,8 +63,11 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
     public C cluster(String name) throws ClusterException, RemoteException {
         C cluster = null;
         int i = 0;
-        while ((cluster == null || cluster.getNodes().size() == 0) && clouds.size() < i) {
-            cluster = clouds.get(i++).cluster(name);
+        logger.log(Level.INFO, "Searching through {0} cloud platforms", clouds.size());
+        while ((cluster == null || cluster.getNodes().size() == 0) && i < clouds.size()) {
+            CloudPlatformManager<C> cloud = clouds.get(i++);
+            logger.log(Level.INFO, "Searching for cluster {0} in cloud {1}", new Object[] { name, cloud.getName() });
+            cluster = cloud.cluster(name);
         }
         return cluster;
     }

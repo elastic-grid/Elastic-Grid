@@ -28,6 +28,8 @@ import java.util.concurrent.TimeoutException;
 
 public interface CloudPlatformManager<C extends Cluster> {
 
+    String getName();
+
     /**
      * Start a cluster with a specified name and a specified number of instances.
      * @param clusterName the name of the cluster to start

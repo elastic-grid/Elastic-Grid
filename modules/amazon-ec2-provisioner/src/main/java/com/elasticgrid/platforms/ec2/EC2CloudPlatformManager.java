@@ -19,7 +19,6 @@
 package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.NodeInstantiator;
-import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
@@ -62,6 +61,10 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     private String ami32, ami64;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
     private static final Logger logger = Logger.getLogger(EC2CloudPlatformManager.class.getName());
+
+    public String getName() {
+        return "Amazon EC2";
+    }
 
     public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} monitor(s) and {2} agent(s)...",

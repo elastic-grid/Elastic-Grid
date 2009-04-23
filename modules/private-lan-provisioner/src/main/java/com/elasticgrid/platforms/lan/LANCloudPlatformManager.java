@@ -21,7 +21,6 @@ package com.elasticgrid.platforms.lan;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Application;
-import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.lan.impl.LANClusterImpl;
@@ -34,12 +33,17 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 @Service("lanCloudPlatformManager")
 public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
     private LANClusterLocator clusterLocator;
     
     private static final Logger logger = Logger.getLogger(LANCloudPlatformManager.class.getName());
+
+    public String getName() {
+        return "Private LAN";
+    }
 
     public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
