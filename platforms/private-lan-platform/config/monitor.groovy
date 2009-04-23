@@ -28,7 +28,7 @@ class MonitorConfig {
     long deployMonitorPeriod = 30000
 
     String[] getInitialLookupGroups() {
-        def groups = ['rio']
+        def groups = ['elastic-grid']
         return groups as String[]
     }
 
