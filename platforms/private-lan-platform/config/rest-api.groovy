@@ -19,7 +19,7 @@ class RestServiceConfig {
     String jmxName = 'com.elasticgrid.rest:type=API'
 
     String[] getInitialLookupGroups() {
-        def groups = ['rio']
+        def groups = ['elastic-grid']
         return groups as String[]
     }
 
