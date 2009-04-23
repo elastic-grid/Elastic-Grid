@@ -37,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Collections;
 import java.rmi.RemoteException;
 
 /**
@@ -97,7 +98,7 @@ public class RestJSB extends ServiceBeanAdapter {
             AssociationDescriptor provisionMonitorAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
             provisionMonitorAssociation.setMatchOnName(false);
             provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
-            provisionMonitorAssociation.setGroups("rio");
+            provisionMonitorAssociation.setGroups("elastic-grid");
 
             // register the association listener
             AssociationMgmt assocMgt = new AssociationMgmt();
@@ -154,18 +155,19 @@ public class RestJSB extends ServiceBeanAdapter {
     }
 
     public static List<OperationalStringManager> getOperationalStringManagers() throws RemoteException {
+        if (provisionMonitor == null)
+            return Collections.emptyList();
         DeployAdmin dAdmin = (DeployAdmin) provisionMonitor.getAdmin();
         OperationalStringManager[] operationalStringMgrs = dAdmin.getOperationalStringManagers();
         for (int i = 0; i < operationalStringMgrs.length; i++) {
             OperationalStringManager operationalStringMgr = operationalStringMgrs[i];
             logger.info("found opstring mgr " + operationalStringMgr);
         }
-        logger.info("found " + operationalStringMgrs.length + " opstrings");
+        logger.log(Level.INFO, "Found {0} opstrings", operationalStringMgrs.length);
         return Arrays.asList(operationalStringMgrs);
     }
 
     public static void setProvisionMonitor(ProvisionMonitor provisionMonitor) {
-        logger.info("Setting provision monitor");
         RestJSB.provisionMonitor = provisionMonitor;
     }
 }
