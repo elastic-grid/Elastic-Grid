@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This script provides the command and control utility for starting
-# Rio services and the Rio command line interface.
+# Elastic Grid services and the Elastic Grid command line interface.
 
 # This script also sets the
 # environment to download native libraries from the $EG_HOME/lib/native directory.
@@ -41,14 +41,14 @@ fi
 # Convert to absolute path
 EG_HOME=$(cd "$EG_HOME" && pwd)
 RIO_HOME=$EG_HOME
-RIO_LIB=$RIO_HOME/lib
+RIO_LIB=$EG_HOME/lib
 
 # Check JINI_HOME
 if [ -z "$JINI_HOME" ] ; then
-    if [ -e "$RIO_HOME/lib/apache-river" ] ; then
-        JINI_HOME=$RIO_HOME/lib/apache-river
+    if [ -e "$EG_HOME/lib/apache-river" ] ; then
+        JINI_HOME=$EG_HOME/lib/apache-river
     else
-        echo "Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Rio with dependencies, exiting"
+        echo "Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Elastic Grid with dependencies, exiting"
 	    exit 1
     fi
 fi
@@ -64,10 +64,10 @@ fi
 # Function to find a file
 getStarterConfig() {
     service="$1"
-    if [ -f "$RIO_HOME/config/start-$service.groovy" ] ; then
-	   starterConfig="$RIO_HOME/config/start-$service.groovy"
+    if [ -f "$EG_HOME/config/start-$service.groovy" ] ; then
+	   starterConfig="$EG_HOME/config/start-$service.groovy"
     else
-	    echo "Cannot locate expected service starter file [start-$service.groovy] in [$RIO_HOME/config], exiting"
+	    echo "Cannot locate expected service starter file [start-$service.groovy] in [$EG_HOME/config], exiting"
 	    exit 1
     fi
 }
@@ -112,7 +112,7 @@ if [ -z "$JAVA_MEM_OPTIONS" ] ; then
     JAVA_MEM_OPTIONS="-Xms256m -Xmx256m"
 fi
 
-# If the command is to start the Rio services, invoke the ServiceStarter
+# If the command is to start the Elastic Grid services, invoke the ServiceStarter
 # Otherwise invoke the CLI
 if [ "$start" = "1" ]; then
     RIO_NATIVE_DIR="$(toNative $RIO_LIB/native)"
@@ -145,20 +145,20 @@ if [ "$start" = "1" ]; then
     fi
     ARGS="$starter_arg $command_line"
     ""$JAVACMD"" -server $JAVA_MEM_OPTIONS $classpath $agentpath $EG_OPTS $libpath  \
-        -Djava.security.policy=$RIO_HOME/policy/policy.all \
+        -Djava.security.policy=$EG_HOME/policy/policy.all \
         -Djava.protocol.handler.pkgs=net.jini.url \
-        -DRIO_HOME=$RIO_HOME \
+        -DRIO_HOME=$EG_HOME \
         -DEG_HOME=$EG_HOME \
-        -Dorg.rioproject.home=$RIO_HOME \
+        -Dorg.rioproject.home=$EG_HOME \
         -DRIO_NATIVE_DIR=$RIO_NATIVE_DIR \
         -DJINI_HOME=$JINI_HOME \
-        -DRIO_LOG_DIR=$RIO_HOME/logs/ \
+        -DRIO_LOG_DIR=$EG_HOME/logs/ \
         -Drio.script.path="$scriptPath" \
         -Drio.script.args="$ARGS" \
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
-    PROPS="-DRIO_HOME=$RIO_HOME -DJINI_HOME=$JINI_HOME"
+    PROPS="-DRIO_HOME=$EG_HOME -DJINI_HOME=$JINI_HOME"
     #cliExt="$RIO_HOME/config/eg-cli.config"
     cliExt=""
     launchTarget=com.elasticgrid.tools.cli.CLI
@@ -168,7 +168,7 @@ else
     done
     classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6.0.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $EG_OPTS \
-        -Djava.security.policy=$RIO_HOME/policy/policy.all \
+        -Djava.security.policy=$EG_HOME/policy/policy.all \
         -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
         $PROPS \
         $NETWORK \

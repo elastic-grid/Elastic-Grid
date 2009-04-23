@@ -1,7 +1,7 @@
 @echo off
 
 rem This script provides the command and control utility for starting
-rem Rio services and the Rio command line interface
+rem Elastic Grid services and the Elastic Grid command line interface
 
 rem Use local variables
 setlocal
@@ -18,7 +18,7 @@ set JINI_HOME=%EG_HOME%\lib\apache-river
 goto haveJiniHome
 
 :jiniNotFound
-echo Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Rio with dependencies, exiting
+echo Cannot locate expected Jini (River) distribution, either set JINI_HOME or download Elastic Grid with dependencies, exiting
 goto exitWithError
 
 :haveJiniHome
