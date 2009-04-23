@@ -19,20 +19,19 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.model.Cluster;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.model.S3Object;
 import org.restlet.Context;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.data.Form;
 import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
@@ -58,6 +57,9 @@ import java.util.logging.Logger;
 public class ApplicationsResource extends WadlResource {
     private String clusterName;
     private String dropBucket;
+
+    @Autowired
+    private Configuration config;
 
     @Autowired
     private S3Service s3;
@@ -93,13 +95,13 @@ public class ApplicationsResource extends WadlResource {
             logger.log(Level.INFO, "Requested variant {0}", variant.getMediaType());
             if (MediaType.TEXT_HTML.equals(variant.getMediaType())
                     || MediaType.APPLICATION_XML.equals(variant.getMediaType())) {
-                Configuration config = new Configuration();
-                config.setClassForTemplateLoading(getClass(), "");
-                config.setObjectWrapper(new DefaultObjectWrapper());
-                Template template = config.getTemplate("applications.ftl");
+                Cluster cluster = clusterManager.cluster(clusterName);
+                if (cluster == null)
+                    throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find cluster " + clusterName);
+                logger.log(Level.INFO, "Found cluster {0}", cluster);
                 Map<String, Object> model = new HashMap<String, Object>();
-                model.put("cluster", clusterManager.cluster(clusterName));
-                return new TemplateRepresentation(template, model, MediaType.TEXT_HTML);
+                model.put("cluster", cluster);
+                return new TemplateRepresentation("applications.ftl", config, model, MediaType.TEXT_HTML);
             } else {
                 return new StringRepresentation("so???");
             }
@@ -123,9 +125,9 @@ public class ApplicationsResource extends WadlResource {
                 RestletFileUpload upload = new RestletFileUpload(factory);
                 List<FileItem> files = upload.parseRequest(getRequest());
 
-                logger.info("Found " + files.size() + " items");
+                logger.log(Level.INFO, "Found {0} items", files.size());
                 for (FileItem fi : files) {
-                    if (fi.getFieldName().equals("oar")) {
+                    if ("oar".equals(fi.getFieldName())) {
                         // download it as a temp file
                         File file = File.createTempFile("elastic-grid", "oar");
                         fi.write(file);

@@ -21,20 +21,20 @@
 <html>
 
 <head>
-    <title>Applications on ${cluster.getName()}</title>
+    <title>Applications on ${cluster.name}</title>
 </head>
 
 <body>
 
-<h1>Applications on ${cluster.getName()}</h1>
+<h1>Applications on ${cluster.name}</h1>
 <ul>
-    <#list cluster.getApplications() as application>
-        <li>${application.getName()}</li>
+    <#list cluster.applications as application>
+        <li>${application.name}</li>
     </#list>
 </ul>
 
 
-<form method="post" action="/eg/${cluster.getName()}/applications" enctype="multipart/form-data">
+<form method="post" action="/eg/${cluster.name}/applications" enctype="multipart/form-data">
     <label for="oar">OAR to deploy:</label>
     <input id="oar" name="oar" type="file"/>
     <input type="submit" value="Deploy"/>

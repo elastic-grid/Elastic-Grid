@@ -100,4 +100,17 @@
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>
 
+    <!--
+    <bean id="freemarkerConfig" class="freemarker.template.Configuration">
+        <property name="outputEncoding" value="utf-8"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="objectWrapper"><bean class="freemarker.ext.beans.BeansWrapper"/></property>
+        <property name="templateLoader"><bean class="freemarker.cache.ClassTemplateLoader"/></property>
+    </bean>
+    -->
+
+    <bean id="freemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPath" value="/com/elasticgrid/rest"/>
+    </bean>
+
 </beans>
