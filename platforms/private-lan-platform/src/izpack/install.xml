@@ -88,7 +88,7 @@ Rio installation file.
     <jar src="../elastic-grid-${pom.version}-bin/lib/elastic-grid/commons-httpclient-3.1.jar"/>
     <jar src="../elastic-grid-${pom.version}-bin/lib/elastic-grid/commons-logging-1.1.1.jar"/>
     <jar src="../elastic-grid-${pom.version}-bin/lib/elastic-grid/commons-codec-1.3.jar"/>
-    <jar src="../elastic-grid-${pom.version}-bin/lib/elastic-grid/jets3t-0.6.1.jar"/>
+    <jar src="../elastic-grid-${pom.version}-bin/lib/elastic-grid/jets3t-0.7.0.jar"/>
 
 	<!-- 
 	The panels section.
