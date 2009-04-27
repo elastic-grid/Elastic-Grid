@@ -19,9 +19,9 @@
 package com.elasticgrid.model.internal;
 
 import com.elasticgrid.model.Cluster;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Clusters {
@@ -30,7 +30,7 @@ public class Clusters {
     public Clusters() {
     }
 
-    public Clusters(List<Cluster> clusters) {
+    public Clusters(Collection<Cluster> clusters) {
         this.clusters = new HashSet<Cluster>(clusters);
     }
 

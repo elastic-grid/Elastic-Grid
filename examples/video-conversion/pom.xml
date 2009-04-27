@@ -22,8 +22,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.mathieucarbou.mojo</groupId>
+                <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
                 <configuration>
                     <header>${basedir}/../../etc/header.txt</header>
                     <quiet>false</quiet>

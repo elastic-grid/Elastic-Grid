@@ -34,8 +34,8 @@
     <bean id="clusterManager" class="com.elasticgrid.cluster.CloudFederationClusterManager">
         <property name="clouds">
             <list>
-                <ref bean="ec2CloudPlatformManager"/>
                 <ref bean="lanCloudPlatformManager"/>
+                <ref bean="ec2CloudPlatformManager"/>
             </list>
         </property>
     </bean>

@@ -158,8 +158,6 @@ if [ "$start" = "1" ]; then
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
-    PROPS="-DRIO_HOME=$EG_HOME -DJINI_HOME=$JINI_HOME"
-    #cliExt="$RIO_HOME/config/eg-cli.config"
     cliExt=""
     launchTarget=com.elasticgrid.tools.cli.CLI
     for j in $(find $EG_HOME/lib/elastic-grid -name "*.jar")
@@ -169,9 +167,11 @@ else
     classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6.0.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $EG_OPTS \
         -Djava.security.policy=$EG_HOME/policy/policy.all \
+        -Djava.protocol.handler.pkgs=net.jini.url \
+        -DRIO_HOME=$RIO_HOME \
+        -DEG_HOME=$EG_HOME \
+        -Dorg.rioproject.home=$RIO_HOME \
+        -DJINI_HOME=$JINI_HOME \
         -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
-        $PROPS \
-        $NETWORK \
-        $DEBUG \
-        $launchTarget $cliExt $command_line
+        $NETWORK $DEBUG $launchTarget $cliExt $command_line
 fi

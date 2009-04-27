@@ -21,10 +21,12 @@ package com.elasticgrid.cluster;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -53,7 +55,7 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
         clouds.get(0).stopCluster(clusterName);
     }
 
-    public List<C> findClusters() throws ClusterException, RemoteException {
+    public Collection<C> findClusters() throws ClusterException, RemoteException {
         List<C> clusters = new LinkedList<C>();
         for (CloudPlatformManager<C> cloud : clouds)
             clusters.addAll(cloud.findClusters());
@@ -69,7 +71,7 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
             logger.log(Level.INFO, "Searching for cluster {0} in cloud {1}", new Object[] { name, cloud.getName() });
             cluster = cloud.cluster(name);
         }
-        return cluster;
+        return null;
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {

@@ -128,7 +128,7 @@
             <dependency>
                 <groupId>net.java.dev.jets3t</groupId>
                 <artifactId>jets3t</artifactId>
-                <version>0.6.1</version>
+                <version>0.7.0</version>
             </dependency>
             <!-- Rio dependencies -->
             <dependency>
@@ -327,6 +327,11 @@
             <id>rio</id>
             <url>http://www.rio-project.org/maven2</url>
         </repository>
+		<repository>
+			<name>jets3t</name>
+			<id>jets3t</id>
+			<url>http://jets3t.s3.amazonaws.com/maven2</url>
+		</repository>
     </repositories>
 
     <pluginRepositories>

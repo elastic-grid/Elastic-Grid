@@ -16,28 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.model;
+package com.elasticgrid.platforms.lan.discovery
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import net.jini.core.lookup.ServiceItem
+import net.jini.lookup.ServiceItemFilter
+import org.rioproject.cybernode.CybernodeAdmin
+import org.rioproject.core.ServiceElement
+import org.rioproject.core.ServiceBeanConfig
 
-/**
- * @author Jerome Bernard
- */
-public interface Cluster<N extends Node> extends Serializable {
-    String getName();
-    Cluster<N> name(String name);
-    boolean isRunning();
-    Set<N> getNodes();
-    Set<N> getMonitorNodes();
-    Set<N> getAgentNodes();
-    Cluster<N> addNodes(Collection<N> nodes);
-    List<Application> getApplications();
-    Application application(String name);
+public class AgentGroupFilter implements ServiceItemFilter {
+  def String clusterName
 
-    enum Status {
-        RUNNING, STOPPED
-    }
+  def AgentGroupFilter(clusterName) {
+    this.clusterName = clusterName;
+  }
+
+
+  boolean check(ServiceItem item) {
+    def CybernodeAdmin cybernode = item.service.admin
+    def ServiceElement serviceElement = cybernode.serviceElement
+    def ServiceBeanConfig config = serviceElement.serviceBeanConfig
+    return config.groups.find { it == clusterName } != null
+  }
 }

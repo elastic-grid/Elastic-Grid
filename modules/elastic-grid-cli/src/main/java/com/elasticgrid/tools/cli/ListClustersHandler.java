@@ -23,7 +23,7 @@ import com.elasticgrid.model.ClusterNotFoundException;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.util.List;
+import java.util.Collection;
 
 public class ListClustersHandler extends AbstractHandler implements OptionHandler {
 
@@ -40,7 +40,7 @@ public class ListClustersHandler extends AbstractHandler implements OptionHandle
      */
     public String process(String input, BufferedReader br, PrintStream out) {
         try {
-            List<Cluster> clusters = getClusterManager().findClusters();
+            Collection<Cluster> clusters = getClusterManager().findClusters();
             System.out.println("Found " + clusters.size() + " clusters");
             Formatter.printClusters(clusters, br, out);
             return "";

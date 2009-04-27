@@ -18,18 +18,21 @@
 
 package com.elasticgrid.platforms.lan.discovery
 
+import com.elasticgrid.cluster.discovery.ClusterLocator
+import com.elasticgrid.model.Application
 import com.elasticgrid.model.ClusterException
 import com.elasticgrid.model.ClusterMonitorNotFoundException
 import com.elasticgrid.model.ClusterNotFoundException
+import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.lan.LANNode
 import com.elasticgrid.model.lan.impl.LANNodeImpl
+import com.elasticgrid.platforms.lan.discovery.AgentGroupFilter
 import com.elasticgrid.platforms.lan.discovery.LANClusterLocator
+import com.elasticgrid.platforms.lan.discovery.MonitorGroupFilter
 import java.rmi.registry.LocateRegistry
 import java.rmi.registry.Registry
 import java.util.logging.Logger
-import net.jini.config.Configuration
 import net.jini.config.ConfigurationProvider
-import net.jini.core.discovery.LookupLocator
 import net.jini.core.lookup.ServiceItem
 import net.jini.core.lookup.ServiceTemplate
 import net.jini.discovery.LookupDiscoveryManager
@@ -44,10 +47,6 @@ import org.rioproject.cybernode.CybernodeAdmin
 import org.rioproject.monitor.ProvisionMonitor
 import org.rioproject.resources.client.JiniClient
 import org.springframework.stereotype.Service
-import com.elasticgrid.model.NodeProfile
-import com.elasticgrid.model.Application
-import com.elasticgrid.model.internal.ApplicationImpl
-import com.elasticgrid.cluster.discovery.ClusterLocator
 
 /**
  * {@link ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
@@ -58,25 +57,26 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   def JiniClient jiniClient
   def ServiceDiscoveryManager sdm
   def LookupCache monitorsCache
-  def LookupCache cybernodesCache
+  def LookupCache agentsCache
   private final Logger logger = Logger.getLogger(getClass().getName())
 
   public JiniGroupsClusterLocator() {
-    String[] groups = JiniClient.parseGroups(System.getProperty('org.rioproject.groups', "all"));
-    LookupLocator[] locators = JiniClient.parseLocators(System.getProperty('org.rioproject.locator'));
-    Configuration config = ConfigurationProvider.getInstance(['-'] as String[])
-    jiniClient = new JiniClient(new LookupDiscoveryManager(groups, locators, null, config));
-    ServiceTemplate monitors = new ServiceTemplate(null, [ProvisionMonitor.class] as Class[], null);
-    ServiceTemplate cybernodes = new ServiceTemplate(null, [Cybernode.class] as Class[], null);
-    sdm = new ServiceDiscoveryManager(jiniClient.getDiscoveryManager(), new LeaseRenewalManager(), config);
-    monitorsCache = sdm.createLookupCache(monitors, null, null);
-    cybernodesCache = sdm.createLookupCache(cybernodes, null, null);
+    def groups = JiniClient.parseGroups(System.getProperty('org.rioproject.groups', "all"))
+    def locators = JiniClient.parseLocators(System.getProperty('org.rioproject.locator'))
+    def config = ConfigurationProvider.getInstance(['-'] as String[])
+    jiniClient = new JiniClient(new LookupDiscoveryManager(groups, locators, null, config))
+    def monitors = new ServiceTemplate(null, [ProvisionMonitor.class] as Class[], null)
+    def agents = new ServiceTemplate(null, [Cybernode.class] as Class[], null)
+    sdm = new ServiceDiscoveryManager(jiniClient.getDiscoveryManager(), new LeaseRenewalManager(), config)
+    monitorsCache = sdm.createLookupCache(monitors, null, null)
+    agentsCache = sdm.createLookupCache(agents, null, null)
   }
 
-  public List<String> findClusters() {
-    logger.info "Searching for all clusters..."
-    ServiceItem[] items = cybernodesCache.lookup(null, Integer.MAX_VALUE)
-    def Set clusters = new HashSet()
+  public Collection<String> findClusters() {
+    def clusters = new HashSet()
+    def ServiceItem[] items = agentsCache.lookup(null, Integer.MAX_VALUE)
+    if (items.length == 0)
+      items = sdm.lookup(new ServiceTemplate(null, [Cybernode.class] as Class[], null), Integer.MAX_VALUE, null)
     items.each { ServiceItem item ->
       def CybernodeAdmin cybernode = item.service.admin
       def ServiceElement serviceElement = cybernode.serviceElement
@@ -84,14 +84,20 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       config.groups.each { clusters << it }
     }
     logger.info "Found clusters $clusters"
-    return clusters as List;
+    return clusters as Collection
   }
 
-  public List<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
+  public Collection<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     logger.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
 
-    def ServiceItem[] agentsItems = cybernodesCache.lookup(new CybernodeGroupFilter(clusterName), Integer.MAX_VALUE);
-    def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
+    def filter = new AgentGroupFilter(clusterName)
+    def ServiceItem[] agentsItems = agentsCache.lookup(filter, Integer.MAX_VALUE)
+    if (agentsItems == null)
+      agentsItems = sdm.lookup(new ServiceTemplate(null, [Cybernode.class] as Class[], null), Integer.MAX_VALUE, filter)
+    filter = new MonitorGroupFilter(clusterName)
+    def ServiceItem[] monitorsItems = monitorsCache.lookup(filter, Integer.MAX_VALUE)
+    if (monitorsItems == null)
+      monitorsItems = sdm.lookup(new ServiceTemplate(null, [ProvisionMonitor.class] as Class[], null), Integer.MAX_VALUE, filter)
 
     def List<LANNode> nodes = new ArrayList<LANNode>()
     monitorsItems.each { ServiceItem item ->
@@ -113,7 +119,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
                 .address(InetAddress.getByName(hostEntry.hostName))
     }
     logger.info "Found nodes $nodes"
-    return nodes as List;
+    return nodes
   }
 
   public LANNode findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
@@ -128,12 +134,16 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
             .address(InetAddress.getByName(hostEntry.hostName))
   }
 
-  public List<? extends Application> findApplications (String clusterName) throws ClusterException {
+  /** TODO: code this method! */
+  public Collection<? extends Application> findApplications (String clusterName) throws ClusterException {
+    /*
     def applications = [
             new ApplicationImpl().name('test'),
             new ApplicationImpl().name('hello')
     ]
-    return applications as List
+    return applications as Collection
+    */
+    return Collections.emptyList();
   }
 
   private ProvisionMonitor findLocalMonitor() {

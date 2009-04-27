@@ -93,8 +93,8 @@
                 <!-- Typica dependencies -->
                 <include>com.google.code.typica:typica</include>
                 <include>javax.xml.bind:*</include>
-                <!--<include>javax.activation:activation</include>-->
-                <!--<include>stax:stax-api</include>-->
+                <include>javax.activation:activation</include>
+                <include>stax:stax-api</include>
                 <!-- Amazon S3 dependencies -->
                 <include>net.java.dev.jets3t:jets3t</include>
                 <!-- JiBX dependencies -->
@@ -107,7 +107,15 @@
                 <include>commons-logging:commons-logging</include>
                 <include>commons-codec:commons-codec</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
+                <!-- logging dependencies -->
+                <include>org.slf4j:slf4j-api</include>
+                <include>org.slf4j:jul-to-slf4j</include>
+                <include>org.slf4j:slf4j-log4j12</include>
+                <include>log4j:log4j</include>
             </includes>
+            <excludes>
+                <exclude>org.slf4j:slf4j-jdk14</exclude>
+            </excludes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
 		<!-- Framework dependencies -->
@@ -134,8 +142,6 @@
                 <include>com.noelios.restlet:*</include>
                 <include>org.restlet:*</include>
                 <include>org.mortbay.jetty:*</include>
-                <include>org.slf4j:slf4j-api</include>
-                <include>org.slf4j:slf4j-jdk14</include>
                 <include>xalan:*</include>
                 <include>commons-fileupload:commons-fileupload</include>
                 <include>commons-io:commons-io</include>

@@ -38,25 +38,28 @@ import org.springframework.stereotype.Service
 
 
 /**
- * {@ClusterLocator}  based on EC2 Security Groups, as described on Elastic Grid Blog post:
+ * {@ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
 @Service
 class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   def Jec2 ec2
-
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
   public static final String EG_GROUP_MONITOR = "eg-monitor"
   public static final String EG_GROUP_AGENT = "eg-agent"
   private final Logger logger = Logger.getLogger(getClass().getName())
 
-  public List<String> findClusters() {
-    logger.info "Searching for all clusters..."
+  /**
+   * @{inheritDoc}
+   * If the EC2 network can't be reached (offline mode or networking issues), then a empty list is returned.
+   */
+  public Collection<String> findClusters() {
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      throw new ClusterException("Can't locate clusters", e)
+      logger.log Level.WARNING, "EC2 is not reacheable. Ignoring EC2 clusters."
+      return [] as List
     }
     // extract cluster names
     def Set clusters = new HashSet()
@@ -68,10 +71,10 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         }
       }
     }
-    return clusters as List;
+    return clusters as List
   }
 
-  public List<EC2Node> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
+  public Collection<EC2Node> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     // retrieve the list of instances running
     logger.log Level.INFO, "Searching for Elastic Grid nodes in cluster '$clusterName'..."
     List<ReservationDescription> reservations
@@ -85,7 +88,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
       reservation.groups.contains "elastic-grid-cluster-$clusterName" as String
     }
     // build of list of all the instances
-    List nodes = clusterReservation.collect {ReservationDescription reservation ->
+    def nodes = clusterReservation.collect {ReservationDescription reservation ->
       reservation.instances.findAll { it.isRunning() }.collect {ReservationDescription.Instance instance ->
         boolean monitor = reservation.groups.contains(NodeProfile.MONITOR.toString())
         boolean agent = reservation.groups.contains(NodeProfile.AGENT.toString())
@@ -124,16 +127,17 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
 
   public EC2Node findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
     logger.log Level.INFO, "Searching for monitor node in cluster '$clusterName'..."
-    def List<EC2Node> nodes = findNodes(clusterName)
+    def Collection<EC2Node> nodes = findNodes(clusterName)
     def found = false
-    def node = nodes.find { NodeProfile.MONITOR == it.profile}
+    def node = nodes.find { NodeProfile.MONITOR == it.profile }
     if (node)
-      return node
+      return node as EC2Node
     else
       throw new ClusterMonitorNotFoundException(clusterName)
   }
 
-  public List<? extends Application> findApplications(String clusterName) throws ClusterException {
+  /** TODO: code this method! */
+  public Collection<? extends Application> findApplications(String clusterName) throws ClusterException {
     return Collections.emptyList();
   }
 

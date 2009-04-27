@@ -40,16 +40,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Various dependencies -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.4</version>
-        </dependency>
+        <!-- Logging dependencies -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.4.3</version>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
         <!-- Tests dependencies -->

@@ -42,7 +42,7 @@ import org.restlet.resource.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.TimeoutException;
 
 public class ClustersResource extends WadlResource {
@@ -63,7 +63,7 @@ public class ClustersResource extends WadlResource {
      */
     @Override
     public Representation represent(Variant variant) throws ResourceException {
-        List<Cluster> clusters;
+        Collection<Cluster> clusters;
         try {
             clusters = clusterManager.findClusters();
             return new JibxRepresentation<Clusters>(MediaType.APPLICATION_XML, new Clusters(clusters), "ElasticGridREST");

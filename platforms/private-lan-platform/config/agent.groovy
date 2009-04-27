@@ -34,15 +34,17 @@ class AgentConfig {
         return Boolean.TRUE
     }
 
+    /*
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
         ['org.rioproject.cybernode' : Level.FINE].each { name, level ->
             loggers.add(new LoggerConfig(name,
                                          level,
-                                         new LogHandlerConfig(new ConsoleHandler())))
+                                         new LogHandlerConfig(new org.slf4j.bridge.SLF4JBridgeHandler())))
         }
         return (LoggerConfig[])loggers
     }
+    */
 
     ClassBundle getFaultDetectionHandler() {
         def fdh = org.rioproject.fdh.HeartbeatFaultDetectionHandler.class.name

@@ -35,6 +35,7 @@ import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -116,15 +117,16 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
         logger.log(Level.INFO, "Stopping cluster ''{0}''", new Object[] { clusterName });
         // locate all nodes in the cluster
-        List<EC2Node> nodes = clusterLocator.findNodes(clusterName);
+        Collection<EC2Node> nodes = clusterLocator.findNodes(clusterName);
         // stop each node one by one
         for (EC2Node node : nodes) {
             nodeInstantiator.shutdownInstance(node.getInstanceID());
         }
     }
 
-    public List<EC2Cluster> findClusters() throws ClusterException, RemoteException {
-        List<String> clustersNames = clusterLocator.findClusters();
+    public Collection<EC2Cluster> findClusters() throws ClusterException, RemoteException {
+        logger.log(Level.INFO, "Searching for clusters running on EC2...");
+        Collection<String> clustersNames = clusterLocator.findClusters();
         List<EC2Cluster> clusters = new ArrayList<EC2Cluster>(clustersNames.size());
         for (String cluster : clustersNames) {
             clusters.add(cluster(cluster));
@@ -134,7 +136,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
 
     public EC2Cluster cluster(String name) throws RemoteException, ClusterException {
         EC2Cluster cluster = new EC2ClusterImpl();
-        List<EC2Node> nodes = clusterLocator.findNodes(name);
+        Collection<EC2Node> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
             return (EC2Cluster) cluster.name(name);
         else
