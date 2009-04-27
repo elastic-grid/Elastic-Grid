@@ -23,6 +23,7 @@ import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.NodeProfile;
 import java.net.InetAddress;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -102,7 +103,7 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
         return application;
     }
 
-    public Cluster<N> addNodes(List<N> nodes) {
+    public Cluster<N> addNodes(Collection<N> nodes) {
         this.nodes.addAll(nodes);
         return this;
     }

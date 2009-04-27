@@ -23,6 +23,7 @@ class RestServiceConfig {
         return groups as String[]
     }
 
+    /*
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
         ['com.elasticgrid' : Level.FINE,
@@ -30,9 +31,10 @@ class RestServiceConfig {
          'com.noelios.restlet' : Level.SEVERE].each { name, level ->
             loggers.add(new LoggerConfig(name,
                                          level,
-                                         new LogHandlerConfig(new ConsoleHandler())))
+                                         new LogHandlerConfig(new org.slf4j.bridge.SLF4JBridgeHandler())))
         }
         return loggers as LoggerConfig[]
     }
+    */
 
 }

@@ -43,6 +43,7 @@ class MonitorConfig {
         return new JrmpExporter()
     }
 
+    /*
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
         ['org.rioproject.monitor' : Level.INFO,
@@ -52,10 +53,11 @@ class MonitorConfig {
          'net.jini.lookup.JoinManager' : Level.OFF].each { name, level ->
             loggers.add(new LoggerConfig(name,
                                          level,
-                                         new LogHandlerConfig(new ConsoleHandler())))
+                                         new LogHandlerConfig(new org.slf4j.bridge.SLF4JBridgeHandler())))
         }
         return (LoggerConfig[])loggers
     }
+    */
 
     ClassBundle getFaultDetectionHandler() {
         def fdh = org.rioproject.fdh.HeartbeatFaultDetectionHandler.class.name

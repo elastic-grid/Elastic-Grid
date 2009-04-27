@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
@@ -38,7 +39,6 @@ import java.util.logging.Level;
 @Service("lanCloudPlatformManager")
 public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
     private LANClusterLocator clusterLocator;
-    
     private static final Logger logger = Logger.getLogger(LANCloudPlatformManager.class.getName());
 
     public String getName() {
@@ -53,8 +53,9 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         throw new UnsupportedOperationException("There is no way to stop a cluster on a private LAN.");
     }
 
-    public List<LANCluster> findClusters() throws ClusterException, RemoteException {
-        List<String> clustersNames = clusterLocator.findClusters();
+    public Collection<LANCluster> findClusters() throws ClusterException, RemoteException {
+        logger.log(Level.INFO, "Searching for clusters running on the LAN...");
+        Collection<String> clustersNames = clusterLocator.findClusters();
         List<LANCluster> clusters = new ArrayList<LANCluster>(clustersNames.size());
         for (String cluster : clustersNames) {
             clusters.add(cluster(cluster));
@@ -64,12 +65,12 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
 
     public LANCluster cluster(String name) throws RemoteException, ClusterException {
         LANCluster cluster = new LANClusterImpl();
-        List<LANNode> nodes = clusterLocator.findNodes(name);
+        Collection<LANNode> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
             cluster.name(name);
         else
             cluster.name(name).addNodes(nodes);
-        List<? extends Application> applications = clusterLocator.findApplications(name);
+        Collection<? extends Application> applications = clusterLocator.findApplications(name);
         for (Application application : applications)
             cluster.application(application.getName());
         return cluster;

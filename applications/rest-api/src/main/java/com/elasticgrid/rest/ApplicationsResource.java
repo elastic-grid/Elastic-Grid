@@ -120,6 +120,7 @@ public class ApplicationsResource extends WadlResource {
         if (MediaType.MULTIPART_ALL.equals(entity.getMediaType())
                 || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType())) {
             try {
+                System.out.println("trace0");
                 DiskFileItemFactory factory = new DiskFileItemFactory();
                 factory.setSizeThreshold(1000240);
                 RestletFileUpload upload = new RestletFileUpload(factory);
@@ -142,7 +143,7 @@ public class ApplicationsResource extends WadlResource {
 
                 // Set the status of the response.
                 logger.info("Redirecting to " + getRequest().getOriginalRef());
-                getResponse().setLocationRef(getRequest().getOriginalRef());
+                getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
             } catch (FileUploadException e) {
                 e.printStackTrace();
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
@@ -151,6 +152,7 @@ public class ApplicationsResource extends WadlResource {
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
             }
         } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
+            System.out.println("trace1");
             try {
                 // extract filename information
                 Form form = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
@@ -161,6 +163,9 @@ public class ApplicationsResource extends WadlResource {
                 S3Object object = new S3Object(fileName);
                 object.setDataInputStream(entity.getStream());
                 s3.putObject(dropBucket, object);
+                // Set the status of the response
+                logger.info("Redirecting to " + getRequest().getOriginalRef());
+                getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);

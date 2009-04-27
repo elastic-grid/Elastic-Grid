@@ -136,6 +136,11 @@
             <artifactId>commons-io</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
@@ -199,8 +204,9 @@
     <!--<build>-->
         <!--<plugins>-->
             <!--<plugin>-->
-                <!--<groupId>com.mathieucarbou.mojo</groupId>-->
+                <!--<groupId>com.google.code.maven-license-plugin</groupId>-->
                 <!--<artifactId>maven-license-plugin</artifactId>-->
+                <!--<version>1.4.0</version>-->
                 <!--<configuration>-->
                     <!--<header>${basedir}/../../etc/header.txt</header>-->
                     <!--<quiet>false</quiet>-->

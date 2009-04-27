@@ -15,6 +15,12 @@
         <maven>2.0.8</maven>
     </prerequisites>
 
+    <scm>
+        <connection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trunk</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.forge.objectweb.org/svnroot/elastic-grid/trunk</developerConnection>
+        <url>https://svn.forge.objectweb.org/cgi-bin/viewcvs.cgi/elastic-grid/trunk</url>
+    </scm>
+
     <modules>
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
@@ -178,6 +184,7 @@
             <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
                 <configuration>
                     <header>${basedir}/../etc/header.txt</header>
                     <quiet>false</quiet>
