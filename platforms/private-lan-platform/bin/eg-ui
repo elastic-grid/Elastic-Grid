@@ -17,6 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 scriptDir="$(dirname $0)"
+if [ -z "$EG_HOME" ]; then
+    if [ "$scriptDir" = "bin" ] ; then
+        export EG_HOME=$scriptDir/..
+    else
+        if [ "$scriptDir" = "." ] ; then
+            if [ -e  "$scriptDir"/bin ] ; then
+                export EG_HOME=$scriptDir
+            else
+                export EG_HOME=$scriptDir/..
+            fi
+        else
+            echo "Dont know how to start Elastic Grid UI from [$scriptDir]. Make sure the EG_HOME environment is set correctly."
+            exit 1
+        fi
+    fi
+fi
+
+# Convert to absolute path
+EG_HOME=$(cd "$EG_HOME" && pwd)
 
 RIO_HOME=$EG_HOME
 
