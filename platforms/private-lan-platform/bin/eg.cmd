@@ -40,7 +40,6 @@ if "%1"=="" goto interactive
 if "%1"=="start" goto start
 
 :interactive
-rem set cliExt=%EG_HOME%\config\rio_cli.config
 rem set cliExt=""
 set command_line=%*
 set launchTarget=com.elasticgrid.tools.cli.CLI
