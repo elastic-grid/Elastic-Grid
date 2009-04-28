@@ -25,6 +25,7 @@
 # Execute the platform setup shell script if available
 if [ -e "$EG_HOME/bin/setup-env" ] ; then
     sh $EG_HOME/bin/setup-env
+fi
 
 scriptDir="$(dirname $0)"
 scriptName=`basename "$0"`
