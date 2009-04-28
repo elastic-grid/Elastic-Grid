@@ -1,0 +1,8 @@
+if [ -e "$EG_HOME/config/monitor-host" ] ; then
+    export MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
+else
+    export MONITOR_HOST=`hostname`
+fi
+export LOCAL_HOST=`cat /tmp/public-hostname`
+
+export EG_OPTS="-DMONITOR_HOST=$MONITOR_HOST"

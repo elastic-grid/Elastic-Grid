@@ -109,8 +109,8 @@
     </bean>
     -->
 
-    <bean id="freemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
-        <property name="templateLoaderPath" value="/com/elasticgrid/rest"/>
-    </bean>
+    <!--<bean id="freemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">-->
+        <!--<property name="templateLoaderPath" value="/com/elasticgrid/rest"/>-->
+    <!--</bean>-->
 
 </beans>

@@ -20,6 +20,7 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -58,7 +59,7 @@ public class ApplicationsResource extends WadlResource {
     private String clusterName;
     private String dropBucket;
 
-    @Autowired
+//    @Autowired
     private Configuration config;
 
     @Autowired
@@ -99,6 +100,8 @@ public class ApplicationsResource extends WadlResource {
                 if (cluster == null)
                     throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find cluster " + clusterName);
                 logger.log(Level.INFO, "Found cluster {0}", cluster);
+                config = new Configuration();
+                config.setTemplateLoader(new ClassTemplateLoader(getClass(), "/com/elasticgrid/rest"));
                 Map<String, Object> model = new HashMap<String, Object>();
                 model.put("cluster", cluster);
                 return new TemplateRepresentation("applications.ftl", config, model, MediaType.TEXT_HTML);
