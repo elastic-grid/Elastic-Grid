@@ -71,7 +71,7 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
             logger.log(Level.INFO, "Searching for cluster {0} in cloud {1}", new Object[] { name, cloud.getName() });
             cluster = cloud.cluster(name);
         }
-        return null;
+        return cluster;
     }
 
     public void resizeCluster(String clusterName, int newSize) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
