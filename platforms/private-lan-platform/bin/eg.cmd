@@ -66,23 +66,24 @@ set RIO_LOG_DIR="%EG_HOME%\logs"
 set RIO_NATIVE_DIR="%EG_HOME%\lib\native";"%EG_HOME%\lib\hyperic"
 set PATH=%PATH%;%RIO_NATIVE_DIR%
 
-set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar"
+set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\jul-to-slf4j-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-api-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-log4j12-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\log4j-1.2.14.jar"
 set agentpath=-javaagent:"%EG_HOME%\lib\boot.jar"
 
 set launchTarget=com.sun.jini.start.ServiceStarter
 
-"%JAVA_HOME%\bin\java" -server %JAVA_MEM_OPTIONS% %classpath% %agentpath% ^
+"%JAVA_HOME%\bin\java" -server %JAVA_MEM_OPTIONS% %classpath% %agentpath% %EG_OPTS% %libpath% ^
     -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
     -Djava.protocol.handler.pkgs=net.jini.url ^
-    -Djava.library.path=%RIO_NATIVE_DIR% ^
-    -DJINI_HOME="%JINI_HOME%" ^
     -DRIO_HOME="%EG_HOME%" ^
     -DEG_HOME="%EG_HOME%" ^
     -Dorg.rioproject.home="%EG_HOME%" ^
-    -DRIO_NATIVE_DIR=%RIO_NATIVE_DIR% ^
+    -DRIO_NATIVE_DIR=%EG_NATIVE_DIR% ^
+    -DJINI_HOME="%JINI_HOME%" ^
     -DRIO_LOG_DIR=%RIO_LOG_DIR% ^
-    %launchTarget% ^
-    %starterConfig%
+    -Drio.script.path="%scriptPath%" ^
+    -Drio.script.args="%ARGS%" ^
+    -Djava.util.logging.config.file=%EG_HOME%\config\eg.logging.properties ^
+    %NETWORK% %DEBUG% %launchTarget% %starterConfig% %command_line%
 goto end
 
 :noStarter

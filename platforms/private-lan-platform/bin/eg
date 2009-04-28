@@ -22,6 +22,10 @@
 # This script also sets the
 # environment to download native libraries from the $EG_HOME/lib/native directory.
 
+# Execute the platform setup shell script if available
+if [ -e "$EG_HOME/bin/setup-env" ] ; then
+    sh $EG_HOME/bin/setup-env
+
 scriptDir="$(dirname $0)"
 scriptName=`basename "$0"`
 scriptPath="$scriptDir/$scriptName"
@@ -40,8 +44,7 @@ if [ -z "$EG_HOME" ] ; then
 fi
 # Convert to absolute path
 EG_HOME=$(cd "$EG_HOME" && pwd)
-RIO_HOME=$EG_HOME
-RIO_LIB=$EG_HOME/lib
+EG_LIB=$EG_HOME/lib
 
 # Check JINI_HOME
 if [ -z "$JINI_HOME" ] ; then
@@ -115,23 +118,23 @@ fi
 # If the command is to start the Elastic Grid services, invoke the ServiceStarter
 # Otherwise invoke the CLI
 if [ "$start" = "1" ]; then
-    RIO_NATIVE_DIR="$(toNative $RIO_LIB/native)"
+    EG_NATIVE_DIR="$(toNative $EG_LIB/native)"
     # Check for running on OS/X
     opSys=`uname -s`
     if [ $opSys = "Darwin" ] ; then
-        export DYLD_LIBRARY_PATH=$RIO_NATIVE_DIR:$DYLD_LIBRARY_PATH
+        export DYLD_LIBRARY_PATH=$EG_NATIVE_DIR:$DYLD_LIBRARY_PATH
         libpath="-Djava.library.path=$DYLD_LIBRARY_PATH"
     else
         if [ "$cygwin" = "1" ] ; then
-            libpath="-Djava.library.path=$RIO_NATIVE_DIR"
+            libpath="-Djava.library.path=$EG_NATIVE_DIR"
         else
-            export LD_LIBRARY_PATH=$RIO_NATIVE_DIR:$LD_LIBRARY_PATH
-            libpath="-Djava.library.path=$RIO_NATIVE_DIR"
+            export LD_LIBRARY_PATH=$EG_NATIVE_DIR:$LD_LIBRARY_PATH
+            libpath="-Djava.library.path=$EG_NATIVE_DIR"
         fi
     fi
 
-    classpath="-cp $(toNative $RIO_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$RIO_LIB/groovy/groovy-all-1.6.0.jar:$RIO_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar)"
-    agentpath="-javaagent:$(toNative $RIO_LIB/boot.jar)"
+    classpath="-cp $(toNative $EG_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar:$EG_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar:$EG_LIB/elastic-grid/jul-to-slf4j-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-api-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-log4j12-1.5.6.jar:$EG_LIB/elastic-grid/log4j-1.2.14.jar)"
+    agentpath="-javaagent:$(toNative $EG_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then
         echo "A service to start is required, exiting"
@@ -150,11 +153,12 @@ if [ "$start" = "1" ]; then
         -DRIO_HOME=$EG_HOME \
         -DEG_HOME=$EG_HOME \
         -Dorg.rioproject.home=$EG_HOME \
-        -DRIO_NATIVE_DIR=$RIO_NATIVE_DIR \
+        -DRIO_NATIVE_DIR=$EG_NATIVE_DIR \
         -DJINI_HOME=$JINI_HOME \
         -DRIO_LOG_DIR=$EG_HOME/logs/ \
         -Drio.script.path="$scriptPath" \
         -Drio.script.args="$ARGS" \
+        -Djava.util.logging.config.file=$EG_HOME/config/eg.logging.properties \
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
@@ -164,14 +168,15 @@ else
     do
         CP=$CP:$j
     done
-    classpath="$(toNative $CP:$RIO_LIB/rio-cli.jar:$RIO_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$RIO_LIB/spring/spring.jar:$RIO_LIB/jakarta-commons/commons-logging.jar:$RIO_LIB/groovy/groovy-all-1.6.0.jar)"
+    classpath="$(toNative $CP:$EG_LIB/rio-cli.jar:$EG_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$EG_LIB/spring/spring.jar:$EG_LIB/jakarta-commons/commons-logging.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $EG_OPTS \
         -Djava.security.policy=$EG_HOME/policy/policy.all \
         -Djava.protocol.handler.pkgs=net.jini.url \
-        -DRIO_HOME=$RIO_HOME \
+        -DRIO_HOME=$EG_HOME \
         -DEG_HOME=$EG_HOME \
-        -Dorg.rioproject.home=$RIO_HOME \
+        -Dorg.rioproject.home=$EG_HOME \
         -DJINI_HOME=$JINI_HOME \
         -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
         $NETWORK $DEBUG $launchTarget $cliExt $command_line
 fi
+
