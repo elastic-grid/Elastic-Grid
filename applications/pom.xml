@@ -10,7 +10,7 @@
     <groupId>com.elasticgrid</groupId>
     <artifactId>applications</artifactId>
     <packaging>pom</packaging>
-    <name>Modules</name>
+    <name>Applications</name>
     <prerequisites>
         <maven>2.0.8</maven>
     </prerequisites>
