@@ -8,5 +8,5 @@ class UI {
     String aboutIcon="com/elasticgrid/tools/ui/Elastic-Grid-Logo.png"
     String aboutInfo="Elastic Grid<br>Management Console<br>"
     String build="Early Access"
-    String version='${pom.version}'
+    String version="${pom.version}"
 }
