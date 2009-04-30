@@ -19,20 +19,23 @@
 package com.elasticgrid.tools.cli
 
 import com.elasticgrid.model.Cluster
+import com.elasticgrid.model.Node
 import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.ec2.EC2Node
+import com.elasticgrid.tools.cli.CLI
 import net.jini.core.discovery.LookupLocator
 import net.jini.discovery.DiscoveryLocatorManagement
 import net.jini.discovery.DiscoveryManagement
 
 class Formatter {
 
-    def static printClusters(Collection<Cluster> clusters, BufferedReader br, PrintStream out) {
+    def static printClusters(Set<Cluster> clusters, BufferedReader br, PrintStream out) {
         out.println "total: ${clusters.size()}"
         clusters.eachWithIndex { Cluster cluster, index ->
             out.println "[${index + 1}]\t${cluster.name}"
             def locators = []
-            cluster.nodes.eachWithIndex { Node node, nodeIndex ->
+            def nodeIndex = 0;
+            cluster.nodes.each { Node node ->
                 def profile
                 if (NodeProfile.MONITOR == node.profile) {
                     profile = "Monitor"
@@ -41,9 +44,9 @@ class Formatter {
                     profile = "Agent"
                 }
                 if (node instanceof EC2Node) {
-                    out.println "\t[${nodeIndex + 1}] ${profile}\t${node.address}\t${node.instanceID}"
+                    out.println "\t[${++nodeIndex}] ${profile}\t${node.address}\t${node.instanceID}"
                 } else {
-                    out.println "\t[${nodeIndex + 1}] ${profile}\t${node.address}"
+                    out.println "\t[${++nodeIndex}] ${profile}\t${node.address}"
                 }
             }
             DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
