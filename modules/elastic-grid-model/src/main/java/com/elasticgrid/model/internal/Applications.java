@@ -16,18 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.model;
+package com.elasticgrid.model.internal;
 
-import java.io.Serializable;
+import com.elasticgrid.model.Application;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Jerome Bernard
- */
-public interface Application extends Serializable {
-    String getName();
-    Application name(String name);
-    Set<Service> getServices();
-    Service service(String name);
+public class Applications {
+    private Set<Application> applications = setOfApplications();
+
+    public Applications() {
+    }
+
+    public Applications(Set<Application> applications) {
+        this.applications = new HashSet<Application>(applications);
+    }
+
+    private static Set<Application> setOfApplications() {
+        return Collections.synchronizedSet(new HashSet<Application>());
+    }
+
+    public Set<Application> getApplications() {
+        return applications;
+    }
+
+    public void addApplication(Application application) {
+        applications.add(application);
+    }
 }

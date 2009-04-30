@@ -24,6 +24,7 @@ import com.elasticgrid.model.ClusterException
 import com.elasticgrid.model.ClusterMonitorNotFoundException
 import com.elasticgrid.model.ClusterNotFoundException
 import com.elasticgrid.model.NodeProfile
+import com.elasticgrid.model.internal.ApplicationImpl
 import com.elasticgrid.model.lan.LANNode
 import com.elasticgrid.model.lan.impl.LANNodeImpl
 import com.elasticgrid.platforms.lan.discovery.AgentGroupFilter
@@ -40,10 +41,12 @@ import net.jini.lease.LeaseRenewalManager
 import net.jini.lookup.LookupCache
 import net.jini.lookup.ServiceDiscoveryManager
 import net.jini.lookup.entry.Host
+import org.rioproject.core.OperationalString
 import org.rioproject.core.ServiceBeanConfig
 import org.rioproject.core.ServiceElement
 import org.rioproject.cybernode.Cybernode
 import org.rioproject.cybernode.CybernodeAdmin
+import org.rioproject.monitor.DeployAdmin
 import org.rioproject.monitor.ProvisionMonitor
 import org.rioproject.resources.client.JiniClient
 import org.springframework.stereotype.Service
@@ -72,7 +75,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     agentsCache = sdm.createLookupCache(agents, null, null)
   }
 
-  public Collection<String> findClusters() {
+  public Set<String> findClusters() {
     def clusters = new HashSet()
     def ServiceItem[] items = agentsCache.lookup(null, Integer.MAX_VALUE)
     if (items.length == 0)
@@ -84,10 +87,10 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       config.groups.each { clusters << it }
     }
     logger.info "Found clusters $clusters"
-    return clusters as Collection
+    return clusters as Set<String>
   }
 
-  public Collection<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
+  public Set<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     logger.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
 
     def filter = new AgentGroupFilter(clusterName)
@@ -99,7 +102,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     if (monitorsItems == null)
       monitorsItems = sdm.lookup(new ServiceTemplate(null, [ProvisionMonitor.class] as Class[], null), Integer.MAX_VALUE, filter)
 
-    def List<LANNode> nodes = new ArrayList<LANNode>()
+    def Set<LANNode> nodes = new HashSet<LANNode>()
     monitorsItems.each { ServiceItem item ->
       def attributes = item.attributeSets
       def Host hostEntry = (Host) attributes.find { it instanceof Host }
@@ -125,7 +128,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   public LANNode findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
     logger.info "Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
-    ServiceItem item = (ServiceItem) monitorsItems[0]
+    def ServiceItem item = (ServiceItem) monitorsItems[0]
     def attributes = item.attributeSets
     def Host hostEntry = (Host) attributes.find { it instanceof Host }
     return (LANNode) new LANNodeImpl()
@@ -134,21 +137,34 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
             .address(InetAddress.getByName(hostEntry.hostName))
   }
 
-  /** TODO: code this method! */
-  public Collection<? extends Application> findApplications (String clusterName) throws ClusterException {
-    /*
-    def applications = [
-            new ApplicationImpl().name('test'),
-            new ApplicationImpl().name('hello')
-    ]
-    return applications as Collection
-    */
-    return Collections.emptyList();
+  public Set<Application> findApplications(String clusterName) throws ClusterException {
+    logger.info "Searching for monitor node in cluster '$clusterName'..."
+    def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
+    if (monitorsItems.length == 0) {
+      return [] as Set<Application>
+    }
+    def ServiceItem item = (ServiceItem) monitorsItems[0]
+    def ProvisionMonitor monitor = item.service as ProvisionMonitor
+    def DeployAdmin dAdmin = monitor.admin as DeployAdmin
+
+    logger.info "Found ${dAdmin.operationalStringManagers.length} opstrings"
+
+    return dAdmin.operationalStringManagers.collect {
+      def OperationalString opstring = it.operationalString
+      logger.info "Found application ${it.operationalString.name}"
+      def Application application = new ApplicationImpl().name(opstring.name)
+      opstring.services.each { ServiceElement elem ->
+        logger.info "Found service ${elem.serviceBeanConfig.name}"
+        logger.finest "Found service '${elem}'"
+        application.service(elem.serviceBeanConfig.name)
+      }
+      return application
+    } as Set<Application>
   }
 
   private ProvisionMonitor findLocalMonitor() {
     Registry registry = LocateRegistry.getRegistry()
-    return (ProvisionMonitor) registry.lookup("Monitor")
+    return registry.lookup("Monitor") as ProvisionMonitor
   }
 
 }

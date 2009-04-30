@@ -43,59 +43,16 @@ public class JiBXTest {
     @Test
     public void testRoundtripOfClusters() throws ObjectXmlMappingException, UnknownHostException {
         Clusters clusters = new Clusters();
-        clusters.addCluster(clusterFactory.createCluster().name("cluster"));
+        Cluster cluster = clusterFactory.createCluster().name("cluster");
+        Application app1 = cluster.application("app1");
+        app1.service("serv1");
+        app1.service("serv2");
+        Application app2 = cluster.application("app2");
+        app2.service("serv3");
+        app2.service("serv4");
+        clusters.addCluster(cluster);
         String xml = XmlUtils.convertObjectToXml("ElasticGridREST", clusters, "UTF-8");
         System.out.printf("XML is: %s\n", xml);
-    }
-
-    @Test
-    public void testRoundtripOfLocalStore() throws ObjectXmlMappingException, UnknownHostException {
-        LocalStore repository = new LocalStore();
-        repository.cluster("test").cluster("another cluster");
-        repository.application("test_application").application("another_fake_application");
-        String xml = XmlUtils.convertObjectToXml("ElasticGrid", repository, "UTF-8");
-        System.out.printf("XML is: %s\n", xml);
-    }
-
-    @Test
-    public void testRoundtripOfRemoteStore() throws ObjectXmlMappingException, UnknownHostException {
-        RemoteStore repository = new RemoteStore();
-        repository.cluster("test").cluster("another cluster");
-        repository.application("test_application").application("another_fake_application");
-        String xml = XmlUtils.convertObjectToXml("ElasticGrid", repository, "UTF-8");
-        System.out.printf("XML is: %s\n", xml);
-    }
-
-    @Test
-    public Cluster testRoundtripOfEC2Grid() throws ObjectXmlMappingException, UnknownHostException {
-        EC2Cluster cluster = (EC2Cluster) clusterFactory.createCluster().name("test-cluster");
-
-        // add nodes        
-        Node node1 = cluster.node("localhost", NodeProfile.MONITOR, InetAddress.getByName("localhost"));
-        assertNotNull(node1);
-        Node node2 = cluster.node("blog.elastic-grid.com", NodeProfile.MONITOR,
-                InetAddress.getByName("blog.elastic-grid.com"));
-        assertNotNull(node2);
-
-        // add applications
-        Application application1 = cluster.application("testApp1");
-        application1.createNewOAR().name("oar1").version("1.0").opstring("opstring");
-        assertNotNull(application1);
-        Application application2 = cluster.application("testApp2");
-        application2.createNewOAR().name("oar2").version("1.0").opstring("opstring");
-        assertNotNull(application2);
-
-        String xml = XmlUtils.convertObjectToXml("ElasticGrid", cluster, "UTF-8");
-        assertNotNull(xml);
-        System.out.printf("XML is: %s\n", xml);
-
-        Cluster roundtrip = XmlUtils.convertXmlToObject("ElasticGrid", EC2ClusterImpl.class, new StringReader(xml));
-        assertNotNull(roundtrip);
-        assertEquals(roundtrip.getName(), cluster.getName());
-        assertEquals(roundtrip.getNodes().size(), 2);
-        assertEquals(roundtrip.getApplications().size(), 2);
-
-        return cluster;
     }
 
     @BeforeTest

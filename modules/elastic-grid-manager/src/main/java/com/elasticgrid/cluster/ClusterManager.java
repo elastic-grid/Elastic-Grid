@@ -22,7 +22,7 @@ import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
 import java.rmi.RemoteException;
-import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -82,7 +82,7 @@ public interface ClusterManager<C extends Cluster> {
      * @throws ClusterException if there is a cluster failure
      * @throws RemoteException if there is a network failure
      */
-    Collection<C> findClusters() throws ClusterException, RemoteException;
+    Set<C> findClusters() throws ClusterException, RemoteException;
 
     /**
      * Retrieve cluster details.

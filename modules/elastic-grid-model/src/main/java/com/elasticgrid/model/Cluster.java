@@ -19,8 +19,6 @@
 package com.elasticgrid.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,9 +31,10 @@ public interface Cluster<N extends Node> extends Serializable {
     Set<N> getNodes();
     Set<N> getMonitorNodes();
     Set<N> getAgentNodes();
-    Cluster<N> addNodes(Collection<N> nodes);
-    List<Application> getApplications();
+    Cluster<N> addNodes(Set<N> nodes);
+    Set<Application> getApplications();
     Application application(String name);
+    Cluster<N> addApplications(Set<Application> applications);
 
     enum Status {
         RUNNING, STOPPED

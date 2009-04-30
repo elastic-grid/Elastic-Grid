@@ -23,10 +23,8 @@ import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.Node;
 import com.elasticgrid.model.NodeProfile;
 import java.net.InetAddress;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,7 +34,7 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
     private String name;
     @SuppressWarnings("unchecked")
     private Set<N> nodes = setOfNodes();
-    private List<Application> applications = Factories.listOfApplications();
+    private Set<Application> applications = Factories.listOfApplications();
 
     protected abstract N createNode(NodeProfile profile);
 
@@ -89,11 +87,16 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
         return node;
     }
 
+    public Cluster<N> addNodes(Set<N> nodes) {
+        this.nodes.addAll(nodes);
+        return this;
+    }
+
     public void setNodes(Set<N> nodes) {
         this.nodes = nodes;
     }
 
-    public List<Application> getApplications() {
+    public Set<Application> getApplications() {
         return applications;
     }
 
@@ -103,8 +106,8 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
         return application;
     }
 
-    public Cluster<N> addNodes(Collection<N> nodes) {
-        this.nodes.addAll(nodes);
+    public Cluster<N> addApplications(Set<Application> applications) {
+        this.applications.addAll(applications);
         return this;
     }
 

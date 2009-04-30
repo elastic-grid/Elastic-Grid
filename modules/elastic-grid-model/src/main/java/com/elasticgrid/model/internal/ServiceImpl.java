@@ -16,23 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.model;
+package com.elasticgrid.model.internal;
 
-import java.io.Serializable;
+import com.elasticgrid.model.Service;
 
 /**
- * Opstring Archive for Rio.
  * @author Jerome Bernard
  */
-public interface OAR extends Serializable {
-    String getName();
-    OAR name(String name);
-    String getVersion();
-    OAR version(String version);
-    String getOpStringName();
-    OAR opstring(String opStringName);
-    String getDeployDir();
-    OAR deployDir(String deployDir);
-    String getActivationType();
-    OAR activationType(String activationType);
+public class ServiceImpl implements Service {
+    private String name;
+
+    public ServiceImpl() {}
+
+    public ServiceImpl(String name) {
+        name(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Service name(String name) {
+        this.name = name;
+        return this;
+    }
 }
