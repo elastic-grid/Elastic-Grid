@@ -20,10 +20,11 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.internal.Clusters;
+import com.elasticgrid.model.internal.Applications;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
-import freemarker.ext.beans.BeansWrapper;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -41,12 +42,10 @@ import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
+import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.StringRepresentation;
 import org.restlet.resource.Variant;
-import org.rioproject.core.OperationalString;
-import org.rioproject.core.OperationalStringManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import java.io.File;
@@ -60,8 +59,6 @@ import java.util.logging.Logger;
 public class ApplicationsResource extends WadlResource {
     private String clusterName;
     private String dropBucket;
-
-//    @Autowired
     private Configuration config;
 
     @Autowired
@@ -81,6 +78,10 @@ public class ApplicationsResource extends WadlResource {
         getVariants().add(new Variant(MediaType.APPLICATION_XML));
         // Extract URI variables
         clusterName = (String) request.getAttributes().get("clusterName");
+        // Setup FreeMarker template engine
+        config = new Configuration();
+        config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+        config.setTemplateLoader(new ClassTemplateLoader(getClass(), "/com/elasticgrid/rest"));
     }
 
     /**
@@ -89,27 +90,21 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public Representation represent(Variant variant) throws ResourceException {
         try {
-            List<OperationalStringManager> opstringMgrs = RestJSB.getOperationalStringManagers();
-            for (OperationalStringManager opstringMgr : opstringMgrs) {
-                OperationalString opstring = opstringMgr.getOperationalString();
-                Logger.getLogger(getClass().getName()).info(opstring.getName());
-            }
-
             logger.log(Level.INFO, "Requested variant {0}", variant.getMediaType());
+            Cluster cluster = clusterManager.cluster(clusterName);
+            if (cluster == null)
+                throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find cluster " + clusterName);
+            logger.log(Level.INFO, "Found cluster {0}", cluster);
+
             if (MediaType.TEXT_HTML.equals(variant.getMediaType())
                     || MediaType.APPLICATION_XML.equals(variant.getMediaType())) {
-                Cluster cluster = clusterManager.cluster(clusterName);
-                if (cluster == null)
-                    throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Can't find cluster " + clusterName);
-                logger.log(Level.INFO, "Found cluster {0}", cluster);
-                config = new Configuration();
-                config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
-                config.setTemplateLoader(new ClassTemplateLoader(getClass(), "/com/elasticgrid/rest"));
                 Map<String, Object> model = new HashMap<String, Object>();
                 model.put("cluster", cluster);
                 return new TemplateRepresentation("applications.ftl", config, model, MediaType.TEXT_HTML);
             } else {
-                return new StringRepresentation("so???");
+                // return XML representation
+                return new JibxRepresentation<Applications>(MediaType.APPLICATION_XML,
+                        new Applications(cluster.getApplications()), "ElasticGridREST");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,6 +118,7 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public void storeRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);
+        System.out.println("trace -1");
         if (MediaType.MULTIPART_ALL.equals(entity.getMediaType())
                 || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType())) {
             try {

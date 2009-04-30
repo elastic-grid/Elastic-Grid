@@ -20,7 +20,6 @@ package com.elasticgrid.platforms.lan;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.Application;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.lan.impl.LANClusterImpl;
@@ -29,12 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service("lanCloudPlatformManager")
 public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
@@ -65,14 +65,12 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
 
     public LANCluster cluster(String name) throws RemoteException, ClusterException {
         LANCluster cluster = new LANClusterImpl();
-        Collection<LANNode> nodes = clusterLocator.findNodes(name);
+        Set<LANNode> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
             cluster.name(name);
         else
             cluster.name(name).addNodes(nodes);
-        Collection<? extends Application> applications = clusterLocator.findApplications(name);
-        for (Application application : applications)
-            cluster.application(application.getName());
+        cluster.addApplications(clusterLocator.findApplications(name));
         return cluster;
     }
 

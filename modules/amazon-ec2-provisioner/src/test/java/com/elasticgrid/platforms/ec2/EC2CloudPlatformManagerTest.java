@@ -31,10 +31,11 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-public class EC2GridManagerTest {
+public class EC2CloudPlatformManagerTest {
     private EC2CloudPlatformManager cloudPlatformManager;
     private NodeInstantiator<EC2Node> mockEC2;
     private EC2ClusterLocator mockLocator;
@@ -51,7 +52,7 @@ public class EC2GridManagerTest {
                 .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"))
                 .times(3);
         EasyMock.expect(mockLocator.findNodes("test"))
-                .andReturn(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123")));
+                .andReturn(new HashSet<EC2Node>(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR).instanceID("123"))));
         EasyMock.replay(mockEC2);
         org.easymock.classextension.EasyMock.replay(mockLocator);
         cloudPlatformManager.startCluster("test", 1, 0);

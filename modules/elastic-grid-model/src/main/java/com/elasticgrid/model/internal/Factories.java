@@ -19,16 +19,16 @@
 package com.elasticgrid.model.internal;
 
 import com.elasticgrid.model.Application;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Factory methods for JiBX marshalling/unmarshalling.
  * @author Jerome Bernard
  */
 public class Factories {
-    public static List<Application> listOfApplications() {
-        return Collections.synchronizedList(new ArrayList<Application>());
+    public static Set<Application> listOfApplications() {
+        return Collections.synchronizedSet(new HashSet<Application>());
     }
 }

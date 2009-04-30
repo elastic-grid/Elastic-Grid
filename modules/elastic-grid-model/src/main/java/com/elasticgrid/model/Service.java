@@ -19,15 +19,11 @@
 package com.elasticgrid.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * @author Jerome Bernard
  */
-public interface Application extends Serializable {
+public interface Service extends Serializable {
     String getName();
-    Application name(String name);
-    Set<Service> getServices();
-    Service service(String name);
+    Service name(String name);
 }

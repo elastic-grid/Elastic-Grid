@@ -19,30 +19,33 @@
 package com.elasticgrid.model.internal;
 
 import com.elasticgrid.model.Application;
-import com.elasticgrid.model.OAR;
+import com.elasticgrid.model.Service;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Jerome Bernard
  */
 public class ApplicationImpl implements Application {
     private String name;
-    private OAR oar;
+    private Set<Service> services = new HashSet<Service>();
 
     public String getName() {
         return name;
     }
 
-    public OAR createNewOAR() {
-        oar = new OARImpl();
-        return oar;
-    }
-
-    public OAR oar() {
-        return oar;
-    }
-
     public Application name(String name) {
         this.name = name;
         return this;
+    }
+
+    public Set<Service> getServices() {
+        return services;
+    }
+
+    public Service service(String name) {
+        Service service = new ServiceImpl(name);
+        services.add(service);
+        return service;
     }
 }

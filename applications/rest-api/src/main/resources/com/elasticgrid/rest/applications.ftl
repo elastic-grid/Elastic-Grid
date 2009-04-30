@@ -29,7 +29,14 @@
 <h1>Applications on ${cluster.getName()}</h1>
 <ul>
     <#list cluster.applications as application>
-        <li>${application.name}</li>
+        <li>
+            ${application.getName()}<br/>
+            <ul>
+                <#list application.services as service>
+                <li>${service.getName()}</li>
+                </#list>
+            </ul>
+        </li>
     </#list>
 </ul>
 

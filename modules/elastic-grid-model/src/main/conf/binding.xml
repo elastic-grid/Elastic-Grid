@@ -79,15 +79,6 @@
 
     <mapping name="application" class="com.elasticgrid.model.internal.ApplicationImpl">
         <value name="name" field="name" style="attribute"/>
-        <structure field="oar" type="com.elasticgrid.model.internal.OARImpl"/>
-    </mapping>
-
-    <mapping name="oar" class="com.elasticgrid.model.internal.OARImpl">
-        <value name="name" field="name"/>
-        <value name="version" field="version" usage="optional"/>
-        <value name="opstring-name" field="opStringName" usage="optional"/>
-        <value name="deploy-directory" field="deployDir" usage="optional"/>
-        <value name="activation-type" field="activationType" usage="optional"/>
     </mapping>
 
 </binding>

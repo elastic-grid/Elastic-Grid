@@ -136,7 +136,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
 
     public EC2Cluster cluster(String name) throws RemoteException, ClusterException {
         EC2Cluster cluster = new EC2ClusterImpl();
-        Collection<EC2Node> nodes = clusterLocator.findNodes(name);
+        Set<EC2Node> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
             return (EC2Cluster) cluster.name(name);
         else
