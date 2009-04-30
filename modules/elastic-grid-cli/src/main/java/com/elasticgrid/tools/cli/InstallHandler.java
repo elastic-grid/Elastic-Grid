@@ -30,14 +30,15 @@ import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
+import org.restlet.data.Status;
 import org.restlet.resource.FileRepresentation;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.PrintStream;
 import java.rmi.RemoteException;
-import java.util.StringTokenizer;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * Install an OAR through the REST API.
@@ -66,8 +67,7 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
             // second token is the path to the OAR
             String oarName = tok.nextToken();
             try {
-                install(clusterName, oarName);
-                return "Installed OAR '" + oarName + "' in cluster '" + clusterName + "'";
+                return install(clusterName, oarName);
             } catch (Exception e) {
                 e.printStackTrace(out);
                 return "unexpected exception";
@@ -77,30 +77,46 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
         }
     }
 
-    private void install(String clusterName, String oarName) throws ClusterException, RemoteException {
+    private String install(String clusterName, String oarName) throws ClusterException, RemoteException {
         Cluster<Node> cluster = CLI.getClusterManager().cluster(clusterName);
         if (cluster == null) {
-            System.err.println("Could not locate cluster '" + clusterName + "'");
-            return;
+            return "Could not locate cluster '" + clusterName + "'";
         }
         Set<Node> monitors = cluster.getMonitorNodes();
         if (monitors.size() == 0) {
-            System.err.println("Could not find any monitor");
-            return;
+            return "Could not find any monitor";
         }
         Node monitor = monitors.iterator().next();
-        System.out.println("Found monitor at " + monitor.getAddress());
+        System.out.println("Found monitor at " + monitor.getAddress().getCanonicalHostName());
 
-        FileRepresentation rep = new FileRepresentation(oarName, new MediaType("application/oar"), 0);
+        File oar = new File(oarName);
+        if (!oar.exists())
+            return "OAR does not exist: " + oarName;
+        FileRepresentation rep = new FileRepresentation(oar, new MediaType("application/oar"));
         EncodeRepresentation encodedRep = new EncodeRepresentation(Encoding.GZIP, rep);
         Client client = new Client(Protocol.HTTP);
-        Request request = new Request(Method.PUT, "http://" + monitor.getAddress() +":8182/eg/" + clusterName + "/applications");
+
+        String url = "http://" + monitor.getAddress().getCanonicalHostName()
+                + ":8182/eg/" + clusterName + "/applications";
+        Request request = new Request(Method.POST, url);
         request.setEntity(encodedRep);
         Form form = new Form();
         form.add("x-filename", new File(oarName).getName());
         request.getAttributes().put("org.restlet.http.headers", form);
-        Response response = client.handle(request);
-        System.out.println("Received status " + response.getStatus());
+        Response response = null;
+        try {
+            response = client.handle(request);
+            System.out.println("Status: " + response.getStatus());
+            System.out.println("Response: " + response.getEntity());
+        } catch (Exception e) {
+            // don't log anything!
+        }
+        if (Status.CONNECTOR_ERROR_COMMUNICATION.equals(response.getStatus()))
+            return "Can't connect to " + url;
+        else if (Status.SERVER_ERROR_INTERNAL.equals(response.getStatus()))
+            return "Unexpected server error on " + url;
+        else
+            return "Installed OAR '" + oarName + "' in cluster '" + clusterName + "'";
     }
 
     /**
