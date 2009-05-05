@@ -161,13 +161,12 @@ public class ApplicationsResource extends WadlResource {
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
             }
         } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
-            System.out.println("trace1");
             try {
                 // extract filename information
                 Form form = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
                 // upload it to S3
                 String fileName = form.getFirstValue("x-filename");
-                logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
+                logger.log(Level.INFO, "Uploading OAR ''{0}'' to S3 bucket ''{1}''",
                         new Object[]{fileName, dropBucket});
                 S3Object object = new S3Object(fileName);
                 object.setDataInputStream(entity.getStream());
