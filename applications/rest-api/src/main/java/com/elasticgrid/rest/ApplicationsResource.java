@@ -29,6 +29,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.jets3t.service.S3Service;
+import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Object;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -116,13 +117,12 @@ public class ApplicationsResource extends WadlResource {
      * Handle POST requests: provision a new application.
      */
     @Override
-    public void storeRepresentation(Representation entity) throws ResourceException {
-        super.acceptRepresentation(entity);
-        System.out.println("trace -1");
-        if (MediaType.MULTIPART_ALL.equals(entity.getMediaType())
-                || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType())) {
+    public void acceptRepresentation(Representation entity) throws ResourceException {
+        super.acceptRepresentation(entity);    //To change body of overridden methods use File | Settings | File Templates.
+
+        if (MediaType.MULTIPART_ALL.equals(entity.getMediaType(), true)
+                || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
             try {
-                System.out.println("trace0");
                 DiskFileItemFactory factory = new DiskFileItemFactory();
                 factory.setSizeThreshold(1000240);
                 RestletFileUpload upload = new RestletFileUpload(factory);
@@ -135,11 +135,18 @@ public class ApplicationsResource extends WadlResource {
                         File file = File.createTempFile("elastic-grid", "oar");
                         fi.write(file);
                         // upload it to S3
-                        logger.log(Level.INFO, "Uploading OAR '{0}' to S3 bucket '{1}'",
+                        logger.log(Level.INFO, "Uploading OAR ''{0}'' to S3 bucket ''{1}''",
                                 new Object[]{fi.getName(), dropBucket});
                         S3Object object = new S3Object(fi.getName());
                         object.setDataInputFile(file);
-                        s3.putObject(dropBucket, object);
+                        try {
+                            s3.putObject(dropBucket, object);
+                        } catch (S3ServiceException e) {
+                            logger.log(Level.SEVERE,
+                                    String.format("Could not upload OAR '%s' to S3 bucket '%s'", fi.getName(), dropBucket),
+                                    e);
+                            throw new ResourceException(Status.SERVER_ERROR_INSUFFICIENT_STORAGE, e);
+                        }
                     }
                 }
 
