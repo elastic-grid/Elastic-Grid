@@ -35,6 +35,7 @@ import com.xerox.amazonws.ec2.ReservationDescription
 import com.xerox.amazonws.ec2.ReservationDescription.Instance
 import java.util.logging.Level
 import java.util.logging.Logger
+import java.util.Collections
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -82,7 +83,8 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      throw new ClusterException("Can't locate cluster $clusterName", e)
+      logger.log Level.WARNING, "EC2 is not reacheable. Ignoring EC2 clusters."
+      return Collections.emptySet()
     }
     // filter nodes which are not part of the cluster
     def clusterReservation = reservations.findAll {ReservationDescription reservation ->

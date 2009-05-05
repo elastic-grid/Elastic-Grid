@@ -28,10 +28,10 @@ import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -81,8 +81,8 @@ public class ClusterManagerMock implements ClusterManager {
         clusters.remove(clusterName);
     }
 
-    public List<Cluster> findClusters() throws ClusterException, RemoteException {
-        return new ArrayList<Cluster>(clusters.values());
+    public Set<Cluster> findClusters() throws ClusterException, RemoteException {
+        return new HashSet<Cluster>(clusters.values());
     }
 
     public Cluster cluster(String name) throws ClusterException, RemoteException {
