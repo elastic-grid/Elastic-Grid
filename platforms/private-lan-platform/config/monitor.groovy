@@ -71,7 +71,7 @@ class MonitorConfig {
         def deployHandlers =
             [new FileSystemOARDeployHandler(new File(deployDir)),
              new S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))]
-        return (DeployHandler[])deployHandlers
+        return deployHandlers as DeployHandler[]
     }
 
 }

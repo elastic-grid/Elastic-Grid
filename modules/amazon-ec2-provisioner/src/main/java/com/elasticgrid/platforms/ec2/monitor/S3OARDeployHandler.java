@@ -89,7 +89,7 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
 
             // authenticate to S3
             s3 = new RestS3Service(credentials);
-            logger.config("Using S3 drop bucket " + dropBucket);
+            logger.info("Using S3 drop bucket " + dropBucket);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Could not retrieve AWS credentials", e);
         } catch (S3ServiceException e) {
@@ -99,7 +99,7 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
         // create install directory if needed
         if (!installDirectory.exists()) {
             if (installDirectory.mkdirs())
-                logger.config("Created installDir " + installDirectory.getAbsolutePath());
+                logger.info("Created installDir " + installDirectory.getAbsolutePath());
         }
 
         // create the opstring loader
