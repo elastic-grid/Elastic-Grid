@@ -43,22 +43,6 @@ class MonitorConfig {
         return new JrmpExporter()
     }
 
-    /*
-    LoggerConfig[] getLoggerConfigs() {
-        def loggers = []
-        ['org.rioproject.monitor' : Level.INFO,
-         'org.rioproject.monitor.provision' : Level.FINEST,
-         'org.rioproject.monitor.sbi' : Level.FINEST,
-         'org.rioproject.monitor.peer' : Level.FINE,
-         'net.jini.lookup.JoinManager' : Level.OFF].each { name, level ->
-            loggers.add(new LoggerConfig(name,
-                                         level,
-                                         new LogHandlerConfig(new org.slf4j.bridge.SLF4JBridgeHandler())))
-        }
-        return (LoggerConfig[])loggers
-    }
-    */
-
     ClassBundle getFaultDetectionHandler() {
         def fdh = org.rioproject.fdh.HeartbeatFaultDetectionHandler.class.name
         def fdhConf = ['-', fdh+'.heartbeatPeriod=10000', fdh+'heartbeatGracePeriod=10000']
@@ -67,7 +51,7 @@ class MonitorConfig {
 
     /* Configure DeployHandlers for the Monitor to use */
     DeployHandler[] getDeployHandlers() {
-        deployDir = System.getProperty('RIO_HOME')+'/deploy'
+        def deployDir = System.getProperty('RIO_HOME')+'/deploy'
         def deployHandlers =
             [new FileSystemOARDeployHandler(new File(deployDir)),
              new S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))]
