@@ -5,6 +5,7 @@ import com.elasticgrid.utils.amazon.AWSUtils
 import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
 import org.rioproject.core.ClassBundle
 import org.rioproject.config.Component
+import org.rioproject.config.Constants
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
@@ -28,7 +29,8 @@ class MonitorConfig {
     long deployMonitorPeriod = 30000
 
     String[] getInitialLookupGroups() {
-        def groups = ['elastic-grid']
+        def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 
+                      'elastic-grid')]
         return groups as String[]
     }
 

@@ -1,12 +1,13 @@
 /*
  * Configuration for a Cybernode
  */
+import org.rioproject.boot.BootUtil
 import org.rioproject.config.Component
+import org.rioproject.config.Constants
+import org.rioproject.core.ClassBundle
+import org.rioproject.fdh.FaultDetectionHandlerFactory
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
-import org.rioproject.fdh.FaultDetectionHandlerFactory
-import org.rioproject.boot.BootUtil
-import org.rioproject.core.ClassBundle
 import net.jini.core.discovery.LookupLocator
 import net.jini.export.Exporter
 import net.jini.jeri.BasicILFactory
@@ -26,7 +27,8 @@ class AgentConfig {
     String provisionRoot = '/mnt'
 
     String[] getInitialLookupGroups() {
-        def groups = ['elastic-grid']
+        def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME,
+                      'elastic-grid')]
         return groups as String[]
     }
 
