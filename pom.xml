@@ -128,7 +128,7 @@
             <dependency>
                 <groupId>net.java.dev.jets3t</groupId>
                 <artifactId>jets3t</artifactId>
-                <version>0.7.0</version>
+                <version>0.7.1</version>
             </dependency>
             <!-- Rio dependencies -->
             <dependency>
