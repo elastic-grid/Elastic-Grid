@@ -20,25 +20,41 @@ class StartAllConfig {
                             egHome+'/deploy']
 
         String policyFile = egHome+'/policy/policy.all'
-        String monitorConfig = egHome+'/config/monitor.groovy'
-        String reggieConfig = egHome+'/config/reggie.groovy'
-        String restApiConfig = egHome+'/config/rest-api.groovy'
-        def configArgs = [egHome+'/config/agent.groovy',
-                          egHome+'/config/compute_resource.groovy']
 
         def serviceDescriptors = [
             /* Webster, set to serve up 4 directories */
             ServiceDescriptorUtil.getWebster(policyFile, '9010', (String[])websterRoots),
             /* Jini Lookup Service */
-            ServiceDescriptorUtil.getLookup(policyFile, reggieConfig),
+            ServiceDescriptorUtil.getLookup(policyFile, getLookupConfigArgs(egHome)),
             /* Elastic Grid Provision Monitor */
-            ServiceDescriptorUtil.getMonitor(policyFile, monitorConfig),
+            ServiceDescriptorUtil.getMonitor(policyFile, getMonitorConfigArgs(egHome)),
             /* Elastic Grid Agent */
-            ServiceDescriptorUtil.getCybernode(policyFile, (String[])configArgs),
+            ServiceDescriptorUtil.getCybernode(policyFile, getCybernodeConfigArgs(egHome)),
             /* Elastic Grid REST API */
-            ServiceDescriptorUtil.getRestApi(policyFile, restApiConfig)
+            ServiceDescriptorUtil.getRestApi(policyFile, getRestConfigArgs(egHome))
         ]
 
         return (ServiceDescriptor[])serviceDescriptors
+    }
+
+    String[] getMonitorConfigArgs(String egHome) {
+        def configArgs = ["${egHome}/config/monitor.groovy"]
+        return configArgs as String[]
+    }
+
+    String[] getLookupConfigArgs(String egHome) {
+        def configArgs = ["${egHome}/config/reggie.groovy"]
+        return configArgs as String[]
+    }
+
+    String[] getRestConfigArgs(String egHome) {
+        def configArgs = ["${egHome}/config/rest-api.groovy"]
+        return configArgs as String[]
+    }
+
+    String[] getCybernodeConfigArgs(String egHome) {
+        def configArgs = ["${egHome}/config/agent.groovy",
+                          "${egHome}/config/compute_resource.groovy"]
+        return configArgs as String[]
     }
 }

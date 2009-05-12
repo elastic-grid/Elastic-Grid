@@ -18,14 +18,18 @@ class StartAgentConfig {
                             egHome+'/lib']
 
         String policyFile = egHome+'/policy/policy.all'
-        def configArgs = [egHome+'/config/agent.groovy',
-                          egHome+'/config/compute_resource.groovy']
 
         def serviceDescriptors = [
             ServiceDescriptorUtil.getWebster(policyFile, '0', (String[])websterRoots),
-            ServiceDescriptorUtil.getCybernode(policyFile, (String[])configArgs)
+            ServiceDescriptorUtil.getCybernode(policyFile, getCybernodeConfigArgs(egHome))
         ]
 
         return (ServiceDescriptor[])serviceDescriptors
+    }
+
+    String[] getCybernodeConfigArgs(String egHome) {
+        def configArgs = ["${egHome}/config/agent.groovy",
+                          "${egHome}/config/compute_resource.groovy"]
+        return configArgs as String[]
     }
 }
