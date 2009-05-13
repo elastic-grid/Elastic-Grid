@@ -19,26 +19,22 @@
 package com.elasticgrid.rest;
 
 import com.sun.jini.start.LifeCycle;
-import org.rioproject.associations.Association;
-import org.rioproject.associations.AssociationDescriptor;
-import org.rioproject.associations.AssociationListener;
-import org.rioproject.associations.AssociationType;
-import org.rioproject.associations.AssociationManagement;
-import org.rioproject.associations.AssociationMgmt;
-import org.rioproject.core.jsb.ServiceBeanContext;
+import org.rioproject.associations.*;
 import org.rioproject.core.OperationalStringManager;
+import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
-import org.rioproject.monitor.ProvisionMonitor;
 import org.rioproject.monitor.DeployAdmin;
+import org.rioproject.monitor.ProvisionMonitor;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
+
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * JSB exposing the underlying REST API.
@@ -98,7 +94,8 @@ public class RestJSB extends ServiceBeanAdapter {
             AssociationDescriptor provisionMonitorAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
             provisionMonitorAssociation.setMatchOnName(false);
             provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
-            provisionMonitorAssociation.setGroups("elastic-grid");
+            provisionMonitorAssociation.setGroups(
+                context.getServiceBeanConfig().getGroups());
 
             // register the association listener
             AssociationMgmt assocMgt = new AssociationMgmt();
