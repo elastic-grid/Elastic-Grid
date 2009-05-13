@@ -46,7 +46,6 @@ set launchTarget=com.elasticgrid.tools.cli.CLI
 set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\slf4j-api-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-logj12-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-cli-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-ec2-provisioner-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\private-lan-provisioner-${pom.version}.jar"
 set props="-DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME%"
 "%JAVACMD%" %classpath% -Xms256m -Xmx256m ^
-    -Djava.util.logging.config.file="%EG_HOME%\config\eg-cli.logging.properties" ^
     -DRIO_HOME="%EG_HOME%" -DJINI_HOME="%JINI_HOME%" -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
     %launchTarget% %cliExt% %command_line%
 goto end
@@ -81,7 +80,6 @@ set launchTarget=com.sun.jini.start.ServiceStarter
     -DRIO_LOG_DIR=%RIO_LOG_DIR% ^
     -Drio.script.path="%scriptPath%" ^
     -Drio.script.args="%ARGS%" ^
-    -Djava.util.logging.config.file=%EG_HOME%\config\eg.logging.properties ^
     %NETWORK% %DEBUG% %launchTarget% %starterConfig% %command_line%
 goto end
 
