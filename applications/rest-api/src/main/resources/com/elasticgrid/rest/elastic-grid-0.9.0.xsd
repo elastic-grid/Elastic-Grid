@@ -24,7 +24,7 @@
            xmlns:eg="urn:elastic-grid:eg"
            xmlns:lan="urn:elastic-grid:lan">
 
-    <xs:import namespace="urn:elastic-grid:lan" schemaLocation="elastic-grid-lan-0.8.3.xsd"/>
+    <xs:import namespace="urn:elastic-grid:lan" schemaLocation="elastic-grid-lan-0.9.0.xsd"/>
 
     <xs:element name="clusters">
         <xs:complexType>

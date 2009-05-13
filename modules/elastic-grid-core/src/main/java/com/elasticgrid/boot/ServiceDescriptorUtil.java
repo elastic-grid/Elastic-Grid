@@ -121,7 +121,7 @@ public class ServiceDescriptorUtil
             + File.pathSeparator +
             // TODO: get rid of this version number!
             egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + "amazon-ec2-provisioner-0.8.3.jar";
+            File.separator + "amazon-ec2-provisioner-0.9.0.jar";
         String monitorCodebase = BootUtil.getCodebase(new String[]{
             "monitor-dl.jar",
             "rio-dl.jar",
@@ -167,7 +167,7 @@ public class ServiceDescriptorUtil
         String restApiRoot =
             egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String restApiClasspath = restApiRoot + File.separator +
-                                  "rest-api-0.8.3.jar";      // TODO: get rid of this version number!
+                                  "rest-api-0.9.0.jar";      // TODO: get rid of this version number!
         String restApiCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
                                                                    "jsk-dl.jar"},
                                                       hostAddress,
