@@ -159,7 +159,7 @@ if [ "$start" = "1" ]; then
         -DRIO_LOG_DIR=$EG_HOME/logs/ \
         -Drio.script.path="$scriptPath" \
         -Drio.script.args="$ARGS" \
-        -Djava.util.logging.config.file=$EG_HOME/config/eg.logging.properties \
+        #-Djava.util.logging.config.file=$EG_HOME/config/eg.logging.properties \
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
@@ -177,7 +177,7 @@ else
         -DEG_HOME=$EG_HOME \
         -Dorg.rioproject.home=$EG_HOME \
         -DJINI_HOME=$JINI_HOME \
-        -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
+        #-Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
         $NETWORK $DEBUG $launchTarget $cliExt $command_line
 fi
 
