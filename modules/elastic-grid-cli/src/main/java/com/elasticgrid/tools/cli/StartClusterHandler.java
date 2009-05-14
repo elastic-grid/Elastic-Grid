@@ -101,6 +101,7 @@ public class StartClusterHandler extends AbstractHandler implements OptionHandle
         int numMonitorAgents = countMonitorAgents(clusterInfo);
         if(numMonitors>0 || numAgents>0 || numMonitorAgents>0) {
             try {
+                out.println("\nStarting cluster ["+clusterName+"] ...");
                 //getClusterManager().startCluster(clusterName, clusterSize);
                 return "Cluster ["+clusterName+"] started with " +
                        numMonitors + " Monitor(s), " +
