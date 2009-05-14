@@ -67,7 +67,7 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
             // second token is the path to the OAR
             String oarName = tok.nextToken();
             try {
-                return install(clusterName, oarName);
+                return install(clusterName, oarName, out);
             } catch (Exception e) {
                 e.printStackTrace(out);
                 return "unexpected exception";
@@ -77,7 +77,8 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
         }
     }
 
-    private String install(String clusterName, String oarName) throws ClusterException, RemoteException {
+    private String install(String clusterName, String oarName, PrintStream out)
+        throws ClusterException, RemoteException {
         Cluster<Node> cluster = CLI.getClusterManager().cluster(clusterName);
         if (cluster == null) {
             return "Could not locate cluster '" + clusterName + "'";
@@ -87,7 +88,7 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
             return "Could not find any monitor";
         }
         Node monitor = monitors.iterator().next();
-        System.out.println("Found monitor at " + monitor.getAddress().getCanonicalHostName());
+        out.println("Found monitor at " + monitor.getAddress().getCanonicalHostName());
 
         File oar = new File(oarName);
         if (!oar.exists())

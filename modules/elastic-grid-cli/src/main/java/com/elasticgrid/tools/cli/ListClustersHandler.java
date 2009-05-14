@@ -41,7 +41,7 @@ public class ListClustersHandler extends AbstractHandler implements OptionHandle
     public String process(String input, BufferedReader br, PrintStream out) {
         try {
             Set<Cluster> clusters = getClusterManager().findClusters();
-            System.out.println("Found " + clusters.size() + " clusters");
+            out.println("Found " + clusters.size() + " clusters");
             Formatter.printClusters(clusters, br, out);
             return "";
         } catch (ClusterNotFoundException e) {
