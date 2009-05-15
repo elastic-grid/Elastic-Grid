@@ -22,9 +22,9 @@ deployment(name:'Video Conversion Example') {
     groups('rio')
     codebase('https://elastic-cluster-examples.s3.amazonaws.com/')
 
-    systemRequirements(id: 'Elastic Cluster Platform') {
-        software name: 'Elastic Cluster Kernel', version: '1.0'
-        software name: 'Elastic Cluster Framework', version: '1.0'
+    systemRequirements(id: 'Elastic Grid Platform') {
+        software name: 'Elastic Grid Kernel', version: '1.0'
+        software name: 'Elastic Grid Framework', version: '1.0'
     }
 
 //    logging {
@@ -64,7 +64,7 @@ deployment(name:'Video Conversion Example') {
         )
 
         serviceLevelAgreements {
-            systemRequirements ref: 'Elastic Cluster Platform'
+            systemRequirements ref: 'Elastic Grid Platform'
             sla(id: 'Queue VideoConversion', low: 2, high: 5) {
                 policy type: 'scaling', class: 'com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler',
                        max: 3, lowerDampener: 3600, upperDampener: 3600

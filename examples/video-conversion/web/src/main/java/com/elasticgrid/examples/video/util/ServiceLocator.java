@@ -87,7 +87,7 @@ public class ServiceLocator {
     }
 
     private static LookupLocator[] lookupMonitors() throws IOException, EC2Exception {
-        System.out.printf("Searching for Elastic Cluster monitor host...\n");
+        System.out.printf("Searching for Elastic Grid monitor host...\n");
         Properties egProps = AWSUtils.loadEC2Configuration();
         ClusterLocator locator = new EC2SecurityGroupsClusterLocator();
         String awsAccessId = egProps.getProperty(EC2Configuration.AWS_ACCESS_ID);

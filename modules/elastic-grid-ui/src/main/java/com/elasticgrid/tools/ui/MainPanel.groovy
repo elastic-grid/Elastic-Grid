@@ -61,7 +61,7 @@ class MainPanel {
         def NodesTableModel nodesModel = new NodesTableModel()
 
         def frame = builder.frame(
-                title: 'Elastic Cluster Administration',
+                title: 'Elastic Grid Administration',
                 defaultCloseOperation: WindowConstants.EXIT_ON_CLOSE) { frame ->
             borderLayout()
             panel(constraints: NORTH) {
