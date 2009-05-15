@@ -48,7 +48,7 @@
 			<useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
         <fileSet>
-            <directory>config</directory>
+            <directory>${basedir}/config</directory>
             <outputDirectory>/config</outputDirectory>
             <includes>
                 <include>**/*</include>
