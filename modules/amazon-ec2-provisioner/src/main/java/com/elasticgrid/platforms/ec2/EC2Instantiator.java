@@ -20,6 +20,8 @@ package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.Discovery;
+
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -36,12 +38,14 @@ public interface EC2Instantiator extends NodeInstantiator<EC2Node> {
      * @param userData the user data
      * @param keyName the name of the security keypair
      * @param publicAddress <tt>true</tt> if the instances should also have public IP addresses
-     * @param options the type of instance to start (small, large, extra large) as a {@link InstanceType}
+     * @param options the type of instance to start (small, large, extra large) as a {@link com.elasticgrid.model.ec2.EC2NodeType}
      * @return the IDs of the instances
      * @throws RemoteException if there is a network failure
      */
     List<String> startInstances(String imageID, int minCount, int maxCount,
                                 List<String> groupSet, String userData, String keyName,
                                 boolean publicAddress, Object... options) throws RemoteException;
+
+    void createSecurityGroup(String group) throws RemoteException;
 
 }

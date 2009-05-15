@@ -21,6 +21,7 @@ package com.elasticgrid.model;
 public class ClusterProvisioning {
     private String clusterName;
     private int numberOfMonitors;
+    private int numberOfMonitorsAndAgents;
     private int numberOfAgents;
 
     public String getClusterName() {
@@ -37,6 +38,14 @@ public class ClusterProvisioning {
 
     public void setNumberOfMonitors(int numberOfMonitors) {
         this.numberOfMonitors = numberOfMonitors;
+    }
+
+    public int getNumberOfMonitorsAndAgents() {
+        return numberOfMonitorsAndAgents;
+    }
+
+    public void setNumberOfMonitorsAndAgents(int numberOfMonitorsAndAgents) {
+        this.numberOfMonitorsAndAgents = numberOfMonitorsAndAgents;
     }
 
     public int getNumberOfAgents() {

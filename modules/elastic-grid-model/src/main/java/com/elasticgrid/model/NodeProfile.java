@@ -18,16 +18,32 @@
 
 package com.elasticgrid.model;
 
+/**
+ * Enum of the node profiles.
+ * A node can either be a monitor or an agent or both.
+ * If it's both, Elastic Grid actually starts two JVM: one for monitor and
+ * another one for the agent, so that if one of them crashes, the other one
+ * is not stuck too.
+ * @author Jerome Bernard
+ */
 public enum NodeProfile {
-    MONITOR("eg-monitor"), AGENT("eg-agent");
+    MONITOR(false, true), AGENT(true, false),
+    MONITOR_AND_AGENT(true, true);
 
-    private String name;
+    private boolean agent;
+    private boolean monitor;
 
-    NodeProfile(String name) {
-        this.name = name;
+    NodeProfile(boolean agent, boolean monitor) {
+        this.agent = agent;
+        this.monitor = monitor;
     }
 
-    public String toString() {
-        return name;
+    public boolean isAgent() {
+        return agent;
     }
+
+    public boolean isMonitor() {
+        return monitor;
+    }
+
 }

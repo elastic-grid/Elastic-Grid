@@ -80,7 +80,8 @@ public class ClusterResource extends WadlResource {
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
         String clusterName = null;
-        int numberOfMonitors = 1;
+        int numberOfMonitors = 0;
+        int numberOfMonitorsAndAgents = 1;
         int numberOfAgents = 0;
         if (MediaType.APPLICATION_XML.equals(entity.getMediaType())) {
             try {
@@ -89,6 +90,7 @@ public class ClusterResource extends WadlResource {
                 ClusterProvisioning clusterProvisioning = representation.getObject();
                 clusterName = clusterProvisioning.getClusterName();
                 numberOfMonitors = clusterProvisioning.getNumberOfMonitors();
+                numberOfMonitorsAndAgents = clusterProvisioning.getNumberOfMonitorsAndAgents();
                 numberOfAgents = clusterProvisioning.getNumberOfAgents();
             } catch (JiBXException e) {
                 e.printStackTrace();
@@ -101,10 +103,11 @@ public class ClusterResource extends WadlResource {
             Form form = new Form(entity);
             clusterName = form.getFirstValue("clusterName");
             numberOfMonitors = Integer.parseInt(form.getFirstValue("numberOfMonitors"));
+            numberOfMonitorsAndAgents = Integer.parseInt(form.getFirstValue("numberOfMonitorsAndAgents"));
             numberOfAgents = Integer.parseInt(form.getFirstValue("numberOfAgents"));
         }
         try {
-            clusterManager.resizeCluster(clusterName, numberOfMonitors, numberOfAgents);
+            clusterManager.resizeCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
         } catch (TimeoutException e) {
             e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_GATEWAY_TIMEOUT, e);
@@ -165,6 +168,8 @@ public class ClusterResource extends WadlResource {
                         "<cluster-provisioning name=\"my-cluster\" xmlns=\"urn:elastic-grid:eg\">\n" +
                         "\t<!-- Start 2 monitors -->\n" +
                         "\t<monitors>2</monitors>\n" +
+                        "\t<!-- Start 4 monitors and agents -->\n" +
+                        "\t<monitors-and-agents>4</monitors-and-agents>\n" +
                         "\t<!-- Start 3 agents -->\n" +
                         "\t<agents>3</agents>\n" +
                         "</cluster-provisioning>" +
@@ -180,6 +185,8 @@ public class ClusterResource extends WadlResource {
                         "The name of the Elastic Grid Cluster to start."),
                 new ParameterInfo("numberOfMonitors", true, "xs:integer", ParameterStyle.PLAIN,
                         "The number of monitors to start in the cluster."),
+                new ParameterInfo("numberOfMonitorsAndAgents", true, "xs:integer", ParameterStyle.PLAIN,
+                        "The number of 'monitors and agents' to start in the cluster."),
                 new ParameterInfo("numberOfAgents", true, "xs:integer", ParameterStyle.PLAIN,
                         "The number of agents to start in the cluster.")
         ));

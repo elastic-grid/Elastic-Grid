@@ -34,6 +34,7 @@ public interface CloudPlatformManager<C extends Cluster> {
      * Start a cluster with a specified name and a specified number of instances.
      * @param clusterName the name of the cluster to start
      * @param numberOfMonitors the number of monitor nodes to start for this cluster
+     * @param numberOfMonitorAndAgents the number of "monitor + agent" nodes to start for this cluster
      * @param numberOfAgents the number of agents nodes to start for this cluster
      * @throws InterruptedException if the cluster was not started before timeout
      * @throws java.rmi.RemoteException if there is a network failure
@@ -41,7 +42,7 @@ public interface CloudPlatformManager<C extends Cluster> {
      * @throws java.util.concurrent.ExecutionException
      * @throws java.util.concurrent.TimeoutException
      */
-    void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents)
+    void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorAndAgents, int numberOfAgents)
             throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
 
     void stopCluster(String clusterName) throws ClusterException, RemoteException;
@@ -65,21 +66,6 @@ public interface CloudPlatformManager<C extends Cluster> {
 
     /**
      * Resize a cluster.
-     * This method will both start monitors and agents as appropriate depending on the <tt>size</tt> parameter.
-     * @param clusterName the name of the cluster to resize
-     * @param newSize the new size of the cluster
-     * @throws com.elasticgrid.model.ClusterNotFoundException if the cluster can't be found
-     * @throws com.elasticgrid.model.ClusterException if there is a cluster failure
-     * @throws InterruptedException if the cluster was not started before timeout
-     * @throws java.rmi.RemoteException if there is a network failure
-     * @throws java.util.concurrent.ExecutionException
-     * @throws java.util.concurrent.TimeoutException
-     */
-    void resizeCluster(String clusterName, int newSize)
-            throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
-
-    /**
-     * Resize a cluster.
      * @param clusterName the name of the cluster to resize
      * @param numberOfMonitors the number of monitor nodes to reach for this cluster
      * @param numberOfAgents the number of agents nodes to reach for this cluster
@@ -90,6 +76,6 @@ public interface CloudPlatformManager<C extends Cluster> {
      * @throws java.util.concurrent.ExecutionException
      * @throws java.util.concurrent.TimeoutException
      */
-    void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents)
+    void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents)
             throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
 }

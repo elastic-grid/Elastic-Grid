@@ -99,7 +99,7 @@ public class Conversion {
         if (profile == null)
             return null;
         switch (profile) {
-            case MONITOR:
+            case MONITOR_AND_AGENT:
                 return "monitor";
             case AGENT:
                 return "agent";
@@ -111,7 +111,7 @@ public class Conversion {
         if (StringUtils.isEmpty(profile))
             return null;
         if ("monitor".equals(profile))
-            return NodeProfile.MONITOR;
+            return NodeProfile.MONITOR_AND_AGENT;
         else if ("agent".equals(profile))
             return NodeProfile.AGENT;
         throw new IllegalArgumentException("Unexpected profile " + profile);

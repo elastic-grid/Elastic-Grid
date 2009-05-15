@@ -19,6 +19,7 @@
 package com.elasticgrid.model.lan.impl;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.internal.AbstractNode;
@@ -57,5 +58,13 @@ public class LANNodeImpl extends AbstractNode implements LANNode {
         sb.append("{instanceID='").append(instanceID).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public NodeType getType() {
+        return new NodeType() {
+            public String getName() {
+                return "Unknown type";  // TODO: find a way to expose this!
+            }
+        };
     }
 }

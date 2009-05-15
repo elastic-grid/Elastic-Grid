@@ -45,7 +45,7 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         return "Private LAN";
     }
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
     }
 
@@ -74,11 +74,7 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         return cluster;
     }
 
-    public void resizeCluster(String clusterName, int newSize) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        throw new UnsupportedOperationException("There is no way to resize a cluster on a private LAN.");
-    }
-
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to resize a cluster on a private LAN.");
     }
 

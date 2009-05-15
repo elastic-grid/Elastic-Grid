@@ -42,14 +42,14 @@ class MainPanel {
         def EC2Cluster cluster1 = new EC2ClusterImpl(
                 name: 'test',
                 nodes: [
-                    new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR, address: InetAddress.localHost),
+                    new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR_AND_AGENT, address: InetAddress.localHost),
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.AGENT, address: InetAddress.localHost)
                 ] as Set
         )
         def EC2Cluster cluster2 = new EC2ClusterImpl(
                 name: 'another',
                 nodes: [
-                    new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR, address: InetAddress.localHost),
+                    new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.MONITOR_AND_AGENT, address: InetAddress.localHost),
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.AGENT, address: InetAddress.localHost),
                     new EC2NodeImpl(instanceID: 'instanceID', profile: NodeProfile.AGENT, address: InetAddress.localHost)
                 ] as Set

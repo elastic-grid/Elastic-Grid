@@ -19,6 +19,8 @@
 package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.Discovery;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;
 import com.xerox.amazonws.ec2.Jec2;
@@ -39,7 +41,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
     public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
-        InstanceType instanceType = (InstanceType) options[0];
+        EC2NodeType instanceType = (EC2NodeType) options[0];
         logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image ''{1}'': keyName={2}, groups={3}, userdata={4}, instanceType={5}",
                 new Object[] { minCount, imageID, keyName, groupSet, userData, instanceType });
         com.xerox.amazonws.ec2.InstanceType type;
@@ -113,19 +115,11 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         return groupNames;
     }
 
-    public void createClusterGroup(String clusterName) throws RemoteException {
+    public void createSecurityGroup(String group) throws RemoteException {
         try {
-            jec2.createSecurityGroup("elastic-grid-cluster-" + clusterName, "Cluster " + clusterName);
+            jec2.createSecurityGroup(group, "Elastic Grid " + group);
         } catch (EC2Exception e) {
-            throw new RemoteException("Can't create security group 'elastic-grid-cluster-" + clusterName + "'", e);
-        }
-    }
-
-    public void createProfileGroup(NodeProfile profile) throws RemoteException {
-        try {
-            jec2.createSecurityGroup(profile.toString(), "Elastic Grid Node Profile");
-        } catch (EC2Exception e) {
-            throw new RemoteException("Can't create security group '" + profile.toString() + "'", e);
+            throw new RemoteException("Can't create security group '" + group + "'", e);
         }
     }
 

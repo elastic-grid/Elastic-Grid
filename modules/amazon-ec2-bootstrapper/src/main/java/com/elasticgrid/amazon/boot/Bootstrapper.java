@@ -19,6 +19,7 @@
 package com.elasticgrid.amazon.boot;
 
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
@@ -54,9 +55,6 @@ public class Bootstrapper {
     public static final String LAUNCH_PARAMETER_EC2_AMI32    = "AWS_EC2_AMI32";
     public static final String LAUNCH_PARAMETER_EC2_AMI64    = "AWS_EC2_AMI32";
 
-    public static final String EG_GROUP_MONITOR = "eg-monitor";
-    public static final String EG_GROUP_AGENT = "eg-agent";
-
     public static final String LAUNCH_PARAMETERS_FILE = "/tmp/user-data";
     public static final String ELASTIC_GRID_CONFIGURATION_FILE = "config/eg.properties";
 
@@ -88,6 +86,9 @@ public class Bootstrapper {
                 egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
+            if (NodeProfile.MONITOR_AND_AGENT.equals(monitor.getProfile())) {
+                FileUtils.writeStringToFile(new File("/tmp/monitor-only"), "yes");
+            }
         } catch (ClusterException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
@@ -165,7 +166,7 @@ public class Bootstrapper {
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(config);
-            egParameters.store(stream, "Elastic Cluster Configuration File - Generated file, please do NOT edit!");
+            egParameters.store(stream, "Elastic Grid Configuration File - Generated file, please do NOT edit!");
         } finally {
             IOUtils.closeQuietly(stream);
         }
@@ -173,7 +174,7 @@ public class Bootstrapper {
     }
 
     public static void main(String[] args) throws IOException, EC2Exception {
-        System.out.printf("Preparing Elastic Cluster environment...\n");
+        System.out.printf("Preparing Elastic Grid environment...\n");
         new Bootstrapper();
     }
 }

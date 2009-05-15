@@ -65,6 +65,7 @@
     <mapping name="cluster-provisioning" class="com.elasticgrid.model.ClusterProvisioning">
         <value name="name" field="clusterName" style="attribute"/>
         <value name="monitors" field="numberOfMonitors"/>
+        <value name="monitors-and-agents" field="numberOfMonitorsAndAgents"/>
         <value name="agents" field="numberOfAgents"/>
     </mapping>
 

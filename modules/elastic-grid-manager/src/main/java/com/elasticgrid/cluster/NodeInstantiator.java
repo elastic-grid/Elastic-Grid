@@ -20,6 +20,8 @@ package com.elasticgrid.cluster;
 
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.Node;
+import com.elasticgrid.model.Discovery;
+
 import java.util.List;
 import java.rmi.RemoteException;
 
@@ -52,7 +54,4 @@ public interface NodeInstantiator<N extends Node> {
     void shutdownInstance(String instanceID) throws RemoteException;
 
     List<String> getGroupsNames() throws RemoteException;
-    void createClusterGroup(String clusterName) throws RemoteException;
-    void createProfileGroup(NodeProfile profile) throws RemoteException;
-
 }

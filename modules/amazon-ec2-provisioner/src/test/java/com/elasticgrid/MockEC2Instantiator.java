@@ -19,6 +19,7 @@
 package com.elasticgrid;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.Discovery;
 import com.elasticgrid.platforms.ec2.EC2Instantiator;
 import net.jini.id.UuidFactory;
 import static java.lang.String.format;
@@ -43,11 +44,8 @@ public class MockEC2Instantiator implements EC2Instantiator {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void createClusterGroup(String clusterName) throws RemoteException {
+    public void createSecurityGroup(String group) throws RemoteException {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void createProfileGroup(NodeProfile profile) throws RemoteException {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

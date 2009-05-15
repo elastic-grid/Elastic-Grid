@@ -37,7 +37,7 @@ class Formatter {
             def nodeIndex = 0;
             cluster.nodes.each { Node node ->
                 def profile
-                if (NodeProfile.MONITOR == node.profile) {
+                if (NodeProfile.MONITOR_AND_AGENT == node.profile) {
                     profile = "Monitor"
                     locators << new LookupLocator("jini://${node.address.hostName}")
                 } else if (NodeProfile.AGENT == node.profile) {

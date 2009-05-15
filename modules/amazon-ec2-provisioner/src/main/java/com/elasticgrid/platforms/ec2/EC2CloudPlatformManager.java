@@ -20,12 +20,10 @@ package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ClusterAlreadyRunningException;
-import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.*;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +31,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -51,7 +44,7 @@ import java.util.logging.Logger;
 
 @Service("ec2CloudPlatformManager")
 public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster> {
-    private NodeInstantiator<EC2Node> nodeInstantiator;
+    private EC2Instantiator nodeInstantiator;
 
     @Autowired(required = true)
     private EC2ClusterLocator clusterLocator;
@@ -67,7 +60,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         return "Amazon EC2";
     }
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} monitor(s) and {2} agent(s)...",
                 new Object[] { clusterName, numberOfMonitors, numberOfAgents });
         // ensure the cluster is not already running
@@ -76,7 +69,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             throw new ClusterAlreadyRunningException(cluster);
         }
         // todo: allow clients to specify which kind of EC2 instances to start
-        InstanceType instanceType = InstanceType.SMALL;
+        EC2NodeType instanceType = EC2NodeType.SMALL;
         String ami;
         switch (instanceType) {
             case SMALL:
@@ -101,6 +94,11 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         // start the monitors
         for (int i = 0; i < numberOfMonitors; i++) {
             futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
+                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
+        }
+        // start the "monitors and agents"
+        for (int i = 0; i < numberOfMonitorAndAgents; i++) {
+            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR_AND_AGENT,
                     instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
         }
         // start the agents
@@ -143,30 +141,34 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             return (EC2Cluster) cluster.name(name).addNodes(nodes);
     }
 
-    public void resizeCluster(String clusterName, int newSize) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        // if no more than 2 nodes, only start monitors
-        if (newSize <= 2)
-            startCluster(clusterName, newSize, 0);
-        // if more than 2 nodes, start 2 monitors and the other nodes as agents
-        else
-            startCluster(clusterName, 2, newSize - 2);
-    }
-
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        // inspect the current cluster in order to figure out its topology
         EC2Cluster cluster = cluster(clusterName);
 
         Set<EC2Node> monitors = cluster.getMonitorNodes();
         Set<EC2Node> agents = cluster.getAgentNodes();
+        // figure out which MONITORs are actually MONITOR_AND_AGENT and update the MONITOR set
+        Set<EC2Node> monitorsAndAgents = new HashSet<EC2Node>();
+        Iterator<EC2Node> monitorsIterator = monitors.iterator();
+        while (monitorsIterator.hasNext()) {
+            EC2Node ec2Node =  monitors.iterator().next();
+            if (ec2Node.getProfile().isAgent()) {
+                monitorsAndAgents.add(ec2Node);
+                monitorsIterator.remove();
+            }
+        }
+
         numberOfMonitors -= monitors.size();
+        numberOfMonitorsAndAgents -= monitorsAndAgents.size();
         numberOfAgents -= agents.size();
 
         List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(Math.abs(numberOfMonitors) + Math.abs(numberOfAgents));
 
-        if (numberOfMonitors > 0) {             // start new monitors
+        if (numberOfMonitors > 0) {             // start new MONITORs
             logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional monitor(s)...",
                     new Object[] { clusterName, numberOfMonitors });
             // todo: allow clients to specify which kind of EC2 instances to start
-            InstanceType instanceType = InstanceType.SMALL;
+            EC2NodeType instanceType = EC2NodeType.SMALL;
             String ami;
             switch (instanceType) {
                 case SMALL:
@@ -194,11 +196,43 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             }
         }
 
+        if (numberOfMonitorsAndAgents > 0) {             // start new MONITOR_AND_AGENTs
+            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional monitor(s) and agent(s)...",
+                    new Object[] { clusterName, numberOfMonitorsAndAgents });
+            // todo: allow clients to specify which kind of EC2 instances to start
+            EC2NodeType instanceType = EC2NodeType.SMALL;
+            String ami;
+            switch (instanceType) {
+                case SMALL:
+                case MEDIUM_HIGH_CPU:
+                    ami = ami32;
+                    break;
+                case LARGE:
+                case EXTRA_LARGE:
+                case EXTRA_LARGE_HIGH_CPU:
+                    ami = ami64;
+                    break;
+                default:
+                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
+            }
+            while (numberOfMonitorsAndAgents-- > 0) {
+                futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR_AND_AGENT, instanceType, ami,
+                        awsAccessID, awsSecretKey, awsSecured)));
+            }
+        } else {                                // stop some monitors
+            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} monitor(s) and agent(s)...",
+                    new Object[] { clusterName, Math.abs(numberOfMonitorsAndAgents) });
+            Iterator<EC2Node> iterator = monitors.iterator();
+            while (numberOfMonitors++ < 0) {
+                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
+            }
+        }
+
         if (numberOfAgents > 0) {               // start new agents
             logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional agent(s)...",
                     new Object[] { clusterName, numberOfAgents });
             // todo: allow clients to specify which kind of EC2 instances to start
-            InstanceType instanceType = InstanceType.SMALL;
+            EC2NodeType instanceType = EC2NodeType.SMALL;
             String ami;
             switch (instanceType) {
                 case SMALL:
@@ -233,7 +267,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     @Autowired(required = true)
-    public void setNodeInstantiator(NodeInstantiator<EC2Node> nodeInstantiator) {
+    public void setNodeInstantiator(EC2Instantiator nodeInstantiator) {
         this.nodeInstantiator = nodeInstantiator;
     }
 
@@ -272,15 +306,15 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     class StartInstanceTask implements Callable<List<String>> {
-        private NodeInstantiator<EC2Node> nodeInstantiator;
+        private EC2Instantiator nodeInstantiator;
         private String clusterName;
         private NodeProfile profile;
-        private InstanceType instanceType;
+        private EC2NodeType instanceType;
         private String ami;
         private String userData;
 
-        public StartInstanceTask(NodeInstantiator<EC2Node> nodeInstantiator, String clusterName, NodeProfile profile,
-                                 InstanceType instanceType, String ami,
+        public StartInstanceTask(EC2Instantiator nodeInstantiator, String clusterName, NodeProfile profile,
+                                 EC2NodeType instanceType, String ami,
                                  String awsAccessId, String awsSecretKey, boolean awsSecured) {
             this.nodeInstantiator = nodeInstantiator;
             this.clusterName = clusterName;
@@ -293,20 +327,33 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         }
 
         public List<String> call() throws RemoteException {
-            // ensure the monitor group exists
-            if (!nodeInstantiator.getGroupsNames().contains(NodeProfile.MONITOR.toString())) {
-                nodeInstantiator.createProfileGroup(NodeProfile.MONITOR);
+            // ensure the Discovery.MONITOR group exists
+            if (!nodeInstantiator.getGroupsNames().contains(Discovery.MONITOR.getGroupName())) {
+                nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
             }
-            // ensure the monitor group exists
-            if (!nodeInstantiator.getGroupsNames().contains(NodeProfile.AGENT.toString())) {
-                nodeInstantiator.createProfileGroup(NodeProfile.AGENT);
+            // ensure the Discovery.AGENT group exists
+            if (!nodeInstantiator.getGroupsNames().contains(Discovery.AGENT.getGroupName())) {
+                nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
             }
             // ensure the cluster name group exists
-            if (!nodeInstantiator.getGroupsNames().contains("elastic-grid-cluster-" + clusterName)) {
-                nodeInstantiator.createClusterGroup(clusterName);
+            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
+            if (!nodeInstantiator.getGroupsNames().contains(securityGroupNameForCluster)) {
+                nodeInstantiator.createSecurityGroup(clusterName);
             }
             // start the agent node
-            List<String> groups = Arrays.asList("elastic-grid-cluster-" + clusterName, profile.toString(), "elastic-grid");
+            List<String> groups = null;
+            switch (profile) {
+                case MONITOR:
+                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.MONITOR.getGroupName(), "elastic-grid");
+                    break;
+                case AGENT:
+                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.AGENT.getGroupName(), "elastic-grid");
+                    break;
+                case MONITOR_AND_AGENT:
+                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.MONITOR.getGroupName(),
+                            Discovery.AGENT.getGroupName(), "elastic-grid");
+                    break;
+            }
             logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
                                        new Object[] { ami, groups.toString(), userData });
             return nodeInstantiator.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);

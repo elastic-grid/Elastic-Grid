@@ -28,5 +28,5 @@ import java.net.InetAddress;
  * @author Jerome Bernard
  */
 public interface EC2Cluster extends Cluster<EC2Node> {
-    Node node(String instanceID, NodeProfile profile, InetAddress address);
+    Node node(String instanceID, NodeProfile profile, EC2NodeType type, InetAddress address);
 }

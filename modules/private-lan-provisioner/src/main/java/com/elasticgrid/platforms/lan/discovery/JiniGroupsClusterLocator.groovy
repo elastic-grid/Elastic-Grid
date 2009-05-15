@@ -108,7 +108,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def Host hostEntry = (Host) attributes.find { it instanceof Host }
       nodes << new LANNodeImpl()
               .instanceID(item.serviceID.toString())
-              .profile(NodeProfile.MONITOR)
+              .profile(NodeProfile.MONITOR_AND_AGENT)
               .address(InetAddress.getByName(hostEntry.hostName))
     }
     agentsItems.each { ServiceItem item ->
@@ -133,7 +133,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     def Host hostEntry = (Host) attributes.find { it instanceof Host }
     return (LANNode) new LANNodeImpl()
             .instanceID(item.serviceID.toString())
-            .profile(NodeProfile.MONITOR)
+            .profile(NodeProfile.MONITOR_AND_AGENT)
             .address(InetAddress.getByName(hostEntry.hostName))
   }
 

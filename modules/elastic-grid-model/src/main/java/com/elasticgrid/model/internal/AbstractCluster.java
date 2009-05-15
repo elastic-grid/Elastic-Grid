@@ -18,10 +18,8 @@
 
 package com.elasticgrid.model.internal;
 
-import com.elasticgrid.model.Application;
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.Node;
-import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.*;
+
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,13 +28,13 @@ import java.util.Set;
 /**
  * @author Jerome Bernard
  */
-public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
+public abstract class AbstractCluster<N extends Node, NT extends NodeType> implements Cluster<N> {
     private String name;
     @SuppressWarnings("unchecked")
     private Set<N> nodes = setOfNodes();
     private Set<Application> applications = Factories.listOfApplications();
 
-    protected abstract N createNode(NodeProfile profile);
+    protected abstract N createNode(NodeProfile profile, NT type);
 
     @SuppressWarnings("unchecked")
     private static Set setOfNodes() {
@@ -67,7 +65,7 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
     public Set<N> getMonitorNodes() {
         Set<N> matches = new HashSet<N>();
         for (N node : nodes)
-            if (NodeProfile.MONITOR.equals(node.getProfile()))
+            if (node.getProfile().isMonitor())
                 matches.add(node);
         return matches;
     }
@@ -75,14 +73,14 @@ public abstract class AbstractCluster<N extends Node> implements Cluster<N> {
     public Set<N> getAgentNodes() {
         Set<N> matches = new HashSet<N>();
         for (N node : nodes)
-            if (NodeProfile.AGENT.equals(node.getProfile()))
+            if (node.getProfile().isAgent())
                 matches.add(node);
         return matches;
     }
 
     @SuppressWarnings("unchecked")
-    public N node(NodeProfile profile, InetAddress address) {
-        N node = (N) createNode(profile).address(address);
+    public N node(NodeProfile profile, NT type, InetAddress address) {
+        N node = (N) createNode(profile, type).address(address);
         nodes.add(node);
         return node;
     }

@@ -19,7 +19,7 @@
 package com.elasticgrid.platforms.ec2.sla;
 
 import com.elasticgrid.platforms.ec2.EC2Instantiator;
-import com.elasticgrid.platforms.ec2.InstanceType;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
@@ -93,7 +93,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
                     egProps.getProperty(EC2Configuration.AWS_EC2_SECURED, "true"),
                     egProps.getProperty(EC2Configuration.AWS_SQS_SECURED, "true")
             );
-            InstanceType instanceType = InstanceType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
+            EC2NodeType instanceType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
             List<String> instances = ec2.startInstances(amazonImageID, 1, 1, groups,
                     userdata, keyName, publicAddress, instanceType);
             String instanceID = instances.get(0);
