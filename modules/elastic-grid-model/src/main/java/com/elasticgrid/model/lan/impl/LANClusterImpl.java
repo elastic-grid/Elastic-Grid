@@ -19,6 +19,7 @@
 package com.elasticgrid.model.lan.impl;
 
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.internal.AbstractCluster;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
@@ -27,8 +28,8 @@ import java.util.Set;
 /**
  * @author Jerome Bernard
  */
-public class LANClusterImpl extends AbstractCluster<LANNode> implements LANCluster {
-    protected LANNode createNode(NodeProfile profile) {
+public class LANClusterImpl extends AbstractCluster<LANNode, NodeType> implements LANCluster {
+    protected LANNode createNode(NodeProfile profile, NodeType type) {
         return new LANNodeImpl(profile);
     }
 

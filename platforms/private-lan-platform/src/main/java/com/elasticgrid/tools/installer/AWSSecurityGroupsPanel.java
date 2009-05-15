@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class AWSSecurityGroupsPanel extends AbstractInstallerPanel {
     private JList lSecurityGroups;
-    private List<String> groups = Arrays.asList("eg-monitor", "eg-agent", "elastic-grid");
+    private List<String> groups = Arrays.asList("eg-monitor-and-agent", "eg-agent", "elastic-grid");
 
     public AWSSecurityGroupsPanel(InstallerFrame parent, InstallData installData) {
         super(parent, installData);

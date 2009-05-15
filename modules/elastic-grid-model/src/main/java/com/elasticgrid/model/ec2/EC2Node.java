@@ -19,7 +19,6 @@
 package com.elasticgrid.model.ec2;
 
 import com.elasticgrid.model.Node;
-import java.net.InetAddress;
 
 /**
  * Amazon EC2 instance.
@@ -27,4 +26,5 @@ import java.net.InetAddress;
 public interface EC2Node extends Node {
     String getInstanceID();
     EC2Node instanceID(String instanceID);
+    EC2NodeType getType();
 }

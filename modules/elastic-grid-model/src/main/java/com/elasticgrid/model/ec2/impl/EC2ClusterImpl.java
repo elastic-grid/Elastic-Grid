@@ -21,20 +21,22 @@ package com.elasticgrid.model.ec2.impl;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.internal.AbstractCluster;
+
 import java.net.InetAddress;
 import java.util.Set;
 
 /**
  * @author Jerome Bernard
  */
-public class EC2ClusterImpl extends AbstractCluster<EC2Node> implements EC2Cluster {
-    protected EC2Node createNode(NodeProfile profile) {
-        return new EC2NodeImpl(profile);
+public class EC2ClusterImpl extends AbstractCluster<EC2Node, EC2NodeType> implements EC2Cluster {
+    protected EC2Node createNode(NodeProfile profile, EC2NodeType type) {
+        return new EC2NodeImpl(profile, type);
     }
 
-    public EC2Node node(String instanceID, NodeProfile profile, InetAddress address) {
-        return node(profile, address).instanceID(instanceID);
+    public EC2Node node(String instanceID, NodeProfile profile, EC2NodeType type, InetAddress address) {
+        return node(profile, type, address).instanceID(instanceID);
     }
 
     public boolean equals(Object o) {

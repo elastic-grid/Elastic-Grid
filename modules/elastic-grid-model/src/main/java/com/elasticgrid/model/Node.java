@@ -26,5 +26,6 @@ import java.net.InetAddress;
 public interface Node<N extends Node> {
     NodeProfile getProfile();
     InetAddress getAddress();
+    NodeType getType();
     N address(InetAddress address);
 }

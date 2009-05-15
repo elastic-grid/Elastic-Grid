@@ -16,12 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2;
+package com.elasticgrid.model.ec2;
+
+import com.elasticgrid.model.NodeType;
 
 /**
  * Enum of the type of Amazon EC2 instances.
  */
-public enum InstanceType {
+public enum EC2NodeType implements NodeType {
     SMALL("m1.small"),
 	LARGE("m1.large"),
 	EXTRA_LARGE("m1.xlarge"),
@@ -30,16 +32,16 @@ public enum InstanceType {
 
     private String name;
 
-    InstanceType(String name) {
+    EC2NodeType(String name) {
         this.name = name;
     }
 
-    public Object getName() {
+    public String getName() {
         return name;
     }
 
     public String toString() {
-        return "InstanceType{" +
+        return "EC2NodeType{" +
                 "name='" + name + '\'' +
                 '}';
     }

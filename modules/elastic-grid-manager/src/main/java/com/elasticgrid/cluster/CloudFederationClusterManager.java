@@ -46,8 +46,8 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
 
     private static final Logger logger = Logger.getLogger(CloudFederationClusterManager.class.getName());
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).startCluster(clusterName, numberOfMonitors, numberOfAgents);
+    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clouds.get(0).startCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
@@ -73,12 +73,8 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
         return cluster;
     }
 
-    public void resizeCluster(String clusterName, int newSize) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).resizeCluster(clusterName, newSize);
-    }
-
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).resizeCluster(clusterName, numberOfMonitors, numberOfAgents);
+    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clouds.get(0).resizeCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
     }
 
     @Required
