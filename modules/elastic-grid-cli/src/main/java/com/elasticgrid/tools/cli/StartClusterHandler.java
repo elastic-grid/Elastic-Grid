@@ -18,11 +18,11 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.cluster.NodeProfileInfo;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2NodeType;
+import com.elasticgrid.model.NodeProfileInfo;
 import org.rioproject.tools.cli.OptionHandler;
 
 import java.io.BufferedReader;
@@ -107,10 +107,7 @@ public class StartClusterHandler extends AbstractHandler
         if (numMonitors > 0 || numAgents > 0 || numMonitorAgents > 0) {
             try {
                 out.println("\nStarting cluster [" + clusterName + "] ...");
-                getClusterManager().startCluster(clusterName,
-                                                 numMonitors,
-                                                 numMonitorAgents,
-                                                 numAgents);
+                getClusterManager().startCluster(clusterName, clusterInfo);
                 return "Cluster [" + clusterName + "] started with " +
                        numMonitors + " Monitor(s), " +
                        numAgents + " Agent(s), " +

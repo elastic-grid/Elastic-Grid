@@ -20,9 +20,9 @@ package com.elasticgrid.model;
 
 public class ClusterProvisioning {
     private String clusterName;
-    private int numberOfMonitors;
-    private int numberOfMonitorsAndAgents;
-    private int numberOfAgents;
+    private NodeProfileInfo monitorsInfo;
+    private NodeProfileInfo monitorsAndAgentsInfo;
+    private NodeProfileInfo agentsInfo;
 
     public String getClusterName() {
         return clusterName;
@@ -32,27 +32,27 @@ public class ClusterProvisioning {
         this.clusterName = clusterName;
     }
 
-    public int getNumberOfMonitors() {
-        return numberOfMonitors;
+    public NodeProfileInfo getMonitorsInfo() {
+        return monitorsInfo;
     }
 
-    public void setNumberOfMonitors(int numberOfMonitors) {
-        this.numberOfMonitors = numberOfMonitors;
+    public void setMonitorsInfo(NodeProfileInfo monitorsInfo) {
+        this.monitorsInfo = monitorsInfo;
     }
 
-    public int getNumberOfMonitorsAndAgents() {
-        return numberOfMonitorsAndAgents;
+    public NodeProfileInfo getMonitorsAndAgentsInfo() {
+        return monitorsAndAgentsInfo;
     }
 
-    public void setNumberOfMonitorsAndAgents(int numberOfMonitorsAndAgents) {
-        this.numberOfMonitorsAndAgents = numberOfMonitorsAndAgents;
+    public void setMonitorsAndAgentsInfo(NodeProfileInfo monitorsAndAgentsInfo) {
+        this.monitorsAndAgentsInfo = monitorsAndAgentsInfo;
     }
 
-    public int getNumberOfAgents() {
-        return numberOfAgents;
+    public NodeProfileInfo getAgentsInfo() {
+        return agentsInfo;
     }
 
-    public void setNumberOfAgents(int numberOfAgents) {
-        this.numberOfAgents = numberOfAgents;
+    public void setAgentsInfo(NodeProfileInfo agentsInfo) {
+        this.agentsInfo = agentsInfo;
     }
 }

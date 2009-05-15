@@ -18,22 +18,21 @@
 
 package com.elasticgrid.cluster;
 
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.ClusterNotFoundException;
-import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.*;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Mock for {@link ClusterManager}.
@@ -41,54 +40,20 @@ import java.util.concurrent.TimeoutException;
 public class ClusterManagerMock implements ClusterManager {
     private Map<String, Cluster> clusters = new HashMap<String, Cluster>();
 
-    public void startCluster(String clusterName) throws ClusterException, RemoteException, ExecutionException, TimeoutException, InterruptedException {
-        startCluster(clusterName, 0, 1, 0);
-    }
-
-    public void startCluster(final String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void startCluster(final String clusterName, List clusterTopology)
+            throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         Cluster<EC2Node> cluster = new EC2ClusterImpl();
         cluster.name(clusterName);
-        for (int i = 0; i < numberOfMonitors; i++) {
+        for (int i = 0; i < clusterTopology.size(); i++) {
+            NodeProfileInfo nodeProfileInfo = (NodeProfileInfo) clusterTopology.get(i);
             EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.MONITOR);
+            node.instanceID(clusterName + Math.random());
+            node.setProfile(nodeProfileInfo.getNodeProfile());
+            node.setType((EC2NodeType) nodeProfileInfo.getNodeType());
             try {
                 node.address(InetAddress.getLocalHost());
             } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            cluster.getNodes().add(node);
-        }
-        for (int i = 0; i < numberOfMonitorsAndAgents; i++) {
-            EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.MONITOR_AND_AGENT);
-            try {
-                node.address(InetAddress.getLocalHost());
-            } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            cluster.getNodes().add(node);
-        }
-        for (int i = 0; i < numberOfMonitorsAndAgents; i++) {
-            EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.MONITOR_AND_AGENT);
-            try {
-                node.address(InetAddress.getLocalHost());
-            } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            cluster.getNodes().add(node);
-        }
-        for (int i = 0; i < numberOfAgents; i++) {
-            EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.AGENT);
-            try {
-                node.address(InetAddress.getLocalHost());
-            } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
             cluster.getNodes().add(node);
         }
@@ -107,28 +72,21 @@ public class ClusterManagerMock implements ClusterManager {
         return clusters.get(name);
     }
 
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        Cluster cluster = clusters.get(clusterName);
+    @SuppressWarnings("unchecked")
+    public void resizeCluster(String clusterName, List clusterTopology)
+            throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        Cluster<EC2Node> cluster = clusters.get(clusterName);
         cluster.getNodes().clear();
-        for (int i = 0; i < numberOfMonitors; i++) {
+        for (int i = 0; i < clusterTopology.size(); i++) {
+            NodeProfileInfo nodeProfileInfo = (NodeProfileInfo) clusterTopology.get(i);
             EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.MONITOR);
+            node.instanceID(clusterName + '-' + Math.random());
+            node.setProfile(nodeProfileInfo.getNodeProfile());
+            node.setType((EC2NodeType) nodeProfileInfo.getNodeType());
             try {
                 node.address(InetAddress.getLocalHost());
             } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            cluster.getNodes().add(node);
-        }
-        for (int i = 0; i < numberOfAgents; i++) {
-            EC2NodeImpl node = new EC2NodeImpl();
-            node.instanceID(clusterName + '-' + i);
-            node.profile(NodeProfile.AGENT);
-            try {
-                node.address(InetAddress.getLocalHost());
-            } catch (UnknownHostException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
             cluster.getNodes().add(node);
         }

@@ -22,8 +22,10 @@ import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
+import com.elasticgrid.model.NodeProfileInfo;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
+
 import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.List;
@@ -41,13 +43,14 @@ import java.util.logging.Logger;
  * @author Jerome Bernard
  */
 @Service("clusterManager")
-public class CloudFederationClusterManager<C extends Cluster> extends AbstractClusterManager<C> implements ClusterManager<C> {
+public class CloudFederationClusterManager<C extends Cluster> implements ClusterManager<C> {
     private List<CloudPlatformManager<C>> clouds;
 
     private static final Logger logger = Logger.getLogger(CloudFederationClusterManager.class.getName());
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).startCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
+    public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
+            throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clouds.get(0).startCluster(clusterName, clusterTopology);
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
@@ -73,8 +76,9 @@ public class CloudFederationClusterManager<C extends Cluster> extends AbstractCl
         return cluster;
     }
 
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).resizeCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
+    public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
+            throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clouds.get(0).resizeCluster(clusterName, clusterTopology);
     }
 
     @Required

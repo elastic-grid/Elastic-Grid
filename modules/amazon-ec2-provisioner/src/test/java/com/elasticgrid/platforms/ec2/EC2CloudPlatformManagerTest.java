@@ -22,6 +22,7 @@ import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
@@ -56,8 +57,9 @@ public class EC2CloudPlatformManagerTest {
                 .andReturn(new HashSet<EC2Node>(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL).instanceID("123"))));
         EasyMock.replay(mockEC2);
         org.easymock.classextension.EasyMock.replay(mockLocator);
-        cloudPlatformManager.startCluster("test", 0, 1, 0);
-        cloudPlatformManager.startCluster("test", 0, 1, 0);
+        NodeProfileInfo monitorAndAgentSmall = new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL, 1);
+        cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
+        cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
     }
 
     @BeforeTest

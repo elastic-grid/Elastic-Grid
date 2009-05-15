@@ -21,6 +21,9 @@ package com.elasticgrid.rest;
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterProvisioning;
+import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import org.jibx.runtime.JiBXException;
 import org.restlet.Context;
 import org.restlet.data.Form;
@@ -80,18 +83,18 @@ public class ClusterResource extends WadlResource {
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
         String clusterName = null;
-        int numberOfMonitors = 0;
-        int numberOfMonitorsAndAgents = 1;
-        int numberOfAgents = 0;
+        NodeProfileInfo monitorsInfo = null;
+        NodeProfileInfo monitorsAndAgentsInfo = null;
+        NodeProfileInfo agentsInfo = null;
         if (MediaType.APPLICATION_XML.equals(entity.getMediaType())) {
             try {
                 JibxRepresentation<ClusterProvisioning> representation =
                         new JibxRepresentation<ClusterProvisioning>(entity, ClusterProvisioning.class, "ElasticGridREST");
                 ClusterProvisioning clusterProvisioning = representation.getObject();
                 clusterName = clusterProvisioning.getClusterName();
-                numberOfMonitors = clusterProvisioning.getNumberOfMonitors();
-                numberOfMonitorsAndAgents = clusterProvisioning.getNumberOfMonitorsAndAgents();
-                numberOfAgents = clusterProvisioning.getNumberOfAgents();
+                monitorsInfo = clusterProvisioning.getMonitorsInfo();
+                monitorsAndAgentsInfo = clusterProvisioning.getMonitorsAndAgentsInfo();
+                agentsInfo = clusterProvisioning.getAgentsInfo();
             } catch (JiBXException e) {
                 e.printStackTrace();
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, e);
@@ -102,12 +105,18 @@ public class ClusterResource extends WadlResource {
         } else if (MediaType.APPLICATION_WWW_FORM.equals(entity.getMediaType())) {
             Form form = new Form(entity);
             clusterName = form.getFirstValue("clusterName");
-            numberOfMonitors = Integer.parseInt(form.getFirstValue("numberOfMonitors"));
-            numberOfMonitorsAndAgents = Integer.parseInt(form.getFirstValue("numberOfMonitorsAndAgents"));
-            numberOfAgents = Integer.parseInt(form.getFirstValue("numberOfAgents"));
+            monitorsInfo = new NodeProfileInfo(NodeProfile.MONITOR,
+                    EC2NodeType.valueOf(form.getFirstValue("monitorNodeType")),
+                    Integer.parseInt(form.getFirstValue("numberOfMonitors")));
+            monitorsAndAgentsInfo = new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT,
+                    EC2NodeType.valueOf(form.getFirstValue("monitorAndAgentNodeType")),
+                    Integer.parseInt(form.getFirstValue("numberOfMonitorsAndAgents")));
+            agentsInfo = new NodeProfileInfo(NodeProfile.AGENT,
+                    EC2NodeType.valueOf(form.getFirstValue("agentNodeType")),
+                    Integer.parseInt(form.getFirstValue("numberOfAgents")));
         }
         try {
-            clusterManager.resizeCluster(clusterName, numberOfMonitors, numberOfMonitorsAndAgents, numberOfAgents);
+            clusterManager.resizeCluster(clusterName, Arrays.asList(monitorsInfo, monitorsAndAgentsInfo, agentsInfo));
         } catch (TimeoutException e) {
             e.printStackTrace();
             throw new ResourceException(Status.SERVER_ERROR_GATEWAY_TIMEOUT, e);
