@@ -46,15 +46,15 @@ public class ResizeClusterHandler extends AbstractHandler implements OptionHandl
             String clusterName = tok.nextToken();
             // third token is new cluster size
             int clusterSize = Integer.parseInt(tok.nextToken());
-            try {
-                getClusterManager().resizeCluster(clusterName, clusterSize);
+            //try {
+                //TODO: fix this! getClusterManager().resizeCluster(clusterName, clusterSize);
                 return "Cluster '" + clusterName + "' resized to " + clusterSize + " node(s)";
-            } catch (ClusterNotFoundException e) {
-                return "cluster not found!";
-            } catch (Exception e) {
-                e.printStackTrace(out);
-                return "unexpected cluster exception";
-            }
+            //} catch (ClusterNotFoundException e) {
+            //    return "cluster not found!";
+            //} catch (Exception e) {
+            //    e.printStackTrace(out);
+            //    return "unexpected cluster exception";
+            //}
         } else {
             return getUsage();
         }
