@@ -18,9 +18,13 @@
 
 package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.model.*;
+import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ClusterAlreadyRunningException;
+import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.Discovery;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
@@ -31,7 +35,14 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -60,52 +71,44 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         return "Amazon EC2";
     }
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        logger.log(Level.INFO, "Starting cluster ''{0}'' with {1} monitor(s) and {2} agent(s)...",
-                new Object[] { clusterName, numberOfMonitors, numberOfAgents });
+    public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        logger.log(Level.INFO, "Starting cluster ''{0}''...", new Object[]{clusterName });
         // ensure the cluster is not already running
         Cluster cluster = cluster(clusterName);
         if (cluster != null && cluster.isRunning()) {
             throw new ClusterAlreadyRunningException(cluster);
         }
-        // todo: allow clients to specify which kind of EC2 instances to start
-        EC2NodeType instanceType = EC2NodeType.SMALL;
-        String ami;
-        switch (instanceType) {
-            case SMALL:
-                ami = ami32;
-                break;
-            case MEDIUM_HIGH_CPU:
-                ami = ami32;
-                break;
-            case LARGE:
-                ami = ami64;
-                break;
-            case EXTRA_LARGE:
-                ami = ami64;
-                break;
-            case EXTRA_LARGE_HIGH_CPU:
-                ami = ami64;
-                break;
-            default:
-                throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
+
+        List<Future<List<String>>> futures = new LinkedList<Future<List<String>>>();
+        for (NodeProfileInfo nodeProfileInfo : clusterTopology) {
+            for (int i = 0; i < nodeProfileInfo.getNumber(); i++) {
+                String ami;
+                switch ((EC2NodeType) nodeProfileInfo.getNodeType()) {
+                    case SMALL:
+                        ami = ami32;
+                        break;
+                    case MEDIUM_HIGH_CPU:
+                        ami = ami32;
+                        break;
+                    case LARGE:
+                        ami = ami64;
+                        break;
+                    case EXTRA_LARGE:
+                        ami = ami64;
+                        break;
+                    case EXTRA_LARGE_HIGH_CPU:
+                        ami = ami64;
+                        break;
+                    default:
+                        throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
+                                nodeProfileInfo.getNodeType().getName()));
+                }
+                futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
+                        nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(), ami,
+                        awsAccessID, awsSecretKey, awsSecured)));
+            }
         }
-        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(numberOfMonitors + numberOfAgents);
-        // start the monitors
-        for (int i = 0; i < numberOfMonitors; i++) {
-            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
-                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
-        }
-        // start the "monitors and agents"
-        for (int i = 0; i < numberOfMonitorAndAgents; i++) {
-            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR_AND_AGENT,
-                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
-        }
-        // start the agents
-        for (int i = 0; i < numberOfAgents; i++) {
-            futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.AGENT,
-                    instanceType, ami, awsAccessID, awsSecretKey, awsSecured)));
-        }
+
         // wait for the threads to finish
         for (Future<List<String>> future : futures) {
             future.get(5 * 60, TimeUnit.SECONDS);
@@ -141,7 +144,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             return (EC2Cluster) cluster.name(name).addNodes(nodes);
     }
 
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         // inspect the current cluster in order to figure out its topology
         EC2Cluster cluster = cluster(clusterName);
 
@@ -158,110 +161,68 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             }
         }
 
-        numberOfMonitors -= monitors.size();
-        numberOfMonitorsAndAgents -= monitorsAndAgents.size();
-        numberOfAgents -= agents.size();
+        int numberOfMonitors = monitors.size();
+        int numberOfMonitorsAndAgents = monitorsAndAgents.size();
+        int numberOfAgents = agents.size();
 
-        List<Future<List<String>>> futures = new ArrayList<Future<List<String>>>(Math.abs(numberOfMonitors) + Math.abs(numberOfAgents));
-
-        if (numberOfMonitors > 0) {             // start new MONITORs
-            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional monitor(s)...",
-                    new Object[] { clusterName, numberOfMonitors });
-            // todo: allow clients to specify which kind of EC2 instances to start
-            EC2NodeType instanceType = EC2NodeType.SMALL;
-            String ami;
-            switch (instanceType) {
-                case SMALL:
-                case MEDIUM_HIGH_CPU:
-                    ami = ami32;
-                    break;
-                case LARGE:
-                case EXTRA_LARGE:
-                case EXTRA_LARGE_HIGH_CPU:
-                    ami = ami64;
-                    break;
-                default:
-                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
-            }
-            while (numberOfMonitors-- > 0) {
-                futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR, instanceType, ami,
-                        awsAccessID, awsSecretKey, awsSecured)));
-            }
-        } else {                                // stop some monitors
-            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} monitor(s)...",
-                    new Object[] { clusterName, Math.abs(numberOfMonitors) });
-            Iterator<EC2Node> iterator = monitors.iterator();
-            while (numberOfMonitors++ < 0) {
-                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
-            }
-        }
-
-        if (numberOfMonitorsAndAgents > 0) {             // start new MONITOR_AND_AGENTs
-            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional monitor(s) and agent(s)...",
-                    new Object[] { clusterName, numberOfMonitorsAndAgents });
-            // todo: allow clients to specify which kind of EC2 instances to start
-            EC2NodeType instanceType = EC2NodeType.SMALL;
-            String ami;
-            switch (instanceType) {
-                case SMALL:
-                case MEDIUM_HIGH_CPU:
-                    ami = ami32;
-                    break;
-                case LARGE:
-                case EXTRA_LARGE:
-                case EXTRA_LARGE_HIGH_CPU:
-                    ami = ami64;
-                    break;
-                default:
-                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
-            }
-            while (numberOfMonitorsAndAgents-- > 0) {
-                futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR_AND_AGENT, instanceType, ami,
-                        awsAccessID, awsSecretKey, awsSecured)));
-            }
-        } else {                                // stop some monitors
-            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} monitor(s) and agent(s)...",
-                    new Object[] { clusterName, Math.abs(numberOfMonitorsAndAgents) });
-            Iterator<EC2Node> iterator = monitors.iterator();
-            while (numberOfMonitors++ < 0) {
-                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
-            }
-        }
-
-        if (numberOfAgents > 0) {               // start new agents
-            logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional agent(s)...",
-                    new Object[] { clusterName, numberOfAgents });
-            // todo: allow clients to specify which kind of EC2 instances to start
-            EC2NodeType instanceType = EC2NodeType.SMALL;
-            String ami;
-            switch (instanceType) {
-                case SMALL:
-                case MEDIUM_HIGH_CPU:
-                    ami = ami32;
-                    break;
-                case LARGE:
-                case EXTRA_LARGE:
-                case EXTRA_LARGE_HIGH_CPU:
-                    ami = ami64;
-                    break;
-                default:
-                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'", instanceType.getName()));
-            }
-            while (numberOfAgents-- > 0) {
-                futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.AGENT, instanceType, ami,
-                        awsAccessID, awsSecretKey, awsSecured)));
-            }
-        } else {                                // stop some agents
-            logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} agent(s)...",
-                    new Object[] { clusterName, Math.abs(numberOfAgents) });
-            Iterator<EC2Node> iterator = agents.iterator();
-            while (numberOfAgents++ < 0) {
-                nodeInstantiator.shutdownInstance(iterator.next().getInstanceID());
+        List<Future> futures = new LinkedList<Future>();
+        for (NodeProfileInfo nodeProfileInfo : clusterTopology) {
+            for (int i = 0; i < nodeProfileInfo.getNumber(); i++) {
+                String ami;
+                switch ((EC2NodeType) nodeProfileInfo.getNodeType()) {
+                    case SMALL:
+                        ami = ami32;
+                        break;
+                    case MEDIUM_HIGH_CPU:
+                        ami = ami32;
+                        break;
+                    case LARGE:
+                        ami = ami64;
+                        break;
+                    case EXTRA_LARGE:
+                        ami = ami64;
+                        break;
+                    case EXTRA_LARGE_HIGH_CPU:
+                        ami = ami64;
+                        break;
+                    default:
+                        throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
+                                nodeProfileInfo.getNodeType().getName()));
+                }
+                int number = 0;
+                Iterator<EC2Node> nodesIterator = null;
+                switch (nodeProfileInfo.getNodeProfile()) {
+                    case MONITOR:
+                        number = numberOfMonitors - nodeProfileInfo.getNumber();
+                        nodesIterator = monitors.iterator();
+                        break;
+                    case MONITOR_AND_AGENT:
+                        number = numberOfMonitorsAndAgents - nodeProfileInfo.getNumber();
+                        nodesIterator = monitorsAndAgents.iterator();
+                        break;
+                    case AGENT:
+                        number = numberOfAgents - nodeProfileInfo.getNumber();
+                        nodesIterator = agents.iterator();
+                        break;
+                }
+                if (number > 0) {
+                    logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional node(s)...", new Object[]{clusterName, number });
+                    for (int j = 0; j < number; i++)
+                        futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
+                            (EC2NodeType) nodeProfileInfo.getNodeType(), ami, awsAccessID, awsSecretKey, awsSecured)));
+                } else {
+                    logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s)...", new Object[]{clusterName, Math.abs(number) });
+                    int numberToStop = Math.abs(number);
+                    while (numberToStop > 0) {
+                        EC2Node node = nodesIterator.next();
+                        futures.add(executor.submit(new StopInstanceTask(nodeInstantiator, node.getInstanceID())));
+                    }
+                }
             }
         }
 
         // wait for the threads to finish
-        for (Future<List<String>> future : futures) {
+        for (Future future : futures) {
             future.get(5 * 60, TimeUnit.SECONDS);
         }
     }
@@ -357,6 +318,21 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
             logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
                                        new Object[] { ami, groups.toString(), userData });
             return nodeInstantiator.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
+        }
+    }
+
+    class StopInstanceTask implements Callable<Void> {
+        private EC2Instantiator nodeInstantiator;
+        private String instanceID;
+
+        public StopInstanceTask(EC2Instantiator nodeInstantiator, String instanceID) {
+            this.nodeInstantiator = nodeInstantiator;
+            this.instanceID = instanceID;
+        }
+
+        public Void call() throws RemoteException {
+            nodeInstantiator.shutdownInstance(instanceID);
+            return null;
         }
     }
 }

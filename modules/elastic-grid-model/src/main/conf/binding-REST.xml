@@ -35,6 +35,10 @@
             serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeNodeProfile"
             deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeNodeProfile"/>
 
+    <format type="com.elasticgrid.model.NodeType"
+            serializer="com.elasticgrid.model.internal.jibx.Conversion.serializeNodeType"
+            deserializer="com.elasticgrid.model.internal.jibx.Conversion.deserializeNodeType"/>
+
     <mapping name="clusters" class="com.elasticgrid.model.internal.Clusters">
         <collection field="clusters"/>
     </mapping>
@@ -62,11 +66,16 @@
                     factory="com.elasticgrid.model.internal.AbstractCluster.setOfNodes"/>
     </mapping>
 
+    <mapping name="node-profile-info" class="com.elasticgrid.model.NodeProfileInfo">
+        <value name="profile" field="nodeProfile" style="attribute"/>
+        <value name="type" field="nodeType" style="attribute"/>
+        <value name="number" field="number" style="attribute"/>
+    </mapping>
     <mapping name="cluster-provisioning" class="com.elasticgrid.model.ClusterProvisioning">
         <value name="name" field="clusterName" style="attribute"/>
-        <value name="monitors" field="numberOfMonitors"/>
-        <value name="monitors-and-agents" field="numberOfMonitorsAndAgents"/>
-        <value name="agents" field="numberOfAgents"/>
+        <structure field="monitorsInfo"/>
+        <structure field="monitorsAndAgentsInfo"/>
+        <structure field="agentsInfo"/>
     </mapping>
 
     <mapping class="com.elasticgrid.model.internal.AbstractNode" abstract="true">

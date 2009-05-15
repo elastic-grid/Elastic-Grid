@@ -18,6 +18,9 @@
 
 package com.elasticgrid.model.internal.jibx;
 
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeType;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -25,10 +28,10 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.ISOPeriodFormat;
 import org.joda.time.format.PeriodFormatter;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Currency;
-import com.elasticgrid.model.NodeProfile;
 
 /**
  * Custom XML serializers/deserializers for JiBX.
@@ -99,8 +102,10 @@ public class Conversion {
         if (profile == null)
             return null;
         switch (profile) {
-            case MONITOR_AND_AGENT:
+            case MONITOR:
                 return "monitor";
+            case MONITOR_AND_AGENT:
+                return "monitor-and-agent";
             case AGENT:
                 return "agent";
         }
@@ -111,10 +116,24 @@ public class Conversion {
         if (StringUtils.isEmpty(profile))
             return null;
         if ("monitor".equals(profile))
+            return NodeProfile.MONITOR;
+        else if ("monitor-and-agent".equals(profile))
             return NodeProfile.MONITOR_AND_AGENT;
         else if ("agent".equals(profile))
             return NodeProfile.AGENT;
         throw new IllegalArgumentException("Unexpected profile " + profile);
+    }
+
+    public static String serializeNodeType(NodeType type) {
+        if (type == null)
+            return null;
+        return type.getName();
+    }
+
+    public static NodeType deserializeNodeType(String type) throws UnknownHostException {
+        if (StringUtils.isEmpty(type))
+            return null;
+        return EC2NodeType.valueOf(type);
     }
 
 }

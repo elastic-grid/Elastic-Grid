@@ -19,12 +19,10 @@
 package com.elasticgrid.model.ec2.impl;
 
 import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.Node;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.internal.AbstractNode;
-import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard

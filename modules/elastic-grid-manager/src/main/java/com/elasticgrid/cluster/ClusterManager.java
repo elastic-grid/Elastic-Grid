@@ -21,41 +21,26 @@ package com.elasticgrid.cluster;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
-import java.rmi.RemoteException;
-import java.util.Set;
+import com.elasticgrid.model.NodeProfileInfo;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.List;
+import java.util.Set;
+import java.rmi.RemoteException;
 
 public interface ClusterManager<C extends Cluster> {
-    /**
-     * Start a cluster with a specified name.
-     * This is the same as calling {@link #startCluster(String, int, int, int)} with only 1 "monitor and agent".
-     * @param clusterName the name of the cluster to start
-     * @throws InterruptedException if the cluster was not started before timeout
-     * @throws ClusterException if there is a cluster failure
-     * @throws ExecutionException
-     * @throws TimeoutException
-     * @throws RemoteException if there is a network failure
-     * @see #startCluster (String, int)
-     * @see #startCluster (String, int,int)
-     */
-    void startCluster(String clusterName)
-            throws ClusterException, RemoteException, ExecutionException, TimeoutException, InterruptedException;
 
     /**
      * Start a cluster with a specified name and a specified number of instances.
      * @param clusterName the name of the cluster to start
-     * @param numberOfMonitors the number of monitor nodes to start for this cluster
-     * @param numberOfMonitorsAndAgents the number of "monitor + agent" nodes to start for this cluster
-     * @param numberOfAgents the number of agents nodes to start for this cluster
+     * @param clusterTopology information about the cluster topology
      * @throws InterruptedException if the cluster was not started before timeout
      * @throws RemoteException if there is a network failure
      * @throws ClusterException if there is a cluster failure
      * @throws ExecutionException
      * @throws TimeoutException
-     * @see #startCluster(String)
      */
-    void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents)
+    void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
 
     void stopCluster(String clusterName) throws ClusterException, RemoteException;
@@ -80,8 +65,7 @@ public interface ClusterManager<C extends Cluster> {
     /**
      * Resize a cluster.
      * @param clusterName the name of the cluster to resize
-     * @param numberOfMonitors the number of monitor nodes to reach for this cluster
-     * @param numberOfAgents the number of agents nodes to reach for this cluster
+     * @param clusterTopology information about the cluster topology
      * @throws ClusterNotFoundException if the cluster can't be found
      * @throws ClusterException if there is a cluster failure
      * @throws InterruptedException if the cluster was not started before timeout
@@ -89,6 +73,7 @@ public interface ClusterManager<C extends Cluster> {
      * @throws ExecutionException
      * @throws TimeoutException
      */
-    void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents)
+    void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
+
 }

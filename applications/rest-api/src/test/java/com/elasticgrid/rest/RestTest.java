@@ -20,6 +20,9 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.internal.Clusters;
 import org.jibx.runtime.JiBXException;
 import org.restlet.Client;
@@ -39,6 +42,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.Arrays;
 
 @ContextConfiguration(locations = {"/com/elasticgrid/rest/applicationContext.xml" })
 public class RestTest extends AbstractTestNGSpringContextTests {
@@ -108,8 +112,9 @@ public class RestTest extends AbstractTestNGSpringContextTests {
     @BeforeMethod
     public void setupDummyClusters() throws TimeoutException, ExecutionException, RemoteException, ClusterException, InterruptedException {
         ClusterManager clusterManager = (ClusterManager) applicationContext.getBean("clusterManager");
-        clusterManager.startCluster("fake1");
-        clusterManager.startCluster("fake2");
+        NodeProfileInfo monitorAndAgent = new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL, 1);
+        clusterManager.startCluster("fake1", Arrays.asList(monitorAndAgent));
+        clusterManager.startCluster("fake2", Arrays.asList(monitorAndAgent));
     }
 
     /**

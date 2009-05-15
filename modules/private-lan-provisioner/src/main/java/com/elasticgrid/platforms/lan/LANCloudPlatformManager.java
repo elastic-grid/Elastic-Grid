@@ -20,6 +20,7 @@ package com.elasticgrid.platforms.lan;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.lan.impl.LANClusterImpl;
@@ -45,7 +46,7 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         return "Private LAN";
     }
 
-    public void startCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to start a new cluster on a private LAN.");
     }
 
@@ -74,7 +75,7 @@ public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster>
         return cluster;
     }
 
-    public void resizeCluster(String clusterName, int numberOfMonitors, int numberOfMonitorsAndAgents, int numberOfAgents) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         throw new UnsupportedOperationException("There is no way to resize a cluster on a private LAN.");
     }
 
