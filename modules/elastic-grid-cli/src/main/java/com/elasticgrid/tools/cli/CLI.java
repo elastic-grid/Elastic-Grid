@@ -19,18 +19,17 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.cluster.discovery.ClusterLocator;
+import net.jini.config.Configuration;
+import net.jini.config.ConfigurationException;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
-import net.jini.config.Configuration;
-import net.jini.config.ConfigurationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class CLI extends org.rioproject.tools.cli.CLI {
@@ -54,7 +53,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
                         new OptionHandlerDesc("list-clusters", ListClustersHandler.class.getName()),
                         new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
                         new OptionHandlerDesc("stop-cluster", StopClusterHandler.class.getName()),
-                        new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
+                        //new OptionHandlerDesc("resize-cluster", ResizeClusterHandler.class.getName()),
                         new OptionHandlerDesc("install", InstallHandler.class.getName()),
                         // Rio handlers
                         new OptionHandlerDesc("list", ListHandler.class.getName()),
