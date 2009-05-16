@@ -176,6 +176,7 @@ else
         -DEG_HOME=$EG_HOME \
         -Dorg.rioproject.home=$EG_HOME \
         -DJINI_HOME=$JINI_HOME \
+        -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties \
         $NETWORK $DEBUG $launchTarget $cliExt $command_line
 fi
 

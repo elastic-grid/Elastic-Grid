@@ -35,6 +35,11 @@ public abstract class AbstractNode implements Node {
         this.profile = profile;
     }
 
+    public Node profile(NodeProfile profile) {
+        setProfile(profile);
+        return this;
+    }
+
     public NodeProfile getProfile() {
         return profile;
     }
