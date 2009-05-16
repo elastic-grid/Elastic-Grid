@@ -21,11 +21,16 @@ public class NodeProfileInfo {
     private NodeProfile nodeProfile;
     private NodeType nodeType;
     private int number;
+    private boolean override;
 
     /** Needed for JiBX */
     public NodeProfileInfo() {}
 
     public NodeProfileInfo(NodeProfile nodeProfile, NodeType nodeType, int number) {
+        this(nodeProfile, nodeType, number, false);
+    }
+    
+    public NodeProfileInfo(NodeProfile nodeProfile, NodeType nodeType, int number, boolean override) {
         this.nodeProfile = nodeProfile;
         this.nodeType = nodeType;
         this.number = number;
