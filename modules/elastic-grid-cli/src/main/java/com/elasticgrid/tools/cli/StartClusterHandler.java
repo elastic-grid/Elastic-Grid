@@ -18,6 +18,7 @@
 
 package com.elasticgrid.tools.cli;
 
+import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.NodeType;
@@ -148,8 +149,8 @@ public class StartClusterHandler extends AbstractHandler
                        numMonitors + " Monitor(s), " +
                        numAgents + " Agent(s), " +
                        numMonitorAgents + " Monitor Agent(s)";
-            //} catch (ClusterAlreadyRunningException e) {
-            //    return "cluster already running!";
+            } catch (ClusterAlreadyRunningException e) {
+                return "cluster already running!";
             } catch (Exception e) {
                 e.printStackTrace(out);
                 return "unexpected cluster exception";
