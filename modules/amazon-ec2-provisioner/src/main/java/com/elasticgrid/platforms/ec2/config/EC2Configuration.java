@@ -26,6 +26,7 @@ import com.elasticgrid.config.GenericConfiguration;
  */
 public interface EC2Configuration extends GenericConfiguration {
     public static final String EG_DROP_BUCKET = "eg.s3.dropBucket";
+    public static final String EG_OVERRIDES_BUCKET = "eg.s3.overridesBucket";
 
     public static final String AWS_ACCESS_ID = "aws.accessId";
     public static final String AWS_SECRET_KEY = "aws.secretKey";
