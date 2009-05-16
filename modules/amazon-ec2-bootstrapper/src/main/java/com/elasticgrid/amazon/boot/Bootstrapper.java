@@ -88,7 +88,7 @@ public class Bootstrapper {
                 egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
-            if (NodeProfile.MONITOR_AND_AGENT.equals(monitor.getProfile())) {
+            if (NodeProfile.MONITOR.equals(monitor.getProfile())) {
                 FileUtils.writeStringToFile(new File("/tmp/monitor-only"), "yes");
             }
             if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
