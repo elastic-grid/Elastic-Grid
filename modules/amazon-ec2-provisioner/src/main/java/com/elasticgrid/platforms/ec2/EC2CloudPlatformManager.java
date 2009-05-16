@@ -33,6 +33,7 @@ import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang.StringUtils;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -59,7 +60,9 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
 
     @Autowired(required = true)
     private EC2ClusterLocator clusterLocator;
-    
+
+    private String dropBucket;
+    private String overridesBucket;
     private String keyName;
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
@@ -103,9 +106,24 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                         throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
                                 nodeProfileInfo.getNodeType().getName()));
                 }
+                String profile = null;
+                switch (nodeProfileInfo.getNodeProfile()) {
+                    case AGENT:
+                        profile = "agent";
+                        break;
+                    case MONITOR:
+                        profile = "monitor";
+                        break;
+                    case MONITOR_AND_AGENT:
+                        profile = "monitor";
+                        break;
+                }
+                String override = null;
+                if (nodeProfileInfo.hasOverride())
+                    override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";
                 futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
-                        nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(), ami,
-                        awsAccessID, awsSecretKey, awsSecured)));
+                        nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
+                        override, ami, awsAccessID, awsSecretKey, awsSecured)));
             }
         }
 
@@ -207,9 +225,25 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                 }
                 if (number > 0) {
                     logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional node(s)...", new Object[]{clusterName, number });
-                    for (int j = 0; j < number; i++)
+                    String profile = null;
+                    switch (nodeProfileInfo.getNodeProfile()) {
+                        case AGENT:
+                            profile = "agent";
+                            break;
+                        case MONITOR:
+                            profile = "monitor";
+                            break;
+                        case MONITOR_AND_AGENT:
+                            profile = "monitor";
+                            break;
+                    }
+                    String override = null;
+                    if (nodeProfileInfo.hasOverride())
+                        override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";
+                    for (int j = 0; j < number; i++) {
                         futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
-                            (EC2NodeType) nodeProfileInfo.getNodeType(), ami, awsAccessID, awsSecretKey, awsSecured)));
+                            (EC2NodeType) nodeProfileInfo.getNodeType(), override, ami, awsAccessID, awsSecretKey, awsSecured)));
+                    }
                 } else {
                     logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s)...", new Object[]{clusterName, Math.abs(number) });
                     int numberToStop = Math.abs(number);
@@ -230,6 +264,16 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     @Autowired(required = true)
     public void setNodeInstantiator(EC2Instantiator nodeInstantiator) {
         this.nodeInstantiator = nodeInstantiator;
+    }
+
+    @Required
+    public void setDropBucket(String dropBucket) {
+        this.dropBucket = dropBucket;
+    }
+
+    @Required
+    public void setOverridesBucket(String overridesBucket) {
+        this.overridesBucket = overridesBucket;
     }
 
     @Required
@@ -273,18 +317,28 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         private EC2NodeType instanceType;
         private String ami;
         private String userData;
-
+                                                                                       
         public StartInstanceTask(EC2Instantiator nodeInstantiator, String clusterName, NodeProfile profile,
-                                 EC2NodeType instanceType, String ami,
-                                 String awsAccessId, String awsSecretKey, boolean awsSecured) {
+                                 EC2NodeType instanceType, String override, String ami,
+                                 String awsAccessID, String awsSecretKey, boolean awsSecured) {
             this.nodeInstantiator = nodeInstantiator;
             this.clusterName = clusterName;
             this.profile = profile;
             this.instanceType = instanceType;
             this.ami = ami;
-            this.userData = String.format(
-                    "CLUSTER_NAME=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_SQS_SECURED=%b",
-                    clusterName, awsAccessId, awsSecretKey, awsSecured);
+
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("CLUSTER_NAME=").append(clusterName);
+            buffer.append(",AWS_ACCESS_ID=").append(awsAccessID);
+            buffer.append(",AWS_SECRET_KEY=").append(awsSecretKey);
+            buffer.append(",AWS_EC2_AMI32=").append(ami32);
+            buffer.append(",AWS_EC2_AMI64=").append(ami64);
+            buffer.append(",AWS_EC2_KEYPAIR=").append(keyName);
+            buffer.append(",AWS_SQS_SECURED=").append(awsSecured);
+            buffer.append(",DROP_BUCKET=").append(dropBucket);
+            if (StringUtils.isNotEmpty(override))
+                buffer.append(",OVERRIDES_URL=").append(override);
+            this.userData = buffer.toString();
         }
 
         public List<String> call() throws RemoteException {

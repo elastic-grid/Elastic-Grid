@@ -47,7 +47,7 @@ public class EC2CloudPlatformManagerTest {
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(null);
         EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
-                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_SQS_SECURED=true",
+                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_EC2_AMI32=null,AWS_EC2_AMI64=null,AWS_EC2_KEYPAIR=null,AWS_SQS_SECURED=true,DROP_BUCKET=null",
                 null, true, EC2NodeType.SMALL))
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
