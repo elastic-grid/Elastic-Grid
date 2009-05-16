@@ -44,22 +44,23 @@ mkdir -p /var/log/eg
 LOCAL_HOST=`cat /tmp/public-hostname`
 MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
 MONITOR_ONLY=`cat /tmp/monitor-only`
-OVERRIDES_URL=`cat /tmp/overrides`
 
 echo "Local host name: $LOCAL_HOST" | logger -t elastic-grid
 echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
 
-if [ MONITOR_ONLY == 'yes' ]; then
+OVERRIDES_URL=`cat /tmp/overrides`
+
+if [ "$MONITOR_ONLY" == 'yes' ]; then
     echo Starting Elastic Grid monitor | logger -t elastic-grid
-    "$EG_HOME"/bin/eg start monitor 2>&1 > /var/log/eg/eg-monitor.log &
+    "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
 else
     if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
         echo Starting Elastic Grid monitor | logger -t elastic-grid
-        "$EG_HOME"/bin/eg start monitor 2>&1 > /var/log/eg/eg-monitor.log &
+        "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
         echo Starting Elastic Grid agent | logger -t elastic-grid
-        "$EG_HOME"/bin/eg start agent 2>&1 > /var/log/eg/eg-agent.log &
+        "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
     else
         echo Starting Elastic Grid agent | logger -t elastic-grid
-        "$EG_HOME"/bin/eg start agent 2>&1 > /var/log/eg/eg-agent.log &
+        "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
     fi
 fi
