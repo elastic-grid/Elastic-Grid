@@ -27,6 +27,13 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid EC2 provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Rio dependencies -->
         <dependency>
             <groupId>org.rioproject.tools</groupId>
