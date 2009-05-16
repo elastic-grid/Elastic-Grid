@@ -52,6 +52,12 @@
             <version>${restlet-release-version}</version>
         </dependency>
 
+        <!-- Amazon S3 dependencies -->
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+        </dependency>
+
         <!-- Command line parsing -->
         <dependency>
             <groupId>args4j</groupId>
