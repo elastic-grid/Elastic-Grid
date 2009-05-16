@@ -24,6 +24,7 @@
                 <exclude>config/cybernode.groovy</exclude>
                 <exclude>config/start-monitor.groovy</exclude>
                 <exclude>config/monitor.groovy</exclude>
+                <exclude>config/reggie.groovy</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
