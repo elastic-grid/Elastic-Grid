@@ -18,23 +18,32 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2NodeType;
-import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.utils.amazon.AWSUtils;
+import org.jets3t.service.S3Service;
+import org.jets3t.service.S3ServiceException;
+import org.jets3t.service.impl.rest.httpclient.RestS3Service;
+import org.jets3t.service.model.S3Bucket;
+import org.jets3t.service.model.S3Object;
+import org.jets3t.service.security.AWSCredentials;
 import org.rioproject.tools.cli.OptionHandler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class StartClusterHandler extends AbstractHandler
     implements OptionHandler {
+
+    public static final String AGENT_OVERRIDE_FILE_NAME = "start-agent-override.groovy";
+    public static final String MONITOR_OVERRIDE_FILE_NAME = "start-monitor-override.groovy";
 
     /**
      * Process the option.
@@ -48,6 +57,7 @@ public class StartClusterHandler extends AbstractHandler
      * @return The result of the action.
      */
     public String process(String input, BufferedReader br, PrintStream out) {
+        File overridesDir = null;
         StringTokenizer tok = new StringTokenizer(input);
         // first token is "start-cluster"
         tok.nextToken();
@@ -55,7 +65,7 @@ public class StartClusterHandler extends AbstractHandler
         String clusterName = null;
         if (tok.hasMoreTokens())
             clusterName = tok.nextToken();
-        List<NodeProfileInfo> clusterInfo = new ArrayList<NodeProfileInfo>();
+        List<NodeProfileInfo> nodeProfileInfo = new ArrayList<NodeProfileInfo>();
         if (clusterName == null) {
             try {
                 clusterName = getClusterName(br, out);
@@ -67,53 +77,79 @@ public class StartClusterHandler extends AbstractHandler
                 out.println("Cluster name not provided, start-cluster cancelled");
                 return "";
             }
-            clusterInfo.addAll(interactiveClusterSetup(br, out));
+            nodeProfileInfo.addAll(interactiveClusterSetup(br, out));
         } else if (!tok.hasMoreTokens()) {
-            clusterInfo.addAll(interactiveClusterSetup(br, out));
+            nodeProfileInfo.addAll(interactiveClusterSetup(br, out));
         } else {
+
             while (tok.hasMoreTokens()) {
                 String value = tok.nextToken();
                 if (value.startsWith("mon:")) {
                     if (!processOption(value.substring(4),
-                                       clusterInfo,
+                                       nodeProfileInfo,
                                        NodeProfile.MONITOR,
                                        out))
                         return getUsage();
 
                 } else if (value.startsWith("agent:")) {
                     if (!processOption(value.substring(6),
-                                       clusterInfo,
+                                       nodeProfileInfo,
                                        NodeProfile.AGENT,
                                        out))
                         return getUsage();
                 } else if (value.startsWith("monAgent:")) {
                     if (!processOption(value.substring(9),
-                                       clusterInfo,
+                                       nodeProfileInfo,
                                        NodeProfile.MONITOR_AND_AGENT,
                                        out))
                         return getUsage();
                 } else {
-                    out.println("Unknown option " + value);
-                    return getUsage();
+                    /* process overrides*/
+                    if(value.startsWith("~")) {
+                        value = System.getProperty("user.home")+value.substring(1);
+                    }
+
+                    overridesDir = new File(value);
+                    if(!overridesDir.exists() || !overridesDir.isDirectory())
+                        return ("The ["+value+"] directory does not exist, or " +
+                                "is not a directory. Please provide a valid " +
+                                "location for cluster configuration overrides");
+                    /* Check for groovy override configuration files */
+
+                    for(String s : overridesDir.list()) {
+                        if(s.equals(AGENT_OVERRIDE_FILE_NAME)) {
+                            setHasOverride(NodeProfile.AGENT, nodeProfileInfo);
+                            setHasOverride(NodeProfile.MONITOR_AND_AGENT, nodeProfileInfo);
+                        }
+                        if(s.equals(MONITOR_OVERRIDE_FILE_NAME)) {
+                            setHasOverride(NodeProfile.MONITOR, nodeProfileInfo);
+                            setHasOverride(NodeProfile.MONITOR_AND_AGENT, nodeProfileInfo);
+                        }
+                    }
+                    //out.println("Unknown option " + value);
+                    //return getUsage();
                 }
             }
         }
 
         if (clusterName.length() == 0)
             return ("Cluster must have a name, start-cluster cancelled");
-        int numMonitors = countMonitors(clusterInfo);
-        int numAgents = countAgents(clusterInfo);
-        int numMonitorAgents = countMonitorAgents(clusterInfo);
+        int numMonitors = countMonitors(nodeProfileInfo);
+        int numAgents = countAgents(nodeProfileInfo);
+        int numMonitorAgents = countMonitorAgents(nodeProfileInfo);
         if (numMonitors > 0 || numAgents > 0 || numMonitorAgents > 0) {
             try {
+                if(overridesDir!=null) {
+                    uploadOverrides(overridesDir, clusterName, out);
+                }
                 out.println("\nStarting cluster [" + clusterName + "] ...");
-                getClusterManager().startCluster(clusterName, clusterInfo);
+                getClusterManager().startCluster(clusterName, nodeProfileInfo);
                 return "Cluster [" + clusterName + "] started with " +
                        numMonitors + " Monitor(s), " +
                        numAgents + " Agent(s), " +
                        numMonitorAgents + " Monitor Agent(s)";
-            } catch (ClusterAlreadyRunningException e) {
-                return "cluster already running!";
+            //} catch (ClusterAlreadyRunningException e) {
+            //    return "cluster already running!";
             } catch (Exception e) {
                 e.printStackTrace(out);
                 return "unexpected cluster exception";
@@ -134,11 +170,11 @@ public class StartClusterHandler extends AbstractHandler
         return ("usage: start-cluster [clusterName " +
                 "[mon:count[:s|m|l|xl]] " +
                 "[agent:count[:s|m|l|xl]] " +
-                "[monAgent:count[:s|m|l|xl]] ]\n");
+                "[monAgent:count[:s|m|l|xl]] [overrides-dir] ]\n");
     }
 
     private boolean processOption(String option,
-                                  List<NodeProfileInfo> clusterInfo,
+                                  List<NodeProfileInfo> nodeProfileInfo,
                                   NodeProfile nodeProfile,
                                   PrintStream out) {
         int num;
@@ -153,7 +189,7 @@ public class StartClusterHandler extends AbstractHandler
             out.println("Bad type: " + option);
             return false;
         }
-        addNodeProfileInfo(clusterInfo,
+        addNodeProfileInfo(nodeProfileInfo,
                            nodeProfile,
                            translateToNodeType(type),
                            num);
@@ -187,11 +223,11 @@ public class StartClusterHandler extends AbstractHandler
         return type;
     }
 
-    private void addNodeProfileInfo(List<NodeProfileInfo> clusterInfo,
+    private void addNodeProfileInfo(List<NodeProfileInfo> nodeProfileInfo,
                                     NodeProfile nodeProfile,
                                     NodeType nodeType,
                                     int number) {
-        clusterInfo.add(new NodeProfileInfo(nodeProfile, nodeType, number));
+        nodeProfileInfo.add(new NodeProfileInfo(nodeProfile, nodeType, number));
     }
 
     private String getClusterName(BufferedReader br, PrintStream out)
@@ -328,30 +364,68 @@ public class StartClusterHandler extends AbstractHandler
         return response;
     }
 
+    private void setHasOverride(NodeProfile np, List<NodeProfileInfo> list) {
+        for (NodeProfileInfo npi : list) {
+            if (npi.getNodeProfile().equals(np))
+                npi.setOverride(true);
+        }
+    }
+
     private int countAgents(List<NodeProfileInfo> list) {
         int count = 0;
-        for (NodeProfileInfo ci : list) {
-            if (ci.getNodeProfile().equals(NodeProfile.AGENT))
-                count += ci.getNumber();
+        for (NodeProfileInfo npi : list) {
+            if (npi.getNodeProfile().equals(NodeProfile.AGENT))
+                count += npi.getNumber();
         }
         return count;
     }
 
     private int countMonitors(List<NodeProfileInfo> list) {
         int count = 0;
-        for (NodeProfileInfo ci : list) {
-            if (ci.getNodeProfile().equals(NodeProfile.MONITOR))
-                count += ci.getNumber();
+        for (NodeProfileInfo npi : list) {
+            if (npi.getNodeProfile().equals(NodeProfile.MONITOR))
+                count += npi.getNumber();
         }
         return count;
     }
 
     private int countMonitorAgents(List<NodeProfileInfo> list) {
         int count = 0;
-        for (NodeProfileInfo ci : list) {
-            if (ci.getNodeProfile().equals(NodeProfile.MONITOR_AND_AGENT))
-                count += ci.getNumber();
+        for (NodeProfileInfo npi : list) {
+            if (npi.getNodeProfile().equals(NodeProfile.MONITOR_AND_AGENT))
+                count += npi.getNumber();
         }
         return count;
+    }
+
+    private void uploadOverrides(File dir, String clusterName, PrintStream out) throws
+                                                               IOException,
+                                                               S3ServiceException,
+                                                               NoSuchAlgorithmException {
+        Properties awsConfig = AWSUtils.loadEC2Configuration();
+        String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
+        String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);
+        if (awsAccessID == null) {
+            throw new IllegalArgumentException("Could not find AWS Access ID");
+        }
+        if (awsSecretKey == null) {
+            throw new IllegalArgumentException("Could not find AWS Secret Key");
+        }
+        AWSCredentials credentials = new AWSCredentials(awsAccessID, awsSecretKey);
+
+        S3Service s3Service = new RestS3Service(credentials);
+        String overridesBucket = awsConfig.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
+        out.println("Uploading overrides from ["+dir.getPath()+"] " +
+                                "to S3 bucket ["+overridesBucket+"] ...");
+        S3Bucket s3OverridesBucket = s3Service.getOrCreateBucket(overridesBucket);
+
+        for(File file : dir.listFiles()) {
+            if(file.getName().endsWith(".groovy")) {
+                S3Object s3o = new S3Object(s3OverridesBucket, file);
+                out.println("Sending "+file.getName()+"...");
+                s3o.setKey("/"+clusterName+"/"+file.getName());
+                s3Service.putObject(s3OverridesBucket, s3o);
+            }
+        }
     }
 }
