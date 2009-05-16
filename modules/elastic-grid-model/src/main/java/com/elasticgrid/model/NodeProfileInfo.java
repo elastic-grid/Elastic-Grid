@@ -27,14 +27,10 @@ public class NodeProfileInfo {
     public NodeProfileInfo() {}
 
     public NodeProfileInfo(NodeProfile nodeProfile, NodeType nodeType, int number) {
-        this(nodeProfile, nodeType, number, false);
-    }
-    
-    public NodeProfileInfo(NodeProfile nodeProfile, NodeType nodeType, int number, boolean override) {
         this.nodeProfile = nodeProfile;
         this.nodeType = nodeType;
         this.number = number;
-        this.override = override;
+        this.override = false;
     }
 
     public NodeProfile getNodeProfile() {
@@ -51,5 +47,9 @@ public class NodeProfileInfo {
 
     public boolean hasOverride() {
         return override;
+    }
+
+    public void setOverride(boolean override) {
+        this.override = override;
     }
 }
