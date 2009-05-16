@@ -34,6 +34,7 @@ public class NodeProfileInfo {
         this.nodeProfile = nodeProfile;
         this.nodeType = nodeType;
         this.number = number;
+        this.override = override;
     }
 
     public NodeProfile getNodeProfile() {
@@ -46,5 +47,9 @@ public class NodeProfileInfo {
 
     public int getNumber() {
         return number;
+    }
+
+    public boolean hasOverride() {
+        return override;
     }
 }
