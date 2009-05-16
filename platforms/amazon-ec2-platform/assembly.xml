@@ -43,4 +43,20 @@
 			<useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>${basedir}/target/private-lan-platform/bin/eg</source>
+            <outputDirectory>/bin</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>0755</fileMode>
+        </file>
+    </files>
+    <dependencySets>
+        <dependencySet>
+            <includes>
+                <include>com.elasticgrid:amazon-ec2-bootstrapper</include>
+            </includes>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
+        </dependencySet>
+    </dependencySets>
 </assembly>
