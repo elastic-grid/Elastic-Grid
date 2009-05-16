@@ -44,6 +44,7 @@ mkdir -p /var/log/eg
 LOCAL_HOST=`cat /tmp/public-hostname`
 MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
 MONITOR_ONLY=`cat /tmp/monitor-only`
+OVERRIDES_URL=`cat /tmp/overrides`
 
 echo "Local host name: $LOCAL_HOST" | logger -t elastic-grid
 echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid

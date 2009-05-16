@@ -23,6 +23,7 @@ package com.elasticgrid.config;
  * @author Jerome Bernard
  */
 public interface GenericConfiguration {
-    public static final String EG_MONITOR_HOST = "eg.monitor.host";
-    public static final String EG_CLUSTER_NAME = "eg.cluster.name";
+    public static final String EG_MONITOR_HOST  = "eg.monitor.host";
+    public static final String EG_CLUSTER_NAME  = "eg.cluster.name";
+    public static final String EG_OVERRIDES_URL = "eg.overrides.url";
 }

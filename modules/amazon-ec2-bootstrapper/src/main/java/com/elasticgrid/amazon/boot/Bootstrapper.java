@@ -45,15 +45,17 @@ import java.util.Properties;
  * @author Jerome Bernard
  */
 public class Bootstrapper {
-    public static final String LAUNCH_PARAMETER_CLUSTER_NAME = "CLUSTER_NAME";
-    public static final String LAUNCH_PARAMETER_YUM_PACKAGES = "YUM_PACKAGES";
-    public static final String LAUNCH_PARAMETER_ACCESS_ID    = "AWS_ACCESS_ID";
-    public static final String LAUNCH_PARAMETER_SECRET_KEY   = "AWS_SECRET_KEY";
-    public static final String LAUNCH_PARAMETER_EC2_SECURED  = "AWS_EC2_SECURED";
-    public static final String LAUNCH_PARAMETER_SQS_SECURED  = "AWS_SQS_SECURED";
-    public static final String LAUNCH_PARAMETER_EC2_KEYPAIR  = "AWS_EC2_KEYPAIR";
-    public static final String LAUNCH_PARAMETER_EC2_AMI32    = "AWS_EC2_AMI32";
-    public static final String LAUNCH_PARAMETER_EC2_AMI64    = "AWS_EC2_AMI32";
+    public static final String LAUNCH_PARAMETER_CLUSTER_NAME  = "CLUSTER_NAME";
+    public static final String LAUNCH_PARAMETER_DROP_BUCKET   = "DROP_BUCKET";
+    public static final String LAUNCH_PARAMETER_OVERRIDES_URL = "OVERRIDES_URL";
+    public static final String LAUNCH_PARAMETER_YUM_PACKAGES  = "YUM_PACKAGES";
+    public static final String LAUNCH_PARAMETER_ACCESS_ID     = "AWS_ACCESS_ID";
+    public static final String LAUNCH_PARAMETER_SECRET_KEY    = "AWS_SECRET_KEY";
+    public static final String LAUNCH_PARAMETER_EC2_SECURED   = "AWS_EC2_SECURED";
+    public static final String LAUNCH_PARAMETER_SQS_SECURED   = "AWS_SQS_SECURED";
+    public static final String LAUNCH_PARAMETER_EC2_KEYPAIR   = "AWS_EC2_KEYPAIR";
+    public static final String LAUNCH_PARAMETER_EC2_AMI32     = "AWS_EC2_AMI32";
+    public static final String LAUNCH_PARAMETER_EC2_AMI64     = "AWS_EC2_AMI64";
 
     public static final String LAUNCH_PARAMETERS_FILE = "/tmp/user-data";
     public static final String ELASTIC_GRID_CONFIGURATION_FILE = "config/eg.properties";
@@ -89,6 +91,9 @@ public class Bootstrapper {
             if (NodeProfile.MONITOR_AND_AGENT.equals(monitor.getProfile())) {
                 FileUtils.writeStringToFile(new File("/tmp/monitor-only"), "yes");
             }
+            if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
+                FileUtils.writeStringToFile(new File("/tmp/overrides"),
+                        launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL));
         } catch (ClusterException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
@@ -131,14 +136,22 @@ public class Bootstrapper {
                 egParameters.put(EC2Configuration.AWS_SECRET_KEY, property.getValue());
             if (LAUNCH_PARAMETER_CLUSTER_NAME.equals(key))
                 egParameters.put(EC2Configuration.EG_CLUSTER_NAME, property.getValue());
+            if (LAUNCH_PARAMETER_DROP_BUCKET.equals(key))
+                egParameters.put(EC2Configuration.EG_DROP_BUCKET, property.getValue());
+            if (LAUNCH_PARAMETER_OVERRIDES_URL.equals(key))
+                egParameters.put(EC2Configuration.EG_OVERRIDES_URL, property.getValue());
             if (LAUNCH_PARAMETER_EC2_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, property.getValue());
+            else
+                egParameters.put(EC2Configuration.AWS_EC2_SECURED, Boolean.TRUE.toString());
             if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_SQS_SECURED, property.getValue());
             if (LAUNCH_PARAMETER_EC2_KEYPAIR.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, property.getValue());
+            /*
             else
                 egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, EC2Utils.getInstanceMetadata("keypair"));    // todo: check the value of the metadata property
+            */
             if (LAUNCH_PARAMETER_EC2_AMI32.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_AMI32, property.getValue());
             if (LAUNCH_PARAMETER_EC2_AMI64.equals(key))
