@@ -152,7 +152,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     logger.log Level.INFO, "Searching for monitor node in cluster '$clusterName'..."
     def Collection<EC2Node> nodes = findNodes(clusterName)
     def found = false
-    def node = nodes.find { it.profile.isAgent() }
+    def node = nodes.find { it.profile.isMonitor() }
     if (node)
       return node as EC2Node
     else
