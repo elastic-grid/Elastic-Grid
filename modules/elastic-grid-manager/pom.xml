@@ -27,6 +27,20 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Core -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Grid Utils -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Rio dependencies -->
         <dependency>
             <groupId>org.rioproject</groupId>

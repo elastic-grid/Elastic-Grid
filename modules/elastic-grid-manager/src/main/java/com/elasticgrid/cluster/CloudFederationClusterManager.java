@@ -19,20 +19,23 @@
 package com.elasticgrid.cluster;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.config.GenericConfiguration;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -44,17 +47,17 @@ import java.util.logging.Logger;
  */
 @Service("clusterManager")
 public class CloudFederationClusterManager<C extends Cluster> implements ClusterManager<C> {
+    private boolean ec2Mode = true;
     private List<CloudPlatformManager<C>> clouds;
-
     private static final Logger logger = Logger.getLogger(CloudFederationClusterManager.class.getName());
 
     public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).startCluster(clusterName, clusterTopology);
+        clouds.get(ec2Mode?1:0).startCluster(clusterName, clusterTopology);
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
-        clouds.get(0).stopCluster(clusterName);
+        clouds.get(ec2Mode?1:0).stopCluster(clusterName);
     }
 
     public Set<C> findClusters() throws ClusterException, RemoteException {
@@ -65,6 +68,7 @@ public class CloudFederationClusterManager<C extends Cluster> implements Cluster
     }
 
     public C cluster(String name) throws ClusterException, RemoteException {
+        /*
         C cluster = null;
         int i = 0;
         logger.log(Level.INFO, "Searching through {0} cloud platforms", clouds.size());
@@ -74,15 +78,26 @@ public class CloudFederationClusterManager<C extends Cluster> implements Cluster
             cluster = cloud.cluster(name);
         }
         return cluster;
+        */
+        return clouds.get(ec2Mode?1:0).cluster(name);
     }
 
     public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        clouds.get(0).resizeCluster(clusterName, clusterTopology);
+        clouds.get(ec2Mode?1:0).resizeCluster(clusterName, clusterTopology);
     }
 
     @Required
     public void setClouds(List<CloudPlatformManager<C>> clouds) {
         this.clouds = clouds;
+        try {
+            Properties awsConfig = AWSUtils.loadEC2Configuration();
+            String egMode = awsConfig.getProperty(GenericConfiguration.EG_MODE);
+            if(egMode!=null && egMode.equalsIgnoreCase("lan")) {
+                ec2Mode = false;
+            }
+        } catch (IOException e) {
+
+        }
     }
 }
