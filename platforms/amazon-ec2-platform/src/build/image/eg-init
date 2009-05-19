@@ -41,38 +41,37 @@ export USER="root"
 mkdir -p /var/log/eg
 /root/eg-bootstrap
 
-LOCAL_HOST=`cat /tmp/public-hostname`
-MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
-MONITOR_ONLY=`cat /tmp/monitor-only`
-
-echo "Local host name: $LOCAL_HOST" | logger -t elastic-grid
-echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
+LNODE=`cat /tmp/eg-node-to-start`
 
 OVERRIDES_URL=`cat /tmp/overrides`
-if [ "$OVERRIDES_URL" != '' ]; then
+if [ -n "$OVERRIDES_URL" ]; then
     OVERRIDES_URL="$OVERRIDES_URL/$CLUSTER_NAME"
 fi
 
-if [ "$MONITOR_ONLY" == 'yes' ]; then
+if [ "$NODE" = "monitor" ]; then
     echo Starting Elastic Grid monitor | logger -t elastic-grid
-    if [ "$OVERRIDES_URL" != '' ]; then
+    if [ -n "$OVERRIDES_URL" ]; then
         OVERRIDES_URL="$OVERRIDES_URL/start-monitor-override.groovy"
     fi
     "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
-else
-    if [ "$MONITOR_HOST" == $LOCAL_HOST ]; then
-        if [ "$OVERRIDES_URL" != '' ]; then
-            OVERRIDES_URL="$OVERRIDES_URL/start-monitor-override.groovy"
-        fi
-        echo Starting Elastic Grid monitor | logger -t elastic-grid
-        "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
-        echo Starting Elastic Grid agent | logger -t elastic-grid
-        "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
-    else
-        echo Starting Elastic Grid agent | logger -t elastic-grid
-        if [ "$OVERRIDES_URL" != '' ]; then
-            OVERRIDES_URL="$OVERRIDES_URL/start-agent-override.groovy"
-        fi
-        "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
+elif [ "$NODE" = "monitor-and-agent" ]; then
+    if [ -n "$OVERRIDES_URL" ]; then
+        OVERRIDES_URL="$OVERRIDES_URL/start-monitor-override.groovy"
     fi
+    echo Starting Elastic Grid monitor | logger -t elastic-grid
+    "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
+
+    echo Starting Elastic Grid agent | logger -t elastic-grid
+    # We need to have a utility to check whether overrides are actually in the location
+    # they are supposed to
+    OVERRIDES_URL=""
+    "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
+elif [ "$NODE" = "agent" ]; then
+    echo Starting Elastic Grid agent | logger -t elastic-grid
+    if [ -n "$OVERRIDES_URL" ]; then
+        OVERRIDES_URL="$OVERRIDES_URL/start-agent-override.groovy"
+    fi
+    "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
+else
+    echo "Unknown node type [$NODE]"
 fi
