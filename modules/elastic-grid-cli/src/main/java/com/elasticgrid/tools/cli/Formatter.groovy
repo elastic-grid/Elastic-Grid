@@ -41,7 +41,7 @@ class Formatter {
                     profile = "Monitor"
                     locators << new LookupLocator("jini://${node.address.hostName}")
                 } else if (NodeProfile.MONITOR_AND_AGENT == node.profile) {
-                    profile = "MonitorAgent"
+                    profile = "Monitor+Agent"
                     locators << new LookupLocator("jini://${node.address.hostName}")
                 } else if (NodeProfile.AGENT == node.profile) {
                     profile = "Agent"
@@ -53,7 +53,6 @@ class Formatter {
                 }
             }
             DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
-            println "Locators are: $locators"
             if (dMgr instanceof DiscoveryLocatorManagement) {
                 if (!locators) {
                     ((DiscoveryLocatorManagement) dMgr).setLocators(new LookupLocator[0]);
