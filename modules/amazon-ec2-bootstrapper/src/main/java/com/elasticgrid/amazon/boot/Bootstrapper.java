@@ -111,9 +111,10 @@ public class Bootstrapper {
             FileUtils.writeStringToFile(new File("/tmp/eg-node-to-start"), profile);
             System.out.printf("Local machine is morphed into a %s\n", profile);
 
+            String overridesURL = "";
             if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
-                FileUtils.writeStringToFile(new File("/tmp/overrides"),
-                        launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL));
+                overridesURL = launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL);
+            FileUtils.writeStringToFile(new File("/tmp/overrides"), overridesURL);
         } catch (ClusterException e) {
             System.err.println("Could not find monitor host!");
             System.exit(-1);
