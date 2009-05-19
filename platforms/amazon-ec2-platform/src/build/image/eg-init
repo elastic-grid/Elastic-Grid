@@ -41,7 +41,7 @@ export USER="root"
 mkdir -p /var/log/eg
 /root/eg-bootstrap
 
-LNODE=`cat /tmp/eg-node-to-start`
+NODE=`cat /tmp/eg-node-to-start`
 
 OVERRIDES_URL=`cat /tmp/overrides`
 if [ -n "$OVERRIDES_URL" ]; then
