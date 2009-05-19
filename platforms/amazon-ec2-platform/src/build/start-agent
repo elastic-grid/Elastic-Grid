@@ -24,4 +24,4 @@ if [ "$1" = "" ]; then
 fi
 
 echo "Starting agent for cluster $1"
-ec2run ami-61f41208 -g elastic-grid -g eg-agent -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config
+ec2run ami-fbf41292 -g elastic-grid -g eg-agent -g elastic-grid-cluster-$1 -g default -k eg-keypair -f ec2params.config

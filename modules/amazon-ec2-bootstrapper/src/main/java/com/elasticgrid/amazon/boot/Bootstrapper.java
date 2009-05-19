@@ -153,30 +153,48 @@ public class Bootstrapper {
             String key = (String) property.getKey();
             if (LAUNCH_PARAMETER_ACCESS_ID.equals(key))
                 egParameters.put(EC2Configuration.AWS_ACCESS_ID, property.getValue());
+            else
+                System.err.println("The Amazon Access ID could not be retreived!");
             if (LAUNCH_PARAMETER_SECRET_KEY.equals(key))
                 egParameters.put(EC2Configuration.AWS_SECRET_KEY, property.getValue());
+            else
+                System.err.println("The Amazon Secret Key could not be retreived!");
             if (LAUNCH_PARAMETER_CLUSTER_NAME.equals(key))
                 egParameters.put(EC2Configuration.EG_CLUSTER_NAME, property.getValue());
+            else
+                System.err.println("The name of the cluster could not be retrived!");
             if (LAUNCH_PARAMETER_DROP_BUCKET.equals(key))
                 egParameters.put(EC2Configuration.EG_DROP_BUCKET, property.getValue());
+            else
+                System.err.println("The name of the Amazon S3 drop bucket could not be retreived!");
             if (LAUNCH_PARAMETER_OVERRIDES_URL.equals(key))
                 egParameters.put(EC2Configuration.EG_OVERRIDES_URL, property.getValue());
+            else
+                egParameters.put(EC2Configuration.EG_OVERRIDES_URL, "");
             if (LAUNCH_PARAMETER_EC2_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, property.getValue());
             else
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, Boolean.TRUE.toString());
             if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_SQS_SECURED, property.getValue());
+            else
+                egParameters.put(EC2Configuration.AWS_SQS_SECURED, Boolean.TRUE.toString());
             if (LAUNCH_PARAMETER_EC2_KEYPAIR.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, property.getValue());
+            else
+                System.err.println("The Amazon keypair name could not be retreived!");
             /*
             else
                 egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, EC2Utils.getInstanceMetadata("keypair"));    // todo: check the value of the metadata property
             */
             if (LAUNCH_PARAMETER_EC2_AMI32.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_AMI32, property.getValue());
+            else
+                System.err.println("The 32bits AMI ID could not be retreived!");
             if (LAUNCH_PARAMETER_EC2_AMI64.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_AMI64, property.getValue());
+            else
+                System.err.println("The 64bits AMI ID could not be retreived!");
 
             if (LAUNCH_PARAMETER_YUM_PACKAGES.equals(key))
                 egParameters.put(EC2Configuration.REDHAT_YUM_PACKAGES, property.getValue());
