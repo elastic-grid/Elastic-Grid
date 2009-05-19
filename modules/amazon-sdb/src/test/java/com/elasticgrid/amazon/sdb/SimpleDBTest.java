@@ -20,7 +20,7 @@ package com.elasticgrid.amazon.sdb;
 
 import com.elasticgrid.amazon.sdb.impl.SimpleDBImpl;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.config.EC2Configuration;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

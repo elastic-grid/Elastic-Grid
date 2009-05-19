@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2.utils;
+package com.elasticgrid.aws.s3;
 
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  */
 public class S3URLConnection extends URLConnection {
     private S3Service s3;
-    private static final Logger logger = Logger.getLogger(S3URLStreamHandler.class.getName());
+    private static final Logger logger = Logger.getLogger(Handler.class.getName());
 
     public S3URLConnection(URL url, S3Service s3) {
         super(url);

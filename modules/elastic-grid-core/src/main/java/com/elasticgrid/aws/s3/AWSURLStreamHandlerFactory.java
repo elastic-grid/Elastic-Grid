@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2.utils;
+package com.elasticgrid.aws.s3;
 
+import com.elasticgrid.aws.s3.Handler;
 import java.net.URLStreamHandlerFactory;
 import java.net.URLStreamHandler;
 
@@ -32,7 +33,7 @@ import java.net.URLStreamHandler;
 public class AWSURLStreamHandlerFactory implements URLStreamHandlerFactory {
     public URLStreamHandler createURLStreamHandler(String protocol) {
         if (protocol.equalsIgnoreCase("s3")) {
-            return new S3URLStreamHandler();
+            return new Handler();
         } else {
             return null;
         }

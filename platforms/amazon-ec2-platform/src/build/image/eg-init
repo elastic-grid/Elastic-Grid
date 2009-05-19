@@ -49,6 +49,9 @@ echo "Local host name: $LOCAL_HOST" | logger -t elastic-grid
 echo "Located Elastic Grid Monitor: $MONITOR_HOST" | logger -t elastic-grid
 
 OVERRIDES_URL=`cat /tmp/overrides`
+if [ "$OVERRIDES_URL" != '' ]; then
+    OVERRIDES_URL="$OVERRIDES_URL/$CLUSTER_NAME/start-monitor-override.groovy"
+fi
 
 if [ "$MONITOR_ONLY" == 'yes' ]; then
     echo Starting Elastic Grid monitor | logger -t elastic-grid
