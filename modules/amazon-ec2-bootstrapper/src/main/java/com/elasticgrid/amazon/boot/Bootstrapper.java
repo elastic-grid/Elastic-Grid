@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Bootstrapper in charge of fetching the EC2 launch parameters and generating the EG configuration files.
@@ -87,9 +88,29 @@ public class Bootstrapper {
                 egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
             }
             FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
-            if (NodeProfile.MONITOR.equals(monitor.getProfile())) {
-                FileUtils.writeStringToFile(new File("/tmp/monitor-only"), "yes");
+
+            // get the currently running node
+            Set<EC2Node> nodes = locator.findNodes(clusterName);
+            EC2Node thisNode = null;
+            for (EC2Node node : nodes) {
+                if (node.getAddress().equals(InetAddress.getLocalHost()))
+                    thisNode = node;
             }
+            String profile = null;
+            switch (thisNode.getProfile()) {
+                case AGENT:
+                    profile = "agent";
+                    break;
+                case MONITOR:
+                    profile = "monitor";
+                    break;
+                case MONITOR_AND_AGENT:
+                    profile = "monitor-and-agent";
+                    break;
+            }
+            FileUtils.writeStringToFile(new File("/tmp/eg-node-to-start"), profile);
+            System.out.printf("Local machine is morphed into a %s\n", profile);
+
             if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
                 FileUtils.writeStringToFile(new File("/tmp/overrides"),
                         launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL));
