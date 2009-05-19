@@ -33,16 +33,16 @@ class Formatter {
         out.println "total: ${clusters.size()}"
         clusters.eachWithIndex { Cluster cluster, index ->
             out.println "[${index + 1}]\t${cluster.name}"
-            def locators = []
+            //def locators = []
             def nodeIndex = 0;
             cluster.nodes.each { Node node ->
                 def profile
                 if (NodeProfile.MONITOR == node.profile) {
                     profile = "Monitor"
-                    locators << new LookupLocator("jini://${node.address.hostName}")
+                    //locators << new LookupLocator("jini://${node.address.hostName}")
                 } else if (NodeProfile.MONITOR_AND_AGENT == node.profile) {
                     profile = "Monitor+Agent"
-                    locators << new LookupLocator("jini://${node.address.hostName}")
+                    //locators << new LookupLocator("jini://${node.address.hostName}")
                 } else if (NodeProfile.AGENT == node.profile) {
                     profile = "Agent"
                 }
@@ -52,7 +52,7 @@ class Formatter {
                     out.println "\t[${++nodeIndex}] ${profile}\t${node.address}"
                 }
             }
-
+            /*
             DiscoveryManagement dMgr = CLI.instance.getServiceFinder().getDiscoveryManagement();
             if (dMgr instanceof DiscoveryLocatorManagement) {
                 if (!locators) {
@@ -65,6 +65,7 @@ class Formatter {
                     }
                 }
             }
+            */
         }
     }
 
