@@ -75,7 +75,6 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        logger.log(Level.INFO, "Starting cluster ''{0}''...", new Object[]{clusterName });
         // ensure the cluster is not already running
         Cluster cluster = cluster(clusterName);
         if (cluster != null && cluster.isRunning()) {
@@ -118,9 +117,12 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                         profile = "monitor";
                         break;
                 }
+                logger.log(Level.INFO, "Starting cluster ["+clusterName+"], " +
+                                       "type ["+nodeProfileInfo.getNodeType().getName()+"], " +
+                                       "using AMI ["+ami+"]");
                 String override = null;
                 if (nodeProfileInfo.hasOverride())
-                    override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";
+                    override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";                
                 futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
                         nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
                         override, ami, awsAccessID, awsSecretKey, awsSecured)));
@@ -299,11 +301,13 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     @Required
     public void setAmi32(String ami32) {
         this.ami32 = ami32;
+        logger.info("\n********************\nSET AMI32 TO "+ami32);
     }
 
     @Required
     public void setAmi64(String ami64) {
         this.ami64 = ami64;
+        logger.info("\n********************\nSET AMI64 TO "+ami64);
     }
 
     public void setClusterLocator(EC2ClusterLocator clusterLocator) {

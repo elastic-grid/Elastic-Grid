@@ -310,7 +310,7 @@ public class StartClusterHandler extends AbstractHandler
             nType = EC2NodeType.LARGE;
         } else {
             nType = EC2NodeType.EXTRA_LARGE;
-        }
+        }        
         return nType;
     }
 
@@ -328,7 +328,7 @@ public class StartClusterHandler extends AbstractHandler
                 break;
             for (String v : validResponse) {
                 if (v.equals(s)) {
-                    response = s;
+                    response = s.equals("")?def:s;
                     break;
                 }
             }
