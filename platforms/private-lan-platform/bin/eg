@@ -24,7 +24,8 @@
 
 # Execute the platform setup shell script if available
 if [ -e "$EG_HOME/bin/setup-env" ] ; then
-    sh $EG_HOME/bin/setup-env
+    . $EG_HOME/bin/setup-env
+    echo "Elastic Grid options: $EG_OPTS"
 fi
 
 scriptDir="$(dirname $0)"
