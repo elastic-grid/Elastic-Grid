@@ -23,7 +23,7 @@ import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2NodeType;
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;

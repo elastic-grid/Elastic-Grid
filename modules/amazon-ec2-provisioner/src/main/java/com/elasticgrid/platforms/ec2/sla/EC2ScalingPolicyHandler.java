@@ -20,7 +20,7 @@ package com.elasticgrid.platforms.ec2.sla;
 
 import com.elasticgrid.platforms.ec2.EC2Instantiator;
 import com.elasticgrid.model.ec2.EC2NodeType;
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;

@@ -14,11 +14,11 @@
     <dependencies>
 
         <!-- Elastic Grid Utilities -->
-        <!--<dependency>-->
-            <!--<groupId>${pom.groupId}</groupId>-->
-            <!--<artifactId>elastic-grid-utils</artifactId>-->
-            <!--<version>${pom.version}</version>-->
-        <!--</dependency>        -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
@@ -42,6 +42,12 @@
         <dependency>
             <groupId>net.jini</groupId>
             <artifactId>jsk-platform</artifactId>
+        </dependency>
+
+        <!-- Amazon S3 dependencies -->
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
         </dependency>
 
         <!-- Spring dependencies -->

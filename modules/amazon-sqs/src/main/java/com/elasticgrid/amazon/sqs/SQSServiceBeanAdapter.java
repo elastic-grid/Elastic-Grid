@@ -18,7 +18,7 @@
 
 package com.elasticgrid.amazon.sqs;
 
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.sqs2.MessageQueue;
 import com.xerox.amazonws.sqs2.QueueService;

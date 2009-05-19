@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2.utils;
+package com.elasticgrid.aws.s3;
 
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
 import com.elasticgrid.utils.amazon.AWSUtils;
+import com.elasticgrid.config.EC2Configuration;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
@@ -41,8 +41,8 @@ import java.util.logging.Logger;
  *
  * @author Jerome Bernard
  */
-public class S3URLStreamHandler extends URLStreamHandler {
-    private static final Logger logger = Logger.getLogger(S3URLStreamHandler.class.getName());
+public class Handler extends URLStreamHandler {
+    private static final Logger logger = Logger.getLogger(Handler.class.getName());
 
     protected URLConnection openConnection(URL url) throws IOException {
         Properties awsConfig = AWSUtils.loadEC2Configuration();

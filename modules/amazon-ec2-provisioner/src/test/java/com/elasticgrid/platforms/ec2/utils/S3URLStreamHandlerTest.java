@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import com.elasticgrid.aws.s3.AWSURLStreamHandlerFactory;
 
 public class S3URLStreamHandlerTest {
 

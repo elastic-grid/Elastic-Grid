@@ -18,8 +18,8 @@
 
 package com.elasticgrid.platforms.ec2.monitor;
 
-import com.elasticgrid.platforms.ec2.config.EC2Configuration;
-import com.elasticgrid.platforms.ec2.utils.AWSURLStreamHandlerFactory;
+import com.elasticgrid.config.EC2Configuration;
+import com.elasticgrid.aws.s3.AWSURLStreamHandlerFactory;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
