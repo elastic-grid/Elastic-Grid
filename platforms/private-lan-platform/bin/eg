@@ -134,7 +134,7 @@ if [ "$start" = "1" ]; then
         fi
     fi
 
-    classpath="-cp $(toNative $EG_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar:$EG_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar:$EG_LIB/elastic-grid/jul-to-slf4j-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-api-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-log4j12-1.5.6.jar:$EG_LIB/elastic-grid/log4j-1.2.14.jar)"
+    classpath="-cp $(toNative $EG_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar:$EG_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar:$EG_LIB/elastic-grid/elastic-grid-utils-${pom.version}.jar:$EG_LIB/elastic-grid/jets3t-0.7.1.jar:$EG_LIB/elastic-grid/jul-to-slf4j-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-api-1.5.6.jar:$EG_LIB/elastic-grid/slf4j-log4j12-1.5.6.jar:$EG_LIB/elastic-grid/log4j-1.2.14.jar)"
     agentpath="-javaagent:$(toNative $EG_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then
