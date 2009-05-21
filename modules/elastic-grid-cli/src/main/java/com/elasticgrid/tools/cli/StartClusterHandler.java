@@ -18,12 +18,9 @@
 
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.model.ClusterAlreadyRunningException;
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.NodeProfileInfo;
-import com.elasticgrid.model.NodeType;
-import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.config.EC2Configuration;
+import com.elasticgrid.model.*;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -35,10 +32,7 @@ import org.rioproject.tools.cli.OptionHandler;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class StartClusterHandler extends AbstractHandler
     implements OptionHandler {
@@ -57,6 +51,7 @@ public class StartClusterHandler extends AbstractHandler
      * for the user. Must not be null
      * @return The result of the action.
      */
+    @SuppressWarnings("unchecked")
     public String process(String input, BufferedReader br, PrintStream out) {
         File overridesDir = null;
         StringTokenizer tok = new StringTokenizer(input);
@@ -145,10 +140,26 @@ public class StartClusterHandler extends AbstractHandler
                 }
                 out.println("\nStarting cluster [" + clusterName + "] ...");
                 getClusterManager().startCluster(clusterName, nodeProfileInfo);
-                return "Cluster [" + clusterName + "] started with " +
-                       numMonitors + " Monitor(s), " +
-                       numAgents + " Agent(s), " +
-                       numMonitorAgents + " Monitor Agent(s)";
+                StringBuilder sb = new StringBuilder();
+                sb.append("Cluster [" + clusterName + "] started with:");
+                Cluster c = getClusterManager().cluster(clusterName);
+                Set<Node> nodes = c.getNodes();
+                for(Node node : nodes) {
+                    sb.append("\n");
+                    sb.append("\t");
+                    NodeProfile profile = node.getProfile();
+                    if (profile.equals(NodeProfile.MONITOR)) {
+                        sb.append("Monitor");
+                    } else if (profile.equals(NodeProfile.MONITOR_AND_AGENT)) {
+                        sb.append("Monitor+Agent");
+                    } else if (profile.equals(NodeProfile.AGENT)) {
+                        sb.append("Agent");
+                    } else {
+                        sb.append("Unknown");
+                    }
+                    sb.append("\t on "+node.getAddress());
+                }
+                return sb.toString();
             } catch (ClusterAlreadyRunningException e) {
                 return "cluster already running!";
             } catch (Exception e) {
@@ -424,7 +435,7 @@ public class StartClusterHandler extends AbstractHandler
             if(file.getName().endsWith(".groovy")) {
                 S3Object s3o = new S3Object(s3OverridesBucket, file);
                 out.println("Sending "+file.getName()+"...");
-                s3o.setKey("/"+clusterName+"/"+file.getName());
+                s3o.setKey(clusterName+"/"+file.getName());
                 s3Service.putObject(s3OverridesBucket, s3o);
             }
         }
