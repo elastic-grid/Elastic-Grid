@@ -105,24 +105,12 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                         throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
                                 nodeProfileInfo.getNodeType().getName()));
                 }
-                String profile = null;
-                switch (nodeProfileInfo.getNodeProfile()) {
-                    case AGENT:
-                        profile = "agent";
-                        break;
-                    case MONITOR:
-                        profile = "monitor";
-                        break;
-                    case MONITOR_AND_AGENT:
-                        profile = "monitor";
-                        break;
-                }
                 logger.log(Level.INFO, "Starting cluster ["+clusterName+"], " +
                                        "type ["+nodeProfileInfo.getNodeType().getName()+"], " +
                                        "using AMI ["+ami+"]");
                 String override = null;
                 if (nodeProfileInfo.hasOverride())
-                    override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";                
+                    override = "s3://" + overridesBucket;
                 futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
                         nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
                         override, ami, awsAccessID, awsSecretKey, awsSecured)));
