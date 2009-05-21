@@ -19,8 +19,14 @@
                 <include>policy/**/*</include>
             </includes>
             <excludes>
-                <exclude>config/start-all.groovy</exclude>
+                <exclude>config/activatable.groovy</exclude>
+                <exclude>config/persistent_*.groovy</exclude>
+                <exclude>config/start-a*.groovy</exclude>
+                <exclude>config/start-p*.groovy</exclude>
                 <exclude>config/start-cybernode.groovy</exclude>
+                <exclude>config/start-service-bean-exec.groovy</exclude>
+                <exclude>config/start-reggie.groovy</exclude>
+                <exclude>config/start-webster.groovy</exclude>
                 <exclude>config/cybernode.groovy</exclude>
                 <exclude>config/start-monitor.groovy</exclude>
                 <exclude>config/monitor.groovy</exclude>
