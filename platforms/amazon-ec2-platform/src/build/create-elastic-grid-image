@@ -81,4 +81,5 @@ ssh $SSH_OPTS "root@$HOSTNAME" '/mnt/create-elastic-grid-image-remote'
 # Register image
 ec2-register $S3_BUCKET/elastic-grid-$EG_VERSION-$ARCH.manifest.xml
 
-echo "Terminate with: ec2-terminate-instances $BOOTING_INSTANCE"
+echo "Terminating bootstrap image $BOOTING_INSTANCE ..."
+ec2-terminate-instances $BOOTING_INSTANCE
