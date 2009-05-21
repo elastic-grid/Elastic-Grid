@@ -11,7 +11,6 @@ import org.rioproject.watch.ThresholdValues
  */
 @Component('org.rioproject.system')
 class ComputeResourceConfig {
-
     InetAddress getAddress() {
         String host = BootUtil.getHostAddressFromProperty("java.rmi.server.hostname")
         return InetAddress.getByName(host)
@@ -66,7 +65,7 @@ class BasicMeasurable {
 }
 
 /*
- * Configuration for the physical machine CPU measurableCapability. This
+ * Configuration for the physical machine CPU measurable capability. This
  * configuration overrides methods in the BasicMeasurable class to customize
  * the setting for threshold values.
  */
@@ -84,7 +83,7 @@ class MeasurableCPU extends BasicMeasurable {
 }
 
 /*
- * Configuration for the JVM's CPU measurableCapability. This configuration
+ * Configuration for the JVM's CPU measurable capability. This configuration
  * overrides methods in the BasicMeasurable class to customize the setting for
  * threshold values.
  */
@@ -101,7 +100,7 @@ class MeasurableJVMCPU extends BasicMeasurable {
 }
 
 /*
- * Configuration for the Memory measurableCapability. This
+ * Configuration for the Memory measurable capability. This
  * configuration overrides methods in the BasicMeasurable class to customize
  * the setting for threshold values.
  */
@@ -116,3 +115,17 @@ class MeasurableMemory extends BasicMeasurable {
     }
 
 }
+
+/*
+ * Configuration for the SystemMemory measurable capability. It just extends
+ * BasicMeasurable, allowing it to have the same default values.
+ */
+@Component('org.rioproject.system.measurable.systemMemory')
+class MeasurableSystemMemory extends BasicMeasurable {    }
+
+/*
+ * Configuration for the DiskSpace measurable capability. It just extends
+ * BasicMeasurable, allowing it to have the same default values.
+ */
+@Component('org.rioproject.system.measurable.disk')
+class MeasurableDiskSpace extends BasicMeasurable {    }
