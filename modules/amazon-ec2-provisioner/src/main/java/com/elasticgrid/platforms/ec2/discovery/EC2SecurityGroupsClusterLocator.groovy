@@ -120,8 +120,8 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
           logger.log Level.WARNING, "Instance ${instance.instanceId} has no Elastic Grid profile!"
           return
         } else if (hasAgent && hasMonitor) {
-          logger.log Level.WARNING,
-                  "Instance ${instance.instanceId} is both a monitor and an agent. Using it as a monitor!"
+          //logger.log Level.WARNING,
+          //        "Instance ${instance.instanceId} is both a monitor and an agent. Using it as a monitor!"
           profile = NodeProfile.MONITOR_AND_AGENT
         } else if (hasMonitor) {
           profile = NodeProfile.MONITOR
