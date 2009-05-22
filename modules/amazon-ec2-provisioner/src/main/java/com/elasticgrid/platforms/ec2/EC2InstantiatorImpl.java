@@ -18,8 +18,6 @@
 
 package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.Discovery;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;
@@ -27,6 +25,7 @@ import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
     }
 
     public List<String> getGroupsNames() throws RemoteException {
-        List<GroupDescription> groups = null;
+        List<GroupDescription> groups;
         try {
             groups = jec2.describeSecurityGroups(new String[] {});
         } catch (EC2Exception e) {
@@ -111,7 +110,7 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         List<String> groupNames = new ArrayList<String>(groups.size());
         for (GroupDescription group : groups) {
             groupNames.add(group.getName());
-        }
+        }        
         return groupNames;
     }
 
