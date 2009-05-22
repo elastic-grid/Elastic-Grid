@@ -18,21 +18,17 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.config.EC2Configuration;
+import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.Properties;
@@ -168,9 +164,9 @@ public class Bootstrapper {
             else
                 System.err.println("The name of the Amazon S3 drop bucket could not be retreived!");
             if (LAUNCH_PARAMETER_OVERRIDES_URL.equals(key))
-                egParameters.put(EC2Configuration.EG_OVERRIDES_URL, property.getValue());
+                egParameters.put(EC2Configuration.EG_OVERRIDES_BUCKET, property.getValue());
             else
-                egParameters.put(EC2Configuration.EG_OVERRIDES_URL, "");
+                egParameters.put(EC2Configuration.EG_OVERRIDES_BUCKET, "");
             if (LAUNCH_PARAMETER_EC2_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, property.getValue());
             else

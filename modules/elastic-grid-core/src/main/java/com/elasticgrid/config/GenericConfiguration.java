@@ -26,7 +26,6 @@ package com.elasticgrid.config;
 public interface GenericConfiguration {
     public static final String EG_MONITOR_HOST  = "eg.monitor.host";
     public static final String EG_CLUSTER_NAME  = "eg.cluster.name";
-    public static final String EG_OVERRIDES_URL = "eg.overrides.url";
     /* Either EC2 or LAN, default to EC2 if not declared */
     public static final String EG_MODE = "eg.mode";
 }

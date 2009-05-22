@@ -30,7 +30,7 @@
 
     <bean id="ec2CloudPlatformManager" class="com.elasticgrid.platforms.ec2.EC2CloudPlatformManager">
         <property name="dropBucket" value="${eg.s3.dropBucket}"/>
-        <property name="overridesBucket" value="${eg.overrides.url}"/>
+        <property name="overridesBucket" value="${eg.s3.overridesBucket}"/>
         <property name="awsAccessID" value="${aws.accessId}"/>
         <property name="awsSecretKey" value="${aws.secretKey}"/>
         <property name="awsSecured" value="${aws.ec2.secured}"/>
