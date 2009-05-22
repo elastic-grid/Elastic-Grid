@@ -289,13 +289,11 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     @Required
     public void setAmi32(String ami32) {
         this.ami32 = ami32;
-        logger.info("\n********************\nSET AMI32 TO "+ami32);
     }
 
     @Required
     public void setAmi64(String ami64) {
         this.ami64 = ami64;
-        logger.info("\n********************\nSET AMI64 TO "+ami64);
     }
 
     public void setClusterLocator(EC2ClusterLocator clusterLocator) {
