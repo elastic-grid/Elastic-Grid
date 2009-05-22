@@ -343,9 +343,9 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                 nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
             }
             // ensure the cluster name group exists
-            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
+            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;            
             if (!nodeInstantiator.getGroupsNames().contains(securityGroupNameForCluster)) {
-                nodeInstantiator.createSecurityGroup(clusterName);
+                nodeInstantiator.createSecurityGroup(securityGroupNameForCluster);
             }
             // start the agent node
             List<String> groups = null;
