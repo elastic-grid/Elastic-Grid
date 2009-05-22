@@ -91,7 +91,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                         break;
                     case MEDIUM_HIGH_CPU:
                         ami = ami32;
-                        break;
+                        break;                     
                     case LARGE:
                         ami = ami64;
                         break;
