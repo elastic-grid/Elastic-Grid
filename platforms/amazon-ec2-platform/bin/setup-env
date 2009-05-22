@@ -1,9 +1,13 @@
-source /tmp/user-data
+if [ -f /tmp/user-data ] ; then
+    source /tmp/user-data
+fi
 if [ -e "$EG_HOME/config/monitor-host" ] ; then
     export MONITOR_HOST=`cat $EG_HOME/config/monitor-host`
 else
     export MONITOR_HOST=`hostname`
 fi
-export LOCAL_HOST=`cat /tmp/public-hostname`
+if [ -f /tmp/public-hostname ] ; then
+    export LOCAL_HOST=`cat /tmp/public-hostname`
+fi
 
 export EG_OPTS="-DMONITOR_HOST=$MONITOR_HOST -Dorg.rioproject.groups=$CLUSTER_NAME"
