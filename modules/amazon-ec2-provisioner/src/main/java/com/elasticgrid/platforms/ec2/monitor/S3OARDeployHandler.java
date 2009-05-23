@@ -59,6 +59,8 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
     private String dropBucket;
     private File installDirectory;
     private S3Service s3;
+    private boolean deleteAfterCopy;
+    private final List<S3Object> processedOARs = new ArrayList<S3Object>();
 
     static {
         URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
@@ -71,9 +73,20 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
      * @param installDirectory The directory to install OARs into
      */
     public S3OARDeployHandler(String dropBucket, File installDirectory) {
+        this(dropBucket, installDirectory, true);
+    }
+
+    /**
+     * Create a S3OARDeployHandler with drop bucket and install directory
+     *
+     * @param dropBucket       The directory where OAR files will be dropped
+     * @param installDirectory The directory to install OARs into
+     * @param deleteAfterCopy  Whether to remove the OAR from S3 after copying it
+     */
+    public S3OARDeployHandler(String dropBucket, File installDirectory, boolean deleteAfterCopy) {
         this.dropBucket = dropBucket;
         this.installDirectory = installDirectory;
-
+        this.deleteAfterCopy = deleteAfterCopy;
         try {
             // retrive S3 configuration parameters
             Properties awsConfig = AWSUtils.loadEC2Configuration();
@@ -127,15 +140,12 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
             // process each OAR found
             for (S3Object object : objects) {
                 try {
-                    install(new URL("s3://" + dropBucket + '/' + object.getKey()), installDirectory);
-                    s3.deleteObject(bucket, object.getKey());
-                    if (logger.isLoggable(Level.FINE))
-                        logger.fine("Deleted [" + object.getKey() + "] " +
-                                    "after installing it to " +
-                                    "[" + installDirectory.getAbsolutePath() + "]");
+                    if(shouldDownload(object)) {
+                        doDownload(bucket, object);
+                    }
                 } catch (IOException e) {
                     logger.log(Level.WARNING,
-                            "Extracting [" + object.getKey() + "] to [" + installDirectory.getName() + "]", e);
+                               "Extracting [" + object.getKey() + "] to [" + installDirectory.getName() + "]", e);
                 }
             }
             // parse the OAR file
@@ -158,4 +168,45 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
         return list;
     }
 
+    private boolean shouldDownload(S3Object oar) {
+        if(deleteAfterCopy)
+            return true;
+        boolean download = false;
+        S3Object processed = null;
+        for(S3Object processedOAR : processedOARs) {
+            if(processedOAR.getKey().equals(oar.getKey())) {
+                processed = processedOAR;
+                break;
+            }
+        }
+        /* If we have processed it see if it's updated. If it is download it */
+        if(processed!=null) {
+            Date processedDate = processed.getLastModifiedDate();
+            Date oarDate = oar.getLastModifiedDate();
+            if (oarDate.after(processedDate)) {
+                download = true;
+                synchronized(processedOARs) {
+                    processedOARs.remove(processed);
+                    processedOARs.add(oar);
+                }
+            }
+        } else {
+            download = true;
+            processedOARs.add(oar);
+        }
+        return download;
+    }
+
+    private void doDownload(S3Bucket bucket, S3Object oar) throws
+                                                           IOException,
+                                                           S3ServiceException {
+        install(new URL("s3://" + dropBucket + '/' + oar.getKey()), installDirectory);
+        if(deleteAfterCopy) {
+            s3.deleteObject(bucket, oar.getKey());
+            if (logger.isLoggable(Level.FINE))
+                logger.fine("Deleted [" + oar.getKey() + "] " +
+                            "after installing it to " +
+                            "[" + installDirectory.getAbsolutePath() + "]");
+        }
+    }
 }
