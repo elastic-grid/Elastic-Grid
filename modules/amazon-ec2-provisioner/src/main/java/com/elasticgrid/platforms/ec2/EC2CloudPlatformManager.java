@@ -32,6 +32,7 @@ import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang.StringUtils;
 import static java.lang.String.format;
@@ -55,7 +56,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service("ec2CloudPlatformManager")
-public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster> {
+public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>, InitializingBean {
     private EC2Instantiator nodeInstantiator;
 
     @Autowired(required = true)
@@ -75,6 +76,12 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        // ensure the cluster name group exists
+        String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
+        if (!nodeInstantiator.getGroupsNames().contains(securityGroupNameForCluster)) {
+            nodeInstantiator.createSecurityGroup(securityGroupNameForCluster);
+        }
+
         // ensure the cluster is not already running
         Cluster cluster = cluster(clusterName);
         if (cluster != null && cluster.isRunning()) {
@@ -300,6 +307,17 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         this.clusterLocator = clusterLocator;
     }
 
+    public void afterPropertiesSet() throws Exception {
+        // ensure the Discovery.MONITOR group exists
+        if (!nodeInstantiator.getGroupsNames().contains(Discovery.MONITOR.getGroupName())) {
+            nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
+        }
+        // ensure the Discovery.AGENT group exists
+        if (!nodeInstantiator.getGroupsNames().contains(Discovery.AGENT.getGroupName())) {
+            nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
+        }
+    }
+
     class StartInstanceTask implements Callable<List<String>> {
         private EC2Instantiator nodeInstantiator;
         private String clusterName;
@@ -332,19 +350,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         }
 
         public List<String> call() throws RemoteException {
-            // ensure the Discovery.MONITOR group exists
-            if (!nodeInstantiator.getGroupsNames().contains(Discovery.MONITOR.getGroupName())) {
-                nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
-            }
-            // ensure the Discovery.AGENT group exists
-            if (!nodeInstantiator.getGroupsNames().contains(Discovery.AGENT.getGroupName())) {
-                nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
-            }
-            // ensure the cluster name group exists
-            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;            
-            if (!nodeInstantiator.getGroupsNames().contains(securityGroupNameForCluster)) {
-                nodeInstantiator.createSecurityGroup(securityGroupNameForCluster);
-            }
+            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
             // start the agent node
             List<String> groups = null;
             switch (profile) {
