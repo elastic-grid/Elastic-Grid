@@ -8,6 +8,7 @@ import org.rioproject.core.ClassBundle
 import org.rioproject.fdh.FaultDetectionHandlerFactory
 import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
+import org.rioproject.resources.client.JiniClient
 import net.jini.core.discovery.LookupLocator
 import net.jini.export.Exporter
 import net.jini.jeri.BasicILFactory
@@ -30,6 +31,16 @@ class AgentConfig {
         def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME,
                       'elastic-grid')]
         return groups as String[]
+    }
+
+    LookupLocator[] getInitialLookupLocators() {
+        String locators = System.getProperty(Constants.LOCATOR_PROPERTY_NAME)
+        if(locators!=null) {
+            def lookupLocators = JiniClient.parseLocators(locators)
+            return lookupLocators as LookupLocator[]
+        } else {
+            return null
+        }
     }
 
     Boolean getProvisionEnabled() {
