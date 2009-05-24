@@ -90,6 +90,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
             return;
         }
         try {
+            // start another agent node from the currently running AMI
             List<String> instances = new StartInstanceTask(ec2, clusterName, NodeProfile.AGENT, nodeType, override,
                     ami, awsAccessID, awsSecretKey, awsSecured).call();
             String instanceID = instances.get(0);
