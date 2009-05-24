@@ -55,7 +55,7 @@ public class StartInstanceTask implements Callable<List<String>> {
         try {
             Properties egProps = AWSUtils.loadEC2Configuration();
             String ami32 = egProps.getProperty(EC2Configuration.AWS_EC2_AMI32);
-            String ami64 = egProps.getProperty(EC2Configuration.AWS_EC2_AMI32);
+            String ami64 = egProps.getProperty(EC2Configuration.AWS_EC2_AMI64);
             keypair = egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR);
             String dropBucket = egProps.getProperty(EC2Configuration.EG_DROP_BUCKET);
 
