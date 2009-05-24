@@ -18,14 +18,13 @@
 
 package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.cluster.NodeInstantiator;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.NodeProfileInfo;
-import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
+import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterTest;
@@ -47,12 +46,15 @@ public class EC2CloudPlatformManagerTest {
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(null);
         EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
-                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null,AWS_EC2_AMI32=null,AWS_EC2_AMI64=null,AWS_EC2_KEYPAIR=null,AWS_SQS_SECURED=true,DROP_BUCKET=null",
-                null, true, EC2NodeType.SMALL))
+                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
+                        "AWS_EC2_AMI32=ami-b5c325dc,AWS_EC2_AMI64=," +
+                        "AWS_EC2_KEYPAIR=eg-keypair," +
+                        "AWS_SQS_SECURED=true,DROP_BUCKET=elastic-grid-drop-target",
+                "eg-keypair", true, EC2NodeType.SMALL))
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
                 .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"))
-                .times(3);
+                .times(2);
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(new HashSet<EC2Node>(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL).instanceID("123"))));
         EasyMock.replay(mockEC2);
@@ -66,7 +68,7 @@ public class EC2CloudPlatformManagerTest {
     @SuppressWarnings("unchecked")
     public void setUpClusterManager() {
         cloudPlatformManager = new EC2CloudPlatformManager();
-        mockEC2 = org.easymock.classextension.EasyMock.createMock(EC2Instantiator.class);
+        mockEC2 = EasyMock.createMock(EC2Instantiator.class);
         mockLocator = org.easymock.classextension.EasyMock.createMock(EC2ClusterLocator.class);
         cloudPlatformManager.setNodeInstantiator(mockEC2);
         cloudPlatformManager.setClusterLocator(mockLocator);
