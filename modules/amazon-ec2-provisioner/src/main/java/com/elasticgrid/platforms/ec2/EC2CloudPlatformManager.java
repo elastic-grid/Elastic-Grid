@@ -23,7 +23,6 @@ import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Discovery;
-import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
@@ -34,18 +33,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang.StringUtils;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -62,9 +58,7 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     @Autowired(required = true)
     private EC2ClusterLocator clusterLocator;
 
-    private String dropBucket;
     private String overridesBucket;
-    private String keyName;
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
     private String ami32, ami64;
@@ -253,11 +247,6 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     @Required
-    public void setDropBucket(String dropBucket) {
-        this.dropBucket = dropBucket;
-    }
-
-    @Required
     public void setOverridesBucket(String overridesBucket) {
         this.overridesBucket = overridesBucket;
     }
@@ -275,11 +264,6 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     @Required
     public void setAwsSecured(boolean awsSecured) {
         this.awsSecured = awsSecured;
-    }
-
-    @Required
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
     }
 
     @Required
@@ -307,71 +291,4 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         }
     }
 
-    class StartInstanceTask implements Callable<List<String>> {
-        private EC2Instantiator nodeInstantiator;
-        private String clusterName;
-        private NodeProfile profile;
-        private EC2NodeType instanceType;
-        private String ami;
-        private String userData;
-                                                                                       
-        public StartInstanceTask(EC2Instantiator nodeInstantiator, String clusterName, NodeProfile profile,
-                                 EC2NodeType instanceType, String override, String ami,
-                                 String awsAccessID, String awsSecretKey, boolean awsSecured) {
-            this.nodeInstantiator = nodeInstantiator;
-            this.clusterName = clusterName;
-            this.profile = profile;
-            this.instanceType = instanceType;
-            this.ami = ami;
-
-            StringBuffer buffer = new StringBuffer();
-            buffer.append("CLUSTER_NAME=").append(clusterName);
-            buffer.append(",AWS_ACCESS_ID=").append(awsAccessID);
-            buffer.append(",AWS_SECRET_KEY=").append(awsSecretKey);
-            buffer.append(",AWS_EC2_AMI32=").append(ami32);
-            buffer.append(",AWS_EC2_AMI64=").append(ami64);
-            buffer.append(",AWS_EC2_KEYPAIR=").append(keyName);
-            buffer.append(",AWS_SQS_SECURED=").append(awsSecured);
-            buffer.append(",DROP_BUCKET=").append(dropBucket);
-            if (StringUtils.isNotEmpty(override))
-                buffer.append(",OVERRIDES_URL=").append(override);
-            this.userData = buffer.toString();
-        }
-
-        public List<String> call() throws RemoteException {
-            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
-            // start the agent node
-            List<String> groups = null;
-            switch (profile) {
-                case MONITOR:
-                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.MONITOR.getGroupName(), "elastic-grid");
-                    break;
-                case AGENT:
-                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.AGENT.getGroupName(), "elastic-grid");
-                    break;
-                case MONITOR_AND_AGENT:
-                    groups = Arrays.asList(securityGroupNameForCluster, Discovery.MONITOR.getGroupName(),
-                            Discovery.AGENT.getGroupName(), "elastic-grid");
-                    break;
-            }
-            logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
-                                       new Object[] { ami, groups.toString(), userData });
-            return nodeInstantiator.startInstances(ami, 1, 1, groups, userData, keyName, true, instanceType);
-        }
-    }
-
-    class StopInstanceTask implements Callable<Void> {
-        private EC2Instantiator nodeInstantiator;
-        private String instanceID;
-
-        public StopInstanceTask(EC2Instantiator nodeInstantiator, String instanceID) {
-            this.nodeInstantiator = nodeInstantiator;
-            this.instanceID = instanceID;
-        }
-
-        public Void call() throws RemoteException {
-            nodeInstantiator.shutdownInstance(instanceID);
-            return null;
-        }
-    }
 }

@@ -29,12 +29,12 @@
     <!--<context:component-scan base-package="com.elasticgrid.platforms.ec2"/>-->
 
     <bean id="ec2CloudPlatformManager" class="com.elasticgrid.platforms.ec2.EC2CloudPlatformManager">
-        <property name="dropBucket" value="${eg.s3.dropBucket}"/>
+        <!--<property name="dropBucket" value="${eg.s3.dropBucket}"/>-->
         <property name="overridesBucket" value="${eg.s3.overridesBucket}"/>
         <property name="awsAccessID" value="${aws.accessId}"/>
         <property name="awsSecretKey" value="${aws.secretKey}"/>
         <property name="awsSecured" value="${aws.ec2.secured}"/>
-        <property name="keyName" value="${aws.ec2.keypair}"/>
+        <!--<property name="keyName" value="${aws.ec2.keypair}"/>-->
         <property name="ami32" value="${aws.ec2.ami32}"/>
         <property name="ami64" value="${aws.ec2.ami64}"/>
     </bean>
