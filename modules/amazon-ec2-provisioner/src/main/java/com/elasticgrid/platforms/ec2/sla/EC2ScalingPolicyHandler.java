@@ -1,26 +1,29 @@
 /**
  * Elastic Grid
  * Copyright (C) 2008-2009 Elastic Grid, LLC.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.elasticgrid.platforms.ec2.sla;
 
-import com.elasticgrid.platforms.ec2.EC2Instantiator;
-import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.config.EC2Configuration;
+import com.elasticgrid.config.GenericConfiguration;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.ec2.EC2NodeType;
+import com.elasticgrid.platforms.ec2.EC2Instantiator;
+import com.elasticgrid.platforms.ec2.StartInstanceTask;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
@@ -29,25 +32,27 @@ import org.rioproject.sla.SLA;
 import org.rioproject.sla.ScalingPolicyHandler;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import java.io.IOException;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * EC2 Scaling Policy Handler.
+ *
  * @author Jerome Bernard
  */
 public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     private EC2Instantiator ec2;
-    private String amazonImageID;
-    private String keyName;
-    private List<String> groups;
-    private Boolean publicAddress;
+    private String clusterName;
+    private EC2NodeType nodeType;
+    private String ami;
+    private String override;
+    private String awsAccessID, awsSecretKey;
+    private Boolean awsSecured;
     private final Properties egProps;
     private static final String AMAZON_INSTANCE_ID_PARAMETER = "amazonInstanceID";
     private static final Logger logger = Logger.getLogger(EC2ScalingPolicyHandler.class.getName());
@@ -62,16 +67,18 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     public void initialize(Object eventSource, EventHandler eventHandler, ServiceBeanContext context) {
         super.initialize(eventSource, eventHandler, context);
         try {
-            amazonImageID = EC2Utils.getInstanceMetadata("ami-id"); // we clone ourselves
-            keyName = egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR);
-            groups = Arrays.asList("default", "elastic-grid",       // todo: retreive this from the existing instance
-                    "eg-agent", "elastic-grid-cluster-" + egProps.getProperty(EC2Configuration.EG_CLUSTER_NAME));
-            publicAddress = Boolean.TRUE;   // todo: fetch this from somewhere!
+            clusterName = egProps.getProperty(GenericConfiguration.EG_CLUSTER_NAME);
+            ami = EC2Utils.getInstanceMetadata("ami-id"); // we clone ourselves
+            override = egProps.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
+            awsAccessID = egProps.getProperty(EC2Configuration.AWS_ACCESS_ID);
+            awsSecretKey = egProps.getProperty(EC2Configuration.AWS_SECRET_KEY);
+            awsSecured = Boolean.parseBoolean(egProps.getProperty(EC2Configuration.AWS_EC2_SECURED));
+            nodeType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
             ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
                     "/com/elasticgrid/cluster/applicationContext.xml",
             });
             ec2 = (EC2Instantiator) ctx.getBean("ec2", EC2Instantiator.class);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -79,28 +86,17 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     @Override
     protected void doIncrement() {
         if (ec2 == null) {
-            logger.warning("No EC2Instantiator has been set, hence no increase of EC2 instances will occur");
+            logger.warning("No EC2 node instantiator has been set, hence no increase of EC2 instances will occur");
             return;
         }
         try {
-            // todo: find a way to make this information more manageable
-            String userdata = String.format(
-                    "CLUSTER_NAME=%s,YUM_PACKAGES=%s,AWS_ACCESS_ID=%s,AWS_SECRET_KEY=%s,AWS_EC2_SECURED=%s,AWS_SQS_SECURED=%s",
-                    egProps.getProperty(EC2Configuration.EG_CLUSTER_NAME),
-                    egProps.getProperty(EC2Configuration.REDHAT_YUM_PACKAGES, ""),
-                    egProps.getProperty(EC2Configuration.AWS_ACCESS_ID),
-                    egProps.getProperty(EC2Configuration.AWS_SECRET_KEY),
-                    egProps.getProperty(EC2Configuration.AWS_EC2_SECURED, "true"),
-                    egProps.getProperty(EC2Configuration.AWS_SQS_SECURED, "true")
-            );
-            EC2NodeType instanceType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
-            List<String> instances = ec2.startInstances(amazonImageID, 1, 1, groups,
-                    userdata, keyName, publicAddress, instanceType);
+            List<String> instances = new StartInstanceTask(ec2, clusterName, NodeProfile.AGENT, nodeType, override,
+                    ami, awsAccessID, awsSecretKey, awsSecured).call();
             String instanceID = instances.get(0);
             logger.log(Level.INFO, "Started Amazon EC2 instance {0}", instanceID);
             context.getServiceBeanConfig().getInitParameters().put(AMAZON_INSTANCE_ID_PARAMETER, instanceID);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, format("Can't start EC2 instance from AMI %s", amazonImageID), e);
+            logger.log(Level.SEVERE, format("Can't start EC2 instance from AMI %s", ami), e);
         }
         super.doIncrement();
     }
@@ -112,7 +108,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     protected boolean doDecrement() {
         super.doDecrement();
         if (ec2 == null) {
-            logger.warning("No EC2Instantiator has been set, hence no decrease of EC2 instances will occur");
+            logger.warning("No EC2 node instantiator has been set, hence no decrease of EC2 instances will occur");
             return false;
         }
         String instanceID = (String) context.getServiceBeanConfig().getInitParameters().get(AMAZON_INSTANCE_ID_PARAMETER);
