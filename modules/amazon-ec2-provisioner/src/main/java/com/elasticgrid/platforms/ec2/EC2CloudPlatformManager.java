@@ -222,24 +222,13 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
                 }
                 if (number > 0) {
                     logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional node(s)...", new Object[]{clusterName, number });
-                    String profile = null;
-                    switch (nodeProfileInfo.getNodeProfile()) {
-                        case AGENT:
-                            profile = "agent";
-                            break;
-                        case MONITOR:
-                            profile = "monitor";
-                            break;
-                        case MONITOR_AND_AGENT:
-                            profile = "monitor";
-                            break;
-                    }
                     String override = null;
                     if (nodeProfileInfo.hasOverride())
-                        override = "s3://" + overridesBucket + "/" + clusterName + "/start-" + profile + ".groovy";
+                        override = "s3://" + overridesBucket;
                     for (int j = 0; j < number; i++) {
-                        futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName, NodeProfile.MONITOR,
-                            (EC2NodeType) nodeProfileInfo.getNodeType(), override, ami, awsAccessID, awsSecretKey, awsSecured)));
+                        futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
+                                nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
+                                override, ami, awsAccessID, awsSecretKey, awsSecured)));
                     }
                 } else {
                     logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s)...", new Object[]{clusterName, Math.abs(number) });
