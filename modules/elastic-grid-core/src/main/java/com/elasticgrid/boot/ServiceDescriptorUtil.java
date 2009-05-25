@@ -25,8 +25,7 @@ import org.rioproject.boot.RioServiceDescriptor;
 import java.io.File;
 import java.io.IOException;
 
-public class ServiceDescriptorUtil
-    extends org.rioproject.boot.ServiceDescriptorUtil {
+public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptorUtil {
 
     /**
      * Get the {@link com.sun.jini.start.ServiceDescriptor} instance for {@link
@@ -39,12 +38,9 @@ public class ServiceDescriptorUtil
      *         Monitor using an anonymous port.
      *
      * @throws IOException If there are problems getting the anonymous port
-     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not
-     * set
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
      */
-    public static ServiceDescriptor getMonitor(String policy,
-                                               String monitorConfig) throws
-                                                                        IOException {
+    public static ServiceDescriptor getMonitor(String policy, String monitorConfig) throws IOException {
         return getMonitor(policy, getAnonymousPort(), monitorConfig);
     }
 
@@ -59,12 +55,9 @@ public class ServiceDescriptorUtil
      *         Monitor using an anonymous port.
      *
      * @throws IOException If there are problems getting the anonymous port
-     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not
-     * set
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
      */
-    public static ServiceDescriptor getMonitor(String policy,
-                                               String... monitorConfig) throws
-                                                                        IOException {
+    public static ServiceDescriptor getMonitor(String policy, String... monitorConfig) throws IOException {
         return getMonitor(policy, getAnonymousPort(), monitorConfig);
     }
 
@@ -79,17 +72,10 @@ public class ServiceDescriptorUtil
      *         Monitor using the provided port.
      *
      * @throws IOException If there are problems getting the anonymous port
-     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not
-     * set
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
      */
-    public static ServiceDescriptor getMonitor(String policy,
-                                               int port,
-                                               String... monitorConfig) throws
-                                                                        IOException {
-        return getMonitor(policy,
-                          BootUtil.getHostAddress(),
-                          port,
-                          monitorConfig);
+    public static ServiceDescriptor getMonitor(String policy, int port, String... monitorConfig) throws IOException {
+        return getMonitor(policy, BootUtil.getHostAddress(), port, monitorConfig);
     }
 
     /**
@@ -105,14 +91,10 @@ public class ServiceDescriptorUtil
      *         Monitor using the provided port.
      *
      * @throws IOException If there are problems getting the anonymous port
-     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not
-     * set
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
      */
-    public static ServiceDescriptor getMonitor(String policy,
-                                               String hostAddress,
-                                               int port,
-                                               String... monitorConfig) throws
-                                                                        IOException {
+    public static ServiceDescriptor getMonitor(String policy, String hostAddress, int port,
+                                               String... monitorConfig) throws IOException {
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
@@ -135,31 +117,110 @@ public class ServiceDescriptorUtil
 
     }
 
+    /**
+     * Get the {@link com.sun.jini.start.ServiceDescriptor} instance for {@link
+     * org.rioproject.cybernode.Cybernode}.
+     *
+     * @param policy The security policy file to use
+     * @param agentConfig The configuration options the Agent will use
+     * @return The {@link com.sun.jini.start.ServiceDescriptor} instance for the
+     *         Monitor using an anonymous port.
+     *
+     * @throws IOException If there are problems getting the anonymous port
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
+     */
+    public static ServiceDescriptor getAgent(String policy, String agentConfig) throws IOException {
+        return getAgent(policy, getAnonymousPort(), agentConfig);
+    }
 
-    public static ServiceDescriptor getRestApi(String policy,
-                                               String restApiConfig) throws
-                                                                     IOException {
+    /**
+     * Get the {@link com.sun.jini.start.ServiceDescriptor} instance for {@link
+     * org.rioproject.cybernode.Cybernode}.
+     *
+     * @param policy The security policy file to use
+     * @param agentConfig The configuration options the Agent will use
+     * @return The {@link com.sun.jini.start.ServiceDescriptor} instance for the
+     *         Monitor using an anonymous port.
+     *
+     * @throws IOException If there are problems getting the anonymous port
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
+     */
+    public static ServiceDescriptor getAgent(String policy, String... agentConfig) throws IOException {
+        return getAgent(policy, getAnonymousPort(), agentConfig);
+    }
+
+    /**
+     * Get the {@link com.sun.jini.start.ServiceDescriptor} instance for {@link
+     * org.rioproject.cybernode.Cybernode}.
+     *
+     * @param policy The security policy file to use
+     * @param port The port to use when constructing the codebase
+     * @param agentConfig The configuration options the Agent will use
+     * @return The {@link com.sun.jini.start.ServiceDescriptor} instance for the
+     *         Monitor using the provided port.
+     *
+     * @throws IOException If there are problems getting the anonymous port
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not set
+     */
+    public static ServiceDescriptor getAgent(String policy, int port, String... agentConfig) throws IOException {
+        return getAgent(policy, BootUtil.getHostAddress(), port, agentConfig);
+    }
+
+    /**
+     * Get the {@link com.sun.jini.start.ServiceDescriptor} instance for {@link
+     * org.rioproject.monitor.ProvisionMonitor}.
+     *
+     * @param policy The security policy file to use
+     * @param hostAddress The address to use when constructing the codebase
+     * @param port The port to use when constructing the codebase
+     * @param agentConfig The configuration options the Monitor will use
+     *
+     * @return The {@link com.sun.jini.start.ServiceDescriptor} instance for the
+     *         Monitor using the provided port.
+     *
+     * @throws IOException If there are problems getting the anonymous port
+     * @throws RuntimeException If the <tt>EG_HOME</tt> system property is not
+     * set
+     */
+    public static ServiceDescriptor getAgent(String policy,
+                                             String hostAddress,
+                                             int port,
+                                             String... agentConfig) throws IOException {
+        String egHome = System.getProperty("EG_HOME");
+        if (egHome == null)
+            throw new RuntimeException("EG_HOME property not declared");
+        String agentClasspath =
+            egHome + File.separator + "lib" + File.separator + "cybernode.jar"
+            + File.pathSeparator +
+            // TODO: get rid of this version number!
+            egHome + File.separator + "lib" + File.separator + "elastic-grid" +
+            File.separator + "amazon-ec2-provisioner-0.9.0.jar";
+        String agentCodebase = BootUtil.getCodebase(new String[]{
+            "cybernode-dl.jar",
+            "rio-dl.jar",
+            "jsk-dl.jar"}, hostAddress, Integer.toString(port));
+        String implClass = "org.rioproject.cybernode.CybernodeImpl";
+        return new RioServiceDescriptor(agentCodebase,
+                                        policy,
+                                        agentClasspath,
+                                        implClass,
+                                        agentConfig);
+    }
+
+
+    public static ServiceDescriptor getRestApi(String policy, String restApiConfig) throws IOException {
         return getRestApi(policy, getAnonymousPort(), restApiConfig);
     }
 
-    public static ServiceDescriptor getRestApi(String policy,
-                                               String... restApiConfigs) throws
-                                                                   IOException {
+    public static ServiceDescriptor getRestApi(String policy, String... restApiConfigs) throws IOException {
         return getRestApi(policy, getAnonymousPort(), restApiConfigs);
     }
 
-    public static ServiceDescriptor getRestApi(String policy,
-                                               int port,
-                                               String... restApiConfig) throws IOException {
-        return getRestApi(policy,
-                          BootUtil.getHostAddress(),
-                          port,
-                          restApiConfig);
+    public static ServiceDescriptor getRestApi(String policy, int port, String... restApiConfig) throws IOException {
+        return getRestApi(policy, BootUtil.getHostAddress(), port, restApiConfig);
     }
 
-    public static ServiceDescriptor getRestApi(String policy,
-                                               String hostAddress,
-                                               int port,
+    public static ServiceDescriptor getRestApi(String policy, String hostAddress, int port,
                                                String... restApiConfig) throws IOException {
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
