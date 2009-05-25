@@ -89,6 +89,11 @@
             <artifactId>boot</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>monitor</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- Jini 2.1 dependencies -->
         <dependency>
             <groupId>net.jini</groupId>
