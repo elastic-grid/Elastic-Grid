@@ -35,7 +35,7 @@ public class HandlerTest {
 
     @Test
     public void testPrivateURL() throws IOException {
-        URL u = new URL("s3://elastic-grid-distributions/elastic-grid-0.8.3-i386.manifest.xml");
+        URL u = new URL("s3://elastic-grid-distributions/elastic-grid-0.9.0-i386.manifest.xml");
         URLConnection connect = u.openConnection();
         // Write download to stdout.
         final int bufferlength = 4096;
