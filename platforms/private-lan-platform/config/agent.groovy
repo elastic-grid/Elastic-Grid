@@ -16,17 +16,7 @@ import net.jini.jeri.BasicJeriExporter
 import net.jini.jeri.tcp.TcpServerEndpoint
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
-import org.rioproject.config.Component
 
 /*
  * Declare Agent properties
