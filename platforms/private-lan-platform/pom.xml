@@ -105,11 +105,11 @@
             <artifactId>jsk-platform</artifactId>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>com.sun.jini</groupId>
             <artifactId>tools</artifactId>
+            <scope>provided</scope>
         </dependency>
-        
 
         <!-- Typica dependencies -->
         <dependency>
