@@ -19,8 +19,11 @@
 package com.elasticgrid.amazon.boot;
 
 import com.elasticgrid.config.EC2Configuration;
+import com.elasticgrid.config.GenericConfiguration;
 import com.elasticgrid.model.ClusterException;
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
@@ -79,41 +82,18 @@ public class Bootstrapper {
 
         // start Spring context
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
-
-        // locate monitor node and write the location of the found monitor into $EG_HOME/config/monitor-host
         final EC2ClusterLocator locator = (EC2ClusterLocator) ctx.getBean("clusterLocator", EC2ClusterLocator.class);
         final String clusterName = launchParameters.getProperty(LAUNCH_PARAMETER_CLUSTER_NAME);
 
-        // eventually wait for monitor to be up and running
-        EC2Node monitor = null;
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 0, TimeUnit.SECONDS);
+        // get the currently running node
+        EC2Node thisNode = null;
+        String profile = null;
         try {
-            monitor = future.get();
-        } catch (Exception e) {
-            System.err.println("Could not find monitor host!");
-            System.exit(-1);
-        }
-
-        try {
-            InetAddress monitorHost = monitor.getAddress();
-            String monitorHostAddress = monitorHost.getHostAddress();
-            if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
-                System.out.println("This host is going to be the new monitor!");
-            } else {
-                System.out.printf("Using monitor host: %s\n", monitorHost.getHostName());
-                egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
-            }
-            FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
-
-            // get the currently running node
             Set<EC2Node> nodes = locator.findNodes(clusterName);
-            EC2Node thisNode = null;
             for (EC2Node node : nodes) {
                 if (node.getAddress().equals(InetAddress.getLocalHost()))
                     thisNode = node;
             }
-            String profile = null;
             switch (thisNode.getProfile()) {
                 case AGENT:
                     profile = "agent";
@@ -127,15 +107,40 @@ public class Bootstrapper {
             }
             FileUtils.writeStringToFile(new File("/tmp/eg-node-to-start"), profile);
             System.out.printf("Local machine is morphed into a %s\n", profile);
-
-            String overridesURL = "";
-            if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
-                overridesURL = launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL);
-            FileUtils.writeStringToFile(new File("/tmp/overrides"), overridesURL);
         } catch (ClusterException e) {
             System.err.println("Could not find nodes in cluster!");
             System.exit(-1);
         }
+
+        // eventually wait for monitor to be up and running
+        EC2Node monitor = null;
+        if ("agent".equals(profile)) {
+            scheduler = Executors.newSingleThreadScheduledExecutor();
+            ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 0, TimeUnit.SECONDS);
+            try {
+                monitor = future.get();
+            } catch (Exception e) {
+                System.err.println("Could not find monitor host!");
+                System.exit(-1);
+            }
+        } else {
+            monitor = thisNode;
+        }
+
+        InetAddress monitorHost = monitor.getAddress();
+        String monitorHostAddress = monitorHost.getHostAddress();
+        if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
+            System.out.println("This host is going to be the new monitor!");
+        } else {
+            System.out.printf("Using monitor host: %s\n", monitorHost.getHostName());
+            egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
+        }
+        FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
+
+        String overridesURL = "";
+        if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
+            overridesURL = launchParameters.getProperty(LAUNCH_PARAMETER_OVERRIDES_URL);
+        FileUtils.writeStringToFile(new File("/tmp/overrides"), overridesURL);
     }
 
     /**
