@@ -21,13 +21,14 @@ class StartAgentConfig {
 
         def serviceDescriptors = [
             ServiceDescriptorUtil.getWebster(policyFile, '0', (String[])websterRoots),
-            ServiceDescriptorUtil.getCybernode(policyFile, getCybernodeConfigArgs(egHome))
+                /* Elastic Grid Provision Monitor */
+            ServiceDescriptorUtil.getAgent(policyFile, getAgentConfigArgs(egHome))
         ]
 
         return (ServiceDescriptor[])serviceDescriptors
     }
 
-    String[] getCybernodeConfigArgs(String egHome) {
+    String[] getAgentConfigArgs(String egHome) {
         def configArgs = ["${egHome}/config/agent.groovy",
                           "${egHome}/config/compute_resource.groovy"]
         return configArgs as String[]
