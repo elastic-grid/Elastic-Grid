@@ -78,6 +78,29 @@
 			<version>${pom.version}</version>
 		</dependency>
 
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>boot</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Jini 2.1 dependencies -->
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-lib</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jsk-platform</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Typica dependencies -->
         <dependency>
             <groupId>com.google.code.typica</groupId>
