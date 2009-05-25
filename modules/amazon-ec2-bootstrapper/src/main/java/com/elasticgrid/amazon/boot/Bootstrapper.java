@@ -87,7 +87,7 @@ public class Bootstrapper {
         // eventually wait for monitor to be up and running
         EC2Node monitor = null;
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 30, TimeUnit.SECONDS);
+        ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 0, TimeUnit.SECONDS);
         try {
             monitor = future.get();
         } catch (Exception e) {
