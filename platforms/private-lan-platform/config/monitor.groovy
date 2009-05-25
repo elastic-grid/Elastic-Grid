@@ -20,6 +20,7 @@ import net.jini.jrmp.JrmpExporter
 import java.io.File
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
+import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 
 /*
  * Declare Provision Monitor properties
@@ -72,4 +73,13 @@ class MonitorConfig {
         return deployHandlers as DeployHandler[]
     }
 
+}
+
+
+/*
+ * Configures the SharedDiscoveryManager class to create
+ */
+@Component('org.rioproject.resources.client.DiscoveryManagementPool')
+class SharedDiscoveryManagerConfig {
+    String sharedDiscoveryManager = EC2LookupDiscoveryManager.class.getName()
 }
