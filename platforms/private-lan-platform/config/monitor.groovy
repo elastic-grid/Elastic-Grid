@@ -13,6 +13,8 @@ import org.rioproject.monitor.DeployHandler
 import org.rioproject.monitor.FileSystemOARDeployHandler
 import org.rioproject.monitor.ServiceResourceSelector
 import org.rioproject.monitor.LeastActiveSelector
+import org.rioproject.resources.client.JiniClient
+import net.jini.core.discovery.LookupLocator
 import net.jini.export.Exporter
 import net.jini.jrmp.JrmpExporter
 import java.io.File
@@ -32,6 +34,16 @@ class MonitorConfig {
         def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 
                       'elastic-grid')]
         return groups as String[]
+    }
+
+    LookupLocator[] getInitialLookupLocators() {
+        String locators = System.getProperty(Constants.LOCATOR_PROPERTY_NAME)
+        if(locators!=null) {
+            def lookupLocators = JiniClient.parseLocators(locators)
+            return lookupLocators as LookupLocator[]
+        } else {
+            return null
+        }
     }
 
     ServiceResourceSelector getServiceResourceSelector() {
