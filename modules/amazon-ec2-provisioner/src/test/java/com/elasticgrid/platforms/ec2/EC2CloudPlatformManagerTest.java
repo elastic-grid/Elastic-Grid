@@ -57,7 +57,7 @@ public class EC2CloudPlatformManagerTest {
                         "AWS_EC2_AMI64=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI64) + "," +
                         "AWS_EC2_KEYPAIR=" + egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR) + "," +
                         "AWS_SQS_SECURED=true,DROP_BUCKET=" + egProps.getProperty(EC2Configuration.EG_DROP_BUCKET),
-                "eg-keypair", true, EC2NodeType.SMALL))
+                egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR), true, EC2NodeType.SMALL))
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
                 .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"))
