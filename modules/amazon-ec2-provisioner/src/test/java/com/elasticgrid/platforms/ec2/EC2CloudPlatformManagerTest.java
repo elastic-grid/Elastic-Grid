@@ -26,6 +26,8 @@ import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
+import com.elasticgrid.utils.amazon.AWSUtils;
+import com.elasticgrid.config.EC2Configuration;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -33,13 +35,17 @@ import org.testng.annotations.Test;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.io.File;
+import java.io.IOException;
 
 public class EC2CloudPlatformManagerTest {
     private EC2CloudPlatformManager cloudPlatformManager;
     private EC2Instantiator mockEC2;
     private EC2ClusterLocator mockLocator;
+    private Properties egProps;
 
     @Test(expectedExceptions = ClusterAlreadyRunningException.class)
     public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
@@ -47,9 +53,10 @@ public class EC2CloudPlatformManagerTest {
                 .andReturn(null);
         EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
                 "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
-                        "AWS_EC2_AMI32=ami-b5c325dc,AWS_EC2_AMI64=," +
-                        "AWS_EC2_KEYPAIR=eg-keypair," +
-                        "AWS_SQS_SECURED=true,DROP_BUCKET=elastic-grid-drop-target",
+                        "AWS_EC2_AMI32=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI32) + "," +
+                        "AWS_EC2_AMI64=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI64) + "," +
+                        "AWS_EC2_KEYPAIR=" + egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR) + "," +
+                        "AWS_SQS_SECURED=true,DROP_BUCKET=" + egProps.getProperty(EC2Configuration.EG_DROP_BUCKET),
                 "eg-keypair", true, EC2NodeType.SMALL))
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
@@ -66,12 +73,13 @@ public class EC2CloudPlatformManagerTest {
 
     @BeforeTest
     @SuppressWarnings("unchecked")
-    public void setUpClusterManager() {
+    public void setUpClusterManager() throws IOException {
         cloudPlatformManager = new EC2CloudPlatformManager();
         mockEC2 = EasyMock.createMock(EC2Instantiator.class);
         mockLocator = org.easymock.classextension.EasyMock.createMock(EC2ClusterLocator.class);
         cloudPlatformManager.setNodeInstantiator(mockEC2);
         cloudPlatformManager.setClusterLocator(mockLocator);
+        egProps = AWSUtils.loadEC2Configuration();
     }
 
     @AfterTest
