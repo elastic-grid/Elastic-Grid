@@ -80,6 +80,6 @@ class MonitorConfig {
  * Configures the SharedDiscoveryManager class to create
  */
 @Component('org.rioproject.resources.client.DiscoveryManagementPool')
-class SharedDiscoveryManagerConfig {
+class MonitorSharedDiscoveryManagerConfig {
     String sharedDiscoveryManager = EC2LookupDiscoveryManager.class.getName()
 }

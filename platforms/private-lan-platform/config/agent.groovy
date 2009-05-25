@@ -116,6 +116,6 @@ class LookupDiscoConfig {
  * Configures the SharedDiscoveryManager class to create
  */
 @Component('org.rioproject.resources.client.DiscoveryManagementPool')
-class SharedDiscoveryManagerConfig {
+class AgentSharedDiscoveryManagerConfig {
     String sharedDiscoveryManager = EC2LookupDiscoveryManager.class.getName()
 }
