@@ -119,6 +119,7 @@ public class Bootstrapper {
             ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 0, TimeUnit.SECONDS);
             try {
                 monitor = future.get();
+                scheduler.shutdownNow();
             } catch (Exception e) {
                 System.err.println("Could not find monitor host!");
                 System.exit(-1);
@@ -175,35 +176,35 @@ public class Bootstrapper {
             String key = (String) property.getKey();
             if (LAUNCH_PARAMETER_ACCESS_ID.equals(key))
                 egParameters.put(EC2Configuration.AWS_ACCESS_ID, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_ACCESS_ID))
                 System.err.println("The Amazon Access ID could not be retreived!");
             if (LAUNCH_PARAMETER_SECRET_KEY.equals(key))
                 egParameters.put(EC2Configuration.AWS_SECRET_KEY, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_SECRET_KEY))
                 System.err.println("The Amazon Secret Key could not be retreived!");
             if (LAUNCH_PARAMETER_CLUSTER_NAME.equals(key))
                 egParameters.put(EC2Configuration.EG_CLUSTER_NAME, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_CLUSTER_NAME))
                 System.err.println("The name of the cluster could not be retrived!");
             if (LAUNCH_PARAMETER_DROP_BUCKET.equals(key))
                 egParameters.put(EC2Configuration.EG_DROP_BUCKET, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_DROP_BUCKET))
                 System.err.println("The name of the Amazon S3 drop bucket could not be retreived!");
             if (LAUNCH_PARAMETER_OVERRIDES_URL.equals(key))
                 egParameters.put(EC2Configuration.EG_OVERRIDES_BUCKET, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
                 egParameters.put(EC2Configuration.EG_OVERRIDES_BUCKET, "");
             if (LAUNCH_PARAMETER_EC2_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_EC2_SECURED))
                 egParameters.put(EC2Configuration.AWS_EC2_SECURED, Boolean.TRUE.toString());
             if (LAUNCH_PARAMETER_SQS_SECURED.equals(key))
                 egParameters.put(EC2Configuration.AWS_SQS_SECURED, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_SQS_SECURED))
                 egParameters.put(EC2Configuration.AWS_SQS_SECURED, Boolean.TRUE.toString());
             if (LAUNCH_PARAMETER_EC2_KEYPAIR.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_KEYPAIR, property.getValue());
-            else
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_EC2_KEYPAIR))
                 System.err.println("The Amazon keypair name could not be retreived!");
             /*
             else
@@ -211,12 +212,12 @@ public class Bootstrapper {
             */
             if (LAUNCH_PARAMETER_EC2_AMI32.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_AMI32, property.getValue());
-            else
-                System.err.println("The 32bits AMI ID could not be retreived!");
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_EC2_AMI32))
+                System.err.println("The 32 bits AMI ID could not be retreived!");
             if (LAUNCH_PARAMETER_EC2_AMI64.equals(key))
                 egParameters.put(EC2Configuration.AWS_EC2_AMI64, property.getValue());
-            else
-                System.err.println("The 64bits AMI ID could not be retreived!");
+            else if (!launchParameters.containsKey(LAUNCH_PARAMETER_EC2_AMI64))
+                System.err.println("The 64 bits AMI ID could not be retreived!");
 
             if (LAUNCH_PARAMETER_YUM_PACKAGES.equals(key))
                 egParameters.put(EC2Configuration.REDHAT_YUM_PACKAGES, property.getValue());
@@ -259,14 +260,16 @@ public class Bootstrapper {
 
         public EC2Node call() throws Exception {
             try {
+                System.out.println("Searching for monitor in cluster " + clusterName);
                 return locator.findMonitor(clusterName);
             } catch (ClusterException e) {
                 if (count++ > 10) {
                     // could not locate locator after 6 minutes, probably something wrong going on!
+                    System.err.println("Oops. Could not locate cluster after 6 minutes!");
                     return null;
                 } else {
                     // try again in 30 seconds
-                    System.err.println("Could not locate monitor. " +
+                    System.out.println("Could not locate monitor. " +
                             "This may be because the EC2 server is not yet ready. " +
                             "Trying again in 30 seconds.");
                     return scheduler.schedule(this, 30, TimeUnit.SECONDS).get();
