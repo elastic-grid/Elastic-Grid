@@ -21,13 +21,12 @@ import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.utils.amazon.AWSUtils;
+import org.rioproject.resources.client.DiscoveryManagementPool;
 import com.xerox.amazonws.ec2.Jec2;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import net.jini.core.discovery.LookupLocator;
 import net.jini.discovery.DiscoveryListener;
-import org.rioproject.resources.client.DiscoveryManagementPool;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
