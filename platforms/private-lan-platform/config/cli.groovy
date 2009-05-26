@@ -16,6 +16,14 @@ class ClientDiscoveryConfig {
     long multicastAnnouncementInterval=5000
 }
 
+/**
+ * Configures groups used by CLI.
+ */
+@Component('org.rioproject.tools.cli')
+class CLIConfig {
+    String[] groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)];
+}
+
 /*
  * Configures the SharedDiscoveryManager class to create
  */
