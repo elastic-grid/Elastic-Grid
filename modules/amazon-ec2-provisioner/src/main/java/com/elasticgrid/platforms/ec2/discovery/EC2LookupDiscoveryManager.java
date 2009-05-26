@@ -26,14 +26,15 @@ import net.jini.discovery.DiscoveryListener;
 import org.rioproject.resources.client.DiscoveryManagementPool;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.MalformedURLException;
 
 /**
  * Adapts Apache River discovery semantics to EC2.
@@ -112,7 +113,8 @@ public class EC2LookupDiscoveryManager extends DiscoveryManagementPool.SharedDis
          public void run() {
              List<LookupLocator> locators = new ArrayList<LookupLocator>();
              try {
-                 for(EC2Node node : clusterLocator.findNodes(clusterName)) {
+                 Set<EC2Node> nodes = clusterLocator.findNodes(clusterName);
+                 for(EC2Node node : nodes) {
                      if(node.getProfile().isMonitor()) {
                          locators.add(
                              new LookupLocator("jini://"+node.getAddress().getHostAddress()));
