@@ -154,7 +154,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def Application application = new ApplicationImpl().name(opstring.name)
       opstring.services.each { ServiceElement elem ->
         Log.info "Found service ${elem.serviceBeanConfig.name}"
-        Log.finest "Found service '${elem}'"
+        Log.debug "Found service '${elem}'"
         application.service(elem.serviceBeanConfig.name)
       }
       return application
