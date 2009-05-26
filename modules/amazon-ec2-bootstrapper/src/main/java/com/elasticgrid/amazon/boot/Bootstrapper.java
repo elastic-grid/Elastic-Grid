@@ -19,11 +19,8 @@
 package com.elasticgrid.amazon.boot;
 
 import com.elasticgrid.config.EC2Configuration;
-import com.elasticgrid.config.GenericConfiguration;
 import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
@@ -39,11 +36,6 @@ import java.net.InetAddress;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Bootstrapper in charge of fetching the EC2 launch parameters and generating the EG configuration files.
@@ -68,8 +60,6 @@ public class Bootstrapper {
     public static final String ELASTIC_GRID_CONFIGURATION_FILE = "config/eg.properties";
 
     private String egHome = System.getProperty("EG_HOME");
-
-    private ScheduledExecutorService scheduler;
 
     public Bootstrapper() throws IOException, EC2Exception {
         // retreive EC2 launch parameters
@@ -111,32 +101,6 @@ public class Bootstrapper {
             System.err.println("Could not find nodes in cluster!");
             System.exit(-1);
         }
-
-        // eventually wait for monitor to be up and running
-        EC2Node monitor = null;
-        if ("agent".equals(profile)) {
-            scheduler = Executors.newSingleThreadScheduledExecutor();
-            ScheduledFuture<EC2Node> future = scheduler.schedule(new LocateMonitorCallable(locator, clusterName), 0, TimeUnit.SECONDS);
-            try {
-                monitor = future.get();
-                scheduler.shutdownNow();
-            } catch (Exception e) {
-                System.err.println("Could not find monitor host!");
-                System.exit(-1);
-            }
-        } else {
-            monitor = thisNode;
-        }
-
-        InetAddress monitorHost = monitor.getAddress();
-        String monitorHostAddress = monitorHost.getHostAddress();
-        if (monitorHostAddress.equals(InetAddress.getLocalHost().getHostAddress())) {
-            System.out.println("This host is going to be the new monitor!");
-        } else {
-            System.out.printf("Using monitor host: %s\n", monitorHost.getHostName());
-            egParameters.put(EC2Configuration.EG_MONITOR_HOST, monitorHost.getHostName());
-        }
-        FileUtils.writeStringToFile(new File(egHome + File.separator + "config", "monitor-host"), monitorHost.getHostName());
 
         String overridesURL = "";
         if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
@@ -246,36 +210,6 @@ public class Bootstrapper {
             IOUtils.closeQuietly(stream);
         }
         return config;
-    }
-
-    class LocateMonitorCallable implements Callable<EC2Node> {
-        private EC2ClusterLocator locator;
-        private String clusterName;
-        private int count = 0;
-
-        LocateMonitorCallable(EC2ClusterLocator locator, String clusterName) {
-            this.locator = locator;
-            this.clusterName = clusterName;
-        }
-
-        public EC2Node call() throws Exception {
-            try {
-                System.out.println("Searching for monitor in cluster " + clusterName);
-                return locator.findMonitor(clusterName);
-            } catch (ClusterException e) {
-                if (count++ > 10) {
-                    // could not locate locator after 6 minutes, probably something wrong going on!
-                    System.err.println("Oops. Could not locate cluster after 6 minutes!");
-                    return null;
-                } else {
-                    // try again in 30 seconds
-                    System.out.println("Could not locate monitor. " +
-                            "This may be because the EC2 server is not yet ready. " +
-                            "Trying again in 30 seconds.");
-                    return scheduler.schedule(this, 30, TimeUnit.SECONDS).get();
-                }
-            }
-        }
     }
 
     public static void main(String[] args) throws IOException, EC2Exception {

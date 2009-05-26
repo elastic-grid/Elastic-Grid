@@ -47,8 +47,6 @@ import org.springframework.stereotype.Service
 class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   def Jec2 ec2
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
-  public static final String EG_GROUP_MONITOR = "eg-monitor"
-  public static final String EG_GROUP_AGENT = "eg-agent"
 
   /**
    * @{inheritDoc}
