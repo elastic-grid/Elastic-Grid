@@ -98,11 +98,11 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
+        String monitorRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String monitorClasspath =
             egHome + File.separator + "lib" + File.separator + "monitor.jar"
             + File.pathSeparator +
-            egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + getJarName(egHome, "amazon-ec2-provisioner");
+            monitorRoot + File.separator + getJarName(monitorRoot, "amazon-ec2-provisioner");
         String monitorCodebase = BootUtil.getCodebase(new String[]{
             "monitor-dl.jar",
             "rio-dl.jar",
@@ -188,11 +188,11 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
+        String agentRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String agentClasspath =
             egHome + File.separator + "lib" + File.separator + "cybernode.jar"
             + File.pathSeparator +
-            egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + getJarName(egHome, "amazon-ec2-provisioner");
+            agentRoot + File.separator + getJarName(agentRoot, "amazon-ec2-provisioner");
         String agentCodebase = BootUtil.getCodebase(new String[]{
             "cybernode-dl.jar",
             "rio-dl.jar",
@@ -223,10 +223,8 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
-        String restApiRoot =
-            egHome + File.separator + "lib" + File.separator + "elastic-grid";
-        String restApiClasspath = restApiRoot + File.separator +
-                                  getJarName(egHome, "rest-api");
+        String restApiRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
+        String restApiClasspath = restApiRoot + File.separator + getJarName(restApiRoot, "rest-api");
         String restApiCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
                                                                    "jsk-dl.jar"},
                                                       hostAddress,
