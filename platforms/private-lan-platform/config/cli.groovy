@@ -8,7 +8,6 @@
 
 import org.rioproject.config.Component
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
-import com.elasticgrid.config.GenericConfiguration
 import org.rioproject.resources.client.DiscoveryManagementPool.SharedDiscoveryManager
 import org.rioproject.config.Constants
 
