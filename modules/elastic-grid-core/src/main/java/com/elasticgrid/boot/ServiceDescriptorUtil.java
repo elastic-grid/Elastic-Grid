@@ -101,9 +101,8 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String monitorClasspath =
             egHome + File.separator + "lib" + File.separator + "monitor.jar"
             + File.pathSeparator +
-            // TODO: get rid of this version number!
             egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + "amazon-ec2-provisioner-0.9.0.jar";
+            File.separator + getJarName(egHome, "amazon-ec2-provisioner");
         String monitorCodebase = BootUtil.getCodebase(new String[]{
             "monitor-dl.jar",
             "rio-dl.jar",
@@ -192,9 +191,8 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String agentClasspath =
             egHome + File.separator + "lib" + File.separator + "cybernode.jar"
             + File.pathSeparator +
-            // TODO: get rid of this version number!
             egHome + File.separator + "lib" + File.separator + "elastic-grid" +
-            File.separator + "amazon-ec2-provisioner-0.9.0.jar";
+            File.separator + getJarName(egHome, "amazon-ec2-provisioner");
         String agentCodebase = BootUtil.getCodebase(new String[]{
             "cybernode-dl.jar",
             "rio-dl.jar",
@@ -228,7 +226,7 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String restApiRoot =
             egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String restApiClasspath = restApiRoot + File.separator +
-                                  "rest-api-0.9.0.jar";      // TODO: get rid of this version number!
+                                  getJarName(egHome, "rest-api");
         String restApiCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
                                                                    "jsk-dl.jar"},
                                                       hostAddress,
@@ -239,6 +237,18 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                                         restApiClasspath,
                                         implClass,
                                         restApiConfig);
+    }
+
+    private static String getJarName(String egHome, String nameNoVersion) {
+        String jarName = null;
+        File f = new File(egHome);
+        for(String s : f.list()) {
+            if(s.startsWith(nameNoVersion)) {
+                jarName = s;
+                break;
+            }
+        }
+        return jarName;
     }
 
 }
