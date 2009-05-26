@@ -8,6 +8,9 @@
 
 import org.rioproject.config.Component
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
+import com.elasticgrid.config.GenericConfiguration
+import org.rioproject.resources.client.DiscoveryManagementPool.SharedDiscoveryManager
+import org.rioproject.config.Constants
 
 @Component('net.jini.discovery.LookupDiscovery')
 class ClientDiscoveryConfig {
@@ -19,5 +22,13 @@ class ClientDiscoveryConfig {
  */
 @Component('org.rioproject.resources.client.DiscoveryManagementPool')
 class CLIDiscoveryManagerConfig {
-    String sharedDiscoveryManager = EC2LookupDiscoveryManager.class.getName()
+    String getSharedDiscoveryManager() {
+        String manager
+        def groups = System.getProperty(Constants.GROUPS_PROPERTY_NAME)
+        if(!groups)
+            manager = SharedDiscoveryManager.class.getName()
+        else
+            manager = EC2LookupDiscoveryManager.class.getName()
+        return manager
+    }
 }

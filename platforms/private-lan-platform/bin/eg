@@ -25,7 +25,7 @@
 # Execute the platform setup shell script if available
 if [ -e "$EG_HOME/bin/setup-env" ] ; then
     . $EG_HOME/bin/setup-env
-    echo "Elastic Grid options: $EG_OPTS"
+    #echo "Elastic Grid options: $EG_OPTS"
 fi
 
 scriptDir="$(dirname $0)"
@@ -44,6 +44,7 @@ fi
 if [ -z "$EG_HOME" ] ; then
   EG_HOME="$scriptDir/.."
 fi
+
 # Convert to absolute path
 EG_HOME=$(cd "$EG_HOME" && pwd)
 EG_LIB=$EG_HOME/lib
