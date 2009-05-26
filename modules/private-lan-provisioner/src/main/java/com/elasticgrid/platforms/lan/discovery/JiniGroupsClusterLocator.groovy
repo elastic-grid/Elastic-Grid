@@ -32,7 +32,6 @@ import com.elasticgrid.platforms.lan.discovery.LANClusterLocator
 import com.elasticgrid.platforms.lan.discovery.MonitorGroupFilter
 import java.rmi.registry.LocateRegistry
 import java.rmi.registry.Registry
-import java.util.logging.Logger
 import net.jini.config.ConfigurationProvider
 import net.jini.core.lookup.ServiceItem
 import net.jini.core.lookup.ServiceTemplate
@@ -50,6 +49,7 @@ import org.rioproject.monitor.DeployAdmin
 import org.rioproject.monitor.ProvisionMonitor
 import org.rioproject.resources.client.JiniClient
 import org.springframework.stereotype.Service
+import com.elasticgrid.utils.logging.Log
 
 /**
  * {@link ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
@@ -61,7 +61,6 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   def ServiceDiscoveryManager sdm
   def LookupCache monitorsCache
   def LookupCache agentsCache
-  private final Logger logger = Logger.getLogger(getClass().getName())
 
   public JiniGroupsClusterLocator() {
     def groups = JiniClient.parseGroups(System.getProperty('org.rioproject.groups', "all"))
@@ -86,12 +85,12 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def ServiceBeanConfig config = serviceElement.serviceBeanConfig
       config.groups.each { clusters << it }
     }
-    logger.info "Found clusters $clusters"
+    Log.info "Found clusters $clusters"
     return clusters as Set<String>
   }
 
   public Set<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
-    logger.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
 
     def filter = new AgentGroupFilter(clusterName)
     def ServiceItem[] agentsItems = agentsCache.lookup(filter, Integer.MAX_VALUE)
@@ -121,12 +120,12 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
                 .profile(NodeProfile.AGENT)
                 .address(InetAddress.getByName(hostEntry.hostName))
     }
-    logger.info "Found nodes $nodes"
+    Log.info "Found nodes $nodes"
     return nodes
   }
 
   public LANNode findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    logger.info "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     def ServiceItem item = (ServiceItem) monitorsItems[0]
     def attributes = item.attributeSets
@@ -138,7 +137,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   }
 
   public Set<Application> findApplications(String clusterName) throws ClusterException {
-    logger.info "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     if (monitorsItems.length == 0) {
       return [] as Set<Application>
@@ -147,15 +146,15 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     def ProvisionMonitor monitor = item.service as ProvisionMonitor
     def DeployAdmin dAdmin = monitor.admin as DeployAdmin
 
-    logger.info "Found ${dAdmin.operationalStringManagers.length} opstrings"
+    Log.info "Found ${dAdmin.operationalStringManagers.length} opstrings"
 
     return dAdmin.operationalStringManagers.collect {
       def OperationalString opstring = it.operationalString
-      logger.info "Found application ${it.operationalString.name}"
+      Log.info "Found application ${it.operationalString.name}"
       def Application application = new ApplicationImpl().name(opstring.name)
       opstring.services.each { ServiceElement elem ->
-        logger.info "Found service ${elem.serviceBeanConfig.name}"
-        logger.finest "Found service '${elem}'"
+        Log.info "Found service ${elem.serviceBeanConfig.name}"
+        Log.finest "Found service '${elem}'"
         application.service(elem.serviceBeanConfig.name)
       }
       return application
