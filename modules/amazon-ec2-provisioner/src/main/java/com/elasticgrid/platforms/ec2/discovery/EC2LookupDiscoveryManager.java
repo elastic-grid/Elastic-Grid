@@ -17,8 +17,11 @@
  */
 package com.elasticgrid.platforms.ec2.discovery;
 
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ec2.EC2Node;
+import com.elasticgrid.utils.amazon.AWSUtils;
+import com.xerox.amazonws.ec2.Jec2;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
 import net.jini.core.discovery.LookupLocator;
@@ -29,6 +32,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -81,12 +85,27 @@ public class EC2LookupDiscoveryManager extends DiscoveryManagementPool.SharedDis
                                                "a cluster configuration that has " +
                                                "more than one name");
 
-        String clusterName = groups[0];
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new ClusterLocatorTask(clusterName),
-                                      0,
-                                      60,
-                                      TimeUnit.SECONDS);
+        try {
+            Properties egProps = AWSUtils.loadEC2Configuration();
+            String awsAccessID = egProps.getProperty(EC2Configuration.AWS_ACCESS_ID);
+            String awsSecretKey = egProps.getProperty(EC2Configuration.AWS_SECRET_KEY);
+            String secured = egProps.getProperty(EC2Configuration.AWS_EC2_SECURED);
+            Jec2 jec2 = new Jec2(awsAccessID, awsSecretKey, Boolean.getBoolean(secured));
+            EC2SecurityGroupsClusterLocator clusterLocator = new EC2SecurityGroupsClusterLocator();
+            clusterLocator.setEc2(jec2);
+
+            String clusterName = groups[0];
+            scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.scheduleAtFixedRate(new ClusterLocatorTask(clusterName, clusterLocator),
+                                          0,
+                                          60,
+                                          TimeUnit.SECONDS);
+        } catch (IOException e) {
+            logger.log(Level.WARNING,
+                       "Unable to obtain AWS Credentials, " +
+                       "no way to locate cluster ["+groups[0]+"]",
+                       e);
+        }
 
     }
 
@@ -105,9 +124,11 @@ public class EC2LookupDiscoveryManager extends DiscoveryManagementPool.SharedDis
          String clusterName;
          EC2SecurityGroupsClusterLocator clusterLocator;
 
-         ClusterLocatorTask(String clusterName) {
+         ClusterLocatorTask(String clusterName,
+                            EC2SecurityGroupsClusterLocator clusterLocator) {
              this.clusterName = clusterName;
-             clusterLocator = new EC2SecurityGroupsClusterLocator();
+             this.clusterLocator = clusterLocator;
+
          }
 
          public void run() {
