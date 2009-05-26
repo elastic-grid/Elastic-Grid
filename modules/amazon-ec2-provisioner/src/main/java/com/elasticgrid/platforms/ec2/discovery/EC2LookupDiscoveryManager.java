@@ -120,8 +120,20 @@ public class EC2LookupDiscoveryManager extends DiscoveryManagementPool.SharedDis
                              new LookupLocator("jini://"+node.getAddress().getHostAddress()));
                      }
                  }
-                 if(locators.size()>0)
+                 if(locators.size()>0) {
                      addLocators(locators.toArray(new LookupLocator[locators.size()]));
+                 }
+                 StringBuilder sb = new StringBuilder();
+                 sb.append("Current list of managed LookupLocators are [");
+                 LookupLocator[] locs = getLocators();
+                 for(int i=0; i< locs.length; i++) {
+                     if(i>0)
+                         sb.append(", ");
+                     sb.append(locs[i].toString());
+                 }
+                 sb.append("]");
+                 logger.info(sb.toString());
+
              } catch (ClusterException e) {
                  logger.log(Level.WARNING,
                             "Looking for nodes in the cluster failed, " +
