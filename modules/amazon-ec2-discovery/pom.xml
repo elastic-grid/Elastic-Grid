@@ -7,25 +7,43 @@
 	    <version>0.9.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>amazon-ec2-provisioner</artifactId>
-    <!--<packaging>jsb</packaging>-->
+    <artifactId>amazon-ec2-discovery</artifactId>
     <packaging>jar</packaging>
-    <name>Modules :: Amazon EC2 Provisioner</name>
+    <name>Modules :: Amazon EC2 Discovery</name>
 
     <dependencies>
-
-        <!-- Amazon EC2 discovery -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>amazon-ec2-discovery</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
 
         <!-- Elastic Grid manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.elasticgrid.substrates</groupId>
+                    <artifactId>substrate-api</artifactId>
+                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>com.elasticgrid</groupId>-->
+                    <!--<artifactId>elastic-grid-core</artifactId>-->
+                <!--</exclusion>-->
+                <exclusion>
+                    <groupId>net.java.dev.jets3t</groupId>
+                    <artifactId>jets3t</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jul-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Elastic Grid model -->
@@ -33,13 +51,20 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-model</artifactId>
             <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Elastic Grid core -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
-            <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>wstx-asl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Elastic Grid Utils -->
@@ -62,32 +87,12 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
         </dependency>
-        <!-- Amazon S3 integration -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
-        </dependency>
-
-        <!-- Jini 2.1 dependencies -->
-        <dependency>
-            <groupId>net.jini</groupId>
-            <artifactId>jsk-platform</artifactId>
-        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>monitor</artifactId>
-        </dependency>
-
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -211,15 +216,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <index>true</index>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <addExtensions/>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<index>true</index>-->
+                        <!--<manifest>-->
+                            <!--<addClasspath>true</addClasspath>-->
+                            <!--<addExtensions/>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>

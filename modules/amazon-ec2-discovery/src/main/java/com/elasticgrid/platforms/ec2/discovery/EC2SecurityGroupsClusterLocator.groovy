@@ -36,14 +36,11 @@ import com.xerox.amazonws.ec2.EC2Exception
 import com.xerox.amazonws.ec2.InstanceType
 import com.xerox.amazonws.ec2.Jec2
 import com.xerox.amazonws.ec2.ReservationDescription
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Service
 
 /**
  * {@ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
-@Service
 class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   def Jec2 ec2
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
@@ -157,7 +154,6 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     return new HashSet<Application>();
   }
 
-  @Autowired(required = true)
   public void setEc2(Jec2 ec2) {
     this.ec2 = ec2;
   }

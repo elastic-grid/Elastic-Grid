@@ -13,6 +13,8 @@
         <classpath>${EG_HOME}/lib/elastic-grid/amazon-ec2-discovery-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/elastic-grid-model-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/elastic-grid-utils-${pom.version}.jar
+            ${EG_HOME}/lib/elastic-grid/elastic-grid-manager-${pom.version}.jar
+            ${EG_HOME}/lib/elastic-grid/substrate-api-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/activation-1.1.jar
             ${EG_HOME}/lib/elastic-grid/commons-lang-2.3.jar
             ${EG_HOME}/lib/elastic-grid/commons-logging-1.1.1.jar
@@ -23,7 +25,7 @@
             ${EG_HOME}/lib/elastic-grid/jaxb-impl-2.1.6.jar
             ${EG_HOME}/lib/elastic-grid/jibx-run-1.1.6a.jar
             ${EG_HOME}/lib/elastic-grid/joda-time-1.5.2.jar
-            ${EG_HOME}/lib/elastic-grid/stax-api-1.0.2.jar
+            ${EG_HOME}/lib/elastic-grid/stax-api-1.0.1.jar
             ${EG_HOME}/lib/elastic-grid/typica-1.5.jar
         </classpath>
     </capability>

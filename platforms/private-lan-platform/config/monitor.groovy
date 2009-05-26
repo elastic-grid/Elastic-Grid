@@ -3,11 +3,10 @@
  */
 import com.elasticgrid.utils.amazon.AWSUtils
 import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
+import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 import org.rioproject.core.ClassBundle
 import org.rioproject.config.Component
 import org.rioproject.config.Constants
-import org.rioproject.log.LoggerConfig
-import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import org.rioproject.fdh.FaultDetectionHandlerFactory
 import org.rioproject.monitor.DeployHandler
 import org.rioproject.monitor.FileSystemOARDeployHandler
@@ -18,9 +17,6 @@ import net.jini.core.discovery.LookupLocator
 import net.jini.export.Exporter
 import net.jini.jrmp.JrmpExporter
 import java.io.File
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
-import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 
 /*
  * Declare Provision Monitor properties
