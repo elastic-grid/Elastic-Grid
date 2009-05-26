@@ -163,7 +163,7 @@ if [ "$start" = "1" ]; then
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
-    cliExt=""
+    cliExt="$EG_HOME/config/cli.groovy"
     launchTarget=com.elasticgrid.tools.cli.CLI
     for j in $(find $EG_HOME/lib/elastic-grid -name "*.jar")
     do
