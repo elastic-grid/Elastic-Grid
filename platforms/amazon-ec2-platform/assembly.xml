@@ -21,19 +21,6 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
         <fileSet>
-            <directory>config</directory>
-            <outputDirectory>/config</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <excludes>
-                <exclude>eg.properties</exclude>
-                <exclude>platform/**/*</exclude>
-            </excludes>
-            <filtered>true</filtered>
-            <useDefaultExcludes>true</useDefaultExcludes>
-        </fileSet>
-        <fileSet>
             <directory>bin</directory>
             <includes>
 				<include>*</include>
