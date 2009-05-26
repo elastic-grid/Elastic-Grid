@@ -10,4 +10,4 @@ if [ -f /tmp/public-hostname ] ; then
     export LOCAL_HOST=`cat /tmp/public-hostname`
 fi
 
-export EG_OPTS="-DMONITOR_HOST=$MONITOR_HOST -Dorg.rioproject.locators=$MONITOR_HOST -Dorg.rioproject.groups=$CLUSTER_NAME"
+export EG_OPTS="-DMONITOR_HOST=$MONITOR_HOST -Dorg.rioproject.groups=$CLUSTER_NAME"
