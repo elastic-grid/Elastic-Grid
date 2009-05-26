@@ -24,22 +24,20 @@ import com.elasticgrid.model.Cluster
 import com.elasticgrid.model.ClusterException
 import com.elasticgrid.model.ClusterMonitorNotFoundException
 import com.elasticgrid.model.ClusterNotFoundException
+import com.elasticgrid.model.Discovery
 import com.elasticgrid.model.NodeProfile
 import com.elasticgrid.model.ec2.EC2Node
+import com.elasticgrid.model.ec2.EC2NodeType
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator
+import com.elasticgrid.utils.logging.Log
 import com.xerox.amazonws.ec2.EC2Exception
+import com.xerox.amazonws.ec2.InstanceType
 import com.xerox.amazonws.ec2.Jec2
 import com.xerox.amazonws.ec2.ReservationDescription
-import java.util.logging.Level
-import java.util.logging.Logger
-import java.util.Collections
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import com.elasticgrid.model.Discovery
-import com.xerox.amazonws.ec2.InstanceType
-import com.elasticgrid.model.ec2.EC2NodeType
 
 /**
  * {@ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
@@ -51,7 +49,6 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   def Map<String, Cluster> oldClusterDefinitions = new HashMap<String, Cluster>()
   public static final String EG_GROUP_MONITOR = "eg-monitor"
   public static final String EG_GROUP_AGENT = "eg-agent"
-  private final Logger logger = Logger.getLogger(getClass().getName())
 
   /**
    * @{inheritDoc}
@@ -62,7 +59,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      logger.log Level.WARNING, "EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2 is not reacheable. Ignoring EC2 clusters."
       return [] as Set<String>
     }
     // extract cluster names
@@ -80,12 +77,12 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
 
   public Set<EC2Node> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     // retrieve the list of instances running
-    logger.log Level.INFO, "Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      logger.log Level.WARNING, "EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2 is not reacheable. Ignoring EC2 clusters."
       return Collections.emptySet()
     }
     // filter nodes which are not part of the cluster
@@ -94,7 +91,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     }
     // build of list of all the instances
     def Set<EC2Node> nodes = clusterReservation.collect { ReservationDescription reservation ->
-      reservation.instances.findAll { it.isRunning() }.collect {ReservationDescription.Instance instance ->
+      reservation.instances.findAll { it.isRunning() }.collect { ReservationDescription.Instance instance ->
         boolean hasMonitor = reservation.groups.contains(Discovery.MONITOR.groupName)
         boolean hasAgent = reservation.groups.contains(Discovery.AGENT.groupName)
         def nodeType = null
@@ -117,11 +114,9 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         }
         def profile = null
         if (!hasAgent && !hasMonitor) {
-          logger.log Level.WARNING, "Instance ${instance.instanceId} has no Elastic Grid profile!"
+          Log.warn "Instance ${instance.instanceId} has no Elastic Grid profile!"
           return
         } else if (hasAgent && hasMonitor) {
-          //logger.log Level.WARNING,
-          //        "Instance ${instance.instanceId} is both a monitor and an agent. Using it as a monitor!"
           profile = NodeProfile.MONITOR_AND_AGENT
         } else if (hasMonitor) {
           profile = NodeProfile.MONITOR
@@ -131,7 +126,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         return new EC2NodeImpl(profile, nodeType).instanceID(instance.instanceId).address(InetAddress.getByName(instance.dnsName))
       }
     }.flatten() as Set<EC2Node>;
-    logger.log Level.INFO, "Found ${nodes.size()} nodes in cluster '$clusterName'..."
+    Log.info "Found ${nodes.size()} nodes in cluster '$clusterName'..."
     // notify listeners of potential cluster topology changes
     Cluster<EC2Node> cluster = new EC2ClusterImpl(name: clusterName).addNodes(nodes)
     if (oldClusterDefinitions.containsKey(clusterName)) {
@@ -149,7 +144,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   }
 
   public EC2Node findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    logger.log Level.INFO, "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "Searching for monitor node in cluster '$clusterName'..."
     def Collection<EC2Node> nodes = findNodes(clusterName)
     def found = false
     def node = nodes.find { it.profile.isMonitor() }
