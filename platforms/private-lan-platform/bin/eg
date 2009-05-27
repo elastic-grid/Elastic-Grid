@@ -160,7 +160,7 @@ if [ "$start" = "1" ]; then
         -DJINI_HOME=$JINI_HOME \
         -DRIO_LOG_DIR=$EG_HOME/logs/ \
         -Drio.script.path="$scriptPath" \
-        -Drio.script.args="$ARGS" \
+        -Drio.script.args=""$ARGS"" \
         $NETWORK $DEBUG $launchTarget $starterConfig $command_line 2>&1 > $LOG_DIR/eg-$starter_arg.log
 else
     # Set system properties
