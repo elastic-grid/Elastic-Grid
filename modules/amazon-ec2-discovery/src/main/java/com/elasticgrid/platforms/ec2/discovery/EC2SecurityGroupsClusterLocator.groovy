@@ -72,7 +72,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
 
   public Set<EC2Node> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     // retrieve the list of instances running
-    Log.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.fine "Searching for Elastic Grid nodes in cluster '$clusterName'..."
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
@@ -89,7 +89,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
       reservation.instances.findAll { it.isRunning() }.collect { ReservationDescription.Instance instance ->
         boolean hasMonitor = reservation.groups.contains(Discovery.MONITOR.groupName)
         boolean hasAgent = reservation.groups.contains(Discovery.AGENT.groupName)
-        def nodeType = null
+        def nodeType
         switch (instance.instanceType) {
           case InstanceType.DEFAULT:
             nodeType = EC2NodeType.SMALL
@@ -121,7 +121,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         return new EC2NodeImpl(profile, nodeType).instanceID(instance.instanceId).address(InetAddress.getByName(instance.dnsName))
       }
     }.flatten() as Set<EC2Node>;
-    Log.info "Found ${nodes.size()} nodes in cluster '$clusterName'..."
+    Log.fine "Found ${nodes.size()} nodes in cluster '$clusterName'..."
     // notify listeners of potential cluster topology changes
     Cluster<EC2Node> cluster = new EC2ClusterImpl(name: clusterName).addNodes(nodes)
     if (oldClusterDefinitions.containsKey(clusterName)) {
