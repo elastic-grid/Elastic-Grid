@@ -37,6 +37,18 @@ public final class Log {
         log(Level.INFO, message, params);
     }
 
+    public static void fine(String message, Object... params) {
+        log(Level.FINE, message, params);
+    }
+
+    public static void finer(String message, Object... params) {
+        log(Level.FINER, message, params);
+    }
+
+    public static void finest(String message, Object... params) {
+        log(Level.FINEST, message, params);
+    }
+
     public static void warn(String message, Object... params) {
         log(Level.WARNING, message, params);
     }
