@@ -70,8 +70,14 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
             try {
                 while (last.isPending()) {
                     Thread.sleep(200);
-                    reservation = jec2.describeInstances(Arrays.asList(last.getInstanceId())).get(0);
-                    last = reservation.getInstances().get(instances.size() - 1);
+                    try {
+                        reservation = jec2.describeInstances(Arrays.asList(last.getInstanceId())).get(0);
+                        last = reservation.getInstances().get(instances.size() - 1);
+                    } catch (Exception e) {
+                        // do nothing -- sometimes EC2 don't allow us to request description of instance right after we start it!
+                        logger.warning(format("Could not get instance description for instance '%s'. Retrying...",
+                                last.getInstanceId()));
+                    }
                 }
             } catch (InterruptedException e) {
                 String message = format("Couldn't start properly %d Amazon EC2 instances." +
