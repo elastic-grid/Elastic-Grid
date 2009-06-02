@@ -15,8 +15,25 @@
 
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>amazon-ec2-provisioner</artifactId>
+            <artifactId>amazon-ec2-discovery</artifactId>
             <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>monitor</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Spring dependencies -->

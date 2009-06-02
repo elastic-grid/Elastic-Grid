@@ -32,4 +32,4 @@ else
     JAVACMD="$JAVA_HOME/bin/java"
 fi
 
-$JAVACMD -cp $CP -DEG_HOME=$EG_HOME com.elasticgrid.amazon.boot.Bootstrapper $* | logger -t elastic-grid
+$JAVACMD -cp $CP -DEG_HOME=$EG_HOME com.elasticgrid.amazon.boot.Bootstrapper -Djava.util.logging.config.file=$EG_HOME/config/eg-cli.logging.properties $* | logger -t elastic-grid
