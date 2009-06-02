@@ -135,7 +135,6 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
     }
 
     public Collection<EC2Cluster> findClusters() throws ClusterException, RemoteException {
-        logger.log(Level.INFO, "Searching for clusters running on EC2...");
         Collection<String> clustersNames = clusterLocator.findClusters();
         List<EC2Cluster> clusters = new ArrayList<EC2Cluster>(clustersNames.size());
         for (String cluster : clustersNames) {

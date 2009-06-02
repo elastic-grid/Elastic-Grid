@@ -93,7 +93,6 @@ public class RestApplication extends WadlApplication implements InitializingBean
         });
 
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
-//        SLF4JBridgeHandler.install();
     }
 
 }

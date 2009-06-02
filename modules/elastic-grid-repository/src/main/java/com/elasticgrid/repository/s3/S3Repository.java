@@ -38,9 +38,7 @@ import org.jets3t.service.model.S3Object;
 import org.jets3t.service.multithread.DownloadPackage;
 import org.jets3t.service.multithread.S3ServiceSimpleMulti;
 import org.jets3t.service.utils.ByteFormatter;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;

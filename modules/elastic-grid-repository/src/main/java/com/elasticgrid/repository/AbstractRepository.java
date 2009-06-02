@@ -22,8 +22,6 @@ package com.elasticgrid.repository;
 import com.elasticgrid.model.Application;
 import com.elasticgrid.model.Grid;
 import com.elasticgrid.model.internal.AbstractStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collections;
@@ -39,7 +37,7 @@ public abstract class AbstractRepository implements Repository {
     private Map<String, Application> applications = Collections.synchronizedMap(new HashMap<String, Application>());
     protected AbstractStore store;
     protected boolean initialized = false;
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected Logger logger = Logger.getLogger(getClass());
 
     protected abstract Logger getLogger();
 

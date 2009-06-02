@@ -19,6 +19,7 @@
 package com.elasticgrid.model.lan;
 
 import com.elasticgrid.model.Node;
+import com.elasticgrid.model.NodeProfile;
 
 /**
  * Private LAN node instance.
@@ -26,4 +27,5 @@ import com.elasticgrid.model.Node;
 public interface LANNode extends Node {
     String getInstanceID();
     LANNode instanceID(String instanceID);
+    LANNode profile(NodeProfile profile);
 }
