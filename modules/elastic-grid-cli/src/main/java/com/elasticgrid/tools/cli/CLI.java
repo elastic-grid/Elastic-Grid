@@ -21,6 +21,7 @@ package com.elasticgrid.tools.cli;
 import com.elasticgrid.cluster.ClusterManager;
 import net.jini.config.Configuration;
 import net.jini.config.ConfigurationException;
+import net.jini.discovery.DiscoveryGroupManagement;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;

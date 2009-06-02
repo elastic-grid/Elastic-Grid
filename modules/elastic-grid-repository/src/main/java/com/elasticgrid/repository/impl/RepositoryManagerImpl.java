@@ -26,9 +26,6 @@ import com.elasticgrid.model.internal.ApplicationImpl;
 import com.elasticgrid.repository.LocalRepository;
 import com.elasticgrid.repository.RemoteRepository;
 import com.elasticgrid.repository.RepositoryManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -46,7 +43,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
     private GridFactory gridFactory;
     private Map<String, Grid> grids = Collections.synchronizedMap(new HashMap<String, Grid>());
     private Map<String, Application> applications = Collections.synchronizedMap(new HashMap<String, Application>());
-    private Logger logger = LoggerFactory.getLogger(RepositoryManager.class);
+    private Logger logger = Logger.getLogger(RepositoryManager.class);
 
     public void bootstrap() throws RemoteException {
         localRepository.bootstrap();

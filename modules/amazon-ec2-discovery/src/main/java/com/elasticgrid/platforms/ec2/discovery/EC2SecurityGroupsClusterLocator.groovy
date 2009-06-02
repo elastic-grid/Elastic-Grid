@@ -50,11 +50,12 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
    * If the EC2 network can't be reached (offline mode or networking issues), then a empty list is returned.
    */
   public Set<String> findClusters() {
+    Log.info "EC2: Searching for clusters running on EC2..."
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      Log.warn "EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2: EC2 is not reacheable. Ignoring EC2 clusters."
       return [] as Set<String>
     }
     // extract cluster names
@@ -67,17 +68,18 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         }
       }
     }
+    Log.info "EC2: Found clusters $clusters"
     return clusters
   }
 
   public Set<EC2Node> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
     // retrieve the list of instances running
-    Log.fine "Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.fine "EC2: Searching for Elastic Grid nodes in cluster '$clusterName'..."
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      Log.warn "EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2: EC2 is not reacheable. Ignoring EC2 clusters."
       return Collections.emptySet()
     }
     // filter nodes which are not part of the cluster
@@ -109,7 +111,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         }
         def profile = null
         if (!hasAgent && !hasMonitor) {
-          Log.warn "Instance ${instance.instanceId} has no Elastic Grid profile!"
+          Log.warn "EC2: Instance ${instance.instanceId} has no Elastic Grid profile!"
           return
         } else if (hasAgent && hasMonitor) {
           profile = NodeProfile.MONITOR_AND_AGENT
@@ -121,7 +123,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         return new EC2NodeImpl(profile, nodeType).instanceID(instance.instanceId).address(InetAddress.getByName(instance.dnsName))
       }
     }.flatten() as Set<EC2Node>;
-    Log.fine "Found ${nodes.size()} nodes in cluster '$clusterName'..."
+    Log.fine "EC2: Found ${nodes.size()} nodes in cluster '$clusterName'..."
     // notify listeners of potential cluster topology changes
     Cluster<EC2Node> cluster = new EC2ClusterImpl(name: clusterName).addNodes(nodes)
     if (oldClusterDefinitions.containsKey(clusterName)) {
@@ -139,7 +141,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   }
 
   public EC2Node findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    Log.info "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "EC2: Searching for monitor node in cluster '$clusterName'..."
     def Collection<EC2Node> nodes = findNodes(clusterName)
     def found = false
     def node = nodes.find { it.profile.isMonitor() }

@@ -34,9 +34,7 @@ import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class StartClusterHandler extends AbstractHandler
-    implements OptionHandler {
-
+public class StartClusterHandler extends AbstractHandler implements OptionHandler {
     public static final String AGENT_OVERRIDE_FILE_NAME = "start-agent-override.groovy";
     public static final String MONITOR_OVERRIDE_FILE_NAME = "start-monitor-override.groovy";
 

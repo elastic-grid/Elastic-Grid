@@ -43,7 +43,7 @@ if "%1"=="start" goto start
 rem set cliExt=""
 set command_line=%*
 set launchTarget=com.elasticgrid.tools.cli.CLI
-set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\slf4j-api-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-logj12-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-cli-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-ec2-provisioner-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\private-lan-provisioner-${pom.version}.jar"
+set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-cli-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-ec2-provisioner-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\private-lan-provisioner-${pom.version}.jar"
 set props="-DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME%"
 "%JAVACMD%" %classpath% -Xms256m -Xmx256m ^
     -DRIO_HOME="%EG_HOME%" -DJINI_HOME="%JINI_HOME%" -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
@@ -64,7 +64,7 @@ set RIO_LOG_DIR="%EG_HOME%\logs"
 set RIO_NATIVE_DIR="%EG_HOME%\lib\native";"%EG_HOME%\lib\hyperic"
 set PATH=%PATH%;%RIO_NATIVE_DIR%
 
-set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\jul-to-slf4j-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-api-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\slf4j-log4j12-1.5.6.jar";"%EG_HOME%\lib\elastic-grid\log4j-1.2.14.jar"
+set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar"
 set agentpath=-javaagent:"%EG_HOME%\lib\boot.jar"
 
 set launchTarget=com.sun.jini.start.ServiceStarter

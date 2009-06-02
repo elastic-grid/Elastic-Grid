@@ -30,8 +30,6 @@ import com.elasticgrid.utils.jibx.ObjectXmlMappingException;
 import com.elasticgrid.utils.jibx.XmlUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

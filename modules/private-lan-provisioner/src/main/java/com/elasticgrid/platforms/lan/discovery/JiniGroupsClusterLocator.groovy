@@ -75,6 +75,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   }
 
   public Set<String> findClusters() {
+    Log.info "LAN: Searching for clusters running on EC2..."
     def clusters = new HashSet()
     def ServiceItem[] items = agentsCache.lookup(null, Integer.MAX_VALUE)
     if (items.length == 0)
@@ -85,12 +86,12 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def ServiceBeanConfig config = serviceElement.serviceBeanConfig
       config.groups.each { clusters << it }
     }
-    Log.info "Found clusters $clusters"
+    Log.info "LAN: Found clusters $clusters"
     return clusters as Set<String>
   }
 
   public Set<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
-    Log.info "Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.info "LAN: Searching for Elastic Grid nodes in cluster '$clusterName'..."
 
     def filter = new AgentGroupFilter(clusterName)
     def ServiceItem[] agentsItems = agentsCache.lookup(filter, Integer.MAX_VALUE)
@@ -105,39 +106,42 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     monitorsItems.each { ServiceItem item ->
       def attributes = item.attributeSets
       def Host hostEntry = (Host) attributes.find { it instanceof Host }
+      // test if this node is an agent too!
+      item.attributeSets.each { Log.info it.dump() }
       nodes << new LANNodeImpl()
               .instanceID(item.serviceID.toString())
-              .profile(NodeProfile.MONITOR_AND_AGENT)
+              .profile(NodeProfile.MONITOR)
               .address(InetAddress.getByName(hostEntry.hostName))
     }
     agentsItems.each { ServiceItem item ->
       def attributes = item.attributeSets
       def Host hostEntry = (Host) attributes.find { it instanceof Host }
-      def matches = agentsItems.findAll { it.attributeSets.find { it instanceof Host } == hostEntry }
-      if (matches.size() > 1)
+      // test if this node is monitor too and if so skip because if was added just before!
+      if (! monitorsItems.any { it.serviceID ==  item.serviceID }) {
         nodes << new LANNodeImpl()
                 .instanceID(item.serviceID.toString())
                 .profile(NodeProfile.AGENT)
                 .address(InetAddress.getByName(hostEntry.hostName))
+      }
     }
-    Log.info "Found nodes $nodes"
+    Log.info "LAN: Found nodes $nodes"
     return nodes
   }
 
   public LANNode findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    Log.info "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "LAN: Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     def ServiceItem item = (ServiceItem) monitorsItems[0]
     def attributes = item.attributeSets
     def Host hostEntry = (Host) attributes.find { it instanceof Host }
     return (LANNode) new LANNodeImpl()
             .instanceID(item.serviceID.toString())
-            .profile(NodeProfile.MONITOR_AND_AGENT)
+            .profile(NodeProfile.MONITOR)
             .address(InetAddress.getByName(hostEntry.hostName))
   }
 
   public Set<Application> findApplications(String clusterName) throws ClusterException {
-    Log.info "Searching for monitor node in cluster '$clusterName'..."
+    Log.info "LAN: Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     if (monitorsItems.length == 0) {
       return [] as Set<Application>
@@ -146,15 +150,15 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     def ProvisionMonitor monitor = item.service as ProvisionMonitor
     def DeployAdmin dAdmin = monitor.admin as DeployAdmin
 
-    Log.info "Found ${dAdmin.operationalStringManagers.length} opstrings"
+    Log.info "LAN: Found ${dAdmin.operationalStringManagers.length} opstrings"
 
     return dAdmin.operationalStringManagers.collect {
       def OperationalString opstring = it.operationalString
-      Log.info "Found application ${it.operationalString.name}"
+      Log.info "LAN: Found application ${it.operationalString.name}"
       def Application application = new ApplicationImpl().name(opstring.name)
       opstring.services.each { ServiceElement elem ->
-        Log.info "Found service ${elem.serviceBeanConfig.name}"
-        Log.debug "Found service '${elem}'"
+        Log.info "LAN: Found service ${elem.serviceBeanConfig.name}"
+        Log.debug "LAN: Found service '${elem}'"
         application.service(elem.serviceBeanConfig.name)
       }
       return application
