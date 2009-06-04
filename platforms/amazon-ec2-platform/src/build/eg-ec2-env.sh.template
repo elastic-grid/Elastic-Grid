@@ -45,7 +45,7 @@ PRIVATE_KEY_PATH=`echo "$EC2_KEYDIR"/"id_rsa-$KEY_NAME"`
 SSH_OPTS=`echo -i "$PRIVATE_KEY_PATH" -o StrictHostKeyChecking=no -o ServerAliveInterval=30`
 
 # The version of Elastic Grid to use.
-EG_VERSION=0.9.0
+EG_VERSION=0.9.1
 
 # The Amazon S3 bucket where the Elastic Grid AMI is stored.
 # The default value is for public images, so can be left if you are using running a public image.
