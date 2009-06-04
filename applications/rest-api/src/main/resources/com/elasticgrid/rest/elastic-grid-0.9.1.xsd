@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+           targetNamespace="urn:elastic-grid:eg"
+           xmlns:eg="urn:elastic-grid:eg"
+           xmlns:lan="urn:elastic-grid:lan">
+
+    <xs:import namespace="urn:elastic-grid:lan" schemaLocation="elastic-grid-lan-0.9.1.xsd"/>
+
+    <xs:element name="clusters">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element name="cluster" type="lan:cluster"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cluster-provisioning">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:element name="monitors" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="agents" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="node" xml:base="xs:string" mixed="true">
+        <xs:attribute name="profile" use="required">
+            <xs:simpleType xml:base="xs:string">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="monitor"/>
+                    <xs:enumeration value="agent"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="applications">
+        <xs:sequence maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="application" type="eg:application"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="application">
+
+    </xs:complexType>
+
+    <xs:complexType name="services">
+
+    </xs:complexType>
+
+    <xs:complexType name="service">
+
+    </xs:complexType>
+
+</xs:schema>
