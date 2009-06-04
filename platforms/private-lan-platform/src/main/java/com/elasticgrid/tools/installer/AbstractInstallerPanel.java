@@ -109,6 +109,7 @@ public abstract class AbstractInstallerPanel extends IzPanel {
 
         JList list = new JList();
         list.setModel(new DefaultComboBoxModel(options.toArray(new Object[options.size()])));
+        list.setEnabled(false);
         constraints.stretch = true;
         constraints.position = TwoColumnConstraints.EAST;
         add(list, constraints);

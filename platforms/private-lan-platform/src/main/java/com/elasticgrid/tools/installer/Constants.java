@@ -23,5 +23,9 @@ public interface Constants {
     String AWS_ACCESS_ID = "aws.accessId";
     String AWS_SECRET_KEY = "aws.secretKey";
     String AWS_KEYPAIR = "aws.ec2.key";
-    String EG_DROP_BUCKET = "eg.dropBucket";
+    String AWS_AMI32 = "aws.ec2.ami32";
+    String AWS_AMI64 = "aws.ec2.ami64";
+
+    String EG_DROP_BUCKET = "eg.s3.dropBucket";
+    String EG_OVERRIDES_BUCKET = "eg.s3.overridesBucket";
 }

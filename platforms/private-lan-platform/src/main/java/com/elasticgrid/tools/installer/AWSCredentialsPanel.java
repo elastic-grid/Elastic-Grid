@@ -70,6 +70,8 @@ public class AWSCredentialsPanel extends AbstractInstallerPanel {
             idata.setAttribute("s3", s3);
             idata.setVariable(Constants.AWS_ACCESS_ID, awsAccessId);
             idata.setVariable(Constants.AWS_SECRET_KEY, awsSecretKey);
+            idata.setVariable(Constants.AWS_AMI32, "ami-4bdc3a22"); // todo: find a way to retrieve this dynamically!
+            idata.setVariable(Constants.AWS_AMI64, "");             // todo: find a way to retrieve this dynamically!
             return true;
         } catch (IllegalArgumentException e) {
             if ("".equals(tfAwsAccessId.getText()))
