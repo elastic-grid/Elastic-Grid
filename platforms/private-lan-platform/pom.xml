@@ -4,7 +4,7 @@
 	<parent>
 	   	<groupId>com.elasticgrid</groupId>
 	    <artifactId>elastic-grid-platforms</artifactId>
-	    <version>0.9.0</version>
+	    <version>0.9.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>private-lan-platform</artifactId>
@@ -259,7 +259,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/private-lan-platform-0.9.0.jar"
+                                <copy file="${project.build.directory}/private-lan-platform-0.9.1.jar"
                                       tofile="${staging.dir}/bin/panels/com.elasticgrid.tools.installer.AWSCredentialsPanel.jar"/>
                             </tasks>
                         </configuration>
