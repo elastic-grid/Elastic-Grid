@@ -1,8 +1,9 @@
-eg.s3.dropBucket=${eg.dropBucket}
+eg.s3.dropBucket=${eg.s3.dropBucket}
+eg.s3.overridesBucket=${eg.s3.overridesBucket}
 aws.accessId=${aws.accessId}
 aws.secretKey=${aws.secretKey}
 aws.ec2.key=${aws.ec2.key}
-aws.ec2.ami32=
-aws.ec2.ami64=
+aws.ec2.ami32=${aws.ec2.ami32}
+aws.ec2.ami64=${aws.ec2.ami64}
 aws.ec2.secured=true
 aws.sqs.secured=true
