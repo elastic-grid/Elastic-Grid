@@ -29,10 +29,6 @@ import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -51,11 +47,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service("ec2CloudPlatformManager")
-public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>, InitializingBean {
+public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster> {
     private EC2Instantiator nodeInstantiator;
-
-    @Autowired(required = true)
     private EC2ClusterLocator clusterLocator;
 
     private String overridesBucket;
@@ -240,46 +233,8 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         }
     }
 
-    @Autowired(required = true)
-    public void setNodeInstantiator(EC2Instantiator nodeInstantiator) {
+    public void setNodeInstantiator(EC2Instantiator nodeInstantiator) throws RemoteException {
         this.nodeInstantiator = nodeInstantiator;
-    }
-
-    @Required
-    public void setOverridesBucket(String overridesBucket) {
-        this.overridesBucket = overridesBucket;
-    }
-
-    @Required
-    public void setAwsAccessID(String awsAccessID) {
-        this.awsAccessID = awsAccessID;
-    }
-
-    @Required
-    public void setAwsSecretKey(String awsSecretKey) {
-        this.awsSecretKey = awsSecretKey;
-    }
-
-    @Required
-    public void setAwsSecured(boolean awsSecured) {
-        this.awsSecured = awsSecured;
-    }
-
-    @Required
-    public void setAmi32(String ami32) {
-        this.ami32 = ami32;
-    }
-
-    @Required
-    public void setAmi64(String ami64) {
-        this.ami64 = ami64;
-    }
-
-    public void setClusterLocator(EC2ClusterLocator clusterLocator) {
-        this.clusterLocator = clusterLocator;
-    }
-
-    public void afterPropertiesSet() throws Exception {
         // ensure the Discovery.MONITOR group exists
         if (!nodeInstantiator.getGroupsNames().contains(Discovery.MONITOR.getGroupName())) {
             nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
@@ -288,6 +243,34 @@ public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster>
         if (!nodeInstantiator.getGroupsNames().contains(Discovery.AGENT.getGroupName())) {
             nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
         }
+    }
+
+    public void setOverridesBucket(String overridesBucket) {
+        this.overridesBucket = overridesBucket;
+    }
+
+    public void setAwsAccessID(String awsAccessID) {
+        this.awsAccessID = awsAccessID;
+    }
+
+    public void setAwsSecretKey(String awsSecretKey) {
+        this.awsSecretKey = awsSecretKey;
+    }
+
+    public void setAwsSecured(boolean awsSecured) {
+        this.awsSecured = awsSecured;
+    }
+
+    public void setAmi32(String ami32) {
+        this.ami32 = ami32;
+    }
+
+    public void setAmi64(String ami64) {
+        this.ami64 = ami64;
+    }
+
+    public void setClusterLocator(EC2ClusterLocator clusterLocator) {
+        this.clusterLocator = clusterLocator;
     }
 
 }

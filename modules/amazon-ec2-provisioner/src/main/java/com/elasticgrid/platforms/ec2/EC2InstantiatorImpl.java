@@ -23,9 +23,6 @@ import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import static java.lang.String.format;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -34,7 +31,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Service("nodeInstantiator")
 public class EC2InstantiatorImpl implements EC2Instantiator {
     private Jec2 jec2;
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
@@ -128,7 +124,6 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         }
     }
 
-    @Autowired(required = true)
     public void setEc2(Jec2 jec2) {
         this.jec2 = jec2;
     }

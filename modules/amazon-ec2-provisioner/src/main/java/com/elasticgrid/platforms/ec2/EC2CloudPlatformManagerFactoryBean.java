@@ -15,21 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.platforms.lan;
+package com.elasticgrid.platforms.ec2;
 
-import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.cluster.spi.CloudPlatformManagerFactory;
-import com.elasticgrid.model.lan.LANCluster;
-import com.elasticgrid.platforms.lan.discovery.JiniGroupsClusterLocator;
+import org.springframework.beans.factory.FactoryBean;
 
-public class LANCloudPlatformManagerFactory implements CloudPlatformManagerFactory<LANCluster> {
-    static LANCloudPlatformManager instance;
+public class EC2CloudPlatformManagerFactoryBean implements FactoryBean {
+    public Object getObject() throws Exception {
+        return new EC2CloudPlatformManagerFactory().getInstance();
+    }
 
-    public CloudPlatformManager<LANCluster> getInstance() {
-        if (instance == null) {
-            instance = new LANCloudPlatformManager();
-            instance.setClusterLocator(new JiniGroupsClusterLocator());
-        }
-        return instance;
+    public Class getObjectType() {
+        return EC2CloudPlatformManager.class;
+    }
+
+    public boolean isSingleton() {
+        return true;
     }
 }
