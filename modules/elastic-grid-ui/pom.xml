@@ -20,10 +20,15 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Support for the Amazon EC2 Cloud Computing Platform -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -34,16 +39,6 @@
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
-        </dependency>
-
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
         </dependency>
 
         <dependency>

@@ -30,6 +30,7 @@ import com.elasticgrid.model.lan.impl.LANNodeImpl
 import com.elasticgrid.platforms.lan.discovery.AgentGroupFilter
 import com.elasticgrid.platforms.lan.discovery.LANClusterLocator
 import com.elasticgrid.platforms.lan.discovery.MonitorGroupFilter
+import com.elasticgrid.utils.logging.Log
 import java.rmi.registry.LocateRegistry
 import java.rmi.registry.Registry
 import net.jini.config.ConfigurationProvider
@@ -48,14 +49,11 @@ import org.rioproject.cybernode.CybernodeAdmin
 import org.rioproject.monitor.DeployAdmin
 import org.rioproject.monitor.ProvisionMonitor
 import org.rioproject.resources.client.JiniClient
-import org.springframework.stereotype.Service
-import com.elasticgrid.utils.logging.Log
 
 /**
  * {@link ClusterLocator} based on EC2 Security Groups, as described on Elastic Grid Blog post:
  * http://blog.elastic-grid.com/2008/06/30/how-to-do-some-service-discovery-on-amazon-ec2/
  */
-@Service
 class JiniGroupsClusterLocator extends LANClusterLocator {
   def JiniClient jiniClient
   def ServiceDiscoveryManager sdm
