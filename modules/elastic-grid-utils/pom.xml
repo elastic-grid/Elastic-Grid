@@ -11,6 +11,13 @@
     <packaging>jar</packaging>
     <name>Modules :: Elastic Grid Utilities</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

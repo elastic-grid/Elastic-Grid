@@ -18,24 +18,55 @@
 
 package com.elasticgrid.rest;
 
+import org.restlet.Component;
+import org.restlet.Restlet;
+import org.restlet.Router;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
-import org.restlet.ext.spring.SpringComponent;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.GrammarsInfo;
 import org.restlet.ext.wadl.IncludeInfo;
 import org.restlet.ext.wadl.WadlApplication;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.rmi.RMISecurityManager;
 import java.security.Permission;
 
-public class RestApplication extends WadlApplication implements InitializingBean, DisposableBean {
-    private SpringComponent component;
+public class RestApplication extends WadlApplication {
+    private Component component;
+
+    public RestApplication() {
+        try {
+            // Create a new Component.
+            component = new Component();
+
+            // Add a new HTTP server listening on port 8182.
+            component.getServers().add(Protocol.HTTP, 8182);
+
+            // Attach the sample application.
+            component.getDefaultHost().attach(this);
+
+            // Start the component.
+            component.start();
+        } catch (Exception e) {
+            // Something is wrong.
+            e.printStackTrace();
+        }
+        setName("Elastic Grid REST API");
+        setAuthor("Elastic Grid, LLC.");
+    }
+
+    @Override
+    public Restlet createRoot() {
+        Router router = new Router(getContext());
+        router.attach("/eg", ClustersResource.class);
+        router.attach("/eg/{clusterName}", ClusterResource.class);
+        router.attach("/eg/{clusterName}/applications", ApplicationsResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}", ApplicationResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}/services", ServicesResource.class);
+        router.attach("/eg/{clusterName}/applications/{applicationName}/services/{serviceName}", ServiceResource.class);
+        return router;
+    }
 
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
@@ -60,26 +91,8 @@ public class RestApplication extends WadlApplication implements InitializingBean
         return "Elastic Grid REST API";
     }
 
-    public void afterPropertiesSet() throws Exception {
-        try {
-            // Create a new Component.
-            component = new SpringComponent();
-
-            // Add a new HTTP server listening on port 8182.
-            component.getServers().add(Protocol.HTTP, 8182);
-
-            // Attach the sample application.
-            component.getDefaultHost().attach(this);
-
-            // Start the component.
-            component.start();
-        } catch (Exception e) {
-            // Something is wrong.
-            e.printStackTrace();
-        }
-    }
-
-    public void destroy() throws Exception {
+    @Override
+    protected void finalize() throws Throwable {
         component.stop();
     }
 
@@ -91,8 +104,7 @@ public class RestApplication extends WadlApplication implements InitializingBean
                 // do nothing -- allow everything
             }
         });
-
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
+        new RestApplication();
     }
 
 }
