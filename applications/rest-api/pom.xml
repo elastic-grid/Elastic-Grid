@@ -55,33 +55,6 @@
         </dependency>
         <dependency>
             <groupId>org.restlet</groupId>
-            <artifactId>org.restlet.ext.spring</artifactId>
-            <version>${restlet-release-version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-context</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-beans</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.restlet</groupId>
             <artifactId>org.restlet</artifactId>
             <version>${restlet-release-version}</version>
         </dependency>
@@ -148,16 +121,6 @@
             <artifactId>jsk-lib</artifactId>
         </dependency>
 
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-
         <!-- JiBX dependencies -->
         <dependency>
             <groupId>org.jibx</groupId>
@@ -192,6 +155,10 @@
             <artifactId>easymockclassextension</artifactId>
             <version>2.4</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
         </dependency>
 
     </dependencies>

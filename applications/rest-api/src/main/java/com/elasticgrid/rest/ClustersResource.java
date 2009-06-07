@@ -19,7 +19,10 @@
 package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.model.*;
+import com.elasticgrid.model.Cluster;
+import com.elasticgrid.model.ClusterProvisioning;
+import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.internal.Clusters;
 import org.jibx.runtime.JiBXException;
@@ -39,7 +42,6 @@ import org.restlet.ext.wadl.WadlResource;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,12 +51,12 @@ import java.util.concurrent.TimeoutException;
  * TODO: update the REST API documentation for this resource.
  */
 public class ClustersResource extends WadlResource {
-    @Autowired
     private ClusterManager<Cluster> clusterManager;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        clusterManager = RestJSB.getClusterManager();
         // Allow modifications of this resource via POST requests
         setModifiable(true);
         // Declare the kind of representations supported by this resource

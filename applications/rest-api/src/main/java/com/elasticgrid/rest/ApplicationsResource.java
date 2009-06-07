@@ -20,8 +20,8 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.internal.Clusters;
 import com.elasticgrid.model.internal.Applications;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -39,17 +39,16 @@ import org.restlet.data.Response;
 import org.restlet.data.Status;
 import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.ext.freemarker.TemplateRepresentation;
+import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.WadlResource;
-import org.restlet.ext.jibx.JibxRepresentation;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,18 +60,19 @@ public class ApplicationsResource extends WadlResource {
     private String clusterName;
     private String dropBucket;
     private Configuration config;
-
-    @Autowired
-    private S3Service s3;
-
-    @Autowired
+    private S3Service s3 = AWSUtils.getS3Service();
     private ClusterManager clusterManager;
-
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        clusterManager = RestJSB.getClusterManager();
+        try {
+            dropBucket = AWSUtils.getDropBucket();
+        } catch (IOException e) {
+            throw new IllegalStateException("Can't retrieve drop bucket", e);
+        }
         // Allow modifications of this resource via POST requests
         setModifiable(true);
         // Declare the kind of representations supported by this resource
@@ -229,10 +229,5 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public boolean allowDelete() {
         return false;
-    }
-
-    @Required
-    public void setDropBucket(String dropBucket) {
-        this.dropBucket = dropBucket;
     }
 }

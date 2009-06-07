@@ -18,6 +18,10 @@
 
 package com.elasticgrid.utils.amazon;
 
+import org.jets3t.service.security.AWSCredentials;
+import org.jets3t.service.S3Service;
+import org.jets3t.service.S3ServiceException;
+import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,7 +31,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AWSUtils {
+    private static S3Service s3;
     private static final Logger logger = Logger.getLogger(AWSUtils.class.getName());
+
+    static {
+        try {
+            Properties config = loadEC2Configuration();
+            String awsAccessID = config.getProperty("aws.accessId");
+            String awsSecretKey = config.getProperty("aws.secretKey");
+            s3 = new RestS3Service(new AWSCredentials(awsAccessID, awsSecretKey));
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Can't initialize S3 environment", e);
+        }
+    }
 
     public static boolean isEnvironmentProperlySet() {
         return new File(System.getProperty("user.home") + File.separatorChar + ".eg", "eg.properties").exists()
@@ -77,6 +93,10 @@ public class AWSUtils {
     }
 
     public static String getDropBucket() throws IOException {
-        return (String) loadEC2Configuration().get("eg.s3.dropBucket");
+        return (String) loadEC2Configuration().getProperty("eg.s3.dropBucket");
+    }
+
+    public static S3Service getS3Service() {
+        return s3;
     }
 }

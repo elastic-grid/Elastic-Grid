@@ -29,16 +29,15 @@ import org.restlet.ext.wadl.WadlResource;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 
 public class ServicesResource extends WadlResource {
-    @Autowired
     private ClusterManager clusterManager;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        clusterManager = RestJSB.getClusterManager();
         // Allow modifications of this resource via POST requests
         setModifiable(false);
         // Declare the kind of representations supported by this resource
