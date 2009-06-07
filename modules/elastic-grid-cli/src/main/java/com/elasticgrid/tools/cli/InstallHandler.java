@@ -36,6 +36,7 @@ import org.rioproject.tools.cli.OptionHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.PrintStream;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -78,7 +79,7 @@ public class InstallHandler extends AbstractHandler implements OptionHandler {
     }
 
     private String install(String clusterName, String oarName, PrintStream out)
-        throws ClusterException, RemoteException {
+            throws ClusterException, IOException {
         Cluster<Node> cluster = CLI.getClusterManager().cluster(clusterName);
         if (cluster == null) {
             return "Could not locate cluster '" + clusterName + "'";

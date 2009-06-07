@@ -1,17 +1,17 @@
 /**
  * Elastic Grid
  * Copyright (C) 2008-2009 Elastic Grid, LLC.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -19,26 +19,28 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
-import net.jini.config.Configuration;
-import net.jini.config.ConfigurationException;
-import net.jini.discovery.DiscoveryGroupManagement;
+import com.elasticgrid.cluster.CloudFederationClusterManager;
+import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.model.lan.LANCluster;
+import com.elasticgrid.model.ec2.EC2Cluster;
+import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
+import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import net.jini.config.Configuration;
+import net.jini.config.ConfigurationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
+import java.io.IOException;
 
 public class CLI extends org.rioproject.tools.cli.CLI {
-    private static ApplicationContext ctx;
+    static CloudFederationClusterManager clusterManager;
 
     static {
         instance = new CLI();
-        ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/tools/cli/applicationContext.xml");
     }
 
     protected CLI() {
@@ -49,7 +51,7 @@ public class CLI extends org.rioproject.tools.cli.CLI {
 
     protected void loadOptionHandlers(Configuration config) throws ConfigurationException {
         OptionHandlerDesc[] defaultHandlers =
-                new OptionHandlerDesc[] {
+                new OptionHandlerDesc[]{
                         // Elastic Grid handlers
                         new OptionHandlerDesc("list-clusters", ListClustersHandler.class.getName()),
                         new OptionHandlerDesc("start-cluster", StartClusterHandler.class.getName()),
@@ -99,7 +101,13 @@ public class CLI extends org.rioproject.tools.cli.CLI {
         }
     }
 
-    public static ClusterManager getClusterManager() {
-        return (ClusterManager) ctx.getBean("clusterManager");
+    public static ClusterManager getClusterManager() throws IOException {
+        if (clusterManager == null) {
+            clusterManager = new CloudFederationClusterManager();
+            CloudPlatformManager<LANCluster> lanCloud = new LANCloudPlatformManagerFactory().getInstance();
+            CloudPlatformManager<EC2Cluster> ec2Cloud = new EC2CloudPlatformManagerFactory().getInstance();
+            clusterManager.setClouds(Arrays.asList(lanCloud, ec2Cloud));
+        }
+        return clusterManager;
     }
 }
