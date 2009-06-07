@@ -1,0 +1,2 @@
+jeje = Jerome Bernard <jerome.bernard@elastic-grid.com>
+dennisreedy = Dennis Reedy <dennis.reedy@elastic-grid.com>
