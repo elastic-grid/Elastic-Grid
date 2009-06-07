@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>amazon-ec2-discovery</artifactId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -34,16 +34,6 @@
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
         </dependency>
 
         <!-- Various dependencies -->

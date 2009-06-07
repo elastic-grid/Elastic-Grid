@@ -22,16 +22,15 @@ import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.config.GenericConfiguration;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2NodeType;
+import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.elasticgrid.platforms.ec2.EC2Instantiator;
 import com.elasticgrid.platforms.ec2.StartInstanceTask;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.xerox.amazonws.ec2.EC2Utils;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.EventHandler;
 import org.rioproject.sla.SLA;
 import org.rioproject.sla.ScalingPolicyHandler;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.xerox.amazonws.ec2.EC2Utils;
 import java.io.IOException;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
@@ -74,10 +73,7 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
             awsSecretKey = egProps.getProperty(EC2Configuration.AWS_SECRET_KEY);
             awsSecured = Boolean.parseBoolean(egProps.getProperty(EC2Configuration.AWS_EC2_SECURED));
             nodeType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
-            ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{
-                    "/com/elasticgrid/cluster/applicationContext.xml",
-            });
-            ec2 = (EC2Instantiator) ctx.getBean("ec2", EC2Instantiator.class);
+            ec2 = new EC2CloudPlatformManagerFactory().getNodeInstantiator();
         } catch (Exception e) {
             e.printStackTrace();
         }
