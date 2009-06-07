@@ -50,16 +50,6 @@
             <artifactId>jets3t</artifactId>
         </dependency>
 
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-        <!--</dependency>-->
-
         <!-- Various dependencies -->
         <dependency>
             <groupId>commons-io</groupId>

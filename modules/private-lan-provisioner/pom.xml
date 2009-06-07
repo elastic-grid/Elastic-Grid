@@ -44,12 +44,6 @@
             <artifactId>rio</artifactId>
         </dependency>
 
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
