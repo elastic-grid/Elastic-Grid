@@ -20,9 +20,10 @@ package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
 import org.rioproject.tools.cli.OptionHandler;
+import java.io.IOException;
 
 abstract class AbstractHandler implements OptionHandler {
-    public ClusterManager getClusterManager() {
+    public ClusterManager getClusterManager() throws IOException {
         return CLI.getClusterManager();
     }
 }

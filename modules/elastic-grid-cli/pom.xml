@@ -33,6 +33,12 @@
             <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
+        <!-- Elastic Grid EC2 provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
@@ -75,16 +81,6 @@
             <groupId>args4j</groupId>
             <artifactId>args4j-tools</artifactId>
             <version>2.0.8</version>
-        </dependency>
-
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
         </dependency>
 
     </dependencies>
