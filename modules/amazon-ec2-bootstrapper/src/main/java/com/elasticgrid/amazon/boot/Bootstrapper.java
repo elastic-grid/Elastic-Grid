@@ -22,11 +22,10 @@ import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Node;
+import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -76,8 +75,7 @@ public class Bootstrapper {
         System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
 
         // start Spring context
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("/com/elasticgrid/amazon/boot/applicationContext.xml");
-        final ClusterLocator locator = (ClusterLocator) ctx.getBean("clusterLocator");
+        final ClusterLocator locator = new EC2CloudPlatformManagerFactory().getClusterLocator();
         final String clusterName = launchParameters.getProperty(LAUNCH_PARAMETER_CLUSTER_NAME);
 
         // get the currently running node

@@ -20,6 +20,7 @@ package com.elasticgrid.platforms.ec2;
 import com.elasticgrid.cluster.spi.CloudPlatformManagerFactory;
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ec2.EC2Cluster;
+import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.Jec2;
@@ -27,30 +28,58 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFactory<EC2Cluster> {
+    static EC2CloudPlatformManager instance;
+    static EC2SecurityGroupsClusterLocator clusterLocator;
+    static EC2Instantiator nodeInstantiator;
+    static Jec2 ec2;
+
     public EC2CloudPlatformManager getInstance() throws IOException {
-        Properties config = AWSUtils.loadEC2Configuration();
+        if (instance == null) {
+            Properties config = AWSUtils.loadEC2Configuration();
 
-        String awsAccessId = config.getProperty(EC2Configuration.AWS_ACCESS_ID);
-        String awsSecretKey = config.getProperty(EC2Configuration.AWS_SECRET_KEY);
-        boolean secured = Boolean.parseBoolean(config.getProperty(EC2Configuration.AWS_EC2_SECURED));
+            String awsAccessId = config.getProperty(EC2Configuration.AWS_ACCESS_ID);
+            String awsSecretKey = config.getProperty(EC2Configuration.AWS_SECRET_KEY);
+            boolean secured = Boolean.parseBoolean(config.getProperty(EC2Configuration.AWS_EC2_SECURED));
 
-        Jec2 ec2 = new Jec2(awsAccessId, awsSecretKey, secured);
+            instance = new EC2CloudPlatformManager();
+            instance.setOverridesBucket(config.getProperty(EC2Configuration.EG_DROP_BUCKET));
+            instance.setAwsAccessID(awsAccessId);
+            instance.setAwsSecretKey(awsSecretKey);
+            instance.setAwsSecured(secured);
+            instance.setAmi32(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
+            instance.setAmi64(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
+            instance.setClusterLocator(getClusterLocator());
+            instance.setNodeInstantiator(getNodeInstantiator());
+        }
 
-        EC2SecurityGroupsClusterLocator ec2ClusterLocator = new EC2SecurityGroupsClusterLocator();
-        ec2ClusterLocator.setEc2(ec2);
-        EC2InstantiatorImpl ec2Instantiator = new EC2InstantiatorImpl();
-        ec2Instantiator.setEc2(ec2);
-
-        EC2CloudPlatformManager ec2CloudPlatformManager = new EC2CloudPlatformManager();
-        ec2CloudPlatformManager.setOverridesBucket(config.getProperty(EC2Configuration.EG_DROP_BUCKET));
-        ec2CloudPlatformManager.setAwsAccessID(awsAccessId);
-        ec2CloudPlatformManager.setAwsSecretKey(awsSecretKey);
-        ec2CloudPlatformManager.setAwsSecured(secured);
-        ec2CloudPlatformManager.setAmi32(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
-        ec2CloudPlatformManager.setAmi64(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
-        ec2CloudPlatformManager.setClusterLocator(ec2ClusterLocator);
-        ec2CloudPlatformManager.setNodeInstantiator(ec2Instantiator);
-
-        return ec2CloudPlatformManager;
+        return instance;
     }
+
+    public EC2ClusterLocator getClusterLocator() throws IOException {
+        if (clusterLocator == null) {
+            clusterLocator = new EC2SecurityGroupsClusterLocator();
+            clusterLocator.setEc2(getEC2());
+        }
+        return clusterLocator;
+    }
+
+    public EC2Instantiator getNodeInstantiator() throws IOException {
+        if (nodeInstantiator == null) {
+            nodeInstantiator = new EC2InstantiatorImpl();
+            ((EC2InstantiatorImpl) nodeInstantiator).setEc2(getEC2());
+        }
+        return nodeInstantiator;
+    }
+
+    private Jec2 getEC2() throws IOException {
+        if (ec2 == null) {
+            Properties config = AWSUtils.loadEC2Configuration();
+            String awsAccessId = config.getProperty(EC2Configuration.AWS_ACCESS_ID);
+            String awsSecretKey = config.getProperty(EC2Configuration.AWS_SECRET_KEY);
+            boolean secured = Boolean.parseBoolean(config.getProperty(EC2Configuration.AWS_EC2_SECURED));
+            ec2 = new Jec2(awsAccessId, awsSecretKey, secured);
+        }
+        return ec2;
+    }
+
 }

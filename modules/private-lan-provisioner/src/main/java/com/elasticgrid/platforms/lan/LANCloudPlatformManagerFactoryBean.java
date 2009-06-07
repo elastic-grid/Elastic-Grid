@@ -17,19 +17,18 @@
  */
 package com.elasticgrid.platforms.lan;
 
-import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.cluster.spi.CloudPlatformManagerFactory;
-import com.elasticgrid.model.lan.LANCluster;
-import com.elasticgrid.platforms.lan.discovery.JiniGroupsClusterLocator;
+import org.springframework.beans.factory.FactoryBean;
 
-public class LANCloudPlatformManagerFactory implements CloudPlatformManagerFactory<LANCluster> {
-    static LANCloudPlatformManager instance;
+public class LANCloudPlatformManagerFactoryBean implements FactoryBean {
+    public Object getObject() throws Exception {
+        return new LANCloudPlatformManagerFactory().getInstance();
+    }
 
-    public CloudPlatformManager<LANCluster> getInstance() {
-        if (instance == null) {
-            instance = new LANCloudPlatformManager();
-            instance.setClusterLocator(new JiniGroupsClusterLocator());
-        }
-        return instance;
+    public Class getObjectType() {
+        return LANCloudPlatformManager.class;
+    }
+
+    public boolean isSingleton() {
+        return true;
     }
 }

@@ -24,15 +24,11 @@ import com.elasticgrid.amazon.sdb.SimpleDBException;
 import com.xerox.amazonws.sdb.SDBException;
 import com.xerox.amazonws.sdb.ListDomainsResult;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.stereotype.Service;
-
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.List;
 import java.util.ArrayList;
 
-@Service
 public class SimpleDBImpl implements SimpleDB, InitializingBean {
     private com.xerox.amazonws.sdb.SimpleDB sdb;
     private String awsAccessID, awsSecretKey;
@@ -80,12 +76,10 @@ public class SimpleDBImpl implements SimpleDB, InitializingBean {
         }
     }
 
-    @Required
     public void setAwsAccessID(String awsAccessID) {
         this.awsAccessID = awsAccessID;
     }
 
-    @Required
     public void setAwsSecretKey(String awsSecretKey) {
         this.awsSecretKey = awsSecretKey;
     }

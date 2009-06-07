@@ -49,8 +49,7 @@ public class EC2CloudPlatformManagerTest {
 
     @Test(expectedExceptions = ClusterAlreadyRunningException.class)
     public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        EasyMock.expect(mockLocator.findNodes("test"))
-                .andReturn(null);
+        mockEC2 = EasyMock.createMock(EC2Instantiator.class);
         EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
                 "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
                         "AWS_EC2_AMI32=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI32) + "," +
@@ -61,11 +60,18 @@ public class EC2CloudPlatformManagerTest {
                 .andReturn(null);
         EasyMock.expect(mockEC2.getGroupsNames())
                 .andReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"))
-                .times(2);
+                .anyTimes();
+        mockLocator = org.easymock.classextension.EasyMock.createMock(EC2ClusterLocator.class);
+        EasyMock.expect(mockLocator.findNodes("test"))
+                        .andReturn(null);
         EasyMock.expect(mockLocator.findNodes("test"))
                 .andReturn(new HashSet<EC2Node>(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL).instanceID("123"))));
         EasyMock.replay(mockEC2);
         org.easymock.classextension.EasyMock.replay(mockLocator);
+
+        cloudPlatformManager.setNodeInstantiator(mockEC2);
+        cloudPlatformManager.setClusterLocator(mockLocator);
+        
         NodeProfileInfo monitorAndAgentSmall = new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL, 1);
         cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
         cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
@@ -75,10 +81,6 @@ public class EC2CloudPlatformManagerTest {
     @SuppressWarnings("unchecked")
     public void setUpClusterManager() throws IOException {
         cloudPlatformManager = new EC2CloudPlatformManager();
-        mockEC2 = EasyMock.createMock(EC2Instantiator.class);
-        mockLocator = org.easymock.classextension.EasyMock.createMock(EC2ClusterLocator.class);
-        cloudPlatformManager.setNodeInstantiator(mockEC2);
-        cloudPlatformManager.setClusterLocator(mockLocator);
         egProps = AWSUtils.loadEC2Configuration();
     }
 

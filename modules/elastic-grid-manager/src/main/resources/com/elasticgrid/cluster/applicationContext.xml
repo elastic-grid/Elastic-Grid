@@ -26,11 +26,6 @@
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:annotation-config />
-
-    <import resource="ec2/applicationContext.xml"/>
-    <import resource="lan/applicationContext.xml"/>
-
     <bean id="clusterManager" class="com.elasticgrid.cluster.CloudFederationClusterManager">
         <property name="clouds">
             <list>
@@ -39,6 +34,9 @@
             </list>
         </property>
     </bean>
+
+    <bean id="ec2CloudPlatformManager" class="com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactoryBean"/>
+    <bean id="lanCloudPlatformManager" class="com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactoryBean"/>
 
 </beans>
 

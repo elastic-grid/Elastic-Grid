@@ -25,9 +25,6 @@ import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashSet;
@@ -45,7 +42,6 @@ import java.util.logging.Logger;
  * Note: actually this only works by mixing EC2 and LAN platforms.
  * @author Jerome Bernard
  */
-@Service("clusterManager")
 public class CloudFederationClusterManager<C extends Cluster> implements ClusterManager<C> {
     private boolean ec2Mode = true;
     private List<CloudPlatformManager<C>> clouds;
@@ -87,17 +83,15 @@ public class CloudFederationClusterManager<C extends Cluster> implements Cluster
         clouds.get(ec2Mode?1:0).resizeCluster(clusterName, clusterTopology);
     }
 
-    @Required
     public void setClouds(List<CloudPlatformManager<C>> clouds) {
         this.clouds = clouds;
         try {
             Properties awsConfig = AWSUtils.loadEC2Configuration();
             String egMode = awsConfig.getProperty(GenericConfiguration.EG_MODE);
-            if(egMode!=null && egMode.equalsIgnoreCase("lan")) {
+            if (egMode != null && egMode.equalsIgnoreCase("lan")) {
                 ec2Mode = false;
             }
         } catch (IOException e) {
-
         }
     }
 }
