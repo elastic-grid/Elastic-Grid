@@ -48,6 +48,7 @@
         </fileSet>
         <fileSet>
             <includes>
+                <include>LICENSE.txt</include>
                 <include>COPYING.txt</include>
                 <include>COPYING.LESSER.txt</include>
 				<include>lib/**</include>
@@ -68,10 +69,6 @@
         </fileSet>
     </fileSets>
 	<files>
-        <file>
-            <source>LICENSE.txt</source>
-			<outputDirectory>/</outputDirectory>
-        </file>
         <file>
 			<source>bin/eg</source>
 			<outputDirectory>/bin</outputDirectory>
