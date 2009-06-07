@@ -20,7 +20,10 @@ package com.elasticgrid.platforms.ec2;
 import com.elasticgrid.cluster.spi.CloudPlatformManagerFactory;
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ec2.EC2Cluster;
+<<<<<<< HEAD:modules/amazon-ec2-provisioner/src/main/java/com/elasticgrid/platforms/ec2/EC2CloudPlatformManagerFactory.java
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
+=======
+>>>>>>> Removed Spring dependency from the REST API.:modules/amazon-ec2-provisioner/src/main/java/com/elasticgrid/platforms/ec2/EC2CloudPlatformManagerFactory.java
 import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.Jec2;

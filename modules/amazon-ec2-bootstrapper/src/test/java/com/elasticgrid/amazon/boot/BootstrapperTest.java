@@ -75,11 +75,7 @@ public class BootstrapperTest {
         Bootstrapper bootstrapper = new Bootstrapper();
 
         Properties props = new Properties();
-<<<<<<< HEAD:modules/amazon-ec2-bootstrapper/src/test/java/com/elasticgrid/amazon/boot/BootstrapperTest.java
         props.load(new FileInputStream(System.getProperty("java.io.tmpdir") + "/config/eg.properties"));
-=======
-        props.load(new FileReader(System.getProperty("java.io.tmpdir") + "/config/eg.properties"));
->>>>>>> Fixed wrong path.:modules/amazon-ec2-bootstrapper/src/test/java/com/elasticgrid/amazon/boot/BootstrapperTest.java
         Assert.assertEquals("Wrong AWS Access ID", "123456123456", props.getProperty(EC2Configuration.AWS_ACCESS_ID));
         Assert.assertEquals("Wrong AWS Secret Key", "123456123456", props.getProperty(EC2Configuration.AWS_SECRET_KEY));
         Assert.assertEquals("Wrong AWS AMI for 32 bits", "ami-bdcb2dd4", props.getProperty(EC2Configuration.AWS_EC2_AMI32));
