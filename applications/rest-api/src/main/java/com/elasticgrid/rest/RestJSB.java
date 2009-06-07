@@ -18,30 +18,39 @@
 
 package com.elasticgrid.rest;
 
-import com.sun.jini.start.LifeCycle;
-import org.rioproject.associations.*;
+import com.elasticgrid.cluster.CloudFederationClusterManager;
+import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.model.ec2.EC2Cluster;
+import com.elasticgrid.model.lan.LANCluster;
+import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
+import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
+import org.rioproject.associations.Association;
+import org.rioproject.associations.AssociationDescriptor;
+import org.rioproject.associations.AssociationListener;
+import org.rioproject.associations.AssociationMgmt;
+import org.rioproject.associations.AssociationType;
 import org.rioproject.core.OperationalStringManager;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
 import org.rioproject.monitor.DeployAdmin;
 import org.rioproject.monitor.ProvisionMonitor;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import com.sun.jini.start.LifeCycle;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 /**
  * JSB exposing the underlying REST API.
  */
 public class RestJSB extends ServiceBeanAdapter {
+    private static CloudFederationClusterManager clusterManager;
     private static ProvisionMonitor provisionMonitor;
-    private ConfigurableApplicationContext springContext;
     /** Component name we use to find items in the Configuration */
     static final String RIO_CONFIG_COMPONENT = "com.elasticgrid";
     /** Component name we use to find items in the Configuration */
@@ -109,6 +118,20 @@ public class RestJSB extends ServiceBeanAdapter {
         }
     }
 
+    @Override
+    public void initialize(ServiceBeanContext context) throws Exception {
+        super.initialize(context);
+        initializeClusterManager();
+        new RestApplication();
+    }
+
+    public static void initializeClusterManager() throws IOException {
+        clusterManager = new CloudFederationClusterManager();
+        CloudPlatformManager<LANCluster> lanCloud = new LANCloudPlatformManagerFactory().getInstance();
+        CloudPlatformManager<EC2Cluster> ec2Cloud = new EC2CloudPlatformManagerFactory().getInstance();
+        clusterManager.setClouds(Arrays.asList(lanCloud, ec2Cloud));
+    }
+
     /**
      * Get the component name to use for accessing the services configuration properties
      *
@@ -118,33 +141,8 @@ public class RestJSB extends ServiceBeanAdapter {
         return configComponent;
     }
 
-    @Override
-    public void initialize(ServiceBeanContext context) throws Exception {
-        super.initialize(context);
-        springContext = new ClassPathXmlApplicationContext("/com/elasticgrid/rest/applicationContext.xml");
-    }
-
-    @Override
-    public void destroy(boolean force) {
-        if (springContext != null)
-            springContext.close();
-        super.destroy(force);
-    }
-
-    /**
-     * An AssociationListener for Provision Monitor instances
-     */
-    static class ProvisionMonitorListener implements AssociationListener<ProvisionMonitor> {
-        public void discovered(Association association, ProvisionMonitor provisionMonitor) {
-            setProvisionMonitor(provisionMonitor);
-        }
-
-        public void changed(Association association, ProvisionMonitor provisionMonitor) {
-        }
-
-        public void broken(Association association, ProvisionMonitor provisionMonitor) {
-            setProvisionMonitor(null);
-        }
+    public static ClusterManager getClusterManager() {
+        return clusterManager;
     }
 
     public static ProvisionMonitor getProvisionMonitor() {
@@ -166,5 +164,21 @@ public class RestJSB extends ServiceBeanAdapter {
 
     public static void setProvisionMonitor(ProvisionMonitor provisionMonitor) {
         RestJSB.provisionMonitor = provisionMonitor;
+    }
+
+    /**
+     * An AssociationListener for Provision Monitor instances
+     */
+    static class ProvisionMonitorListener implements AssociationListener<ProvisionMonitor> {
+        public void discovered(Association association, ProvisionMonitor provisionMonitor) {
+            setProvisionMonitor(provisionMonitor);
+        }
+
+        public void changed(Association association, ProvisionMonitor provisionMonitor) {
+        }
+
+        public void broken(Association association, ProvisionMonitor provisionMonitor) {
+            setProvisionMonitor(null);
+        }
     }
 }

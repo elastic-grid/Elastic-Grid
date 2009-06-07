@@ -29,18 +29,17 @@ import org.restlet.ext.wadl.WadlResource;
 import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 
 public class ApplicationResource extends WadlResource {
     private String clusterName;
     private String applicationName;
-    @Autowired
     private ClusterManager clusterManager;
 
     @Override
     public void init(Context context, Request request, Response response) {
         super.init(context, request, response);
+        clusterManager = RestJSB.getClusterManager();
         // Allow modifications of this resource via POST requests
         setModifiable(true);
         setAutoDescribed(true);
