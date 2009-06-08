@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2.monitor;
+package com.elasticgrid.monitor;
 
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.aws.s3.AWSURLStreamHandlerFactory;

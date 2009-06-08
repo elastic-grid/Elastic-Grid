@@ -77,6 +77,11 @@
 			<artifactId>elastic-grid-cli</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-deploy-handlers</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Rio dependencies -->
         <dependency>
