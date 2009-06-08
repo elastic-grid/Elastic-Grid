@@ -28,6 +28,10 @@ class StartMonitorConfig {
             ServiceDescriptorUtil.getLookup(policyFile, getLookupConfigArgs(egHome)),
             /* Elastic Grid Provision Monitor */
             ServiceDescriptorUtil.getMonitor(policyFile, getMonitorConfigArgs(egHome)),
+            /* Elastic Grid Private LAN Cloud Platform */
+            ServiceDescriptorUtil.getPrivateLANCloudPlatform(policyFile, getPrivateLANCloudPlatformConfigArgs(egHome)),
+            /* Elastic Grid Amazon EC2 Cloud Platform */
+            ServiceDescriptorUtil.getEC2CloudPlatform(policyFile, getEC2CloudPlatformConfigArgs(egHome)),
             /* Elastic Grid Cluster Manager */
             ServiceDescriptorUtil.getClusterManager(policyFile, getClusterManagerConfigArgs(egHome)),
             /* Elastic Grid REST API */
@@ -38,23 +42,27 @@ class StartMonitorConfig {
   }
 
   String[] getMonitorConfigArgs(String egHome) {
-    def configArgs = ["${egHome}/config/monitor.groovy"]
-    return configArgs as String[]
+    return ["${egHome}/config/monitor.groovy"] as String[]
+  }
+
+  String[] getPrivateLANCloudPlatformConfigArgs(String egHome) {
+    return ["${egHome}/config/private-lan-cloud-platform.groovy"] as String[]
+  }
+
+  String[] getEC2CloudPlatformConfigArgs(String egHome) {
+    return ["${egHome}/config/amazon-ec2-cloud-platform.groovy"] as String[]
   }
 
   String[] getClusterManagerConfigArgs(String egHome) {
-    def configArgs = ["${egHome}/config/cluster-manager.groovy"]
-    return configArgs as String[]
+    return ["${egHome}/config/cluster-manager.groovy"] as String[]
   }
 
   String[] getRestConfigArgs(String egHome) {
-    def configArgs = ["${egHome}/config/rest-api.groovy"]
-    return configArgs as String[]
+    return ["${egHome}/config/rest-api.groovy"] as String[]
   }
 
   String[] getLookupConfigArgs(String egHome) {
-    def configArgs = ["${egHome}/config/reggie.groovy"]
-    return configArgs as String[]
+    return ["${egHome}/config/reggie.groovy"] as String[]
   }
 
 }

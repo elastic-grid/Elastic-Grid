@@ -7,11 +7,18 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cluster-manager-jsb</artifactId>
+    <artifactId>amazon-ec2-cloud-platform</artifactId>
     <packaging>jar</packaging>
-    <name>Modules :: Cluster Manager (JSB)</name>
+    <name>Modules :: Amazon EC2 Cloud Platform (JSB)</name>
 
     <dependencies>
+
+        <!-- Elastic Grid Private EC2 provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Elastic Grid Manager -->
         <dependency>

@@ -79,7 +79,6 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
      * Get the ServiceBeanContext and bootstrap the {@link ClusterManager}.
      */
     protected void bootstrap(String[] configArgs) throws Exception {
-        ClassLoaderUtil.displayContextClassLoaderTree();
         try {
             context = ServiceBeanActivation.getServiceBeanContext(
                     getConfigComponent(),

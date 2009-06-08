@@ -7,11 +7,18 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cluster-manager-jsb</artifactId>
+    <artifactId>private-lan-cloud-platform</artifactId>
     <packaging>jar</packaging>
-    <name>Modules :: Cluster Manager (JSB)</name>
+    <name>Modules :: Private LAN Cloud Platform (JSB)</name>
 
     <dependencies>
+
+        <!-- Elastic Grid Private LAN provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Elastic Grid Manager -->
         <dependency>

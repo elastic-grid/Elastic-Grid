@@ -263,6 +263,66 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                                         clusterManagerConfig);
     }
 
+    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String cloudPlatformConfig) throws IOException {
+        return getPrivateLANCloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String... cloudPlatformConfig) throws IOException {
+        return getPrivateLANCloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, int port, String... cloudPlatformConfig) throws IOException {
+        return getPrivateLANCloudPlatform(policy, BootUtil.getHostAddress(), port, cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String hostAddress, int port,
+                                               String... cloudPlatformConfig) throws IOException {
+        String egHome = System.getProperty("EG_HOME");
+        if (egHome == null)
+            throw new RuntimeException("EG_HOME property not declared");
+        String cloudPlatformRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
+        String cloudPlatformClasspath =
+                cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-cloud-platform");
+        String cloudPlatformCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar", "jsk-dl.jar"},
+                hostAddress, Integer.toString(port));
+        String implClass = "com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB";
+        return new RioServiceDescriptor(cloudPlatformCodebase,
+                                        policy,
+                                        cloudPlatformClasspath,
+                                        implClass,
+                                        cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getEC2CloudPlatform(String policy, String cloudPlatformConfig) throws IOException {
+        return getEC2CloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getEC2CloudPlatform(String policy, String... cloudPlatformConfig) throws IOException {
+        return getEC2CloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getEC2CloudPlatform(String policy, int port, String... cloudPlatformConfig) throws IOException {
+        return getEC2CloudPlatform(policy, BootUtil.getHostAddress(), port, cloudPlatformConfig);
+    }
+
+    public static ServiceDescriptor getEC2CloudPlatform(String policy, String hostAddress, int port,
+                                               String... cloudPlatformConfig) throws IOException {
+        String egHome = System.getProperty("EG_HOME");
+        if (egHome == null)
+            throw new RuntimeException("EG_HOME property not declared");
+        String cloudPlatformRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
+        String cloudPlatformClasspath =
+                cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "amazon-ec2-cloud-platform");
+        String cloudPlatformCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar", "jsk-dl.jar"},
+                hostAddress, Integer.toString(port));
+        String implClass = "com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB";
+        return new RioServiceDescriptor(cloudPlatformCodebase,
+                                        policy,
+                                        cloudPlatformClasspath,
+                                        implClass,
+                                        cloudPlatformConfig);
+    }
+
     private static String getJarName(String egHome, String nameNoVersion) {
         String jarName = null;
         File f = new File(egHome);
