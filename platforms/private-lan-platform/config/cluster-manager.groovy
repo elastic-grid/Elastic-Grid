@@ -1,16 +1,9 @@
-/*
- * Configuration for the REST service
- */
-
 import org.rioproject.config.Component
 import org.rioproject.config.Constants
 import com.elasticgrid.cluster.spi.CloudPlatformManager
 import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory
 
-/*
- * Declare REST API properties
- */
 @Component ('com.elasticgrid.cluster')
 class ClusterManagerConfig {
   String serviceName = 'Cluster Manager'

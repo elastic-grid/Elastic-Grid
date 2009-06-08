@@ -40,6 +40,8 @@
         <!--module>examples</module-->
         <module>jabber-cli</module>
         <!--module>jxta-discovery</module-->
+        <module>private-lan-cloud-platform</module>
+        <module>amazon-ec2-cloud-platform</module>
     </modules>
 
     <reporting>

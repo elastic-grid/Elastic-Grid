@@ -28,6 +28,11 @@
             <artifactId>cluster-manager-jsb</artifactId>
             <version>${pom.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Substrates dependencies -->
 		<!--<dependency>-->
