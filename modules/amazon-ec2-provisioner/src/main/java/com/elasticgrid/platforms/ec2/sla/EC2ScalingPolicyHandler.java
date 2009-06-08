@@ -64,17 +64,32 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
     @Override
     @SuppressWarnings("unchecked")
     public void initialize(Object eventSource, EventHandler eventHandler, ServiceBeanContext context) {
+        logger.info("Initialzing EC2 Scaling Policy Handler");
         super.initialize(eventSource, eventHandler, context);
         try {
             clusterName = egProps.getProperty(GenericConfiguration.EG_CLUSTER_NAME);
-            ami = EC2Utils.getInstanceMetadata("ami-id"); // we clone ourselves
+            if (clusterName == null)
+                clusterName = "elastic-grid";
+            boolean ec2Mode = true;
+            String egMode = egProps.getProperty(GenericConfiguration.EG_MODE);
+            if (egMode != null && egMode.equalsIgnoreCase("lan")) {
+                ec2Mode = false;
+            }
+            if (ec2Mode)
+                ami = EC2Utils.getInstanceMetadata("ami-id"); // we clone ourselves
+            else
+                ami = egProps.getProperty(EC2Configuration.AWS_EC2_AMI32);
             override = egProps.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
             awsAccessID = egProps.getProperty(EC2Configuration.AWS_ACCESS_ID);
             awsSecretKey = egProps.getProperty(EC2Configuration.AWS_SECRET_KEY);
             awsSecured = Boolean.parseBoolean(egProps.getProperty(EC2Configuration.AWS_EC2_SECURED));
-            nodeType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
+            if (ec2Mode)
+                nodeType = EC2NodeType.valueOf(EC2Utils.getInstanceMetadata("instance-type"));
+            else
+                nodeType = EC2NodeType.SMALL;
             ec2 = new EC2CloudPlatformManagerFactory().getNodeInstantiator();
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error when starting EC2 Scaling Policy Handler", e);
             e.printStackTrace();
         }
     }
@@ -86,6 +101,11 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
             return;
         }
         try {
+            // ensure the cluster name group exists
+            String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
+            if (!ec2.getGroupsNames().contains(securityGroupNameForCluster)) {
+                ec2.createSecurityGroup(securityGroupNameForCluster);
+            }
             // start another agent node from the currently running AMI
             List<String> instances = new StartInstanceTask(ec2, clusterName, NodeProfile.AGENT, nodeType, override,
                     ami, awsAccessID, awsSecretKey, awsSecured).call();

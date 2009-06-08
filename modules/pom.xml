@@ -39,6 +39,7 @@
         <!--module>examples</module-->
         <module>jabber-cli</module>
         <!--module>jxta-discovery</module-->
+	<module>elastic-grid-deploy-handlers</module>
     </modules>
 
     <reporting>

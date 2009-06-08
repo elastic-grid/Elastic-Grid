@@ -64,7 +64,7 @@ set RIO_LOG_DIR="%EG_HOME%\logs"
 set RIO_NATIVE_DIR="%EG_HOME%\lib\native";"%EG_HOME%\lib\hyperic"
 set PATH=%PATH%;%RIO_NATIVE_DIR%
 
-set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar"
+set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-utils-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\jets3t-0.7.1.jar";"%EG_HOME%\lib\elastic-grid\commons-logging-1.1.1.jar";"%EG_HOME%\lib\elastic-grid\commons-httpclient-3.1.jar";"%EG_HOME%\lib\elastic-grid\commons-codec-1.3.jar"
 set agentpath=-javaagent:"%EG_HOME%\lib\boot.jar"
 
 set launchTarget=com.sun.jini.start.ServiceStarter
