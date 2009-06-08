@@ -2,7 +2,7 @@
  * Configuration for a Provision Monitor
  */
 import com.elasticgrid.utils.amazon.AWSUtils
-import com.elasticgrid.platforms.ec2.monitor.S3OARDeployHandler
+import com.elasticgrid.monitor.S3OARDeployHandler
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 import org.rioproject.core.ClassBundle
 import org.rioproject.config.Component
@@ -19,8 +19,8 @@ import net.jini.jrmp.JrmpExporter
 import java.io.File
 
 /*
- * Declare Provision Monitor properties
- */
+* Declare Provision Monitor properties
+*/
 @Component('org.rioproject.monitor')
 class MonitorConfig {
     String serviceName = 'Elastic Grid Monitor'
@@ -65,7 +65,7 @@ class MonitorConfig {
         def deployDir = System.getProperty('RIO_HOME')+'/deploy'
         def deployHandlers =
             [new FileSystemOARDeployHandler(new File(deployDir)),
-             new S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))]
+             new com.elasticgrid.monitor.S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))]
         return deployHandlers as DeployHandler[]
     }
 

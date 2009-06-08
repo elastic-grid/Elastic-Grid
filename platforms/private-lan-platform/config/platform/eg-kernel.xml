@@ -10,7 +10,9 @@
 		<description>Elastic Grid Kernel</description>
 		<version>${pom.version}</version>
 		<manufacturer>Elastic Grid, LLC.</manufacturer>
-        <classpath>${EG_HOME}/lib/elastic-grid/amazon-ec2-discovery-${pom.version}.jar
+        <classpath>
+            ${EG_HOME}/lib/elastic-grid/amazon-ec2-discovery-${pom.version}.jar
+            ${EG_HOME}/lib/elastic-grid/amazon-ec2-provisioner-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/elastic-grid-model-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/elastic-grid-utils-${pom.version}.jar
             ${EG_HOME}/lib/elastic-grid/elastic-grid-manager-${pom.version}.jar
