@@ -3,6 +3,7 @@ import org.rioproject.config.Constants
 import com.elasticgrid.cluster.spi.CloudPlatformManager
 import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory
+import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory
 
 @Component ('com.elasticgrid.cluster')
 class ClusterManagerConfig {
