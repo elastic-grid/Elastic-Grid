@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 /**
  * Cloud Platform Manager for the LAN.
@@ -106,6 +107,12 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
         cloud = new EC2CloudPlatformManagerFactory().getInstance();
+    }
+
+    @Override
+    public void advertise() throws IOException {
+        super.advertise();
+        logger.info("Advertised EC2 Cloud Platform");
     }
 
     /**

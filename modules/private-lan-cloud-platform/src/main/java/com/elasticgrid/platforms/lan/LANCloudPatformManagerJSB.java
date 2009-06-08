@@ -21,6 +21,7 @@ import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
+import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
@@ -32,6 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 /**
  * Cloud Platform Manager for the LAN.
@@ -106,6 +108,12 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
         cloud = (LANCloudPlatformManager) new LANCloudPlatformManagerFactory().getInstance();
+    }
+
+    @Override
+    public void advertise() throws IOException {
+        super.advertise();
+        logger.info("Advertised Private LAN Cloud Platform");
     }
 
     /**

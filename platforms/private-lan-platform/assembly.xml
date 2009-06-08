@@ -94,6 +94,7 @@
                 <include>com.elasticgrid:elastic-grid-manager</include>
                 <include>com.elasticgrid:cluster-manager-jsb</include>
                 <include>com.elasticgrid:private-lan-cloud-platform</include>
+                <include>com.elasticgrid:amazon-ec2-cloud-platform</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 <!-- Typica dependencies -->
