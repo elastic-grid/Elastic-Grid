@@ -11,16 +11,17 @@ deployment(name: 'Spring DM Server') {
     }
 
     // deploy Spring Travel Sample
-    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip', unarchive: true,
-         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
+    //data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/spring-travel-1.2.0.zip', unarchive: true,
+    //     target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
     // deploy Form Tags Sample
-    data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/formtags-1.4.0.zip', unarchive: true,
-         target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
+    //data source: 'http://elastic-grid-examples.s3.amazonaws.com/spring-dm/formtags-1.4.0.zip', unarchive: true,
+    //     target: 'springsource-dm-server/springsource-dm-server-1.0.1.RELEASE'
 
     // monitor number of threads and scale Spring dm Server instances
     sla(id: 'thread-count', low: 80, high: 200) {
-      policy type: 'scaling', max: 3
+      //policy type: 'scaling', max: 3
+	  policy handler: 'com.elasticgrid.platforms.ec2.sla.EC2ScalingPolicyHandler', max: 2, lowerDampener: 1000, upperDampener: 1000
       monitor name: 'Thread Count',
               objectName: ManagementFactory.THREAD_MXBEAN_NAME,
               attribute: 'ThreadCount', period: 5000
