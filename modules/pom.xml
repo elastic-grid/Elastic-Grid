@@ -26,6 +26,7 @@
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
         <module>elastic-grid-manager</module>
+        <module>cluster-manager-jsb</module>
         <module>elastic-grid-core</module>
         <module>elastic-grid-ui</module>
         <module>elastic-grid-cli</module>

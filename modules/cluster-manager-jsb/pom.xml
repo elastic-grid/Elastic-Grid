@@ -7,37 +7,30 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>elastic-grid-manager</artifactId>
+    <artifactId>cluster-manager-jsb</artifactId>
     <packaging>jar</packaging>
-    <name>Modules :: Elastic Grid Manager</name>
+    <name>Modules :: Cluster Manager (JSB)</name>
 
     <dependencies>
 
-        <!-- Elastic Grid model -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-model</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Substrates API -->
+        <!-- Elastic Grid EC2 Provisioner -->
         <dependency>
-            <groupId>com.elasticgrid.substrates</groupId>
-            <artifactId>substrate-api</artifactId>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Core -->
+        <!-- Elastic Grid Private LAN Provisioner -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Elastic Grid Utils -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-utils</artifactId>
+            <artifactId>private-lan-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -86,7 +79,20 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <addExtensions/>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

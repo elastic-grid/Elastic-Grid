@@ -233,6 +233,36 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                                         restApiConfig);
     }
 
+    public static ServiceDescriptor getClusterManager(String policy, String clusterManagerConfig) throws IOException {
+        return getClusterManager(policy, getAnonymousPort(), clusterManagerConfig);
+    }
+
+    public static ServiceDescriptor getClusterManager(String policy, String... clusterManagerConfig) throws IOException {
+        return getClusterManager(policy, getAnonymousPort(), clusterManagerConfig);
+    }
+
+    public static ServiceDescriptor getClusterManager(String policy, int port, String... clusterManagerConfig) throws IOException {
+        return getClusterManager(policy, BootUtil.getHostAddress(), port, clusterManagerConfig);
+    }
+
+    public static ServiceDescriptor getClusterManager(String policy, String hostAddress, int port,
+                                               String... clusterManagerConfig) throws IOException {
+        String egHome = System.getProperty("EG_HOME");
+        if (egHome == null)
+            throw new RuntimeException("EG_HOME property not declared");
+        String clusterManagerRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
+        String clusterManagerClasspath =
+                clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "cluster-manager-jsb");
+        String clusterManagerCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar", "jsk-dl.jar"},
+                hostAddress, Integer.toString(port));
+        String implClass = "com.elasticgrid.cluster.ClusterManagerJSB";
+        return new RioServiceDescriptor(clusterManagerCodebase,
+                                        policy,
+                                        clusterManagerClasspath,
+                                        implClass,
+                                        clusterManagerConfig);
+    }
+
     private static String getJarName(String egHome, String nameNoVersion) {
         String jarName = null;
         File f = new File(egHome);
