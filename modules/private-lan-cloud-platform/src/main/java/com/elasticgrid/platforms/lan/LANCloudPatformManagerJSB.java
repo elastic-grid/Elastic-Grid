@@ -21,11 +21,13 @@ import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
-import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
+import com.elasticgrid.platforms.lan.discovery.LANClusterLocator;
+import com.sun.jini.start.LifeCycle;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
-import com.sun.jini.start.LifeCycle;
+
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +35,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * Cloud Platform Manager for the LAN.
@@ -111,6 +112,11 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     }
 
     @Override
+    protected Object createProxy() {
+        return new LANCloudPlatformManagerProxy((CloudPlatformManager<LANCluster>) getExportedProxy(), getUuid());
+    }
+
+    @Override
     public void advertise() throws IOException {
         super.advertise();
         logger.info("Advertised Private LAN Cloud Platform");
@@ -125,11 +131,12 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
         return configComponent;
     }
 
-    public String getName() {
+    public String getName() throws RemoteException {
         return cloud.getName();
     }
 
-    public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
+            throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         cloud.startCluster(clusterName, clusterTopology);
     }
 
@@ -145,8 +152,12 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
         return cloud.cluster(name);
     }
 
-    public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+    public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
+            throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         cloud.resizeCluster(clusterName, clusterTopology);
     }
 
+    public void setClusterLocator(LANClusterLocator clusterLocator) {
+        cloud.setClusterLocator(clusterLocator);
+    }
 }

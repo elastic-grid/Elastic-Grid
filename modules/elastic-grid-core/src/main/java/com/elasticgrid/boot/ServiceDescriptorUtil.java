@@ -286,8 +286,10 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                 + File.pathSeparator +
                 new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-provisioner")).getCanonicalPath();
         String cloudPlatformCodebase = BootUtil.getCodebase(new String[] {"rio-dl.jar", "jsk-dl.jar",
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "dl")},
-                hostAddress, Integer.toString(port));
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "dl"),
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
+        }, hostAddress, Integer.toString(port));
         System.out.println("classpath: " + cloudPlatformClasspath);
         System.out.println("codehase:  " + cloudPlatformCodebase);
         String implClass = "com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB";
@@ -321,8 +323,10 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                 + File.pathSeparator +
                 new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "amazon-ec2-provisioner")).getCanonicalPath();
         String cloudPlatformCodebase = BootUtil.getCodebase(new String[] {"rio-dl.jar", "jsk-dl.jar",
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "amazon-ec2-cloud-platform", "dl")},
-                hostAddress, Integer.toString(port));
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "amazon-ec2-cloud-platform", "dl"),
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
+                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
+        }, hostAddress, Integer.toString(port));
         System.out.println("classpath: " + cloudPlatformClasspath);
         System.out.println("codehase:  " + cloudPlatformCodebase);
         String implClass = "com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB";

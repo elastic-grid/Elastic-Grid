@@ -18,20 +18,20 @@
 
 package com.elasticgrid.cluster.spi;
 
-import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.ClusterNotFoundException;
-
+import com.elasticgrid.model.NodeProfileInfo;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
-public interface CloudPlatformManager<C extends Cluster> {
+public interface CloudPlatformManager<C extends Cluster> extends Remote {
 
-    String getName();
+    String getName() throws RemoteException;
 
     /**
      * Start a cluster with a specified name and a specified number of instances.

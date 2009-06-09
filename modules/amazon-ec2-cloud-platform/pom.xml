@@ -115,12 +115,14 @@
                     </implementationIns>
                     <implementationTopclasses>
                         <implementationTopclass>com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerProxy</implementationTopclass>
                     </implementationTopclasses>
                     <downloadableIns>
                         <downloadableIn>com.elasticgrid.platforms.ec2</downloadableIn>
                     </downloadableIns>
                     <downloadableTopclasses>
                         <downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManager</downloadableTopclass>
+                        <downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerProxy</downloadableTopclass>
                     </downloadableTopclasses>
                 </configuration>
             </plugin>

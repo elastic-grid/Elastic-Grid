@@ -20,6 +20,7 @@ package com.elasticgrid.platforms.ec2;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
@@ -110,6 +111,11 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     }
 
     @Override
+    protected Object createProxy() {
+        return new EC2CloudPlatformManagerProxy((CloudPlatformManager<EC2Cluster>) getExportedProxy(), getUuid());
+    }
+
+    @Override
     public void advertise() throws IOException {
         super.advertise();
         logger.info("Advertised EC2 Cloud Platform");
@@ -124,7 +130,7 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
         return configComponent;
     }
 
-    public String getName() {
+    public String getName() throws RemoteException {
         return cloud.getName();
     }
 
