@@ -11,12 +11,6 @@ class ClusterManagerConfig {
   String serviceComment = 'Cluster Manager'
   String jmxName = 'com.elasticgrid.cluster:type=API'
 
-  List<CloudPlatformManager> getCloudPlatformManagers() {
-    def lan = new LANCloudPlatformManagerFactory().getInstance()
-    def ec2 = new EC2CloudPlatformManagerFactory().getInstance()
-    return [lan, ec2] as List
-  }
-
   String[] getInitialLookupGroups() {
     def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')]
     return groups as String[]

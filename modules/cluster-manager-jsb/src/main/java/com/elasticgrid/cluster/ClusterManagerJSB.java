@@ -24,15 +24,26 @@ import com.elasticgrid.model.ClusterNotFoundException;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.associations.AssociationDescriptor;
+import org.rioproject.associations.AssociationType;
+import org.rioproject.associations.AssociationMgmt;
+import org.rioproject.associations.AssociationListener;
+import org.rioproject.associations.Association;
+import org.rioproject.monitor.ProvisionMonitor;
 import com.sun.jini.start.LifeCycle;
 import com.sun.jini.start.ClassLoaderUtil;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
+import net.jini.core.lookup.ServiceItem;
+import net.jini.core.entry.Entry;
 
 /**
  * JSB exposing the {@link ClusterManager}.
@@ -40,7 +51,7 @@ import java.util.logging.Logger;
  * @author Jerome Bernard
  */
 public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterManager {
-    private ClusterManager clusterManager;
+    private static ClusterManager clusterManager;
 
     /**
      * Component name we use to find items in the Configuration
@@ -98,6 +109,19 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
             } else {
                 logger.log(Level.WARNING, "LifeCycleManager is null, unable to register");
             }
+
+            // build the association with Cloud Platform Managers
+            AssociationDescriptor cpmAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+            cpmAssociation.setMatchOnName(false);
+            cpmAssociation.setInterfaceNames(CloudPlatformManager.class.getName());
+            cpmAssociation.setGroups(context.getServiceBeanConfig().getGroups());
+
+            // register the association listener
+            AssociationMgmt assocMgt = new AssociationMgmt();
+            assocMgt.register(new CloudPlatformManagerListener());
+
+            // search for the provision monitor
+            assocMgt.addAssociationDescriptors(cpmAssociation);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
             throw e;
@@ -108,13 +132,12 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
         clusterManager = new CloudFederationClusterManager();
-        List<CloudPlatformManager> clouds = (List<CloudPlatformManager>) getConfiguration().getEntry(
-                CONFIG_COMPONENT, "cloudPlatformManagers", List.class);
-        if (logger.isLoggable(Level.INFO)) {                // TODO: switch to CONFIG level instead
-            for (CloudPlatformManager cloud : clouds)
-                logger.info(String.format("Adding Cloud Platform %s", cloud.getName()));
-        }
-        ((CloudFederationClusterManager) clusterManager).setClouds(clouds);
+    }
+
+    @Override
+    public void advertise() throws IOException {
+        super.advertise();
+        logger.info("Advertised Cluster Manager");
     }
 
     /**
@@ -126,23 +149,69 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
         return configComponent;
     }
 
-    public void startCluster(String clusterName, List clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void startCluster(String clusterName, List clusterTopology)
+            throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clusterManager.startCluster(clusterName, clusterTopology);
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        clusterManager.stopCluster(clusterName);
     }
 
     public Set findClusters() throws ClusterException, RemoteException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return clusterManager.findClusters();
     }
 
     public Cluster cluster(String name) throws ClusterException, RemoteException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return clusterManager.cluster(name);
     }
 
-    public void resizeCluster(String clusterName, List clusterTopology) throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void resizeCluster(String clusterName, List clusterTopology)
+            throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        clusterManager.resizeCluster(clusterName, clusterTopology);
+    }
+
+    public static void setCloudPlatformManagers(List<CloudPlatformManager> clouds) {
+        try {
+            if (logger.isLoggable(Level.INFO)) {                // TODO: switch to CONFIG level instead
+                for (CloudPlatformManager cloud : clouds)
+                    logger.info(String.format("Cluster Manager discovered Cloud Platform %s", cloud.getName()));
+            }
+            ((CloudFederationClusterManager) clusterManager).setClouds(clouds);
+        } catch (RemoteException e) {
+            logger.log(Level.SEVERE, "Could not update list of cloud platform managers", e);
+        }
+    }
+
+    /**
+     * An AssociationListener for Provision Monitor instances
+     */
+    static class CloudPlatformManagerListener implements AssociationListener<CloudPlatformManager> {
+        public void discovered(Association association, CloudPlatformManager cpm) {
+            try {
+                logger.info("Discovered cloud " + cpm.getName());
+                ServiceItem[] serviceItems = association.getServiceItems();
+                List<CloudPlatformManager> clouds = new ArrayList<CloudPlatformManager>(serviceItems.length);
+                for (ServiceItem serviceItem : serviceItems) {
+                    CloudPlatformManager cloud = (CloudPlatformManager) serviceItem.service;
+                    if ("Private LAN".equals(cloud.getName()))
+                        clouds.add(0, cloud);       // first one
+                    else if ("Amazon EC2".equals(cloud.getName()))
+                        clouds.add(cloud);          // last one
+                    else
+                        logger.warning(String.format("Can't cope with %s platform yet", cloud.getName()));
+                }
+                setCloudPlatformManagers(clouds);
+            } catch (RemoteException e) {
+                logger.log(Level.SEVERE, "Could not retreive cloud platform name", e);
+            }
+        }
+
+        public void changed(Association association, CloudPlatformManager provisionMonitor) {
+        }
+
+        public void broken(Association association, CloudPlatformManager provisionMonitor) {
+            setCloudPlatformManagers(null);
+        }
     }
 }

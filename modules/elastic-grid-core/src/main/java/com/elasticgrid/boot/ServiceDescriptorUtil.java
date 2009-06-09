@@ -252,7 +252,11 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
             throw new RuntimeException("EG_HOME property not declared");
         String clusterManagerRoot = new File(egHome + File.separator + "lib" + File.separator + "elastic-grid").getCanonicalPath();
         String clusterManagerClasspath =
-                clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "cluster-manager-jsb");
+                clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "cluster-manager", "impl")
+                + File.pathSeparator +
+                new File(clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "private-lan-provisioner")).getCanonicalPath()
+                + File.pathSeparator +
+                new File(clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "amazon-ec2-provisioner")).getCanonicalPath();
         String clusterManagerCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar", "jsk-dl.jar"},
                 hostAddress, Integer.toString(port));
         String implClass = "com.elasticgrid.cluster.ClusterManagerJSB";
@@ -290,8 +294,6 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
         }, hostAddress, Integer.toString(port));
-        System.out.println("classpath: " + cloudPlatformClasspath);
-        System.out.println("codehase:  " + cloudPlatformCodebase);
         String implClass = "com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB";
         return new RioServiceDescriptor(cloudPlatformCodebase,
                                         policy,
@@ -327,8 +329,6 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
         }, hostAddress, Integer.toString(port));
-        System.out.println("classpath: " + cloudPlatformClasspath);
-        System.out.println("codehase:  " + cloudPlatformCodebase);
         String implClass = "com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB";
         return new RioServiceDescriptor(cloudPlatformCodebase,
                                         policy,
@@ -356,7 +356,6 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
             if (s.startsWith(nameNoVersion)) {
                 if (s.endsWith(classifier + ".jar")) {
                     jarName = s;
-                    System.out.println("Using " + jarName);
                     break;
                 }
             }

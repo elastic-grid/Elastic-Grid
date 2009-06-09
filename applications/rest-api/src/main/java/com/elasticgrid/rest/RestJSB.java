@@ -103,8 +103,7 @@ public class RestJSB extends ServiceBeanAdapter {
             AssociationDescriptor provisionMonitorAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
             provisionMonitorAssociation.setMatchOnName(false);
             provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
-            provisionMonitorAssociation.setGroups(
-                context.getServiceBeanConfig().getGroups());
+            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
 
             // register the association listener
             AssociationMgmt assocMgt = new AssociationMgmt();
