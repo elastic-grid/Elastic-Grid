@@ -172,15 +172,7 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
     }
 
     public static void setCloudPlatformManagers(List<CloudPlatformManager> clouds) {
-        try {
-            if (logger.isLoggable(Level.INFO)) {                // TODO: switch to CONFIG level instead
-                for (CloudPlatformManager cloud : clouds)
-                    logger.info(String.format("Cluster Manager discovered Cloud Platform %s", cloud.getName()));
-            }
-            ((CloudFederationClusterManager) clusterManager).setClouds(clouds);
-        } catch (RemoteException e) {
-            logger.log(Level.SEVERE, "Could not update list of cloud platform managers", e);
-        }
+        ((CloudFederationClusterManager) clusterManager).setClouds(clouds);
     }
 
     /**
@@ -189,7 +181,7 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
     static class CloudPlatformManagerListener implements AssociationListener<CloudPlatformManager> {
         public void discovered(Association association, CloudPlatformManager cpm) {
             try {
-                logger.info("Discovered cloud " + cpm.getName());
+                logger.log(Level.INFO, "Cluster Manager discovered Cloud Platform {0}", cpm.getName());
                 ServiceItem[] serviceItems = association.getServiceItems();
                 List<CloudPlatformManager> clouds = new ArrayList<CloudPlatformManager>(serviceItems.length);
                 for (ServiceItem serviceItem : serviceItems) {
@@ -203,7 +195,7 @@ public class ClusterManagerJSB extends ServiceBeanAdapter implements ClusterMana
                 }
                 setCloudPlatformManagers(clouds);
             } catch (RemoteException e) {
-                logger.log(Level.SEVERE, "Could not retreive cloud platform name", e);
+                logger.log(Level.SEVERE, "Could not retrieve cloud platform name", e);
             }
         }
 
