@@ -26,6 +26,10 @@ import com.sun.jini.start.LifeCycle;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
+import org.rioproject.watch.GaugeWatch;
+import org.rioproject.watch.SamplingWatch;
+import org.rioproject.watch.PeriodicWatch;
+import org.rioproject.watch.Calculable;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -99,6 +103,18 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
             } else {
                 logger.log(Level.WARNING, "LifeCycleManager is null, unable to register");
             }
+            PeriodicWatch clustersWatch = new PeriodicWatch("# of Clusters") {
+                public void checkValue() {
+                    int nbClusters = 0;
+                    try {
+                        nbClusters = cloud.findClusters().size();
+                        addWatchRecord(new Calculable(id, nbClusters, System.currentTimeMillis()));
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING, "Could not compute the number of running clusters", e);
+                    }
+                }
+            };
+            context.getWatchRegistry().register(clustersWatch);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
             throw e;

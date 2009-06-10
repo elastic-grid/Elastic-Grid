@@ -102,6 +102,7 @@
                     </implementationIns>
                     <implementationTopclasses>
                         <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB$1</implementationTopclass>
                         <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPlatformManagerProxy</implementationTopclass>
                     </implementationTopclasses>
                     <downloadableIns>

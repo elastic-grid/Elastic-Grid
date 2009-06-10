@@ -288,7 +288,9 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String cloudPlatformClasspath =
                 new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "impl")).getCanonicalPath()
                 + File.pathSeparator +
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-provisioner")).getCanonicalPath();
+                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-provisioner")).getCanonicalPath()
+                + File.pathSeparator +
+                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "elastic-grid-manager")).getCanonicalPath();
         String cloudPlatformCodebase = BootUtil.getCodebase(new String[] {"rio-dl.jar", "jsk-dl.jar",
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "dl"),
                 "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
