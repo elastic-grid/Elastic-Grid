@@ -38,10 +38,10 @@ public interface CloudPlatformManager<C extends Cluster> extends Remote {
      * @param clusterName the name of the cluster to start
      * @param clusterTopology information about the cluster topology
      * @throws InterruptedException if the cluster was not started before timeout
-     * @throws java.rmi.RemoteException if there is a network failure
-     * @throws com.elasticgrid.model.ClusterException if there is a cluster failure
-     * @throws java.util.concurrent.ExecutionException
-     * @throws java.util.concurrent.TimeoutException
+     * @throws RemoteException if there is a network failure
+     * @throws ClusterException if there is a cluster failure
+     * @throws ExecutionException
+     * @throws TimeoutException
      */
     void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
@@ -51,8 +51,8 @@ public interface CloudPlatformManager<C extends Cluster> extends Remote {
     /**
      * Retreive all clusters details.
      * @return the clusters details
-     * @throws com.elasticgrid.model.ClusterException if there is a cluster failure
-     * @throws java.rmi.RemoteException if there is a network failure
+     * @throws ClusterException if there is a cluster failure
+     * @throws RemoteException if there is a network failure
      */
     Collection<C> findClusters() throws ClusterException, RemoteException;
 
@@ -60,8 +60,8 @@ public interface CloudPlatformManager<C extends Cluster> extends Remote {
      * Retrieve cluster details.
      * @param name the name of the cluster
      * @return the cluster or null if the cluster is not found
-     * @throws com.elasticgrid.model.ClusterException if there is a cluster failure
-     * @throws java.rmi.RemoteException if there is a network failure
+     * @throws ClusterException if there is a cluster failure
+     * @throws RemoteException if there is a network failure
      */
     C cluster(String name) throws ClusterException, RemoteException;
 
@@ -72,11 +72,18 @@ public interface CloudPlatformManager<C extends Cluster> extends Remote {
      * @throws com.elasticgrid.model.ClusterNotFoundException if the cluster can't be found
      * @throws com.elasticgrid.model.ClusterException if there is a cluster failure
      * @throws InterruptedException if the cluster was not started before timeout
-     * @throws java.rmi.RemoteException if there is a network failure
-     * @throws java.util.concurrent.ExecutionException
-     * @throws java.util.concurrent.TimeoutException
+     * @throws RemoteException if there is a network failure
+     * @throws ExecutionException
+     * @throws TimeoutException
      */
     void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
             throws ClusterNotFoundException, ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException;
+
+    /**
+     * Retreive statistics from the cloud.
+     * @return the statistics
+     * @throws RemoteException if there is a network failure
+     */
+    Statistics getStatistics() throws RemoteException;
 
 }

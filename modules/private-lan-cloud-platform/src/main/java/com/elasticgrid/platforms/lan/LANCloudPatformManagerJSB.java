@@ -18,6 +18,7 @@
 package com.elasticgrid.platforms.lan;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.cluster.spi.Statistics;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
@@ -83,4 +84,17 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
         cloud.resizeCluster(clusterName, clusterTopology);
     }
 
+    public Statistics getStatistics() throws RemoteException {
+        return cloud.getStatistics();
+    }
+
+    /** Needed in order to expose this value for watches. */
+    public int getNumberOfClusters() throws ClusterException, RemoteException {
+        return getStatistics().getNumberOfClusters();
+    }
+
+    /** Needed in order to expose this value for watches. */
+    public int getNumberOfNodes() throws ClusterException, RemoteException {
+        return getStatistics().getNumberOfNodes();
+    }
 }

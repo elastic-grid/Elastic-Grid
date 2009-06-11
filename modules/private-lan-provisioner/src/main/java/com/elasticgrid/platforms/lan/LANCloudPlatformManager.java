@@ -18,6 +18,7 @@
 
 package com.elasticgrid.platforms.lan;
 
+import com.elasticgrid.cluster.spi.AbstractCloudPlatformManager;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
@@ -26,7 +27,6 @@ import com.elasticgrid.model.lan.LANNode;
 import com.elasticgrid.model.lan.impl.LANClusterImpl;
 import com.elasticgrid.platforms.lan.discovery.LANClusterLocator;
 import java.rmi.RemoteException;
-import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LANCloudPlatformManager implements CloudPlatformManager<LANCluster> {
+public class LANCloudPlatformManager extends AbstractCloudPlatformManager<LANCluster> implements CloudPlatformManager<LANCluster> {
     private LANClusterLocator clusterLocator;
     private static final Logger logger = Logger.getLogger(LANCloudPlatformManager.class.getName());
 

@@ -1,5 +1,3 @@
-import java.util.logging.Level
-
 deployment(name: 'Elastic Grid') {
   groups 'elastic-grid'
 
@@ -13,13 +11,6 @@ deployment(name: 'Elastic Grid') {
                 'elastic-grid/amazon-ec2-provisioner-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar'
     }
-//      serviceLevelAgreements {
-//          systemRequirements ref: 'Elastic Grid Platform'
-//          sla(id: 'Queue VideoConversion', low: 2, high: 5) {
-//              policy type: 'scaling', class: 'com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler',
-//                     max: 3, lowerDampener: 3600, upperDampener: 3600
-//          }
-//      }
     association name: 'cloudPlatforms', property: 'cloudPlatforms',
                 serviceType: 'com.elasticgrid.cluster.spi.CloudPlatformManager',
                 type: 'requires', matchOnName: 'false'
@@ -39,6 +30,12 @@ deployment(name: 'Elastic Grid') {
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
+    sla(id: 'numberOfClusters') {
+      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
+    }
+    sla(id: 'numberOfNodes') {
+      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
+    }
     maintain 1
   }
 
@@ -53,6 +50,12 @@ deployment(name: 'Elastic Grid') {
       resources 'elastic-grid/amazon-ec2-cloud-platform-${pom.version}-impl.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+    }
+    sla(id: 'numberOfClusters') {
+      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
+    }
+    sla(id: 'numberOfNodes') {
+      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
     }
     maintain 1
   }

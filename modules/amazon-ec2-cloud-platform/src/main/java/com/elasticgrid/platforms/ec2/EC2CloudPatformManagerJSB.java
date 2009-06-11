@@ -18,6 +18,7 @@
 package com.elasticgrid.platforms.ec2;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.cluster.spi.Statistics;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.ec2.EC2Cluster;
@@ -79,5 +80,19 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
 
     public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         cloud.resizeCluster(clusterName, clusterTopology);
+    }
+
+    public Statistics getStatistics() throws RemoteException {
+        return cloud.getStatistics();
+    }
+
+    /** Needed in order to expose this value for watches. */
+    public int getNumberOfClusters() throws ClusterException, RemoteException {
+        return getStatistics().getNumberOfClusters();
+    }
+
+    /** Needed in order to expose this value for watches. */
+    public int getNumberOfNodes() throws ClusterException, RemoteException {
+        return getStatistics().getNumberOfNodes();
     }
 }
