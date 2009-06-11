@@ -21,23 +21,14 @@ import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
-import com.elasticgrid.platforms.lan.discovery.LANClusterLocator;
-import com.sun.jini.start.LifeCycle;
 import org.rioproject.core.jsb.ServiceBeanContext;
-import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
-import org.rioproject.watch.GaugeWatch;
-import org.rioproject.watch.SamplingWatch;
-import org.rioproject.watch.PeriodicWatch;
-import org.rioproject.watch.Calculable;
-
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -46,80 +37,7 @@ import java.util.logging.Logger;
  */
 public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements CloudPlatformManager<LANCluster> {
     private LANCloudPlatformManager cloud;
-
-    /**
-     * Component name we use to find items in the Configuration
-     */
-    static final String EG_CONFIG_COMPONENT = "com.elasticgrid";
-    /**
-     * Component name we use to find items in the Configuration
-     */
-    static final String CONFIG_COMPONENT = EG_CONFIG_COMPONENT + ".platforms.lan";
-    /**
-     * The componant name for accessing the service's configuration
-     */
-    static String configComponent = CONFIG_COMPONENT;
-    /**
-     * Logger name
-     */
-    static final String LOGGER = "com.elasticgrid.platforms.lan";
-    /**
-     * Cluster Manager logger.
-     */
-    static final Logger logger = Logger.getLogger(LOGGER);
-
-    /**
-     * Create a {@link CloudPlatformManager} launched from the ServiceStarter framework
-     *
-     * @param configArgs Configuration arguments
-     * @param lifeCycle  The LifeCycle object that started the REST API
-     * @throws Exception if bootstrapping fails
-     */
-    public LANCloudPatformManagerJSB(String[] configArgs, LifeCycle lifeCycle) throws Exception {
-        super();
-        bootstrap(configArgs);
-    }
-
-    /**
-     * Get the ServiceBeanContext and bootstrap the {@link CloudPlatformManager}.
-     */
-    protected void bootstrap(String[] configArgs) throws Exception {
-        try {
-            context = ServiceBeanActivation.getServiceBeanContext(
-                    getConfigComponent(),
-                    "LAN Cloud Platform Manager",
-                    configArgs,
-                    getClass().getClassLoader());
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Getting ServiceElement", e);
-            throw e;
-        }
-        try {
-            start(context);
-            ServiceBeanActivation.LifeCycleManager lMgr =
-                    (ServiceBeanActivation.LifeCycleManager) context.getServiceBeanManager().getDiscardManager();
-            if (lMgr != null) {
-                lMgr.register(getServiceProxy(), context);
-            } else {
-                logger.log(Level.WARNING, "LifeCycleManager is null, unable to register");
-            }
-            PeriodicWatch clustersWatch = new PeriodicWatch("# of Clusters") {
-                public void checkValue() {
-                    int nbClusters = 0;
-                    try {
-                        nbClusters = cloud.findClusters().size();
-                        addWatchRecord(new Calculable(id, nbClusters, System.currentTimeMillis()));
-                    } catch (Exception e) {
-                        logger.log(Level.WARNING, "Could not compute the number of running clusters", e);
-                    }
-                }
-            };
-            context.getWatchRegistry().register(clustersWatch);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
-            throw e;
-        }
-    }
+    private static final Logger logger = Logger.getLogger("com.elasticgrid.platforms.lan");
 
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {
@@ -128,6 +46,7 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object createProxy() {
         return new LANCloudPlatformManagerProxy((CloudPlatformManager<LANCluster>) getExportedProxy(), getUuid());
     }
@@ -136,15 +55,6 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     public void advertise() throws IOException {
         super.advertise();
         logger.info("Advertised Private LAN Cloud Platform");
-    }
-
-    /**
-     * Get the component name to use for accessing the services configuration properties
-     *
-     * @return The component name
-     */
-    public static String getConfigComponent() {
-        return configComponent;
     }
 
     public String getName() throws RemoteException {
@@ -173,7 +83,4 @@ public class LANCloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
         cloud.resizeCluster(clusterName, clusterTopology);
     }
 
-    public void setClusterLocator(LANClusterLocator clusterLocator) {
-        cloud.setClusterLocator(clusterLocator);
-    }
 }

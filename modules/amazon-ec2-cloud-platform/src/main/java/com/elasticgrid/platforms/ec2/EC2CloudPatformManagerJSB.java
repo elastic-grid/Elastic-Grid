@@ -20,20 +20,16 @@ package com.elasticgrid.platforms.ec2;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
-import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import org.rioproject.core.jsb.ServiceBeanContext;
-import org.rioproject.jsb.ServiceBeanActivation;
 import org.rioproject.jsb.ServiceBeanAdapter;
-import com.sun.jini.start.LifeCycle;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * Cloud Platform Manager for the LAN.
@@ -41,68 +37,7 @@ import java.io.IOException;
  */
 public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements CloudPlatformManager<EC2Cluster> {
     private EC2CloudPlatformManager cloud;
-
-    /**
-     * Component name we use to find items in the Configuration
-     */
-    static final String EG_CONFIG_COMPONENT = "com.elasticgrid";
-    /**
-     * Component name we use to find items in the Configuration
-     */
-    static final String CONFIG_COMPONENT = EG_CONFIG_COMPONENT + ".platforms.ec2";
-    /**
-     * The componant name for accessing the service's configuration
-     */
-    static String configComponent = CONFIG_COMPONENT;
-    /**
-     * Logger name
-     */
-    static final String LOGGER = "com.elasticgrid.platforms.ec2";
-    /**
-     * Cluster Manager logger.
-     */
-    static final Logger logger = Logger.getLogger(LOGGER);
-
-    /**
-     * Create a {@link com.elasticgrid.cluster.spi.CloudPlatformManager} launched from the ServiceStarter framework
-     *
-     * @param configArgs Configuration arguments
-     * @param lifeCycle  The LifeCycle object that started the REST API
-     * @throws Exception if bootstrapping fails
-     */
-    public EC2CloudPatformManagerJSB(String[] configArgs, LifeCycle lifeCycle) throws Exception {
-        super();
-        bootstrap(configArgs);
-    }
-
-    /**
-     * Get the ServiceBeanContext and bootstrap the {@link com.elasticgrid.cluster.spi.CloudPlatformManager}.
-     */
-    protected void bootstrap(String[] configArgs) throws Exception {
-        try {
-            context = ServiceBeanActivation.getServiceBeanContext(
-                    getConfigComponent(),
-                    "EC2 Cloud Platform Manager",
-                    configArgs,
-                    getClass().getClassLoader());
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Getting ServiceElement", e);
-            throw e;
-        }
-        try {
-            start(context);
-            ServiceBeanActivation.LifeCycleManager lMgr =
-                    (ServiceBeanActivation.LifeCycleManager) context.getServiceBeanManager().getDiscardManager();
-            if (lMgr != null) {
-                lMgr.register(getServiceProxy(), context);
-            } else {
-                logger.log(Level.WARNING, "LifeCycleManager is null, unable to register");
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
-            throw e;
-        }
-    }
+    private static final Logger logger = Logger.getLogger("com.elasticgrid.platforms.ec2");
 
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {
@@ -111,6 +46,7 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object createProxy() {
         return new EC2CloudPlatformManagerProxy((CloudPlatformManager<EC2Cluster>) getExportedProxy(), getUuid());
     }
@@ -119,15 +55,6 @@ public class EC2CloudPatformManagerJSB extends ServiceBeanAdapter implements Clo
     public void advertise() throws IOException {
         super.advertise();
         logger.info("Advertised EC2 Cloud Platform");
-    }
-
-    /**
-     * Get the component name to use for accessing the services configuration properties
-     *
-     * @return The component name
-     */
-    public static String getConfigComponent() {
-        return configComponent;
     }
 
     public String getName() throws RemoteException {

@@ -18,9 +18,9 @@
 
 package com.elasticgrid.boot;
 
+import com.sun.jini.start.ServiceDescriptor;
 import org.rioproject.boot.BootUtil;
 import org.rioproject.boot.RioServiceDescriptor;
-import com.sun.jini.start.ServiceDescriptor;
 import java.io.File;
 import java.io.IOException;
 
@@ -233,112 +233,6 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                                         restApiConfig);
     }
 
-    public static ServiceDescriptor getClusterManager(String policy, String clusterManagerConfig) throws IOException {
-        return getClusterManager(policy, getAnonymousPort(), clusterManagerConfig);
-    }
-
-    public static ServiceDescriptor getClusterManager(String policy, String... clusterManagerConfig) throws IOException {
-        return getClusterManager(policy, getAnonymousPort(), clusterManagerConfig);
-    }
-
-    public static ServiceDescriptor getClusterManager(String policy, int port, String... clusterManagerConfig) throws IOException {
-        return getClusterManager(policy, BootUtil.getHostAddress(), port, clusterManagerConfig);
-    }
-
-    public static ServiceDescriptor getClusterManager(String policy, String hostAddress, int port,
-                                               String... clusterManagerConfig) throws IOException {
-        String egHome = System.getProperty("EG_HOME");
-        if (egHome == null)
-            throw new RuntimeException("EG_HOME property not declared");
-        String clusterManagerRoot = new File(egHome + File.separator + "lib" + File.separator + "elastic-grid").getCanonicalPath();
-        String clusterManagerClasspath =
-                clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "cluster-manager", "impl")
-                + File.pathSeparator +
-                new File(clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "private-lan-provisioner")).getCanonicalPath()
-                + File.pathSeparator +
-                new File(clusterManagerRoot + File.separator + getJarName(clusterManagerRoot, "amazon-ec2-provisioner")).getCanonicalPath();
-        String clusterManagerCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar", "jsk-dl.jar"},
-                hostAddress, Integer.toString(port));
-        String implClass = "com.elasticgrid.cluster.ClusterManagerJSB";
-        return new RioServiceDescriptor(clusterManagerCodebase,
-                                        policy,
-                                        clusterManagerClasspath,
-                                        implClass,
-                                        clusterManagerConfig);
-    }
-
-    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String cloudPlatformConfig) throws IOException {
-        return getPrivateLANCloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String... cloudPlatformConfig) throws IOException {
-        return getPrivateLANCloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, int port, String... cloudPlatformConfig) throws IOException {
-        return getPrivateLANCloudPlatform(policy, BootUtil.getHostAddress(), port, cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getPrivateLANCloudPlatform(String policy, String hostAddress, int port,
-                                               String... cloudPlatformConfig) throws IOException {
-        String egHome = System.getProperty("EG_HOME");
-        if (egHome == null)
-            throw new RuntimeException("EG_HOME property not declared");
-        String cloudPlatformRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
-        String cloudPlatformClasspath =
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "impl")).getCanonicalPath()
-                + File.pathSeparator +
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "private-lan-provisioner")).getCanonicalPath()
-                + File.pathSeparator +
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "elastic-grid-manager")).getCanonicalPath();
-        String cloudPlatformCodebase = BootUtil.getCodebase(new String[] {"rio-dl.jar", "jsk-dl.jar",
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "private-lan-cloud-platform", "dl"),
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
-        }, hostAddress, Integer.toString(port));
-        String implClass = "com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB";
-        return new RioServiceDescriptor(cloudPlatformCodebase,
-                                        policy,
-                                        cloudPlatformClasspath,
-                                        implClass,
-                                        cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getEC2CloudPlatform(String policy, String cloudPlatformConfig) throws IOException {
-        return getEC2CloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getEC2CloudPlatform(String policy, String... cloudPlatformConfig) throws IOException {
-        return getEC2CloudPlatform(policy, getAnonymousPort(), cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getEC2CloudPlatform(String policy, int port, String... cloudPlatformConfig) throws IOException {
-        return getEC2CloudPlatform(policy, BootUtil.getHostAddress(), port, cloudPlatformConfig);
-    }
-
-    public static ServiceDescriptor getEC2CloudPlatform(String policy, String hostAddress, int port,
-                                               String... cloudPlatformConfig) throws IOException {
-        String egHome = System.getProperty("EG_HOME");
-        if (egHome == null)
-            throw new RuntimeException("EG_HOME property not declared");
-        String cloudPlatformRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
-        String cloudPlatformClasspath =
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "amazon-ec2-cloud-platform", "impl")).getCanonicalPath()
-                + File.pathSeparator +
-                new File(cloudPlatformRoot + File.separator + getJarName(cloudPlatformRoot, "amazon-ec2-provisioner")).getCanonicalPath();
-        String cloudPlatformCodebase = BootUtil.getCodebase(new String[] {"rio-dl.jar", "jsk-dl.jar",
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "amazon-ec2-cloud-platform", "dl"),
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-model"),
-                "elastic-grid/" + getJarName(cloudPlatformRoot, "elastic-grid-manager")
-        }, hostAddress, Integer.toString(port));
-        String implClass = "com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB";
-        return new RioServiceDescriptor(cloudPlatformCodebase,
-                                        policy,
-                                        cloudPlatformClasspath,
-                                        implClass,
-                                        cloudPlatformConfig);
-    }
-
     private static String getJarName(String egHome, String nameNoVersion) {
         String jarName = null;
         File f = new File(egHome);
@@ -346,20 +240,6 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
             if (s.startsWith(nameNoVersion)) {
                 jarName = s;
                 break;
-            }
-        }
-        return jarName;
-    }
-
-    private static String getJarName(String egHome, String nameNoVersion, String classifier) {
-        String jarName = null;
-        File f = new File(egHome);
-        for (String s : f.list()) {
-            if (s.startsWith(nameNoVersion)) {
-                if (s.endsWith(classifier + ".jar")) {
-                    jarName = s;
-                    break;
-                }
             }
         }
         return jarName;
