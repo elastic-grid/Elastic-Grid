@@ -26,8 +26,8 @@
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
         <module>elastic-grid-manager</module>
+        <module>cluster-manager-jsb</module>
         <module>elastic-grid-core</module>
-        <module>elastic-grid-ui</module>
         <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>
         <module>amazon-sdb</module>
@@ -39,7 +39,9 @@
         <!--module>examples</module-->
         <module>jabber-cli</module>
         <!--module>jxta-discovery</module-->
-	<module>elastic-grid-deploy-handlers</module>
+	    <module>elastic-grid-deploy-handlers</module>
+        <module>private-lan-cloud-platform</module>
+        <module>amazon-ec2-cloud-platform</module>
     </modules>
 
     <reporting>

@@ -22,6 +22,38 @@
 			<version>${pom.version}</version>
 		</dependency>
 
+        <!-- Core Services dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>cluster-manager-jsb</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>dl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>dl</classifier>
+        </dependency>
+
         <!-- Substrates dependencies -->
 		<!--<dependency>-->
 			<!--<groupId>com.elasticgrid.substrates</groupId>-->
