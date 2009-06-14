@@ -18,9 +18,9 @@
 
 package com.elasticgrid.boot;
 
+import com.sun.jini.start.ServiceDescriptor;
 import org.rioproject.boot.BootUtil;
 import org.rioproject.boot.RioServiceDescriptor;
-import com.sun.jini.start.ServiceDescriptor;
 import java.io.File;
 import java.io.IOException;
 
@@ -99,9 +99,9 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
             throw new RuntimeException("EG_HOME property not declared");
         String monitorRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String monitorClasspath =
-            egHome + File.separator + "lib" + File.separator + "monitor.jar"
+            new File(egHome + File.separator + "lib" + File.separator + "monitor.jar").getCanonicalPath()
             + File.pathSeparator +
-            monitorRoot + File.separator + getJarName(monitorRoot, "elastic-grid-deploy-handlers");
+            new File(monitorRoot + File.separator + getJarName(monitorRoot, "elastic-grid-deploy-handlers")).getCanonicalPath();
         String monitorCodebase = BootUtil.getCodebase(new String[]{
             "monitor-dl.jar",
             "rio-dl.jar",
@@ -188,7 +188,7 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
         String agentClasspath =
-            egHome + File.separator + "lib" + File.separator + "cybernode.jar";
+            new File(egHome + File.separator + "lib" + File.separator + "cybernode.jar").getCanonicalPath();
         String agentCodebase = BootUtil.getCodebase(new String[]{
             "cybernode-dl.jar",
             "rio-dl.jar",
@@ -220,7 +220,7 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
         String restApiRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
-        String restApiClasspath = restApiRoot + File.separator + getJarName(restApiRoot, "rest-api");
+        String restApiClasspath = new File(restApiRoot + File.separator + getJarName(restApiRoot, "rest-api")).getCanonicalPath();
         String restApiCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
                                                                    "jsk-dl.jar"},
                                                       hostAddress,
@@ -236,8 +236,8 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
     private static String getJarName(String egHome, String nameNoVersion) {
         String jarName = null;
         File f = new File(egHome);
-        for(String s : f.list()) {
-            if(s.startsWith(nameNoVersion)) {
+        for (String s : f.list()) {
+            if (s.startsWith(nameNoVersion)) {
                 jarName = s;
                 break;
             }

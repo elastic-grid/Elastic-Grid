@@ -18,6 +18,7 @@
 
 package com.elasticgrid.platforms.ec2;
 
+import com.elasticgrid.cluster.spi.AbstractCloudPlatformManager;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
@@ -47,7 +48,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EC2CloudPlatformManager implements CloudPlatformManager<EC2Cluster> {
+public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Cluster> implements CloudPlatformManager<EC2Cluster> {
     private EC2Instantiator nodeInstantiator;
     private EC2ClusterLocator clusterLocator;
 
