@@ -41,7 +41,6 @@ public class SQSVideoConversionRequester implements VideoConversionRequester {
     }
 
     public void convertVideo(String video, String queueName) throws SQSException {
-        System.out.println("Using AccessID: " + awsAccessId + " and Secret Key: " + awsSecretKey);
         MessageQueue queue = SQSUtils.connectToQueue(queueName, awsAccessId, awsSecretKey);
         queue.sendMessage(video);
     }

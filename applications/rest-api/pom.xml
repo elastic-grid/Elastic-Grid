@@ -228,7 +228,6 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <addExtensions/>
-                            <!--<classpathPrefix>../../kernel</classpathPrefix>-->
                         </manifest>
                     </archive>
                 </configuration>

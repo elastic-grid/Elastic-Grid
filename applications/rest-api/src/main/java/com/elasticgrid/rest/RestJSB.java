@@ -52,14 +52,14 @@ public class RestJSB extends ServiceBeanAdapter {
     private static CloudFederationClusterManager clusterManager;
     private static ProvisionMonitor provisionMonitor;
     /** Component name we use to find items in the Configuration */
-    static final String RIO_CONFIG_COMPONENT = "com.elasticgrid";
+    static final String EG_CONFIG_COMPONENT = "com.elasticgrid";
     /** Component name we use to find items in the Configuration */
-    static final String CONFIG_COMPONENT = RIO_CONFIG_COMPONENT + ".rest";
+    static final String CONFIG_COMPONENT = EG_CONFIG_COMPONENT + ".rest";
     /** The componant name for accessing the service's configuration */
     static String configComponent = CONFIG_COMPONENT;
     /** Logger name */
-    static final String LOGGER = "org.rioproject.cybernode";
-    /** Cybernode logger. */
+    static final String LOGGER = "com.elasticgrid.rest";
+    /** REST API logger. */
     static final Logger logger = Logger.getLogger(LOGGER);
 
     /**
@@ -75,7 +75,7 @@ public class RestJSB extends ServiceBeanAdapter {
         bootstrap(configArgs);
     }
 
-    /*
+    /**
      * Get the ServiceBeanContext and bootstrap the REST API
      */
     protected void bootstrap(String[] configArgs) throws Exception {
@@ -103,8 +103,7 @@ public class RestJSB extends ServiceBeanAdapter {
             AssociationDescriptor provisionMonitorAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
             provisionMonitorAssociation.setMatchOnName(false);
             provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
-            provisionMonitorAssociation.setGroups(
-                context.getServiceBeanConfig().getGroups());
+            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
 
             // register the association listener
             AssociationMgmt assocMgt = new AssociationMgmt();

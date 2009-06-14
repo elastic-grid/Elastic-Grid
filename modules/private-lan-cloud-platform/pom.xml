@@ -7,37 +7,37 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>elastic-grid-manager</artifactId>
-    <packaging>jar</packaging>
-    <name>Modules :: Elastic Grid Manager</name>
+    <artifactId>private-lan-cloud-platform</artifactId>
+    <packaging>jsb</packaging>
+    <name>Modules :: Private LAN Cloud Platform (JSB)</name>
 
     <dependencies>
 
-        <!-- Elastic Grid model -->
+        <!-- Elastic Grid Private LAN provisioner -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-model</artifactId>
+            <artifactId>private-lan-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Substrates API -->
+        <!-- Elastic Grid Manager -->
         <dependency>
-            <groupId>com.elasticgrid.substrates</groupId>
-            <artifactId>substrate-api</artifactId>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Core -->
+        <!-- Elastic Grid EC2 Provisioner -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Utils -->
+        <!-- Elastic Grid Private LAN Provisioner -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-utils</artifactId>
+            <artifactId>private-lan-provisioner</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -86,7 +86,33 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-rio-plugin</artifactId>
+                <version>4.0-M3-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <environment>
+                        <rio.home>${env.RIO_HOME}</rio.home>
+                        <jini.home>${env.JINI_HOME}</jini.home>
+                    </environment>
+                    <implementationIns>
+                        <implementationIn>com.elasticgrid.platforms.lan</implementationIn>
+                    </implementationIns>
+                    <implementationTopclasses>
+                        <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB$1</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.platforms.lan.LANCloudPlatformManagerProxy</implementationTopclass>
+                    </implementationTopclasses>
+                    <downloadableIns>
+                        <downloadableIn>com.elasticgrid.platforms.lan</downloadableIn>
+                    </downloadableIns>
+                    <downloadableTopclasses>
+                        <downloadableTopclass>com.elasticgrid.platforms.lan.LANCloudPlatformManagerProxy</downloadableTopclass>
+                    </downloadableTopclasses>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
