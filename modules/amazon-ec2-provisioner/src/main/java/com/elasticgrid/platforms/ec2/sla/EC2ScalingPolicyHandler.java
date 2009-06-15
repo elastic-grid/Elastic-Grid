@@ -30,6 +30,7 @@ import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.EventHandler;
 import org.rioproject.sla.SLA;
 import org.rioproject.sla.ScalingPolicyHandler;
+import org.rioproject.watch.ThresholdEvent;
 import com.xerox.amazonws.ec2.EC2Utils;
 import java.io.IOException;
 import static java.lang.String.format;
@@ -96,6 +97,17 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
 
     @Override
     protected void doIncrement() {
+        if (!(lastCalculable.getValue() > lastThresholdValues.getCurrentHighThreshold())) {
+            if(logger.isLoggable(Level.FINE))
+                logger.fine("["+getName()+"] "+
+                            "ScalingPolicyHandler ["+getID()+"]: "+
+                            "INCREMENT CANCELLED, operating below " +
+                            "High Threshold, "+
+                            "value ["+lastCalculable.getValue()+"] "+
+                            "high ["+
+                            lastThresholdValues.getCurrentHighThreshold()+"]");
+            return;
+        }
         if (ec2 == null) {
             logger.warning("No EC2 node instantiator has been set, hence no increase of EC2 instances will occur");
             return;
@@ -123,6 +135,17 @@ public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
      * Only return true if the decrement needs to be rescheduled
      */
     protected boolean doDecrement() {
+        if(!(lastCalculable.getValue() < lastThresholdValues.getCurrentLowThreshold())) {
+            if(logger.isLoggable(Level.FINE))
+                logger.fine("["+getName()+"] "+
+                            "ScalingPolicyHandler ["+getID()+"]: "+
+                            "DECREMENT CANCELLED, operating above "+
+                            "Low Threshold, "+
+                            "value ["+lastCalculable.getValue()+"] "+
+                            "low ["+
+                            lastThresholdValues.getCurrentLowThreshold()+"]");
+            return false;
+        }
         super.doDecrement();
         if (ec2 == null) {
             logger.warning("No EC2 node instantiator has been set, hence no decrease of EC2 instances will occur");
