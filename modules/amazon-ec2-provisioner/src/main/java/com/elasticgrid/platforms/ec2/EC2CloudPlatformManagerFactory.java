@@ -42,7 +42,7 @@ public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFacto
             boolean secured = Boolean.parseBoolean(config.getProperty(EC2Configuration.AWS_EC2_SECURED));
 
             instance = new EC2CloudPlatformManager();
-            instance.setOverridesBucket(config.getProperty(EC2Configuration.EG_DROP_BUCKET));
+            instance.setOverridesBucket(config.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET));
             instance.setAwsAccessID(awsAccessId);
             instance.setAwsSecretKey(awsSecretKey);
             instance.setAwsSecured(secured);
