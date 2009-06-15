@@ -18,6 +18,7 @@
 package com.elasticgrid.platforms.lan;
 
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
+import com.elasticgrid.cluster.spi.Statistics;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.lan.LANCluster;
@@ -66,4 +67,7 @@ public class LANCloudPlatformManagerProxy extends AbstractProxy implements Cloud
         cloud.resizeCluster(clusterName, clusterTopology);
     }
 
+    public Statistics getStatistics() throws RemoteException {
+        return cloud.getStatistics();
+    }
 }
