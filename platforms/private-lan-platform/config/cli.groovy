@@ -10,6 +10,7 @@ import org.rioproject.config.Component
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 import org.rioproject.resources.client.DiscoveryManagementPool.SharedDiscoveryManager
 import org.rioproject.config.Constants
+import net.jini.discovery.DiscoveryGroupManagement
 
 @Component('net.jini.discovery.LookupDiscovery')
 class ClientDiscoveryConfig {
@@ -21,7 +22,14 @@ class ClientDiscoveryConfig {
  */
 @Component('org.rioproject.tools.cli')
 class CLIConfig {
-    String[] groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)];
+    String[] getGroups() {
+        def groups
+        if(System.getProperty(Constants.GROUPS_PROPERTY_NAME)==null)
+            groups = DiscoveryGroupManagement.ALL_GROUPS
+        else
+            groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)]
+        return groups as String[]
+    }
 }
 
 /*
