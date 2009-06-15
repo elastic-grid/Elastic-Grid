@@ -32,7 +32,7 @@ class MonitorConfig {
   long deployMonitorPeriod = 30000
 
   String[] getInitialOpStrings() {
-    ['../config/cluster-manager.groovy'] as String[]
+    [System.getProperty('EG_HOME') + '/config/cluster-manager.groovy'] as String[]
   }
 
   String[] getInitialLookupGroups() {
