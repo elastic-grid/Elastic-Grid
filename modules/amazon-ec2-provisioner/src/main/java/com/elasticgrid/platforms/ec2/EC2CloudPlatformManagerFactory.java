@@ -20,8 +20,8 @@ package com.elasticgrid.platforms.ec2;
 import com.elasticgrid.cluster.spi.CloudPlatformManagerFactory;
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ec2.EC2Cluster;
-import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
+import com.elasticgrid.platforms.ec2.discovery.EC2SecurityGroupsClusterLocator;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.xerox.amazonws.ec2.Jec2;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFacto
             boolean secured = Boolean.parseBoolean(config.getProperty(EC2Configuration.AWS_EC2_SECURED));
 
             instance = new EC2CloudPlatformManager();
-            instance.setOverridesBucket(config.getProperty(EC2Configuration.EG_DROP_BUCKET));
+            instance.setOverridesBucket(config.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET));
             instance.setAwsAccessID(awsAccessId);
             instance.setAwsSecretKey(awsSecretKey);
             instance.setAwsSecured(secured);
