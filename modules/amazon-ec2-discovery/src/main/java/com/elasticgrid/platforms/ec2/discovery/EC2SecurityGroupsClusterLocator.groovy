@@ -50,7 +50,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
    * If the EC2 network can't be reached (offline mode or networking issues), then a empty list is returned.
    */
   public Set<String> findClusters() {
-    Log.info "EC2: Searching for clusters running on EC2..."
+    Log.fine "EC2: Searching for clusters running on EC2..."
     List<ReservationDescription> reservations
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
@@ -68,7 +68,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
         }
       }
     }
-    Log.info "EC2: Found clusters $clusters"
+    Log.fine "EC2: Found clusters $clusters"
     return clusters
   }
 
@@ -141,7 +141,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
   }
 
   public EC2Node findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    Log.info "EC2: Searching for monitor node in cluster '$clusterName'..."
+    Log.fine "EC2: Searching for monitor node in cluster '$clusterName'..."
     def Collection<EC2Node> nodes = findNodes(clusterName)
     def found = false
     def node = nodes.find { it.profile.isMonitor() }

@@ -30,12 +30,12 @@ deployment(name: 'Elastic Grid') {
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
-    sla(id: 'numberOfClusters') {
-      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
-    }
-    sla(id: 'numberOfNodes') {
-      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
-    }
+//    sla(id: 'numberOfClusters') {
+//      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
+//    }
+//    sla(id: 'numberOfNodes') {
+//      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
+//    }
     maintain 1
   }
 
@@ -51,12 +51,12 @@ deployment(name: 'Elastic Grid') {
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
-    sla(id: 'numberOfClusters') {
-      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
-    }
-    sla(id: 'numberOfNodes') {
-      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
-    }
+//    sla(id: 'numberOfClusters') {
+//      monitor(name: 'Number of Clusters', property: 'numberOfClusters', period: '30000')
+//    }
+//    sla(id: 'numberOfNodes') {
+//      monitor(name: 'Number of Nodes', property: 'numberOfNodes', period: '30000')
+//    }
     maintain 1
   }
 

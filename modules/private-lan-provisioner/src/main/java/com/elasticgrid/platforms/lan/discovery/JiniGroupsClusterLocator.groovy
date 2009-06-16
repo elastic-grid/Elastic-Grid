@@ -73,7 +73,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   }
 
   public Set<String> findClusters() {
-    Log.info "LAN: Searching for clusters running on EC2..."
+    Log.fine "LAN: Searching for clusters running on EC2..."
     def clusters = new HashSet()
     def ServiceItem[] items = agentsCache.lookup(null, Integer.MAX_VALUE)
     if (items.length == 0)
@@ -84,12 +84,12 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def ServiceBeanConfig config = serviceElement.serviceBeanConfig
       config.groups.each { clusters << it }
     }
-    Log.info "LAN: Found clusters $clusters"
+    Log.fine "LAN: Found clusters $clusters"
     return clusters as Set<String>
   }
 
   public Set<LANNode> findNodes(String clusterName) throws ClusterNotFoundException, ClusterException {
-    Log.info "LAN: Searching for Elastic Grid nodes in cluster '$clusterName'..."
+    Log.fine "LAN: Searching for Elastic Grid nodes in cluster '$clusterName'..."
 
     def filter = new AgentGroupFilter(clusterName)
     def ServiceItem[] agentsItems = agentsCache.lookup(filter, Integer.MAX_VALUE)
@@ -105,7 +105,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
       def attributes = item.attributeSets
       def Host hostEntry = (Host) attributes.find { it instanceof Host }
       // test if this node is an agent too!
-      item.attributeSets.each { Log.info it.dump() }
+      item.attributeSets.each { Log.finest it.dump() }
       nodes << new LANNodeImpl()
               .instanceID(item.serviceID.toString())
               .profile(NodeProfile.MONITOR)
@@ -122,12 +122,12 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
                 .address(InetAddress.getByName(hostEntry.hostName))
       }
     }
-    Log.info "LAN: Found nodes $nodes"
+    Log.fine "LAN: Found nodes $nodes"
     return nodes
   }
 
   public LANNode findMonitor(String clusterName) throws ClusterMonitorNotFoundException {
-    Log.info "LAN: Searching for monitor node in cluster '$clusterName'..."
+    Log.fine "LAN: Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     def ServiceItem item = (ServiceItem) monitorsItems[0]
     def attributes = item.attributeSets
@@ -139,7 +139,7 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
   }
 
   public Set<Application> findApplications(String clusterName) throws ClusterException {
-    Log.info "LAN: Searching for monitor node in cluster '$clusterName'..."
+    Log.fine "LAN: Searching for monitor node in cluster '$clusterName'..."
     def ServiceItem[] monitorsItems = monitorsCache.lookup(new MonitorGroupFilter(clusterName), Integer.MAX_VALUE);
     if (monitorsItems.length == 0) {
       return [] as Set<Application>
@@ -148,14 +148,14 @@ class JiniGroupsClusterLocator extends LANClusterLocator {
     def ProvisionMonitor monitor = item.service as ProvisionMonitor
     def DeployAdmin dAdmin = monitor.admin as DeployAdmin
 
-    Log.info "LAN: Found ${dAdmin.operationalStringManagers.length} opstrings"
+    Log.fine "LAN: Found ${dAdmin.operationalStringManagers.length} opstrings"
 
     return dAdmin.operationalStringManagers.collect {
       def OperationalString opstring = it.operationalString
-      Log.info "LAN: Found application ${it.operationalString.name}"
+      Log.fine "LAN: Found application ${it.operationalString.name}"
       def Application application = new ApplicationImpl().name(opstring.name)
       opstring.services.each { ServiceElement elem ->
-        Log.info "LAN: Found service ${elem.serviceBeanConfig.name}"
+        Log.fine "LAN: Found service ${elem.serviceBeanConfig.name}"
         Log.debug "LAN: Found service '${elem}'"
         application.service(elem.serviceBeanConfig.name)
       }
