@@ -92,7 +92,7 @@ public class StartInstanceTask implements Callable<List<String>> {
                         Discovery.AGENT.getGroupName(), "elastic-grid");
                 break;
         }
-        logger.log(Level.INFO, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
+        logger.log(Level.FINE, "Starting 1 Amazon EC2 instance from AMI {0} using groups {1} and user data {2}...",
                 new Object[]{ami, groups.toString(), userData});
         return nodeInstantiator.startInstances(ami, 1, 1, groups, userData, keypair, true, instanceType);
     }
