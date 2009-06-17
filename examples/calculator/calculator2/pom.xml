@@ -84,6 +84,7 @@
                         <implementationTopclass>calculator.service.SubtractImpl</implementationTopclass>
                         <implementationTopclass>calculator.service.DivideImpl</implementationTopclass>
                         <implementationTopclass>calculator.service.MultiplyImpl</implementationTopclass>
+                        <implementationTopclass>calculator.service.ModuloImpl</implementationTopclass>
                     </implementationTopclasses>
 
                     <clientIns>
@@ -95,6 +96,7 @@
                         <clientTopclass>calculator.Subtract</clientTopclass>
                         <clientTopclass>calculator.Divide</clientTopclass>
                         <clientTopclass>calculator.Multiply</clientTopclass>
+                        <clientTopclass>calculator.Modulo</clientTopclass>
                     </clientTopclasses>
 
                     <downloadableIns>
@@ -106,6 +108,7 @@
                         <downloadableTopclass>calculator.Subtract</downloadableTopclass>
                         <downloadableTopclass>calculator.Divide</downloadableTopclass>
                         <downloadableTopclass>calculator.Multiply</downloadableTopclass>
+                        <downloadableTopclass>calculator.Modulo</downloadableTopclass>
                     </downloadableTopclasses>
                 </configuration>
             </plugin>

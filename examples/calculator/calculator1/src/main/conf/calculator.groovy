@@ -1,8 +1,8 @@
-deployment(name:'Calculator') {
+deployment(name:'Calculator 1') {
     groups 'calculator'
 
-    resources id:'impl.jars', 'calculator_1.0/lib/calculator-mavenized-1.0-impl.jar'
-    resources id:'client.jars', 'calculator_1.0/lib/calculator-mavenized-1.0-dl.jar'
+    resources id:'impl.jars', 'calculator1_0.9.1/lib/calculator1-0.9.1-impl.jar'
+    resources id:'client.jars', 'calculator1_0.9.1/lib/calculator1-0.9.1-dl.jar'
 
     service(name: 'Calculator') {
         interfaces {

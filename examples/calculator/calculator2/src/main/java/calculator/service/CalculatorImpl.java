@@ -45,6 +45,10 @@ public class CalculatorImpl implements Calculator {
         this.multiplyService = multiplyService;
     }
 
+    public void setModulo(Modulo moduloService) {
+        this.moduloService = moduloService;
+    }
+
     public double add(double n1, double n2) throws RemoteException {
         return(addService.add(n1, n2));
     }
