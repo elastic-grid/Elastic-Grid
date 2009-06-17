@@ -15,36 +15,49 @@
  */
 package calculator;
 
-import org.rioproject.test.RioTestRunner;
-import org.rioproject.test.SetTestManager;
-import org.rioproject.test.TestManager;
+import org.rioproject.cybernode.StaticCybernode;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runners.Parameterized;
 import org.junit.runner.RunWith;
+import java.io.File;
 import java.rmi.RemoteException;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * Example testing the Calculator service and it's required services from the
  * <tt>OperationalString</tt>
  */
-@RunWith(RioTestRunner.class)
-public class ITCalculatorTest2 {
+@RunWith(Parameterized.class)
+public class ITCalculatorTest {
+    String opstring;
     Calculator calculator;
 
-    @SetTestManager
-    static TestManager testManager;
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        String opstring = System.getProperty("opstring");
+        Assert.assertNotNull("no opstring given", opstring);
+        return Arrays.asList(new Object[][] {{ opstring }});
+    }
+
+    public ITCalculatorTest(String opstring) {
+        this.opstring = opstring;
+    }
 
     @Before
     public void setupCalculator() throws Exception {
-        Assert.assertNotNull(testManager);
-        testManager.startReggie();
-//        testManager.startProvisionMonitor();
-//        testManager.startCybernode();
-//        testManager.deploy(new File(System.getProperty("opstring")));
-//        ServiceTemplate template = new ServiceTemplate(null, new Class[]{Calculator.class}, null);
-//        calculator = (Calculator) testManager.getClient().getRegistrars()[0].lookup(template);
+        StaticCybernode cybernode = new StaticCybernode();
+        Map<String, Object> map = cybernode.activate(new File(opstring));
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String beanName = entry.getKey();
+            Object beanImpl = entry.getValue();
+            if (beanName.equals("Calculator"))
+                calculator = (Calculator) beanImpl;
+        }
     }
 
     @Test

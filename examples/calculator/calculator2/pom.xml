@@ -7,9 +7,9 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>calculator1</artifactId>
+    <artifactId>calculator2</artifactId>
     <packaging>oar</packaging>
-    <name>Examples :: Calculator :: Version 1</name>
+    <name>Examples :: Calculator :: Version 2</name>
 
     <dependencies>
 
@@ -71,7 +71,7 @@
                         <rio.home>${env.RIO_HOME}</rio.home>
                         <jini.home>${env.JINI_HOME}</jini.home>
                     </environment>
-                    <oarName>calculator1</oarName>
+                    <oarName>calculator2</oarName>
                     <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
                     <!--<opstring-test>${basedir}/src/test/conf/calculator.groovy</opstring-test>-->
 
