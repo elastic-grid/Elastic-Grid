@@ -17,25 +17,21 @@
  */
 package com.elasticgrid.tools.cli;
 
-import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.NodeProfile;
+import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2NodeType;
+import com.elasticgrid.storage.Container;
+import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.amazon.s3.S3StorageManager;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.config.EC2Configuration;
-import org.jets3t.service.S3ServiceException;
-import org.jets3t.service.S3Service;
-import org.jets3t.service.model.S3Bucket;
-import org.jets3t.service.model.S3Object;
-import org.jets3t.service.impl.rest.httpclient.RestS3Service;
-import org.jets3t.service.security.AWSCredentials;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Properties;
-import java.io.PrintStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.File;
-import java.security.NoSuchAlgorithmException;
 
 public abstract class AbstractClusterHandler extends AbstractHandler {
     public static final String AGENT_OVERRIDE_FILE_NAME = "start-agent-override.groovy";
@@ -208,10 +204,8 @@ public abstract class AbstractClusterHandler extends AbstractHandler {
         return count;
     }
 
-    protected void uploadOverrides(File dir, String clusterName, PrintStream out) throws
-                                                               IOException,
-            S3ServiceException,
-            NoSuchAlgorithmException {
+    protected void uploadOverrides(File dir, String clusterName, PrintStream out) throws Exception {
+        // initialize storage manager
         Properties awsConfig = AWSUtils.loadEC2Configuration();
         String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
         String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);
@@ -221,20 +215,18 @@ public abstract class AbstractClusterHandler extends AbstractHandler {
         if (awsSecretKey == null) {
             throw new IllegalArgumentException("Could not find AWS Secret Key");
         }
-        AWSCredentials credentials = new AWSCredentials(awsAccessID, awsSecretKey);
+        StorageManager storage = new S3StorageManager(awsAccessID, awsSecretKey);
 
-        S3Service s3Service = new RestS3Service(credentials);
-        String overridesBucket = awsConfig.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
+        // upload overrides
+        String overridesContainer = awsConfig.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
         out.println("Uploading overrides from ["+dir.getPath()+"] " +
-                                "to S3 bucket ["+overridesBucket+"] ...");
-        S3Bucket s3OverridesBucket = s3Service.getOrCreateBucket(overridesBucket);
-
-        for(File file : dir.listFiles()) {
-            if(file.getName().endsWith(".groovy")) {
-                S3Object s3o = new S3Object(s3OverridesBucket, file);
+                                "to storage container ["+overridesContainer+"] ...");
+        Container container = storage.createContainer(overridesContainer);
+        for (File file : dir.listFiles()) {
+            if (file.getName().endsWith(".groovy")) {
                 out.println("Sending "+file.getName()+"...");
-                s3o.setKey(clusterName+"/"+file.getName());
-                s3Service.putObject(s3OverridesBucket, s3o);
+                String key = clusterName + '/' + file.getName();
+                container.uploadStorable(key, file);
             }
         }
     }

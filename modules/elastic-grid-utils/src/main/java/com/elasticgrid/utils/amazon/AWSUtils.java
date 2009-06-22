@@ -18,10 +18,9 @@
 
 package com.elasticgrid.utils.amazon;
 
-import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.S3Service;
-import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
+import org.jets3t.service.security.AWSCredentials;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

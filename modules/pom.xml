@@ -26,11 +26,13 @@
         <module>elastic-grid-model</module>
         <!--module>elastic-grid-repository</module-->
         <module>elastic-grid-manager</module>
+        <module>elastic-grid-storage</module>
         <module>cluster-manager-jsb</module>
         <module>elastic-grid-core</module>
         <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>
         <module>amazon-sdb</module>
+        <module>amazon-s3-storage</module>
         <module>amazon-ec2-bootstrapper</module>
         <module>amazon-ec2-discovery</module>
         <module>amazon-ec2-provisioner</module>
