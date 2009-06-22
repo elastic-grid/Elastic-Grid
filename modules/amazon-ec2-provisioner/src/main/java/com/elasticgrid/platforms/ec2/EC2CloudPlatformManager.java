@@ -160,7 +160,7 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         Set<EC2Node> monitorsAndAgents = new HashSet<EC2Node>();
         Iterator<EC2Node> monitorsIterator = monitors.iterator();
         while (monitorsIterator.hasNext()) {
-            EC2Node ec2Node =  monitors.iterator().next();
+            EC2Node ec2Node =  monitorsIterator.next();
             if (ec2Node.getProfile().isAgent()) {
                 monitorsAndAgents.add(ec2Node);
                 monitorsIterator.remove();
@@ -171,63 +171,69 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         int numberOfMonitorsAndAgents = monitorsAndAgents.size();
         int numberOfAgents = agents.size();
 
+        logger.log(Level.FINEST, "Cluster {0} made of {1} monitor(s), {2} agent(s) and {3} monitor(s) and agent(s)",
+                new Object[] { clusterName, numberOfMonitors, numberOfAgents, numberOfMonitorsAndAgents });
+
         List<Future> futures = new LinkedList<Future>();
         for (NodeProfileInfo nodeProfileInfo : clusterTopology) {
-            for (int i = 0; i < nodeProfileInfo.getNumber(); i++) {
-                String ami;
-                switch ((EC2NodeType) nodeProfileInfo.getNodeType()) {
-                    case SMALL:
-                        ami = ami32;
-                        break;
-                    case MEDIUM_HIGH_CPU:
-                        ami = ami32;
-                        break;
-                    case LARGE:
-                        ami = ami64;
-                        break;
-                    case EXTRA_LARGE:
-                        ami = ami64;
-                        break;
-                    case EXTRA_LARGE_HIGH_CPU:
-                        ami = ami64;
-                        break;
-                    default:
-                        throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
-                                nodeProfileInfo.getNodeType().getName()));
+            logger.log(Level.FINEST, "Cluster should be made of {0} node(s) of profile {1} and type {2}",
+                    new Object[] { nodeProfileInfo.getNumber(), nodeProfileInfo.getNodeProfile(), nodeProfileInfo.getNodeType() });
+            String ami;
+            switch ((EC2NodeType) nodeProfileInfo.getNodeType()) {
+                case SMALL:
+                    ami = ami32;
+                    break;
+                case MEDIUM_HIGH_CPU:
+                    ami = ami32;
+                    break;
+                case LARGE:
+                    ami = ami64;
+                    break;
+                case EXTRA_LARGE:
+                    ami = ami64;
+                    break;
+                case EXTRA_LARGE_HIGH_CPU:
+                    ami = ami64;
+                    break;
+                default:
+                    throw new IllegalArgumentException(format("Unexpected Amazon EC2 instance type '%s'",
+                            nodeProfileInfo.getNodeType().getName()));
+            }
+            int number = 0;
+            Iterator<EC2Node> nodesIterator = null;
+            switch (nodeProfileInfo.getNodeProfile()) {
+                case MONITOR:
+                    number = nodeProfileInfo.getNumber() - numberOfMonitors;
+                    nodesIterator = monitors.iterator();
+                    break;
+                case MONITOR_AND_AGENT:
+                    number = nodeProfileInfo.getNumber() - numberOfMonitorsAndAgents;
+                    nodesIterator = monitorsAndAgents.iterator();
+                    break;
+                case AGENT:
+                    number = nodeProfileInfo.getNumber() - numberOfAgents;
+                    nodesIterator = agents.iterator();
+                    break;
+            }
+
+            if (number > 0) {
+                logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional node(s) of profile {1}...",
+                        new Object[] { clusterName, number, nodeProfileInfo.getNodeProfile() });
+                String override = null;
+                if (nodeProfileInfo.hasOverride())
+                    override = "s3://" + overridesBucket;
+                for (int i = 0; i < number; i++) {
+                    futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
+                            nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
+                            override, ami, awsAccessID, awsSecretKey, awsSecured)));
                 }
-                int number = 0;
-                Iterator<EC2Node> nodesIterator = null;
-                switch (nodeProfileInfo.getNodeProfile()) {
-                    case MONITOR:
-                        number = numberOfMonitors - nodeProfileInfo.getNumber();
-                        nodesIterator = monitors.iterator();
-                        break;
-                    case MONITOR_AND_AGENT:
-                        number = numberOfMonitorsAndAgents - nodeProfileInfo.getNumber();
-                        nodesIterator = monitorsAndAgents.iterator();
-                        break;
-                    case AGENT:
-                        number = numberOfAgents - nodeProfileInfo.getNumber();
-                        nodesIterator = agents.iterator();
-                        break;
-                }
-                if (number > 0) {
-                    logger.log(Level.INFO, "Scaling cluster ''{0}'' with {1} additional node(s)...", new Object[]{clusterName, number });
-                    String override = null;
-                    if (nodeProfileInfo.hasOverride())
-                        override = "s3://" + overridesBucket;
-                    for (int j = 0; j < number; i++) {
-                        futures.add(executor.submit(new StartInstanceTask(nodeInstantiator, clusterName,
-                                nodeProfileInfo.getNodeProfile(), (EC2NodeType) nodeProfileInfo.getNodeType(),
-                                override, ami, awsAccessID, awsSecretKey, awsSecured)));
-                    }
-                } else {
-                    logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s)...", new Object[]{clusterName, Math.abs(number) });
-                    int numberToStop = Math.abs(number);
-                    while (numberToStop > 0 && nodesIterator.hasNext()) {
-                        EC2Node node = nodesIterator.next();
-                        futures.add(executor.submit(new StopInstanceTask(nodeInstantiator, node.getInstanceID())));
-                    }
+            } else {
+                logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s) of profile {2}...",
+                        new Object[] { clusterName, Math.abs(number), nodeProfileInfo.getNodeProfile() });
+                int numberToStop = Math.abs(number);
+                while (numberToStop > 0 && nodesIterator.hasNext()) {
+                    EC2Node node = nodesIterator.next();
+                    futures.add(executor.submit(new StopInstanceTask(nodeInstantiator, node.getInstanceID())));
                 }
             }
         }

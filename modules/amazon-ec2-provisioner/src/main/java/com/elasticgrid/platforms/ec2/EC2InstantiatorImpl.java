@@ -30,12 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang.StringUtils;
 
 public class EC2InstantiatorImpl implements EC2Instantiator {
     private Jec2 jec2;
     private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
 
     public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
+        if (StringUtils.isEmpty(imageID))
+            throw new IllegalArgumentException("imageID can't be null");
         EC2NodeType instanceType = (EC2NodeType) options[0];
         logger.log(Level.FINER, "Starting {0} Amazon EC2 instance from image ''{1}'': keyName={2}, groups={3}, userdata={4}, instanceType={5}",
                 new Object[] { minCount, imageID, keyName, groupSet, userData, instanceType });

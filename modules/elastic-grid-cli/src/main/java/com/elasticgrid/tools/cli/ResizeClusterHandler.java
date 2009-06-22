@@ -192,45 +192,44 @@ public class ResizeClusterHandler extends AbstractClusterHandler implements Opti
                 getIntegerResponse("Number of Monitors: ", br, out);
 
             String[] types = {"s", "m", "l", "xl", ""};
+            String monType = "s";
             if (numMonitors > 0) {
-                String monType =
+                monType =
                     getValidResponse("Monitor Machine type [s,m,l,xl] (s): ",
                                      types,
                                      "s",
                                      br,
                                      out);
-                list.add(new NodeProfileInfo(NodeProfile.MONITOR,
-                                             translateToNodeType(monType),
-                                             numMonitors));
             }
+            list.add(new NodeProfileInfo(NodeProfile.MONITOR, translateToNodeType(monType), numMonitors));
 
             int numAgents =
                 getIntegerResponse("Number of Agents: ", br, out);
+            String agentType = "s";
             if (numAgents > 0) {
-                String agentType =
+                agentType =
                     getValidResponse("Agent Machine type [s,m,l,xl] (s): ",
                                      types,
                                      "s",
                                      br,
                                      out);
-                list.add(new NodeProfileInfo(NodeProfile.AGENT,
-                                             translateToNodeType(agentType),
-                                             numAgents));
             }
+            list.add(new NodeProfileInfo(NodeProfile.AGENT, translateToNodeType(agentType), numAgents));
 
             int numMonAgents =
                 getIntegerResponse("Number of Monitor Agents: ", br, out);
+            String monAgentType = "s";
             if (numMonAgents > 0) {
-                String monAgentType =
+                monAgentType =
                     getValidResponse("Monitor Agent Machine type [s,m,l,xl] (s): ",
                                      types,
                                      "s",
                                      br,
                                      out);
-                list.add(new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT,
+            }
+            list.add(new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT,
                                              translateToNodeType(monAgentType),
                                              numMonAgents));
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
