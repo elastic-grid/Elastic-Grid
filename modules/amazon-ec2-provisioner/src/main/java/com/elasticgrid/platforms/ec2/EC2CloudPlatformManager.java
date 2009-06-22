@@ -25,6 +25,7 @@ import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Discovery;
 import com.elasticgrid.model.NodeProfileInfo;
+import com.elasticgrid.model.ClusterNotFoundException;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.ec2.EC2Node;
 import com.elasticgrid.model.ec2.EC2NodeType;
@@ -150,6 +151,9 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         // inspect the current cluster in order to figure out its topology
         EC2Cluster cluster = cluster(clusterName);
 
+        if (cluster.getNodes().isEmpty())
+            throw new ClusterNotFoundException(clusterName);
+
         Set<EC2Node> monitors = cluster.getMonitorNodes();
         Set<EC2Node> agents = cluster.getAgentNodes();
         // figure out which MONITORs are actually MONITOR_AND_AGENT and update the MONITOR set
@@ -220,7 +224,7 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
                 } else {
                     logger.log(Level.INFO, "Decreasing cluster ''{0}'' by {1} node(s)...", new Object[]{clusterName, Math.abs(number) });
                     int numberToStop = Math.abs(number);
-                    while (numberToStop > 0) {
+                    while (numberToStop > 0 && nodesIterator.hasNext()) {
                         EC2Node node = nodesIterator.next();
                         futures.add(executor.submit(new StopInstanceTask(nodeInstantiator, node.getInstanceID())));
                     }
