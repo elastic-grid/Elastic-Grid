@@ -46,6 +46,17 @@ public class StartInstanceTask implements Callable<List<String>> {
     public StartInstanceTask(EC2Instantiator nodeInstantiator, String clusterName, NodeProfile profile,
                              EC2NodeType instanceType, String override, String ami,
                              String awsAccessID, String awsSecretKey, boolean awsSecured) throws ClusterException {
+        if (nodeInstantiator == null)
+            throw new IllegalArgumentException("The node instantiator can't be null!");
+        if (StringUtils.isEmpty(clusterName))
+            throw new IllegalArgumentException("The cluster name can't be null!");
+        if (profile == null)
+            throw new IllegalArgumentException("The node profile can't be null!");
+        if (instanceType == null)
+            throw new IllegalArgumentException("The instance type can't be null!");
+        if (StringUtils.isEmpty(ami))
+            throw new IllegalArgumentException("The AMI can't be null!");
+
         this.nodeInstantiator = nodeInstantiator;
         this.clusterName = clusterName;
         this.profile = profile;
