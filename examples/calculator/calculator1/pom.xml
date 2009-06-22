@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid.examples.calculator</groupId>
+        <artifactId>calculator-examples</artifactId>
+        <version>0.9.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>calculator1</artifactId>
+    <packaging>oar</packaging>
+    <name>Examples :: Calculator :: Version 1</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <version>4.0-M3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>cybernode</artifactId>
+            <version>4.0-M3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>monitor</artifactId>
+            <version>4.0-M3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>boot</artifactId>
+            <version>4.0-M3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject.tools</groupId>
+            <artifactId>cli</artifactId>
+            <version>4.0-M3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.6</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jini</groupId>
+            <artifactId>tools</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-rio-plugin</artifactId>
+                <version>4.0-M3-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <environment>
+                        <rio.home>${env.RIO_HOME}</rio.home>
+                        <jini.home>${env.JINI_HOME}</jini.home>
+                    </environment>
+                    <oarName>calculator1</oarName>
+                    <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
+                    <!--<opstring-test>${basedir}/src/test/conf/calculator.groovy</opstring-test>-->
+
+                    <implementationIns>
+                        <implementationIn>calculator</implementationIn>
+                    </implementationIns>
+                    <implementationTopclasses>
+                        <implementationTopclass>calculator.service.CalculatorImpl</implementationTopclass>
+                        <implementationTopclass>calculator.service.AddImpl</implementationTopclass>
+                        <implementationTopclass>calculator.service.SubtractImpl</implementationTopclass>
+                        <implementationTopclass>calculator.service.DivideImpl</implementationTopclass>
+                        <implementationTopclass>calculator.service.MultiplyImpl</implementationTopclass>
+                    </implementationTopclasses>
+
+                    <clientIns>
+                        <clientIn>calculator</clientIn>
+                    </clientIns>
+                    <clientTopclasses>
+                        <clientTopclass>calculator.Calculator</clientTopclass>
+                        <clientTopclass>calculator.Add</clientTopclass>
+                        <clientTopclass>calculator.Subtract</clientTopclass>
+                        <clientTopclass>calculator.Divide</clientTopclass>
+                        <clientTopclass>calculator.Multiply</clientTopclass>
+                    </clientTopclasses>
+
+                    <downloadableIns>
+                        <downloadableIn>calculator</downloadableIn>
+                    </downloadableIns>
+                    <downloadableTopclasses>
+                        <downloadableTopclass>calculator.Calculator</downloadableTopclass>
+                        <downloadableTopclass>calculator.Add</downloadableTopclass>
+                        <downloadableTopclass>calculator.Subtract</downloadableTopclass>
+                        <downloadableTopclass>calculator.Divide</downloadableTopclass>
+                        <downloadableTopclass>calculator.Multiply</downloadableTopclass>
+                    </downloadableTopclasses>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>*/**IT*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>failsafe-maven-plugin</artifactId>
+                <version>2.4.3-alpha-1</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <argLine>-Dopstring=${basedir}/src/test/conf/calculator.groovy -DRIO_HOME=${env.RIO_HOME}</argLine>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>rio</id>
+            <url>http://www.rio-project.org/maven2</url>
+        </repository>
+        <repository>
+            <id>elastic-grid</id>
+            <url>http://maven.elastic-grid.com</url>
+        </repository>
+    </repositories>
+
+
+</project>
+
