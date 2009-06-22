@@ -24,11 +24,9 @@ import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link Container} providing support for Amazon S3.
