@@ -19,11 +19,17 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.storage.StorageManager;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.IOException;
+import net.jini.config.ConfigurationException;
 
 abstract class AbstractHandler implements OptionHandler {
-    public ClusterManager getClusterManager() throws IOException {
+    protected ClusterManager getClusterManager() throws IOException {
         return CLI.getClusterManager();
+    }
+
+    protected StorageManager getStorageManager() throws ConfigurationException {
+        return (StorageManager) CLI.getInstance().getConfiguration().getEntry(CLI.COMPONENT, "", StorageManager.class);
     }
 }
