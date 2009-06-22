@@ -66,7 +66,7 @@ public class MossoContainer implements Container {
             mosso.login();
             // upload the file
             // todo: figure out the content-type!!
-            mosso.storeObjectAs(getName(), file, "content-type??", file.getName());
+            mosso.storeObjectAs(getName(), file, "content-type??", key);
             // retrieve mosso object
             List<FilesObject> objects = mossoContainer.getObjects(key);
             FilesObject object = null;
