@@ -23,8 +23,6 @@ import com.elasticgrid.model.NodeProfileInfo;
 import com.elasticgrid.model.NodeType;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.storage.Container;
-import com.elasticgrid.storage.StorageManager;
-import com.elasticgrid.storage.amazon.s3.S3StorageManager;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -205,23 +203,12 @@ public abstract class AbstractClusterHandler extends AbstractHandler {
     }
 
     protected void uploadOverrides(File dir, String clusterName, PrintStream out) throws Exception {
-        // initialize storage manager
-        Properties awsConfig = AWSUtils.loadEC2Configuration();
-        String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
-        String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);
-        if (awsAccessID == null) {
-            throw new IllegalArgumentException("Could not find AWS Access ID");
-        }
-        if (awsSecretKey == null) {
-            throw new IllegalArgumentException("Could not find AWS Secret Key");
-        }
-        StorageManager storage = new S3StorageManager(awsAccessID, awsSecretKey);
-
         // upload overrides
+        Properties awsConfig = AWSUtils.loadEC2Configuration();
         String overridesContainer = awsConfig.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
         out.println("Uploading overrides from ["+dir.getPath()+"] " +
                                 "to storage container ["+overridesContainer+"] ...");
-        Container container = storage.createContainer(overridesContainer);
+        Container container = getStorageManager().createContainer(overridesContainer);
         for (File file : dir.listFiles()) {
             if (file.getName().endsWith(".groovy")) {
                 out.println("Sending "+file.getName()+"...");
@@ -230,5 +217,4 @@ public abstract class AbstractClusterHandler extends AbstractHandler {
             }
         }
     }
-
 }

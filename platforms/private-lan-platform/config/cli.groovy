@@ -1,4 +1,3 @@
-
 /**
  * Configuration for the EG Command Line Interface
  */
@@ -11,39 +10,57 @@ import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
 import org.rioproject.resources.client.DiscoveryManagementPool.SharedDiscoveryManager
 import org.rioproject.config.Constants
 import net.jini.discovery.DiscoveryGroupManagement
-
-@Component('net.jini.discovery.LookupDiscovery')
-class ClientDiscoveryConfig {
-    long multicastAnnouncementInterval=5000
-}
+import com.elasticgrid.storage.StorageManager
+import com.elasticgrid.storage.amazon.s3.S3StorageManager
+import com.elasticgrid.utils.amazon.AWSUtils
+import com.elasticgrid.config.EC2Configuration
 
 /**
  * Configures groups used by CLI.
  */
-@Component('org.rioproject.tools.cli')
+@Component ('org.rioproject.tools.cli')
 class CLIConfig {
-    String[] getGroups() {
-        def groups
-        if(System.getProperty(Constants.GROUPS_PROPERTY_NAME)==null)
-            groups = DiscoveryGroupManagement.ALL_GROUPS
-        else
-            groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)]
-        return groups as String[]
+  StorageManager getStorageManager() {
+    Properties awsConfig = AWSUtils.loadEC2Configuration()
+    String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID)
+    String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY)
+    if (awsAccessID == null) {
+      throw new IllegalArgumentException("Could not find AWS Access ID")
     }
+    if (awsSecretKey == null) {
+      throw new IllegalArgumentException("Could not find AWS Secret Key")
+    }
+    StorageManager storage = new S3StorageManager(awsAccessID, awsSecretKey)
+    return storage
+  }
+
+  String[] getGroups() {
+    def groups
+    if (System.getProperty(Constants.GROUPS_PROPERTY_NAME) == null)
+      groups = DiscoveryGroupManagement.ALL_GROUPS
+    else
+      groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)]
+    return groups as String[]
+  }
 }
 
 /*
  * Configures the SharedDiscoveryManager class to create
  */
-@Component('org.rioproject.resources.client.DiscoveryManagementPool')
+@Component ('org.rioproject.resources.client.DiscoveryManagementPool')
 class CLIDiscoveryManagerConfig {
-    String getSharedDiscoveryManager() {
-        String manager
-        def groups = System.getProperty(Constants.GROUPS_PROPERTY_NAME)
-        if(!groups)
-            manager = SharedDiscoveryManager.class.getName()
-        else
-            manager = EC2LookupDiscoveryManager.class.getName()
-        return manager
-    }
+  String getSharedDiscoveryManager() {
+    String manager
+    def groups = System.getProperty(Constants.GROUPS_PROPERTY_NAME)
+    if (!groups)
+      manager = SharedDiscoveryManager.class.getName()
+    else
+      manager = EC2LookupDiscoveryManager.class.getName()
+    return manager
+  }
+}
+
+@Component ('net.jini.discovery.LookupDiscovery')
+class ClientDiscoveryConfig {
+  long multicastAnnouncementInterval = 5000
 }
