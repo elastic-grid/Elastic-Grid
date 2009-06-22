@@ -16,6 +16,7 @@
         <module>calculator1</module>
         <module>calculator2</module>
         <module>calculator-slow-client</module>
+        <module>calculator-fast-client</module>
     </modules>
 
 </project>

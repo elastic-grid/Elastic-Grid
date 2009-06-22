@@ -41,6 +41,7 @@ public class CalculatorClient {
             }
         });
     }
+
     static Calculator calculator;
 
     public static void discover() throws IOException, InterruptedException {
@@ -63,11 +64,15 @@ public class CalculatorClient {
         CalculatorClient.discover();
 
         for (int i = 0; i < MAX_OPS; i++) {
-            calculator.add(3, 2);
-            calculator.subtract(3, 2);
-            calculator.multiply(3, 2);
-            calculator.divide(3, 2);
-            Thread.sleep(100);
+            try {
+                System.out.println(calculator.add(3, 2));
+                System.out.println(calculator.subtract(3, 2));
+                System.out.println(calculator.multiply(3, 2));
+                System.out.println(calculator.divide(3, 2));
+            } catch (Throwable t) {
+                t.printStackTrace();
+                CalculatorClient.discover();
+            }
         }
     }
 }

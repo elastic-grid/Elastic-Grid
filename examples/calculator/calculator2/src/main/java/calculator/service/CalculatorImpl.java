@@ -19,6 +19,9 @@ import calculator.*;
 
 import java.rmi.RemoteException;
 
+import org.rioproject.watch.StopWatch;
+import org.rioproject.core.jsb.ServiceBeanContext;
+
 /**
  * An implementation of the Calculator service.
  */
@@ -28,6 +31,7 @@ public class CalculatorImpl implements Calculator {
     private Multiply multiplyService;
     private Divide divideService;
     private Modulo moduloService;
+    private long time;
 
     public void setAdd(Add addService) {
         this.addService = addService;
@@ -50,23 +54,41 @@ public class CalculatorImpl implements Calculator {
     }
 
     public double add(double n1, double n2) throws RemoteException {
-        return(addService.add(n1, n2));
+        long t0 = System.nanoTime();
+        double result = addService.add(n1, n2);
+        time = System.nanoTime()-t0;
+        return result;
     }
 
     public double subtract(double n1, double n2) throws RemoteException {
-        return(subtractService.subtract(n1, n2));
+        long t0 = System.nanoTime();
+        double result = subtractService.subtract(n1, n2);
+        time = System.nanoTime()-t0;
+        return result;
     }
 
     public double multiply(double n1, double n2) throws RemoteException {
-        return(multiplyService.multiply(n1, n2));
+        long t0 = System.nanoTime();
+        double result = multiplyService.multiply(n1, n2);
+        time = System.nanoTime()-t0;
+        return result;
     }
 
     public double divide(double n1, double n2) throws RemoteException {
-        return(divideService.divide(n1, n2));
+        long t0 = System.nanoTime();
+        double result = divideService.divide(n1, n2);
+        time = System.nanoTime()-t0;
+        return result;
     }
 
     public double nod(double n1, double n2) throws RemoteException {
-        return(moduloService.mod(n1, n2));
+        long t0 = System.nanoTime();
+        double result = moduloService.mod(n1, n2);
+        time = System.nanoTime()-t0;
+        return result;
     }
 
+    public long getTime() {
+        return time;
+    }
 }

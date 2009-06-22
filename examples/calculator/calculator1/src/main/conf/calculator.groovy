@@ -1,5 +1,5 @@
 deployment(name:'Calculator 1') {
-    groups 'calculator'
+    groups 'elastic-grid'
 
     resources id:'impl.jars', 'calculator1_0.9.1/lib/calculator1-0.9.1-impl.jar'
     resources id:'client.jars', 'calculator1_0.9.1/lib/calculator1-0.9.1-dl.jar'
@@ -30,6 +30,11 @@ deployment(name:'Calculator 1') {
             implementation(class: "calculator.service.${s}Impl") {
                 resources ref:'impl.jars'
             }
+          /*
+            sla(id: 'CPU', low:0.2, high:0.8) {
+              policy type: 'scaling', max: 3, lowerDampener: 3000, upperDampener: 3000
+            }
+          */
             maintain 1
         }
     }

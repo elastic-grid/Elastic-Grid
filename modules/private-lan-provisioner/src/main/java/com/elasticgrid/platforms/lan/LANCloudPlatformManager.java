@@ -53,7 +53,7 @@ public class LANCloudPlatformManager extends AbstractCloudPlatformManager<LANClu
     }
 
     public Collection<LANCluster> findClusters() throws ClusterException, RemoteException {
-        logger.log(Level.INFO, "Searching for clusters running on the LAN...");
+        logger.log(Level.FINE, "Searching for clusters running on the LAN...");
         Collection<String> clustersNames = clusterLocator.findClusters();
         List<LANCluster> clusters = new ArrayList<LANCluster>(clustersNames.size());
         for (String cluster : clustersNames) {
