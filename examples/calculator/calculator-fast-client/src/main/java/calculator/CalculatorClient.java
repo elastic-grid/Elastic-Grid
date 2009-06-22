@@ -65,10 +65,10 @@ public class CalculatorClient {
 
         for (int i = 0; i < MAX_OPS; i++) {
             try {
-                calculator.add(3, 2);
-                calculator.subtract(3, 2);
-                calculator.multiply(3, 2);
-                calculator.divide(3, 2);
+                System.out.println(calculator.add(3, 2));
+                System.out.println(calculator.subtract(3, 2));
+                System.out.println(calculator.multiply(3, 2));
+                System.out.println(calculator.divide(3, 2));
             } catch (Throwable t) {
                 t.printStackTrace();
                 CalculatorClient.discover();
