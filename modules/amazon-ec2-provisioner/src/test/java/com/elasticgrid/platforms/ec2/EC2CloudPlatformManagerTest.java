@@ -50,7 +50,8 @@ public class EC2CloudPlatformManagerTest {
     @Test(expectedExceptions = ClusterAlreadyRunningException.class)
     public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
         mockEC2 = EasyMock.createMock(EC2Instantiator.class);
-        EasyMock.expect(mockEC2.startInstances(null, 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
+        EasyMock.expect(mockEC2.startInstances(egProps.getProperty(EC2Configuration.AWS_EC2_AMI32),
+                1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
                 "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
                         "AWS_EC2_AMI32=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI32) + "," +
                         "AWS_EC2_AMI64=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI64) + "," +
@@ -80,7 +81,10 @@ public class EC2CloudPlatformManagerTest {
     @BeforeTest
     @SuppressWarnings("unchecked")
     public void setUpClusterManager() throws IOException {
+        Properties config = AWSUtils.loadEC2Configuration();
         cloudPlatformManager = new EC2CloudPlatformManager();
+        cloudPlatformManager.setAmi32(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
+        cloudPlatformManager.setAmi64(config.getProperty(EC2Configuration.AWS_EC2_AMI64));
         egProps = AWSUtils.loadEC2Configuration();
     }
 
