@@ -20,6 +20,7 @@ package com.elasticgrid.storage.amazon.s3;
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.Storable;
 import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.StorableNotFoundException;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
@@ -56,6 +57,18 @@ public class S3Container implements Container {
             return storables;
         } catch (S3ServiceException e) {
             throw new StorageException("Can't list storables", e);
+        }
+    }
+
+    public Storable findStorableByName(String name) throws StorableNotFoundException, StorageException {
+        try {
+            S3Object object = s3.getObject(bucket, name);
+            return new S3Storable(s3, object);
+        } catch (S3ServiceException e) {
+            if ("The specified key does not exist.".equals(e.getMessage()))
+                throw new StorableNotFoundException(name);
+            else
+                throw new StorageException("Can't get storable", e);
         }
     }
 

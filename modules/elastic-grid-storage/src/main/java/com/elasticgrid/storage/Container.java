@@ -39,6 +39,15 @@ public interface Container {
     List<Storable> listStorables() throws StorageException;
 
     /**
+     * Retrieve a {@link Storable} by name (also called key).
+     * @param name the name of the storable
+     * @return the {@link Storable} found
+     * @throws StorableNotFoundException if there is no storable having that name
+     * @throws StorageException if the storable can't be retreived
+     */
+    Storable findStorableByName(String name) throws StorableNotFoundException, StorageException;
+
+    /**
      * Upload a {@link Storable} from a {@link File}.
      * @param key the {@link Storable} key
      * @param file the file to upload as a {@link Storable}

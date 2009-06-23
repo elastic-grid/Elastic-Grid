@@ -46,7 +46,7 @@ public interface StorageManager {
     Container createContainer(String name) throws StorageException;
 
     /**
-     * Delete a container.
+     * Recursively delete a container.
      * @param name the name of the container to delete
      * @throws ContainerNotFoundException if there is no container named <tt>name</tt>
      * @throws StorageException if the container can't be deleted

@@ -24,6 +24,7 @@ import com.elasticgrid.storage.ContainerNotFoundException;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
+import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import java.util.List;
@@ -74,6 +75,9 @@ public class S3StorageManager implements StorageManager {
             S3Bucket bucket;
             if ((bucket = s3.getBucket(name)) == null)
                 throw new ContainerNotFoundException(name);
+            S3Object[] objects = s3.listObjects(bucket);
+            for (S3Object o : objects)
+                s3.deleteObject(bucket, o.getKey());
             s3.deleteBucket(bucket);
         } catch (S3ServiceException e) {
             throw new StorageException("Can't delete container", e);
