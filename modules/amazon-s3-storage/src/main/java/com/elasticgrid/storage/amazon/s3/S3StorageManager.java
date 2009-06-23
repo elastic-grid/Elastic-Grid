@@ -20,6 +20,7 @@ package com.elasticgrid.storage.amazon.s3;
 import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.ContainerNotFoundException;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
@@ -27,6 +28,8 @@ import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * {@link StorageManager} providing support for Amazon S3.
@@ -34,7 +37,8 @@ import java.util.ArrayList;
  * @author Jerome Bernard
  */
 public class S3StorageManager implements StorageManager {
-    private S3Service s3;
+    private final S3Service s3;
+    private final Logger logger = Logger.getLogger(S3StorageManager.class.getName());
 
     public S3StorageManager(String awsAccessId, String awsSecretKey) throws S3ServiceException {
         s3 = new RestS3Service(new AWSCredentials(awsAccessId, awsSecretKey));
@@ -42,6 +46,7 @@ public class S3StorageManager implements StorageManager {
 
     public List<Container> getContainers() throws StorageException {
         try {
+            logger.log(Level.FINE, "Retrieving list of S3 buckets");
             S3Bucket[] buckets = s3.listAllBuckets();
             List<Container> containers = new ArrayList<Container>(buckets.length);
             for (S3Bucket bucket : buckets) {
@@ -55,10 +60,23 @@ public class S3StorageManager implements StorageManager {
 
     public Container createContainer(String name) throws StorageException {
         try {
+            logger.log(Level.FINE, "Creating S3 bucket {0}", name);
             S3Bucket bucket = s3.createBucket(name);
             return new S3Container(s3, bucket);
         } catch (S3ServiceException e) {
             throw new StorageException("Can't create container", e);
+        }
+    }
+
+    public void deleteContainer(String name) throws StorageException {
+        try {
+            logger.log(Level.FINE, "Deleting S3 bucket {0}", name);
+            S3Bucket bucket;
+            if ((bucket = s3.getBucket(name)) == null)
+                throw new ContainerNotFoundException(name);
+            s3.deleteBucket(bucket);
+        } catch (S3ServiceException e) {
+            throw new StorageException("Can't delete container", e);
         }
     }
 }

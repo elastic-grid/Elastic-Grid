@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage;
+package com.elasticgrid.config;
 
-public class StorageException extends Exception {
-    public StorageException(String message) {
-        super(message);
-    }
-
-    public StorageException(String message, Throwable cause) {
-        super(message, cause);
-    }
+/**
+ * Specific Mosso configuration properties.
+ * @author Jerome Bernard
+ */
+public interface MossoConfiguration extends GenericConfiguration {
+    public static final String LOGIN = "eg.mosso.login";
+    public static final String PASSWORD = "eg.mosso.password";
 }

@@ -17,12 +17,8 @@
  */
 package com.elasticgrid.storage;
 
-public class StorageException extends Exception {
-    public StorageException(String message) {
-        super(message);
-    }
-
-    public StorageException(String message, Throwable cause) {
-        super(message, cause);
+public class ContainerNotFoundException extends StorageException {
+    public ContainerNotFoundException(String containerName) {
+        super("Can't find container " + containerName);
     }
 }

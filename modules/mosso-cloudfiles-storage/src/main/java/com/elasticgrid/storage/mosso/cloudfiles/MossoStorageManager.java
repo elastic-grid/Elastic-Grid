@@ -20,10 +20,13 @@ package com.elasticgrid.storage.mosso.cloudfiles;
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.ContainerNotFoundException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * {@link StorageManager} providing support for Mosso Cloud Files.
@@ -32,6 +35,7 @@ import java.util.List;
  */
 public class MossoStorageManager implements StorageManager {
     private FilesClient mosso;
+    private final Logger logger = Logger.getLogger(MossoStorageManager.class.getName());
 
     public MossoStorageManager(String login, String password) {
         mosso = new FilesClient(login, password);
@@ -39,6 +43,7 @@ public class MossoStorageManager implements StorageManager {
 
     public List<Container> getContainers() throws StorageException {
         try {
+            logger.log(Level.FINE, "Retrieving list of Cloud Files containers");
             mosso.login();
             List<FilesContainer> mossoContainers = mosso.listContainers();
             List<Container> containers = new ArrayList<Container>(mossoContainers.size());
@@ -53,6 +58,7 @@ public class MossoStorageManager implements StorageManager {
 
     public Container createContainer(String name) throws StorageException {
         try {
+            logger.log(Level.FINE, "Creating Clouds File container {0}", name);
             mosso.login();
             mosso.createContainer(name);
             FilesContainer mossoContainer = null;
@@ -63,6 +69,17 @@ public class MossoStorageManager implements StorageManager {
             return new MossoContainer(mosso, mossoContainer);
         } catch (Exception e) {
             throw new StorageException("Can't create container", e);
+        }
+    }
+
+    public void deleteContainer(String name) throws StorageException {
+        try {
+            logger.log(Level.FINE, "Deleting Cloud Files container {0}", name);
+            mosso.login();
+            if (!mosso.deleteContainer(name))
+                throw new ContainerNotFoundException(name);
+        } catch (Exception e) {
+            throw new StorageException("Can't delete container", e);
         }
     }
 }

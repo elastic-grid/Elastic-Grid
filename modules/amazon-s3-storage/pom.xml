@@ -26,6 +26,15 @@
             <artifactId>jets3t</artifactId>
         </dependency>
 
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-storage</artifactId>
+            <version>${pom.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
