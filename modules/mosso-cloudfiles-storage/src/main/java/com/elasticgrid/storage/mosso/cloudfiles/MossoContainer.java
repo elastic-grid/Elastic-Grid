@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.httpclient.HttpException;
+import javax.activation.MimetypesFileTypeMap;
 
 /**
  * {@link Container} providing support for Mosso Cloud Files.
@@ -37,10 +38,12 @@ import org.apache.commons.httpclient.HttpException;
 public class MossoContainer implements Container {
     private final FilesClient mosso;
     private final FilesContainer mossoContainer;
+    private final MimetypesFileTypeMap mimes;
 
     public MossoContainer(final FilesClient mosso, final FilesContainer mossoContainer) {
         this.mosso = mosso;
         this.mossoContainer = mossoContainer;
+        this.mimes = new MimetypesFileTypeMap();
     }
 
     public String getName() {
@@ -65,8 +68,7 @@ public class MossoContainer implements Container {
         try {
             mosso.login();
             // upload the file
-            // todo: figure out the content-type!!
-            mosso.storeObjectAs(getName(), file, "content-type??", key);
+            mosso.storeObjectAs(getName(), file, mimes.getContentType(file), key);
             // retrieve mosso object
             List<FilesObject> objects = mossoContainer.getObjects(key);
             FilesObject object = null;
