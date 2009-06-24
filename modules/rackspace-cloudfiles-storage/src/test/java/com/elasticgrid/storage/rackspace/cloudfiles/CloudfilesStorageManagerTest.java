@@ -15,35 +15,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage.mosso.cloudfiles;
+package com.elasticgrid.storage.rackspace.cloudfiles;
 
-import com.elasticgrid.config.EC2Configuration;
-import com.elasticgrid.config.MossoConfiguration;
+import com.elasticgrid.config.RackspaceConfiguration;
 import com.elasticgrid.storage.AbstractStorageManagerTest;
 import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorageManager;
-import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.utils.mosso.MossoUtils;
+import com.elasticgrid.storage.rackspace.CloudFilesStorageManager;
+import com.elasticgrid.utils.mosso.RackspaceUtils;
+
 import java.util.Properties;
 
 /**
- * {@link MossoStorageManager} tests.
+ * {@link com.elasticgrid.storage.rackspace.CloudFilesStorageManager} tests.
  *
  * @author Jerome Bernard
  */
-public class MossoStorageManagerTest extends AbstractStorageManagerTest {
+public class CloudFilesStorageManagerTest extends AbstractStorageManagerTest {
     protected StorageManager getStorageManager() throws StorageException {
         try {
-            Properties mossoConfig = MossoUtils.loadMossoConfiguration();
-            String login = mossoConfig.getProperty(MossoConfiguration.LOGIN);
-            String password = mossoConfig.getProperty(MossoConfiguration.PASSWORD);
+            Properties rackspaceConfig = RackspaceUtils.loadMossoConfiguration();
+            String login = rackspaceConfig.getProperty(RackspaceConfiguration.LOGIN);
+            String password = rackspaceConfig.getProperty(RackspaceConfiguration.PASSWORD);
             if (login == null) {
                 throw new IllegalArgumentException("Could not find Cloud Files login");
             }
             if (password == null) {
                 throw new IllegalArgumentException("Could not find Cloud Files password");
             }
-            return new MossoStorageManager(login, password);
+            return new CloudFilesStorageManager(login, password);
         } catch (Exception e) {
             throw new StorageException("Can't initialize Cloud Files Storage Manager", e);
         }

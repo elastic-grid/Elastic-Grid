@@ -15,23 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage.mosso.cloudfiles;
+package com.elasticgrid.storage.rackspace;
 
 import com.elasticgrid.storage.Storable;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesObject;
 
 /**
- * {@link Storable} providing support for Mosso Cloud Files.
+ * {@link Storable} providing support for Rackspace Cloud Files.
  *
  * @author Jerome Bernard
  */
-public class MossoStorable implements Storable {
-    private final FilesClient mosso;
+public class CloudFilesStorable implements Storable {
+    private final FilesClient rackspace;
     private final FilesObject object;
 
-    public MossoStorable(final FilesClient mosso, final FilesObject object) {
-        this.mosso = mosso;
+    public CloudFilesStorable(final FilesClient rackspace, final FilesObject object) {
+        this.rackspace = rackspace;
         this.object = object;
     }
 

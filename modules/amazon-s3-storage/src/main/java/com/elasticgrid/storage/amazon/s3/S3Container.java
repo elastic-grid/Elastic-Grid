@@ -65,7 +65,7 @@ public class S3Container implements Container {
             S3Object object = s3.getObject(bucket, name);
             return new S3Storable(s3, object);
         } catch (S3ServiceException e) {
-            if ("The specified key does not exist.".equals(e.getMessage()))
+            if ("NoSuchKey".equals(e.getS3ErrorCode()))
                 throw new StorableNotFoundException(name);
             else
                 throw new StorageException("Can't get storable", e);

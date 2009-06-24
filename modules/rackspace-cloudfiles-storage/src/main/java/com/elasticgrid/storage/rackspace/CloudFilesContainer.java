@@ -15,48 +15,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage.mosso.cloudfiles;
+package com.elasticgrid.storage.rackspace;
 
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.Storable;
 import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.StorableNotFoundException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesObject;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
-import java.io.IOException;
-import org.apache.commons.httpclient.HttpException;
+
 import javax.activation.MimetypesFileTypeMap;
 
 /**
- * {@link Container} providing support for Mosso Cloud Files.
+ * {@link Container} providing support for Rackspace Cloud Files.
  *
  * @author Jerome Bernard
  */
-public class MossoContainer implements Container {
-    private final FilesClient mosso;
-    private final FilesContainer mossoContainer;
+public class CloudFilesContainer implements Container {
+    private final FilesClient rackspace;
+    private final FilesContainer rackspaceContainer;
     private final MimetypesFileTypeMap mimes;
 
-    public MossoContainer(final FilesClient mosso, final FilesContainer mossoContainer) {
-        this.mosso = mosso;
-        this.mossoContainer = mossoContainer;
+    public CloudFilesContainer(final FilesClient rackspace, final FilesContainer rackspaceContainer) {
+        this.rackspace = rackspace;
+        this.rackspaceContainer = rackspaceContainer;
         this.mimes = new MimetypesFileTypeMap();
     }
 
     public String getName() {
-        return mossoContainer.getName();
+        return rackspaceContainer.getName();
     }
 
     public List<Storable> listStorables() throws StorageException {
         try {
-            mosso.login();
-            List<FilesObject> objects = mossoContainer.getObjects();
+            rackspace.login();
+            List<FilesObject> objects = rackspaceContainer.getObjects();
             List<Storable> storables = new ArrayList<Storable>(objects.size());
             for (FilesObject object : objects) {
-                storables.add(new MossoStorable(mosso, object));
+                storables.add(new CloudFilesStorable(rackspace, object));
             }
             return storables;
         } catch (Exception e) {
@@ -64,18 +64,31 @@ public class MossoContainer implements Container {
         }
     }
 
+    public Storable findStorableByName(String name) throws StorableNotFoundException, StorageException {
+        try {
+            rackspace.login();
+            List<FilesObject> objects = rackspaceContainer.getObjects(name);
+            if (objects.isEmpty())
+                throw new StorableNotFoundException(name);
+            else
+                return new CloudFilesStorable(rackspace, objects.get(0)); 
+        } catch (Exception e) {
+            throw new StorageException("Can't find storage", e);
+        }
+    }
+
     public Storable uploadStorable(String key, File file) throws StorageException {
         try {
-            mosso.login();
+            rackspace.login();
             // upload the file
-            mosso.storeObjectAs(getName(), file, mimes.getContentType(file), key);
-            // retrieve mosso object
-            List<FilesObject> objects = mossoContainer.getObjects(key);
+            rackspace.storeObjectAs(getName(), file, mimes.getContentType(file), key);
+            // retrieve rackspace object
+            List<FilesObject> objects = rackspaceContainer.getObjects(key);
             FilesObject object = null;
             for (FilesObject o : objects)
                 if (o.getName().equals(file.getName()))
                     object = o;
-            return new MossoStorable(mosso, object);
+            return new CloudFilesStorable(rackspace, object);
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from file", e);
         }

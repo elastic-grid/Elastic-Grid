@@ -21,7 +21,7 @@ package com.elasticgrid.config;
  * Specific Mosso configuration properties.
  * @author Jerome Bernard
  */
-public interface MossoConfiguration extends GenericConfiguration {
-    public static final String LOGIN = "eg.mosso.login";
-    public static final String PASSWORD = "eg.mosso.password";
+public interface RackspaceConfiguration extends GenericConfiguration {
+    public static final String LOGIN = "rackspace.login";
+    public static final String PASSWORD = "rackspace.password";
 }

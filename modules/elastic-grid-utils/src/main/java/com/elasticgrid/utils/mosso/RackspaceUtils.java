@@ -18,8 +18,6 @@
 
 package com.elasticgrid.utils.mosso;
 
-import org.jets3t.service.impl.rest.httpclient.RestS3Service;
-import org.jets3t.service.security.AWSCredentials;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,8 +26,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MossoUtils {
-    private static final Logger logger = Logger.getLogger(MossoUtils.class.getName());
+public class RackspaceUtils {
+    private static final Logger logger = Logger.getLogger(RackspaceUtils.class.getName());
 
     public static boolean isEnvironmentProperlySet() {
         return new File(System.getProperty("user.home") + File.separatorChar + ".eg", "eg.properties").exists()

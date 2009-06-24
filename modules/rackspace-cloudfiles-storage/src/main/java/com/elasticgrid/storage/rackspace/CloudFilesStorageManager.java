@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage.mosso.cloudfiles;
+package com.elasticgrid.storage.rackspace;
 
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.StorageException;
@@ -29,26 +29,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link StorageManager} providing support for Mosso Cloud Files.
+ * {@link StorageManager} providing support for Rackspace Cloud Files.
  *
  * @author Jerome Bernard
  */
-public class MossoStorageManager implements StorageManager {
-    private FilesClient mosso;
-    private final Logger logger = Logger.getLogger(MossoStorageManager.class.getName());
+public class CloudFilesStorageManager implements StorageManager {
+    private FilesClient rackspace;
+    private final Logger logger = Logger.getLogger(CloudFilesStorageManager.class.getName());
 
-    public MossoStorageManager(String login, String password) {
-        mosso = new FilesClient(login, password);
+    public CloudFilesStorageManager(String login, String password) {
+        rackspace = new FilesClient(login, password);
     }
 
     public List<Container> getContainers() throws StorageException {
         try {
             logger.log(Level.FINE, "Retrieving list of Cloud Files containers");
-            mosso.login();
-            List<FilesContainer> mossoContainers = mosso.listContainers();
-            List<Container> containers = new ArrayList<Container>(mossoContainers.size());
-            for (FilesContainer mossoContainer : mossoContainers) {
-                containers.add(new MossoContainer(mosso, mossoContainer));
+            rackspace.login();
+            List<FilesContainer> rackspaceContainers = rackspace.listContainers();
+            List<Container> containers = new ArrayList<Container>(rackspaceContainers.size());
+            for (FilesContainer rackspaceContainer : rackspaceContainers) {
+                containers.add(new CloudFilesContainer(rackspace, rackspaceContainer));
             }
             return containers;
         } catch (Exception e) {
@@ -59,14 +59,14 @@ public class MossoStorageManager implements StorageManager {
     public Container createContainer(String name) throws StorageException {
         try {
             logger.log(Level.FINE, "Creating Clouds File container {0}", name);
-            mosso.login();
-            mosso.createContainer(name);
-            FilesContainer mossoContainer = null;
-            List<FilesContainer> containers = mosso.listContainers();
+            rackspace.login();
+            rackspace.createContainer(name);
+            FilesContainer rackspaceContainer = null;
+            List<FilesContainer> containers = rackspace.listContainers();
             for (FilesContainer container : containers)
                 if (container.getName().equals(name))
-                    mossoContainer = container;
-            return new MossoContainer(mosso, mossoContainer);
+                    rackspaceContainer = container;
+            return new CloudFilesContainer(rackspace, rackspaceContainer);
         } catch (Exception e) {
             throw new StorageException("Can't create container", e);
         }
@@ -75,8 +75,8 @@ public class MossoStorageManager implements StorageManager {
     public void deleteContainer(String name) throws StorageException {
         try {
             logger.log(Level.FINE, "Deleting Cloud Files container {0}", name);
-            mosso.login();
-            if (!mosso.deleteContainer(name))
+            rackspace.login();
+            if (!rackspace.deleteContainer(name))
                 throw new ContainerNotFoundException(name);
         } catch (Exception e) {
             throw new StorageException("Can't delete container", e);
