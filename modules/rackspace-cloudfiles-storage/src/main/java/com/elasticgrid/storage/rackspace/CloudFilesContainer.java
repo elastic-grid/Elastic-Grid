@@ -81,13 +81,17 @@ public class CloudFilesContainer implements Container {
         try {
             rackspace.login();
             // upload the file
-            rackspace.storeObjectAs(getName(), file, mimes.getContentType(file), key);
+//            rackspace.storeObjectAs(getName(), file, mimes.getContentType(file), key);
+            rackspace.storeObject(getName(), file, mimes.getContentType(file));
             // retrieve rackspace object
             List<FilesObject> objects = rackspaceContainer.getObjects(key);
+            assert objects.size() > 0 : "The uploaded file is missing!"; 
             FilesObject object = null;
             for (FilesObject o : objects)
                 if (o.getName().equals(file.getName()))
                     object = o;
+                else
+                    System.out.println("Found instead " + o.getName());
             return new CloudFilesStorable(rackspace, object);
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from file", e);

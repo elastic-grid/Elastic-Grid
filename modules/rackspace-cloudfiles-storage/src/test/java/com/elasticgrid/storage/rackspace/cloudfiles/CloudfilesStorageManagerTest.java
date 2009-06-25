@@ -22,7 +22,7 @@ import com.elasticgrid.storage.AbstractStorageManagerTest;
 import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.rackspace.CloudFilesStorageManager;
-import com.elasticgrid.utils.mosso.RackspaceUtils;
+import com.elasticgrid.utils.rackspace.RackspaceUtils;
 
 import java.util.Properties;
 
@@ -36,7 +36,7 @@ public class CloudFilesStorageManagerTest extends AbstractStorageManagerTest {
         try {
             Properties rackspaceConfig = RackspaceUtils.loadMossoConfiguration();
             String login = rackspaceConfig.getProperty(RackspaceConfiguration.LOGIN);
-            String password = rackspaceConfig.getProperty(RackspaceConfiguration.PASSWORD);
+            String password = rackspaceConfig.getProperty(RackspaceConfiguration.API_KEY);
             if (login == null) {
                 throw new IllegalArgumentException("Could not find Cloud Files login");
             }

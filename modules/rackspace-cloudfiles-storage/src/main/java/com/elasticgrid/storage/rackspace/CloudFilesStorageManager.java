@@ -23,10 +23,12 @@ import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.ContainerNotFoundException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
+import com.mosso.client.cloudfiles.FilesNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 /**
  * {@link StorageManager} providing support for Rackspace Cloud Files.
@@ -37,8 +39,8 @@ public class CloudFilesStorageManager implements StorageManager {
     private FilesClient rackspace;
     private final Logger logger = Logger.getLogger(CloudFilesStorageManager.class.getName());
 
-    public CloudFilesStorageManager(String login, String password) {
-        rackspace = new FilesClient(login, password);
+    public CloudFilesStorageManager(String login, String apiKey) throws IOException {
+        rackspace = new FilesClient(login, apiKey);
     }
 
     public List<Container> getContainers() throws StorageException {
@@ -76,8 +78,9 @@ public class CloudFilesStorageManager implements StorageManager {
         try {
             logger.log(Level.FINE, "Deleting Cloud Files container {0}", name);
             rackspace.login();
-            if (!rackspace.deleteContainer(name))
-                throw new ContainerNotFoundException(name);
+            rackspace.deleteContainer(name);
+        } catch (FilesNotFoundException e) {
+            throw new ContainerNotFoundException(name);
         } catch (Exception e) {
             throw new StorageException("Can't delete container", e);
         }

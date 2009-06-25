@@ -22,6 +22,6 @@ package com.elasticgrid.config;
  * @author Jerome Bernard
  */
 public interface RackspaceConfiguration extends GenericConfiguration {
-    public static final String LOGIN = "rackspace.login";
-    public static final String PASSWORD = "rackspace.password";
+    public static final String LOGIN = "rackspace.username";
+    public static final String API_KEY = "rackspace.apiKey";
 }

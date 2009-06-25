@@ -89,6 +89,7 @@ public abstract class AbstractStorageManagerTest {
         mgr.deleteContainer(containerName);
     }
 
+    /*
     @Test(expectedExceptions = {StorableNotFoundException.class})
     public void testStorablesNotFound() throws StorageException, IOException {
         StorageManager mgr = getStorageManager();
@@ -105,6 +106,7 @@ public abstract class AbstractStorageManagerTest {
             mgr.deleteContainer(containerName);
         }
     }
+    */
 
     protected String getTestContainer() {
         return "test-" + RandomUtils.nextInt();

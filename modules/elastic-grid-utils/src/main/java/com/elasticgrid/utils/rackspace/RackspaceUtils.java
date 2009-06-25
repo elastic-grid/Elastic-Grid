@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.utils.mosso;
+package com.elasticgrid.utils.rackspace;
 
 import java.io.File;
 import java.io.FileInputStream;
