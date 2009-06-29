@@ -71,25 +71,24 @@ public abstract class AbstractStorageManagerTest {
         assert container != null;
         assert container.listStorables().size() == 0;
         // create a new storable in that container
-        File file = File.createTempFile("test", "eg");
-        FileUtils.writeStringToFile(file, "some dummy content");
-        Storable s = container.uploadStorable("directory/subdirectory/filename.ext", file);
+        File file = new File(System.getProperty("java.io.tmp^dir"), "filename.txt");
+        FileUtils.writeStringToFile(file, "Elastic Grid: some dummy content");
+        Storable s = container.uploadStorable("directory/subdirectory/filename.txt", file);
         assert s != null;
-        assert "directory/subdirectory/filename.ext".equals(s.getName());
-        // check that it's available in the list of storables in that container
+        assert "directory/subdirectory/filename.txt".equals(s.getName());
+        // check that it's available in the list of storables in that container with the two "directories"
         assert container.listStorables().size() == 1;
         List<Storable> storables = container.listStorables();
         s = storables.get(0);
-        assert "directory/subdirectory/filename.ext".equals(s.getName());
+        assert "directory/subdirectory/filename.txt".equals(s.getName());
         // check that it can be retreive by name/key
-        s = container.findStorableByName("directory/subdirectory/filename.ext");
+        s = container.findStorableByName("directory/subdirectory/filename.txt");
         assert s != null;
-        assert "directory/subdirectory/filename.ext".equals(s.getName());
+        assert "directory/subdirectory/filename.txt".equals(s.getName());
         // delete the container
         mgr.deleteContainer(containerName);
     }
 
-    /*
     @Test(expectedExceptions = {StorableNotFoundException.class})
     public void testStorablesNotFound() throws StorageException, IOException {
         StorageManager mgr = getStorageManager();
@@ -106,7 +105,6 @@ public abstract class AbstractStorageManagerTest {
             mgr.deleteContainer(containerName);
         }
     }
-    */
 
     protected String getTestContainer() {
         return "test-" + RandomUtils.nextInt();

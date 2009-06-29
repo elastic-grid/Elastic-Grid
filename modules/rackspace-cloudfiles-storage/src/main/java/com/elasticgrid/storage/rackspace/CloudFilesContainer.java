@@ -19,16 +19,22 @@ package com.elasticgrid.storage.rackspace;
 
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.Storable;
-import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorableNotFoundException;
+import com.elasticgrid.storage.StorageException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesObject;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.File;
-
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.lang.reflect.Field;
 
 /**
  * {@link Container} providing support for Rackspace Cloud Files.
@@ -39,11 +45,15 @@ public class CloudFilesContainer implements Container {
     private final FilesClient rackspace;
     private final FilesContainer rackspaceContainer;
     private final MimetypesFileTypeMap mimes;
+    private Field mimeTypeField;
+    private final Logger logger = Logger.getLogger(CloudFilesStorageManager.class.getName());
 
-    public CloudFilesContainer(final FilesClient rackspace, final FilesContainer rackspaceContainer) {
+    public CloudFilesContainer(final FilesClient rackspace, final FilesContainer rackspaceContainer) throws NoSuchFieldException {
         this.rackspace = rackspace;
         this.rackspaceContainer = rackspaceContainer;
         this.mimes = new MimetypesFileTypeMap();
+        mimeTypeField = FilesObject.class.getDeclaredField("mimeType");
+        mimeTypeField.setAccessible(true);
     }
 
     public String getName() {
@@ -53,10 +63,13 @@ public class CloudFilesContainer implements Container {
     public List<Storable> listStorables() throws StorageException {
         try {
             rackspace.login();
-            List<FilesObject> objects = rackspaceContainer.getObjects();
+            List<FilesObject> objects = rackspace.listObjects(getName());
             List<Storable> storables = new ArrayList<Storable>(objects.size());
             for (FilesObject object : objects) {
-                storables.add(new CloudFilesStorable(rackspace, object));
+                // small hack in order to fetch the mime type of the underlying object                
+                String mimeType = (String) mimeTypeField.get(object);
+                if (!"application/directory".equals(mimeType))      // skip directories
+                    storables.add(new CloudFilesStorable(rackspace, object));
             }
             return storables;
         } catch (Exception e) {
@@ -67,32 +80,53 @@ public class CloudFilesContainer implements Container {
     public Storable findStorableByName(String name) throws StorableNotFoundException, StorageException {
         try {
             rackspace.login();
-            List<FilesObject> objects = rackspaceContainer.getObjects(name);
+            int hasPath = name.lastIndexOf('/');
+            List<FilesObject> objects = null;
+            if (hasPath == -1) {
+                objects = rackspace.listObjects(getName());
+            } else {
+                String path = name.substring(0, hasPath);
+                objects = rackspace.listObjects(getName(), path);
+            }
             if (objects.isEmpty())
                 throw new StorableNotFoundException(name);
+            FilesObject found = null;
+            for (FilesObject object : objects) {
+                if (object.getName().equals(name)) {
+                    found = object;
+                    break;
+                }
+            }
+            if (found == null)
+                throw new StorableNotFoundException(name);
             else
-                return new CloudFilesStorable(rackspace, objects.get(0)); 
+                return new CloudFilesStorable(rackspace, found);
+        } catch (StorableNotFoundException snfe) {
+            throw snfe;
         } catch (Exception e) {
             throw new StorageException("Can't find storage", e);
         }
     }
 
-    public Storable uploadStorable(String key, File file) throws StorageException {
+    public Storable uploadStorable(String name, File file) throws StorageException {
         try {
             rackspace.login();
+            // create directories if needed
+            String path = name.substring(0, name.lastIndexOf('/'));
+            logger.log(Level.FINE, "Creating full path \"{0}\"", path);
+            rackspace.createFullPath(getName(), path);
             // upload the file
-//            rackspace.storeObjectAs(getName(), file, mimes.getContentType(file), key);
-            rackspace.storeObject(getName(), file, mimes.getContentType(file));
+            logger.log(Level.FINE, "Uploading \"{0}\"", name);
+            InputStream stream = null;
+            try {
+                stream = FileUtils.openInputStream(file);
+                rackspace.storeStreamedObject(getName(), stream, mimes.getContentType(file), name,
+                        Collections.<String, String>emptyMap());
+            } finally {
+                IOUtils.closeQuietly(stream);
+            }
             // retrieve rackspace object
-            List<FilesObject> objects = rackspaceContainer.getObjects(key);
-            assert objects.size() > 0 : "The uploaded file is missing!"; 
-            FilesObject object = null;
-            for (FilesObject o : objects)
-                if (o.getName().equals(file.getName()))
-                    object = o;
-                else
-                    System.out.println("Found instead " + o.getName());
-            return new CloudFilesStorable(rackspace, object);
+            return findStorableByName(name);
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from file", e);
         }

@@ -17,10 +17,14 @@
  */
 package com.elasticgrid.storage;
 
+import java.io.InputStream;
+import java.io.IOException;
+
 /**
  * A {@link Storable} is a file stored in a {@link Container} with associated metadata.
  * @author Jerome Bernard
  */
 public interface Storable {
     String getName();
+    InputStream getInputStream() throws IOException;
 }

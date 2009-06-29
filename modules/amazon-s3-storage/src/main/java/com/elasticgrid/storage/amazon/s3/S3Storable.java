@@ -19,7 +19,10 @@ package com.elasticgrid.storage.amazon.s3;
 
 import com.elasticgrid.storage.Storable;
 import org.jets3t.service.S3Service;
+import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Object;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * {@link Storable} providing support for Amazon S3.
@@ -37,5 +40,13 @@ public class S3Storable implements Storable {
 
     public String getName() {
         return object.getKey();
+    }
+
+    public InputStream getInputStream() throws IOException {
+        try {
+            return object.getDataInputStream();
+        } catch (S3ServiceException e) {
+            throw new IOException("Can't get stream from storable", e);
+        }
     }
 }

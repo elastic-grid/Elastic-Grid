@@ -24,6 +24,7 @@ import com.elasticgrid.storage.ContainerNotFoundException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesNotFoundException;
+import com.mosso.client.cloudfiles.FilesObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -78,6 +79,8 @@ public class CloudFilesStorageManager implements StorageManager {
         try {
             logger.log(Level.FINE, "Deleting Cloud Files container {0}", name);
             rackspace.login();
+            for (FilesObject o : rackspace.listObjects(name))
+                rackspace.deleteObject(name, o.getName());
             rackspace.deleteContainer(name);
         } catch (FilesNotFoundException e) {
             throw new ContainerNotFoundException(name);
