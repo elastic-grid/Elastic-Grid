@@ -21,10 +21,24 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <!-- Elastic Grid Storage manager -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-storage</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
         <!-- Amazon S3 Storage implementation -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-s3-storage</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Rackspace CloudFiles Storage implementation -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>rackspace-cloudfiles-storage</artifactId>
             <version>${pom.version}</version>
         </dependency>
 

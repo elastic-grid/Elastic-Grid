@@ -18,6 +18,7 @@
 package com.elasticgrid.storage;
 
 import java.util.List;
+import java.net.URLStreamHandlerFactory;
 
 /**
  * The Storage Manager enables virtualization of underlying storage providers.
@@ -25,6 +26,11 @@ import java.util.List;
  */
 public interface StorageManager {
 
+    /**
+     * Return the name of the underlying storage technology used.
+     * This is typically the name of the product doing the real "storage".
+     * @return the name of the underlying storage technology
+     */
     String getStorageName();
 
     /**

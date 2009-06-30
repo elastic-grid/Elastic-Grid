@@ -62,9 +62,9 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
     private boolean deleteAfterCopy;
     private final List<S3Object> processedOARs = new ArrayList<S3Object>();
 
-    static {
-        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
-    }
+//    static {
+//        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
+//    }
 
     /**
      * Create a S3OARDeployHandler with drop bucket and install directory
@@ -88,7 +88,7 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
         this.installDirectory = installDirectory;
         this.deleteAfterCopy = deleteAfterCopy;
         try {
-            // retrive S3 configuration parameters
+            // retrieve S3 configuration parameters
             Properties awsConfig = AWSUtils.loadEC2Configuration();
             String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
             String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);

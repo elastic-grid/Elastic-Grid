@@ -24,11 +24,15 @@ import com.elasticgrid.storage.StorageException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesObject;
+import com.mosso.client.cloudfiles.FilesInvalidNameException;
+import com.mosso.client.cloudfiles.FilesAuthorizationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.httpclient.HttpException;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -155,6 +159,14 @@ public class CloudFilesContainer implements Container {
             return findStorableByName(name);
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from stream", e);
+        }
+    }
+
+    public void deleteStorable(String name) throws StorageException {
+        try {
+            rackspace.deleteObject(getName(), name);
+        } catch (Exception e) {
+            throw new StorageException("Can't delete storable", e);
         }
     }
 }

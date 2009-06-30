@@ -101,4 +101,12 @@ public class S3Container implements Container {
             throw new StorageException("Can't upload storable from stream", e);
         }
     }
+
+    public void deleteStorable(String name) throws StorageException {
+        try {
+            s3.deleteObject(bucket, name);
+        } catch (Exception e) {
+            throw new StorageException("Can't delete storable", e);
+        }
+    }
 }

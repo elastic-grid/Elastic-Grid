@@ -44,7 +44,7 @@ public interface Container {
      * @param name the name of the storable
      * @return the {@link Storable} found
      * @throws StorableNotFoundException if there is no storable having that name
-     * @throws StorageException if the storable can't be retreived
+     * @throws StorageException if the storable can't be retrieved
      */
     Storable findStorableByName(String name) throws StorableNotFoundException, StorageException;
 
@@ -60,20 +60,27 @@ public interface Container {
 
     /**
      * Upload a {@link Storable} from a {@link File}.
-     * @param key the {@link Storable} key
+     * @param name the {@link Storable} key
      * @param file the file to upload as a {@link Storable}
      * @return the created storable
      * @throws StorageException if the upload can't be done
      */
-    Storable uploadStorable(String key, File file) throws StorageException;
+    Storable uploadStorable(String name, File file) throws StorageException;
 
     /**
      * Upload a {@link Storable} from an {@link InputStream}.
-     * @param key the {@link Storable} key
+     * @param name the {@link Storable} key
      * @param stream the input stream to upload as a {@link Storable}
      * @param mimeType the MIME-type of the content to upload
      * @return the created storable
      * @throws StorageException if the upload can't be done
      */
-    Storable uploadStorable(String key, InputStream stream, String mimeType) throws StorageException;
+    Storable uploadStorable(String name, InputStream stream, String mimeType) throws StorageException;
+
+    /**
+     * Delete a {@link Storable} by name.
+     * @param name the name of the storable to delete
+     * @throws StorageException if the deletion can't be done
+     */
+    void deleteStorable(String name) throws StorageException;
 }

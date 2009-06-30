@@ -24,6 +24,12 @@ import com.mosso.client.cloudfiles.FilesAuthorizationException;
 import com.mosso.client.cloudfiles.FilesInvalidNameException;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.util.Date;
+import org.apache.commons.io.IOUtils;
 
 /**
  * {@link Storable} providing support for Rackspace Cloud Files.
@@ -43,11 +49,27 @@ public class CloudFilesStorable implements Storable {
         return object.getName();
     }
 
-    public InputStream getInputStream() throws IOException {
+    public Date getLastModifiedDate() {
+        // TODO: which date format??
+//        return object.getLastModified();
+        return null;
+    }
+
+    public InputStream asInputStream() throws IOException {
         try {
             return object.getObjectAsStream();
         } catch (Exception e) {
             throw new IOException("Can't get stream from storable", e);
         }
+    }
+
+    public File asFile() throws IOException {
+        File f = File.createTempFile("elastic-grid-storable", getName());
+        try {
+            object.writeObjectToFile(f);
+        } catch (Exception e) {
+            throw new IOException("Can't write storable to file", e);
+        }
+        return f;
     }
 }

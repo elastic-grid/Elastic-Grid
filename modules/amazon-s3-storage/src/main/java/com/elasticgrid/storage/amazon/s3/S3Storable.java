@@ -21,8 +21,15 @@ import com.elasticgrid.storage.Storable;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Object;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 /**
  * {@link Storable} providing support for Amazon S3.
@@ -42,11 +49,30 @@ public class S3Storable implements Storable {
         return object.getKey();
     }
 
-    public InputStream getInputStream() throws IOException {
+    public Date getLastModifiedDate() {
+        return object.getLastModifiedDate();
+    }
+
+    public InputStream asInputStream() throws IOException {
         try {
             return object.getDataInputStream();
         } catch (S3ServiceException e) {
             throw new IOException("Can't get stream from storable", e);
         }
+    }
+
+    public File asFile() throws IOException {
+        File f = File.createTempFile("elastic-grid-storable", getName());
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = asInputStream();
+            output = new BufferedOutputStream(new FileOutputStream(f));
+            IOUtils.copy(input, output);
+        } finally {
+            IOUtils.closeQuietly(input);
+            IOUtils.closeQuietly(output);
+        }
+        return f;
     }
 }

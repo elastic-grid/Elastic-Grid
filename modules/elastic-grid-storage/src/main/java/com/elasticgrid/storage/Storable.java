@@ -19,12 +19,45 @@ package com.elasticgrid.storage;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.File;
+import java.util.Date;
 
 /**
  * A {@link Storable} is a file stored in a {@link Container} with associated metadata.
  * @author Jerome Bernard
  */
 public interface Storable {
+
+    /**
+     * Return the name of the storable.
+     * The name usually includes directory and subdirectory information and don't start with a forward slash.
+     * @return the name of the storable
+     */
     String getName();
-    InputStream getInputStream() throws IOException;
+
+    /**
+     * Return the date of last modification.
+     * This is mostly useful in order to check if a storable changed since last time it was downloaded/retreived.
+     * @return the date of last modification
+     */
+    Date getLastModifiedDate();
+
+    /**
+     * Expose the storable content as an {@link InputStream}.
+     * <strong>Note:</strong> it is the responsability of the caller to close the input stream!
+     * @return the stream
+     * @throws IOException
+     * @see #asFile
+     */
+    InputStream asInputStream() throws IOException;
+
+    /**
+     * Expose the storable content as a {@link File}.
+     * The {@link #asInputStream} alternative should be preferred most of the time in order to avoid file
+     * creations and many superflous I/O operations.
+     * @return the file
+     * @throws java.io.IOException
+     * @see #asInputStream
+     */
+    File asFile() throws IOException;
 }
