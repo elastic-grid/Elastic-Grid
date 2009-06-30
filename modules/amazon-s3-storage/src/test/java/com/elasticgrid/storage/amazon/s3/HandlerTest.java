@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.aws.s3;
+package com.elasticgrid.storage.amazon.s3;
 
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import com.elasticgrid.aws.s3.AWSURLStreamHandlerFactory;
 
 public class HandlerTest {
 

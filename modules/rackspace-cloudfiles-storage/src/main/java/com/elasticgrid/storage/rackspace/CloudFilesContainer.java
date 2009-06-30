@@ -108,6 +108,10 @@ public class CloudFilesContainer implements Container {
         }
     }
 
+    public Storable uploadStorable(File file) throws StorageException {
+        return uploadStorable(file.getName(), file);
+    }
+
     public Storable uploadStorable(String name, File file) throws StorageException {
         try {
             rackspace.login();
@@ -129,6 +133,28 @@ public class CloudFilesContainer implements Container {
             return findStorableByName(name);
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from file", e);
+        }
+    }
+
+    public Storable uploadStorable(String name, InputStream stream, String mimeType) throws StorageException {
+        try {
+            rackspace.login();
+            // create directories if needed
+            String path = name.substring(0, name.lastIndexOf('/'));
+            logger.log(Level.FINE, "Creating full path \"{0}\"", path);
+            rackspace.createFullPath(getName(), path);
+            // upload the file
+            logger.log(Level.FINE, "Uploading \"{0}\"", name);
+            try {
+                rackspace.storeStreamedObject(getName(), stream, mimeType, name,
+                        Collections.<String, String>emptyMap());
+            } finally {
+                IOUtils.closeQuietly(stream);
+            }
+            // retrieve rackspace object
+            return findStorableByName(name);
+        } catch (Exception e) {
+            throw new StorageException("Can't upload storable from stream", e);
         }
     }
 }

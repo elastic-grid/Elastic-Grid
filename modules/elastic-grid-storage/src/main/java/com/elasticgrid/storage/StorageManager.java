@@ -25,6 +25,8 @@ import java.util.List;
  */
 public interface StorageManager {
 
+    String getStorageName();
+
     /**
      * Return the list of containers:
      * <ul>
@@ -44,6 +46,15 @@ public interface StorageManager {
      * @throws StorageException if the container can't be created
      */
     Container createContainer(String name) throws StorageException;
+
+    /**
+     * Lookup a container by its name.
+     * @param name the name of the container to lookup
+     * @return the container
+     * @throws ContainerNotFoundException if there is no container named <tt>name</tt>
+     * @throws StorageException if the container can't be created
+     */
+    Container findContainerByName(String name) throws StorageException;
 
     /**
      * Recursively delete a container.

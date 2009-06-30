@@ -91,8 +91,16 @@ public class AWSUtils {
         return awsProperties;
     }
 
+    public static String getAccessID() throws IOException {
+        return loadEC2Configuration().getProperty("aws.accessId");
+    }
+
+    public static String getSecretKey() throws IOException {
+        return loadEC2Configuration().getProperty("aws.secretKey");
+    }
+
     public static String getDropBucket() throws IOException {
-        return (String) loadEC2Configuration().getProperty("eg.s3.dropBucket");
+        return loadEC2Configuration().getProperty("eg.s3.dropBucket");
     }
 
     public static S3Service getS3Service() {

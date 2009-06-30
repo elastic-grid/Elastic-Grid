@@ -44,6 +44,10 @@ public class CloudFilesStorageManager implements StorageManager {
         rackspace = new FilesClient(login, apiKey);
     }
 
+    public String getStorageName() {
+        return "Rackspace CloudFiles";
+    }
+
     public List<Container> getContainers() throws StorageException {
         try {
             logger.log(Level.FINE, "Retrieving list of Cloud Files containers");
@@ -72,6 +76,25 @@ public class CloudFilesStorageManager implements StorageManager {
             return new CloudFilesContainer(rackspace, rackspaceContainer);
         } catch (Exception e) {
             throw new StorageException("Can't create container", e);
+        }
+    }
+
+    public Container findContainerByName(String name) throws StorageException {
+        try {
+            logger.log(Level.FINE, "Searching for Clouds File container {0}", name);
+            rackspace.login();
+            FilesContainer rackspaceContainer = null;
+            List<FilesContainer> containers = rackspace.listContainers();
+            for (FilesContainer container : containers)
+                if (container.getName().equals(name))
+                    rackspaceContainer = container;
+            if (rackspaceContainer == null)
+                throw new ContainerNotFoundException(name);
+            return new CloudFilesContainer(rackspace, rackspaceContainer);
+        } catch (ContainerNotFoundException cnfe) {
+            throw cnfe;
+        } catch (Exception e) {
+            throw new StorageException("Can't find container", e);
         }
     }
 

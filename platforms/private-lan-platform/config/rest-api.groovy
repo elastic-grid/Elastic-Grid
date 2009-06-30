@@ -4,6 +4,9 @@
 
 import org.rioproject.config.Component
 import org.rioproject.config.Constants
+import com.elasticgrid.storage.StorageManager
+import com.elasticgrid.storage.amazon.s3.S3StorageManager
+import com.elasticgrid.utils.amazon.AWSUtils
 
 /*
  * Declare REST API properties
@@ -13,6 +16,8 @@ class RestServiceConfig {
   String serviceName = 'Elastic Grid REST API'
   String serviceComment = 'Elastic Grid REST API'
   String jmxName = 'com.elasticgrid.rest:type=API'
+
+  StorageManager storageManager = new S3StorageManager(AWSUtils.accessID, AWSUtils.secretKey)
 
   String[] getInitialLookupGroups() {
     def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')]

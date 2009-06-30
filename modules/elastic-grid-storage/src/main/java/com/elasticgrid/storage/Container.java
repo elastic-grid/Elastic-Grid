@@ -19,6 +19,7 @@ package com.elasticgrid.storage;
 
 import java.util.List;
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * A container is a set of objects stored in the cloud.
@@ -49,9 +50,30 @@ public interface Container {
 
     /**
      * Upload a {@link Storable} from a {@link File}.
+     * This method is the same as calling {@link #uploadStorable(String,File)} where the key is the filename.
+     * @param file the file to upload as a {@link Storable}
+     * @throws StorageException if the upload can't be done
+     * @return the created storable
+     * @see #uploadStorable(String, File)
+     */
+    Storable uploadStorable(File file) throws StorageException;
+
+    /**
+     * Upload a {@link Storable} from a {@link File}.
      * @param key the {@link Storable} key
      * @param file the file to upload as a {@link Storable}
+     * @return the created storable
      * @throws StorageException if the upload can't be done
      */
     Storable uploadStorable(String key, File file) throws StorageException;
+
+    /**
+     * Upload a {@link Storable} from an {@link InputStream}.
+     * @param key the {@link Storable} key
+     * @param stream the input stream to upload as a {@link Storable}
+     * @param mimeType the MIME-type of the content to upload
+     * @return the created storable
+     * @throws StorageException if the upload can't be done
+     */
+    Storable uploadStorable(String key, InputStream stream, String mimeType) throws StorageException;
 }

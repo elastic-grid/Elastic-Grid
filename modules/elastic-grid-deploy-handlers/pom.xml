@@ -21,10 +21,10 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid core -->
+        <!-- Amazon S3 Storage implementation -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
+            <artifactId>amazon-s3-storage</artifactId>
             <version>${pom.version}</version>
         </dependency>
 

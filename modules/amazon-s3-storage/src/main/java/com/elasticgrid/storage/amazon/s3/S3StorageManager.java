@@ -45,6 +45,10 @@ public class S3StorageManager implements StorageManager {
         s3 = new RestS3Service(new AWSCredentials(awsAccessId, awsSecretKey));
     }
 
+    public String getStorageName() {
+        return "Amazon S3";
+    }
+
     public List<Container> getContainers() throws StorageException {
         try {
             logger.log(Level.FINE, "Retrieving list of S3 buckets");
@@ -66,6 +70,18 @@ public class S3StorageManager implements StorageManager {
             return new S3Container(s3, bucket);
         } catch (S3ServiceException e) {
             throw new StorageException("Can't create container", e);
+        }
+    }
+
+    public Container findContainerByName(String name) throws StorageException {
+        try {
+            logger.log(Level.FINE, "Searching for S3 bucket {0}", name);
+            S3Bucket bucket = s3.getBucket(name);
+            if (bucket == null)
+                throw new ContainerNotFoundException(name);
+            return new S3Container(s3, bucket);
+        } catch (S3ServiceException e) {
+            throw new StorageException("Can't find container", e);
         }
     }
 

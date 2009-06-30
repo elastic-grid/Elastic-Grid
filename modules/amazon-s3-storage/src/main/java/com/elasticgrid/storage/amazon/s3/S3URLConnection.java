@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  */
 public class S3URLConnection extends URLConnection {
     private S3Service s3;
-    private static final Logger logger = Logger.getLogger(Handler.class.getName());
+    private static final Logger logger = Logger.getLogger(S3URLConnection.class.getName());
 
     public S3URLConnection(URL url, S3Service s3) {
         super(url);

@@ -25,7 +25,9 @@ import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +39,12 @@ import java.util.List;
 public class S3Container implements Container {
     private final S3Service s3;
     private final S3Bucket bucket;
+    private final MimetypesFileTypeMap mimes;
 
     public S3Container(final S3Service s3, final S3Bucket bucket) {
         this.s3 = s3;
         this.bucket = bucket;
+        this.mimes = new MimetypesFileTypeMap();
     }
 
     public String getName() {
@@ -72,13 +76,29 @@ public class S3Container implements Container {
         }
     }
 
+    public Storable uploadStorable(File file) throws StorageException {
+        return uploadStorable(file.getName(), file);
+    }
+
     public Storable uploadStorable(String key, File file) throws StorageException {
         try {
             S3Object object = new S3Object(file);
+            object.setContentType(mimes.getContentType(file));
             object.setKey(key);
             return new S3Storable(s3, s3.putObject(bucket, object));
         } catch (Exception e) {
             throw new StorageException("Can't upload storable from file", e);
+        }
+    }
+
+    public Storable uploadStorable(String key, InputStream stream, String mimeType) throws StorageException {
+        try {
+            S3Object object = new S3Object(key);
+            object.setContentType(mimeType);
+            object.setDataInputStream(stream);
+            return new S3Storable(s3, s3.putObject(bucket, object));
+        } catch (Exception e) {
+            throw new StorageException("Can't upload storable from stream", e);
         }
     }
 }

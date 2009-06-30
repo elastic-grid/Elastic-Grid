@@ -45,6 +45,9 @@ public abstract class AbstractStorageManagerTest {
             if (c.getName().equals(containerName))
                 found = true;
         assert found : "Can't find container " + containerName;
+        // try to locate it by name
+        container = mgr.findContainerByName(containerName);
+        assert container != null;
         // delete the container
         mgr.deleteContainer(containerName);
         // ensure it's gone in the list of containers
@@ -54,6 +57,12 @@ public abstract class AbstractStorageManagerTest {
             if (c.getName().equals(containerName))
                 found = true;
         assert !found;
+    }
+
+    @Test(expectedExceptions = {ContainerNotFoundException.class})
+    public void testFindUnknownContainer() throws StorageException {
+        StorageManager mgr = getStorageManager();
+        mgr.findContainerByName("whatever-" + RandomUtils.nextInt());
     }
 
     @Test(expectedExceptions = {ContainerNotFoundException.class})

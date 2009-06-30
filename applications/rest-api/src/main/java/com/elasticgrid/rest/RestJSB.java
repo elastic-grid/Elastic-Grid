@@ -25,6 +25,7 @@ import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
+import com.elasticgrid.storage.StorageManager;
 import org.rioproject.associations.Association;
 import org.rioproject.associations.AssociationDescriptor;
 import org.rioproject.associations.AssociationListener;
@@ -50,6 +51,7 @@ import java.io.IOException;
  */
 public class RestJSB extends ServiceBeanAdapter {
     private static CloudFederationClusterManager clusterManager;
+    private static StorageManager storageManager;
     private static ProvisionMonitor provisionMonitor;
     /** Component name we use to find items in the Configuration */
     static final String EG_CONFIG_COMPONENT = "com.elasticgrid";
@@ -121,6 +123,8 @@ public class RestJSB extends ServiceBeanAdapter {
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
         initializeClusterManager();
+        storageManager = (StorageManager) context.getConfiguration().getEntry(CONFIG_COMPONENT,
+                "storageManager", StorageManager.class);
         new RestApplication();
     }
 
@@ -142,6 +146,10 @@ public class RestJSB extends ServiceBeanAdapter {
 
     public static ClusterManager getClusterManager() {
         return clusterManager;
+    }
+
+    public static StorageManager getStorageManager() {
+        return storageManager;
     }
 
     public static ProvisionMonitor getProvisionMonitor() {
