@@ -113,6 +113,11 @@
                 <!-- Amazon S3 dependencies -->
                 <include>net.java.dev.jets3t:jets3t</include>
 
+                <!-- Rackspace Clouds dependencies -->
+                <include>com.elasticgrid:rackspace-cloudfiles-storage</include>
+                <include>com.mosso:cloud-files</include>
+                <include>log4j:log4j</include>
+
                 <!-- JiBX dependencies -->
                 <include>org.jibx:jibx-run</include>
                 <include>org.jibx:jibx-extras</include>

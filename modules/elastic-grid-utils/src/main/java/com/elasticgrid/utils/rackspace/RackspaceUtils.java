@@ -34,7 +34,7 @@ public class RackspaceUtils {
                 || new File(System.getenv("EG_HOME") + File.separatorChar + "config", "eg.properties").exists();
     }
 
-    public static Properties loadMossoConfiguration() throws IOException {
+    public static Properties loadRackspaceConfiguration() throws IOException {
         // try to load properties from $HOME/.eg/aws.properties
         Properties mossoProperties = new Properties();
         File awsPropertiesFile = new File(System.getProperty("user.home") + File.separatorChar + ".eg",
@@ -74,6 +74,14 @@ public class RackspaceUtils {
         }
 
         return mossoProperties;
+    }
+
+    public static String getUsername() throws IOException {
+        return loadRackspaceConfiguration().getProperty("rackspace.username");
+    }
+
+    public static String getApiKey() throws IOException {
+        return loadRackspaceConfiguration().getProperty("rackspace.apiKey");
     }
 
 }

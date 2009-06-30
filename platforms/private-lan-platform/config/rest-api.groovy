@@ -18,6 +18,7 @@ class RestServiceConfig {
   String jmxName = 'com.elasticgrid.rest:type=API'
 
   StorageManager storageManager = new S3StorageManager(AWSUtils.accessID, AWSUtils.secretKey)
+//  StorageManager storageManager = new CloudFilesStorageManager(RackspaceUtils.username, RackspaceUtils.apiKey)
 
   String[] getInitialLookupGroups() {
     def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')]

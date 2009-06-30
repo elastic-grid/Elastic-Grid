@@ -34,7 +34,7 @@ import java.util.Properties;
 public class CloudFilesStorageManagerTest extends AbstractStorageManagerTest {
     protected StorageManager getStorageManager() throws StorageException {
         try {
-            Properties rackspaceConfig = RackspaceUtils.loadMossoConfiguration();
+            Properties rackspaceConfig = RackspaceUtils.loadRackspaceConfiguration();
             String login = rackspaceConfig.getProperty(RackspaceConfiguration.LOGIN);
             String password = rackspaceConfig.getProperty(RackspaceConfiguration.API_KEY);
             if (login == null) {
