@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.aws.s3;
+package com.elasticgrid.storage.amazon.s3;
 
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;

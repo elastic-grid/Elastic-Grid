@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.aws.s3;
+package com.elasticgrid.storage.amazon.s3;
 
 import com.elasticgrid.utils.amazon.AWSUtils;
 import com.elasticgrid.config.EC2Configuration;

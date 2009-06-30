@@ -72,7 +72,7 @@ set launchTarget=com.sun.jini.start.ServiceStarter
 
 "%JAVA_HOME%\bin\java" -server %JAVA_MEM_OPTIONS% %classpath% %agentpath% %EG_OPTS% %libpath% ^
     -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
-    -Djava.protocol.handler.pkgs=net.jini.url ^
+    -Djava.protocol.handler.pkgs=com.elasticgrid.storage.amazon.s3 ^
     -DRIO_HOME="%EG_HOME%" ^
     -DEG_HOME="%EG_HOME%" ^
     -Dorg.rioproject.home="%EG_HOME%" ^
