@@ -44,12 +44,6 @@
             <artifactId>jsk-platform</artifactId>
         </dependency>
 
-        <!-- Amazon S3 dependencies -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
-        </dependency>
-
         <!-- Various dependencies -->
         <dependency>
             <groupId>commons-io</groupId>

@@ -32,11 +32,17 @@
             <artifactId>elastic-grid-storage</artifactId>
             <version>${pom.version}</version>
         </dependency>
-        <!-- TODO: get rid of this "hack"! -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-s3-storage</artifactId>
             <version>${pom.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>rackspace-cloudfiles-storage</artifactId>
+            <version>${pom.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- Elastic Grid Utils -->
