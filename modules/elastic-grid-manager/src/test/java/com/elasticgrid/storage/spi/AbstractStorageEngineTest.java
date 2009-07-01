@@ -15,25 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage;
+package com.elasticgrid.storage.spi;
 
-import org.apache.commons.lang.math.RandomUtils;
+import com.elasticgrid.storage.Container;
+import com.elasticgrid.storage.ContainerNotFoundException;
+import com.elasticgrid.storage.Storable;
+import com.elasticgrid.storage.StorableNotFoundException;
+import com.elasticgrid.storage.StorageException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.testng.annotations.Test;
-import java.util.List;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
- * Helper class providing support for writing {@link StorageManager} implementations tests.
+ * Helper class providing support for writing {@link com.elasticgrid.storage.StorageManager} implementations tests.
  *
  * @author Jerome Bernard
  */
-public abstract class AbstractStorageManagerTest {
+public abstract class AbstractStorageEngineTest {
 
     @Test
     public void testCreationOfContainers() throws StorageException {
-        StorageManager mgr = getStorageManager();
+        StorageEngine mgr = getStorageEngine();
         // create a container
         String containerName = getTestContainer();
         Container container = mgr.createContainer(containerName);
@@ -61,19 +66,19 @@ public abstract class AbstractStorageManagerTest {
 
     @Test(expectedExceptions = {ContainerNotFoundException.class})
     public void testFindUnknownContainer() throws StorageException {
-        StorageManager mgr = getStorageManager();
+        StorageEngine mgr = getStorageEngine();
         mgr.findContainerByName("whatever-" + RandomUtils.nextInt());
     }
 
     @Test(expectedExceptions = {ContainerNotFoundException.class})
     public void testDeletionOfUnknowContainer() throws StorageException {
-        StorageManager mgr = getStorageManager();
+        StorageEngine mgr = getStorageEngine();
         mgr.deleteContainer("whatever-" + RandomUtils.nextInt());
     }
 
     @Test
     public void testStorablesInContainer() throws StorageException, IOException {
-        StorageManager mgr = getStorageManager();
+        StorageEngine mgr = getStorageEngine();
         // create a container
         String containerName = getTestContainer();
         Container container = mgr.createContainer(containerName);
@@ -100,7 +105,7 @@ public abstract class AbstractStorageManagerTest {
 
     @Test(expectedExceptions = {StorableNotFoundException.class})
     public void testStorablesNotFound() throws StorageException, IOException {
-        StorageManager mgr = getStorageManager();
+        StorageEngine mgr = getStorageEngine();
         String containerName = getTestContainer();
         try {
             // create a container
@@ -119,6 +124,6 @@ public abstract class AbstractStorageManagerTest {
         return "test-" + RandomUtils.nextInt();
     }
 
-    protected abstract StorageManager getStorageManager() throws StorageException;
+    protected abstract StorageEngine getStorageEngine() throws StorageException;
 
 }

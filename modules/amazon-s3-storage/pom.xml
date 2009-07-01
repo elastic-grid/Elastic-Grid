@@ -29,7 +29,7 @@
         <!-- Tests dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-storage</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>

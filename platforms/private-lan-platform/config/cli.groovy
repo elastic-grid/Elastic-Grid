@@ -11,9 +11,10 @@ import org.rioproject.resources.client.DiscoveryManagementPool.SharedDiscoveryMa
 import org.rioproject.config.Constants
 import net.jini.discovery.DiscoveryGroupManagement
 import com.elasticgrid.storage.StorageManager
-import com.elasticgrid.storage.amazon.s3.S3StorageManager
+import com.elasticgrid.storage.amazon.s3.S3StorageEngine
 import com.elasticgrid.utils.amazon.AWSUtils
 import com.elasticgrid.config.EC2Configuration
+import com.elasticgrid.storage.amazon.s3.S3StorageEngine
 
 /**
  * Configures groups used by CLI.
@@ -30,7 +31,7 @@ class CLIConfig {
     if (awsSecretKey == null) {
       throw new IllegalArgumentException("Could not find AWS Secret Key")
     }
-    StorageManager storage = new S3StorageManager(awsAccessID, awsSecretKey)
+    StorageManager storage = new S3StorageEngine(awsAccessID, awsSecretKey)
     return storage
   }
 

@@ -17,31 +17,31 @@
  */
 package com.elasticgrid.storage.amazon.s3;
 
-import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.Container;
-import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.ContainerNotFoundException;
+import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.spi.StorageEngine;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
+import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
-import org.jets3t.service.impl.rest.httpclient.RestS3Service;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link StorageManager} providing support for Amazon S3.
+ * {@link StorageEngine} providing support for Amazon S3.
  *
  * @author Jerome Bernard
  */
-public class S3StorageManager implements StorageManager {
+public class S3StorageEngine implements StorageEngine {
     private final S3Service s3;
-    private final Logger logger = Logger.getLogger(S3StorageManager.class.getName());
+    private final Logger logger = Logger.getLogger(S3StorageEngine.class.getName());
 
-    public S3StorageManager(String awsAccessId, String awsSecretKey) throws S3ServiceException {
+    public S3StorageEngine(String awsAccessId, String awsSecretKey) throws S3ServiceException {
         s3 = new RestS3Service(new AWSCredentials(awsAccessId, awsSecretKey));
     }
 

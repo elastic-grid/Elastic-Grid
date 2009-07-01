@@ -15,16 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.storage;
+package com.elasticgrid.storage.spi;
 
+import com.elasticgrid.storage.Container;
+import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.ContainerNotFoundException;
 import java.util.List;
-import java.net.URLStreamHandlerFactory;
 
 /**
- * The Storage Manager enables virtualization of underlying storage providers.
+ * The Storage Engine enables virtualization of underlying storage providers.
  * @author Jerome Bernard
  */
-public interface StorageManager {
+public interface StorageEngine {
 
     /**
      * Return the name of the underlying storage technology used.

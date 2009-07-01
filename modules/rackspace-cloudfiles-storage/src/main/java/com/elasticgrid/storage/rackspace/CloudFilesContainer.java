@@ -24,15 +24,11 @@ import com.elasticgrid.storage.StorageException;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesObject;
-import com.mosso.client.cloudfiles.FilesInvalidNameException;
-import com.mosso.client.cloudfiles.FilesAuthorizationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.httpclient.HttpException;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.InputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +46,7 @@ public class CloudFilesContainer implements Container {
     private final FilesContainer rackspaceContainer;
     private final MimetypesFileTypeMap mimes;
     private Field mimeTypeField;
-    private final Logger logger = Logger.getLogger(CloudFilesStorageManager.class.getName());
+    private final Logger logger = Logger.getLogger(CloudFilesContainer.class.getName());
 
     public CloudFilesContainer(final FilesClient rackspace, final FilesContainer rackspaceContainer) throws NoSuchFieldException {
         this.rackspace = rackspace;

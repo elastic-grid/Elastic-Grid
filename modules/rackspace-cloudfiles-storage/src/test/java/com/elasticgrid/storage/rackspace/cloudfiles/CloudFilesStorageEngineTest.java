@@ -18,21 +18,20 @@
 package com.elasticgrid.storage.rackspace.cloudfiles;
 
 import com.elasticgrid.config.RackspaceConfiguration;
-import com.elasticgrid.storage.AbstractStorageManagerTest;
 import com.elasticgrid.storage.StorageException;
-import com.elasticgrid.storage.StorageManager;
-import com.elasticgrid.storage.rackspace.CloudFilesStorageManager;
+import com.elasticgrid.storage.rackspace.CloudFilesStorageEngine;
+import com.elasticgrid.storage.spi.AbstractStorageEngineTest;
+import com.elasticgrid.storage.spi.StorageEngine;
 import com.elasticgrid.utils.rackspace.RackspaceUtils;
-
 import java.util.Properties;
 
 /**
- * {@link com.elasticgrid.storage.rackspace.CloudFilesStorageManager} tests.
+ * {@link CloudFilesStorageEngine} tests.
  *
  * @author Jerome Bernard
  */
-public class CloudFilesStorageManagerTest extends AbstractStorageManagerTest {
-    protected StorageManager getStorageManager() throws StorageException {
+public class CloudFilesStorageEngineTest extends AbstractStorageEngineTest {
+    protected StorageEngine getStorageEngine() throws StorageException {
         try {
             Properties rackspaceConfig = RackspaceUtils.loadRackspaceConfiguration();
             String login = rackspaceConfig.getProperty(RackspaceConfiguration.LOGIN);
@@ -43,7 +42,7 @@ public class CloudFilesStorageManagerTest extends AbstractStorageManagerTest {
             if (password == null) {
                 throw new IllegalArgumentException("Could not find Cloud Files password");
             }
-            return new CloudFilesStorageManager(login, password);
+            return new CloudFilesStorageEngine(login, password);
         } catch (Exception e) {
             throw new StorageException("Can't initialize Cloud Files Storage Manager", e);
         }

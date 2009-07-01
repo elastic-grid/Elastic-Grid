@@ -18,29 +18,29 @@
 package com.elasticgrid.storage.rackspace;
 
 import com.elasticgrid.storage.Container;
-import com.elasticgrid.storage.StorageException;
-import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.ContainerNotFoundException;
+import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.spi.StorageEngine;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesContainer;
 import com.mosso.client.cloudfiles.FilesNotFoundException;
 import com.mosso.client.cloudfiles.FilesObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
- * {@link StorageManager} providing support for Rackspace Cloud Files.
+ * {@link com.elasticgrid.storage.StorageManager} providing support for Rackspace Cloud Files.
  *
  * @author Jerome Bernard
  */
-public class CloudFilesStorageManager implements StorageManager {
+public class CloudFilesStorageEngine implements StorageEngine {
     private FilesClient rackspace;
-    private final Logger logger = Logger.getLogger(CloudFilesStorageManager.class.getName());
+    private final Logger logger = Logger.getLogger(CloudFilesStorageEngine.class.getName());
 
-    public CloudFilesStorageManager(String login, String apiKey) throws IOException {
+    public CloudFilesStorageEngine(String login, String apiKey) throws IOException {
         rackspace = new FilesClient(login, apiKey);
     }
 

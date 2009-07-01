@@ -16,37 +16,23 @@
         <!-- Elastic Grid model -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-model</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Elastic Grid Substrates API -->
-        <dependency>
-            <groupId>com.elasticgrid.substrates</groupId>
-            <artifactId>substrate-api</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Elastic Grid Core -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
         <!-- Elastic Grid Utils -->
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-utils</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>${pom.groupId}</groupId>-->
+            <!--<artifactId>elastic-grid-utils</artifactId>-->
+            <!--<version>${pom.version}</version>-->
+        <!--</dependency>-->
 
         <!-- Rio dependencies -->
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio</artifactId>
-            <scope>provided</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.rioproject</groupId>-->
+            <!--<artifactId>rio</artifactId>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
 
     </dependencies>
 

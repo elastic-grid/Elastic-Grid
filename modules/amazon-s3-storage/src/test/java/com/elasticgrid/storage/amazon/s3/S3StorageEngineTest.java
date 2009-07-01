@@ -18,19 +18,19 @@
 package com.elasticgrid.storage.amazon.s3;
 
 import com.elasticgrid.config.EC2Configuration;
-import com.elasticgrid.storage.AbstractStorageManagerTest;
 import com.elasticgrid.storage.StorageException;
-import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.AbstractStorageEngineTest;
+import com.elasticgrid.storage.spi.StorageEngine;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import java.util.Properties;
 
 /**
- * {@link S3StorageManager} tests.
+ * {@link S3StorageEngine} tests.
  *
  * @author Jerome Bernard
  */
-public class S3StorageManagerTest extends AbstractStorageManagerTest {
-    protected StorageManager getStorageManager() throws StorageException {
+public class S3StorageEngineTest extends AbstractStorageEngineTest {
+    protected StorageEngine getStorageEngine() throws StorageException {
         try {
             Properties awsConfig = AWSUtils.loadEC2Configuration();
             String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
@@ -41,7 +41,7 @@ public class S3StorageManagerTest extends AbstractStorageManagerTest {
             if (awsSecretKey == null) {
                 throw new IllegalArgumentException("Could not find AWS Secret Key");
             }
-            return new S3StorageManager(awsAccessID, awsSecretKey);
+            return new S3StorageEngine(awsAccessID, awsSecretKey);
         } catch (Exception e) {
             throw new StorageException("Can't initialize S3 Storage Manager", e);
         }
