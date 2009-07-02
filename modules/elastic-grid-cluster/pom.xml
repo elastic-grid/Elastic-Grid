@@ -7,7 +7,7 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cluster-manager</artifactId>
+    <artifactId>elastic-grid-cluster</artifactId>
     <packaging>jsb</packaging>
     <name>Modules :: Cluster Manager (JSB)</name>
 
@@ -44,7 +44,7 @@
     </dependencies>
 
     <build>
-        <finalName>cluster-manager-${pom.version}</finalName>
+        <finalName>elastic-grid-cluster-${pom.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -25,8 +25,8 @@
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
         <module>elastic-grid-manager</module>
+        <module>elastic-grid-cluster</module>
         <module>elastic-grid-storage</module>
-        <module>cluster-manager</module>
         <module>elastic-grid-core</module>
         <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>

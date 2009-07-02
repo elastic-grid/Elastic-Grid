@@ -25,7 +25,7 @@
         <!-- Core Services dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>cluster-manager</artifactId>
+            <artifactId>elastic-grid-cluster</artifactId>
             <version>${pom.version}</version>
             <classifier>impl</classifier>
         </dependency>

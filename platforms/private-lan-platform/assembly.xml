@@ -92,7 +92,7 @@
                 <include>com.elasticgrid:elastic-grid-manager</include>
                 <include>com.elasticgrid:elastic-grid-storage</include>
                 <include>com.elasticgrid:elastic-grid-deploy-handlers</include>
-                <include>com.elasticgrid:cluster-manager</include>
+                <include>com.elasticgrid:elastic-grid-cluster</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
                 
