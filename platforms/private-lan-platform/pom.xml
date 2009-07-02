@@ -25,7 +25,7 @@
         <!-- Core Services dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>cluster-manager-jsb</artifactId>
+            <artifactId>cluster-manager</artifactId>
             <version>${pom.version}</version>
             <classifier>impl</classifier>
         </dependency>

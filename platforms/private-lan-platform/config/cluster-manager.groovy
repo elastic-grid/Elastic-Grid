@@ -7,7 +7,7 @@ deployment(name: 'Elastic Grid') {
       resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.cluster.ClusterManagerJSB') {
-      resources 'elastic-grid/cluster-manager-jsb-${pom.version}-impl.jar',
+      resources 'elastic-grid/cluster-manager-${pom.version}-impl.jar',
                 'elastic-grid/amazon-ec2-provisioner-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar'
     }
