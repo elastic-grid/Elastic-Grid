@@ -22,6 +22,7 @@ import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.Storable;
 import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.StorageEngine;
 import org.rioproject.core.OperationalString;
 import org.rioproject.monitor.AbstractOARDeployHandler;
 import org.rioproject.opstring.OAR;
@@ -35,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
+import java.rmi.RemoteException;
 
 /**
  * A {@link org.rioproject.monitor.DeployHandler} that handles OAR files retrieved from any
@@ -68,7 +70,7 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
      * @param dropContainer    The container where OAR files will be dropped
      * @param installDirectory The directory to install OARs into
      */
-    public StorableOARDeployHandler(String dropContainer, File installDirectory) {
+    public StorableOARDeployHandler(String dropContainer, File installDirectory) throws StorageException, RemoteException {
         this(dropContainer, installDirectory, true);
     }
 
@@ -79,14 +81,15 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
      * @param installDirectory The directory to install OARs into
      * @param deleteAfterCopy  Whether to remove the OAR from the container after copying it
      */
-    public StorableOARDeployHandler(String dropContainer, File installDirectory, boolean deleteAfterCopy) {
+    public StorableOARDeployHandler(String dropContainer, File installDirectory, boolean deleteAfterCopy) throws StorageException, RemoteException {
         this.dropContainer = dropContainer;
         this.installDirectory = installDirectory;
         this.deleteAfterCopy = deleteAfterCopy;
 //        try {
             storageManager = null;  // TODO; how to get it??
+            StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
             logger.log(Level.INFO, "Using {0}'s drop container {1}",
-                    new Object[] { storageManager.getStorageName(), dropContainer });
+                    new Object[] { storageEngine.getStorageName(), dropContainer });
 //        } catch (StorageException e) {
 //            logger.log(Level.SEVERE, "Could not create StorableOARDeployHandler", e);
 //        }
@@ -110,7 +113,8 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
         List<OperationalString> list = new ArrayList<OperationalString>();
         try {
             // get a handle to the container
-            Container container = storageManager.findContainerByName(dropContainer);
+            StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+            Container container = storageEngine.findContainerByName(dropContainer);
             // retrieve the list of objects in the container
             List<Storable> storables = container.listStorables();
             // filter the list so that only OARs are kept
@@ -146,6 +150,8 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
             }
         } catch (StorageException e) {
             logger.log(Level.SEVERE, "Unexpected storable error", e);
+        } catch (RemoteException e) {
+            logger.log(Level.SEVERE, "Unexpected remote exception", e);
         }
         return list;
     }
@@ -184,7 +190,8 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
         install(new URL("storage://" + dropContainer + '/' + oar.getName()), installDirectory);
         if (deleteAfterCopy) {
             try {
-                Container container = storageManager.findContainerByName(dropContainer);
+                StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+                Container container = storageEngine.findContainerByName(dropContainer);
                 container.deleteStorable(oar.getName());
                 if (logger.isLoggable(Level.FINE))
                     logger.fine("Deleted [" + oar.getName() + "] " +

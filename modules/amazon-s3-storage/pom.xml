@@ -13,10 +13,10 @@
 
     <dependencies>
 
-        <!-- Elastic Grid Storage Manager -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-storage</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -24,6 +24,12 @@
         <dependency>
             <groupId>net.java.dev.jets3t</groupId>
             <artifactId>jets3t</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Tests dependencies -->

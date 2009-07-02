@@ -24,7 +24,6 @@
     <modules>
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
-        <!--module>elastic-grid-repository</module-->
         <module>elastic-grid-manager</module>
         <module>elastic-grid-storage</module>
         <module>cluster-manager</module>
@@ -38,10 +37,8 @@
         <module>amazon-ec2-provisioner</module>
         <module>private-lan-provisioner</module>
         <module>rackspace-cloudfiles-storage</module>
-        <!--module>elastic-grid-oar</module-->
         <!--module>examples</module-->
         <module>jabber-cli</module>
-        <!--module>jxta-discovery</module-->
 	    <module>elastic-grid-deploy-handlers</module>
         <module>private-lan-cloud-platform</module>
         <module>amazon-ec2-cloud-platform</module>

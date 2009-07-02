@@ -208,7 +208,7 @@ public abstract class AbstractClusterHandler extends AbstractHandler {
         String overridesContainer = awsConfig.getProperty(EC2Configuration.EG_OVERRIDES_BUCKET);
         out.println("Uploading overrides from ["+dir.getPath()+"] " +
                                 "to storage container ["+overridesContainer+"] ...");
-        Container container = getStorageManager().createContainer(overridesContainer);
+        Container container = getPreferredStorageEngine().createContainer(overridesContainer);
         for (File file : dir.listFiles()) {
             if (file.getName().endsWith(".groovy")) {
                 out.println("Sending "+file.getName()+"...");

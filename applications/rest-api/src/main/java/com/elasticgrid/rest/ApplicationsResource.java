@@ -1,17 +1,17 @@
 /**
  * Elastic Grid
  * Copyright (C) 2008-2009 Elastic Grid, LLC.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,9 +22,10 @@ import com.elasticgrid.cluster.ClusterManager;
 import com.elasticgrid.model.Cluster;
 import com.elasticgrid.model.internal.Applications;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.storage.StorageManager;
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.StorageEngine;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -120,72 +121,72 @@ public class ApplicationsResource extends WadlResource {
     @Override
     public void acceptRepresentation(Representation entity) throws ResourceException {
         super.acceptRepresentation(entity);    //To change body of overridden methods use File | Settings | File Templates.
-
-        if (MediaType.MULTIPART_ALL.equals(entity.getMediaType(), true)
-                || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
-            try {
-                DiskFileItemFactory factory = new DiskFileItemFactory();
-                factory.setSizeThreshold(1000240);
-                RestletFileUpload upload = new RestletFileUpload(factory);
-                List<FileItem> files = upload.parseRequest(getRequest());
-
-                logger.log(Level.INFO, "Found {0} items", files.size());
-                for (FileItem fi : files) {
-                    if ("oar".equals(fi.getFieldName())) {
-                        // download it as a temp file
-                        File file = File.createTempFile("elastic-grid", "oar");
-                        fi.write(file);
-                        // upload it to storage container
-                        logger.log(Level.INFO, "Uploading OAR ''{0}'' to {1}'s container ''{2}''",
-                                new Object[]{fi.getName(), storageManager.getStorageName(), dropBucket});
-                        Container container = storageManager.findContainerByName(dropBucket);
-                        try {
-                            container.uploadStorable(file);
-                        } catch (StorageException e) {
-                            logger.log(Level.SEVERE,
-                                    String.format("Could not upload OAR '%s' to %s's container '%s'",
-                                            fi.getName(), storageManager.getStorageName(), dropBucket), e);
-                            throw new ResourceException(Status.SERVER_ERROR_INSUFFICIENT_STORAGE, e);
+        try {
+            StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+            if (MediaType.MULTIPART_ALL.equals(entity.getMediaType(), true)
+                    || MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
+                try {
+                    DiskFileItemFactory factory = new DiskFileItemFactory();
+                    factory.setSizeThreshold(1000240);
+                    RestletFileUpload upload = new RestletFileUpload(factory);
+                    List<FileItem> files = upload.parseRequest(getRequest());
+                    logger.log(Level.INFO, "Found {0} items", files.size());
+                    for (FileItem fi : files) {
+                        if ("oar".equals(fi.getFieldName())) {
+                            // download it as a temp file
+                            File file = File.createTempFile("elastic-grid", "oar");
+                            fi.write(file);
+                            // upload it to storage container
+                            logger.log(Level.INFO, "Uploading OAR ''{0}'' to {1}'s container ''{2}''",
+                                    new Object[]{fi.getName(), storageEngine.getStorageName(), dropBucket});
+                            Container container = storageEngine.findContainerByName(dropBucket);
+                            try {
+                                container.uploadStorable(file);
+                            } catch (StorageException e) {
+                                logger.log(Level.SEVERE,
+                                        String.format("Could not upload OAR '%s' to %s's container '%s'",
+                                                fi.getName(), storageEngine.getStorageName(), dropBucket), e);
+                                throw new ResourceException(Status.SERVER_ERROR_INSUFFICIENT_STORAGE, e);
+                            }
                         }
                     }
+                    // Set the status of the response.
+                    logger.info("Redirecting to " + getRequest().getOriginalRef());
+                    getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
+                } catch (FileUploadException e) {
+                    e.printStackTrace();
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
                 }
-
-                // Set the status of the response.
-                logger.info("Redirecting to " + getRequest().getOriginalRef());
-                getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
-            } catch (FileUploadException e) {
-                e.printStackTrace();
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
-            }
-        } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
-            try {
-                // extract filename information
-                Form form = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
-                // upload it to storage container
-                String fileName = form.getFirstValue("x-filename");
-                logger.log(Level.INFO, "Uploading OAR ''{0}'' to {1}'s container ''{2}''",
-                        new Object[]{fileName, storageManager.getStorageName(), dropBucket});
-                Container container = storageManager.findContainerByName(dropBucket);
+            } else if (new MediaType("application/oar").equals(entity.getMediaType())) {
                 try {
-                    container.uploadStorable(fileName, entity.getStream(), "application/oar");
-                } catch (StorageException e) {
-                    logger.log(Level.SEVERE,
-                            String.format("Could not upload OAR '%s' to %s's container '%s'",
-                                    fileName, storageManager.getStorageName(), dropBucket), e);
-                    throw new ResourceException(Status.SERVER_ERROR_INSUFFICIENT_STORAGE, e);
+                    // extract filename information
+                    Form form = (Form) getRequest().getAttributes().get("org.restlet.http.headers");
+                    // upload it to storage container
+                    String fileName = form.getFirstValue("x-filename");
+                    logger.log(Level.INFO, "Uploading OAR ''{0}'' to {1}'s container ''{2}''",
+                            new Object[]{fileName, storageEngine.getStorageName(), dropBucket});
+                    Container container = storageEngine.findContainerByName(dropBucket);
+                    try {
+                        container.uploadStorable(fileName, entity.getStream(), "application/oar");
+                    } catch (StorageException e) {
+                        logger.log(Level.SEVERE,
+                                String.format("Could not upload OAR '%s' to %s's container '%s'",
+                                        fileName, storageEngine.getStorageName(), dropBucket), e);
+                        throw new ResourceException(Status.SERVER_ERROR_INSUFFICIENT_STORAGE, e);
+                    }
+                    // Set the status of the response
+                    logger.info("Redirecting to " + getRequest().getOriginalRef());
+                    getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
                 }
-                // Set the status of the response
-                logger.info("Redirecting to " + getRequest().getOriginalRef());
-                getResponse().setLocationRef(getRequest().getOriginalRef().addSegment("??"));  // todo: figure out the proper URL
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
+            } else {
+                throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
             }
-        } else {
-            throw new ResourceException(Status.CLIENT_ERROR_UNSUPPORTED_MEDIA_TYPE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, e);
         }
     }
 

@@ -13,10 +13,10 @@
 
     <dependencies>
 
-        <!-- Elastic Grid Storage Manager -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-storage</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -30,6 +30,12 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Tests dependencies -->

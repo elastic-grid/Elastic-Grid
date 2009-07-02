@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.rmi.RemoteException;
 
 /**
  * Helper class providing support for writing {@link com.elasticgrid.storage.StorageManager} implementations tests.
@@ -37,7 +38,7 @@ import java.util.List;
 public abstract class AbstractStorageEngineTest {
 
     @Test
-    public void testCreationOfContainers() throws StorageException {
+    public void testCreationOfContainers() throws StorageException, RemoteException {
         StorageEngine mgr = getStorageEngine();
         // create a container
         String containerName = getTestContainer();
@@ -65,13 +66,13 @@ public abstract class AbstractStorageEngineTest {
     }
 
     @Test(expectedExceptions = {ContainerNotFoundException.class})
-    public void testFindUnknownContainer() throws StorageException {
+    public void testFindUnknownContainer() throws StorageException, RemoteException {
         StorageEngine mgr = getStorageEngine();
         mgr.findContainerByName("whatever-" + RandomUtils.nextInt());
     }
 
     @Test(expectedExceptions = {ContainerNotFoundException.class})
-    public void testDeletionOfUnknowContainer() throws StorageException {
+    public void testDeletionOfUnknowContainer() throws StorageException, RemoteException {
         StorageEngine mgr = getStorageEngine();
         mgr.deleteContainer("whatever-" + RandomUtils.nextInt());
     }

@@ -19,7 +19,7 @@
 package com.elasticgrid.tools.cli;
 
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.StorageEngine;
 import org.rioproject.tools.cli.OptionHandler;
 import java.io.IOException;
 import net.jini.config.ConfigurationException;
@@ -29,7 +29,8 @@ abstract class AbstractHandler implements OptionHandler {
         return CLI.getClusterManager();
     }
 
-    protected StorageManager getStorageManager() throws ConfigurationException {
-        return (StorageManager) CLI.getInstance().getConfiguration().getEntry(CLI.COMPONENT, "", StorageManager.class);
+    protected StorageEngine getPreferredStorageEngine() throws ConfigurationException {
+        return (StorageEngine) CLI.getInstance().getConfiguration().getEntry(
+                CLI.COMPONENT, "storageEngine", StorageEngine.class);
     }
 }

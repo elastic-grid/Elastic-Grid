@@ -17,9 +17,35 @@
  */
 package com.elasticgrid.storage;
 
+import com.elasticgrid.storage.spi.StorageEngine;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
+
 /**
  * The Storage Manager enables virtualization of underlying storage providers.
  * @author Jerome Bernard
  */
-public interface StorageManager {
+public interface StorageManager extends Remote {
+
+    /**
+     * Return the preferred {@link StorageEngine} which should be used by default unless there is a
+     * need for a specific storage engine.
+     * The preferred storage engine is usually different depending on the underlying Cloud Platform
+     * where Elastic Grid is running.
+     * @return the preferred storage engine
+     * @throws StorageException
+     * @throws RemoteException
+     */
+    StorageEngine getPreferredStorageEngine() throws StorageException, RemoteException;
+
+    /**
+     * Return the list of available {@link StorageEngine}s based on their availability within the
+     * cluster.
+     * @return the available storage engines
+     * @throws StorageException
+     * @throws RemoteException
+     */
+    List<StorageEngine> getAvailableStorageEngines() throws StorageException, RemoteException;
+
 }

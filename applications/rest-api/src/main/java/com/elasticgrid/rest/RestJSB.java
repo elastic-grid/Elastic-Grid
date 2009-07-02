@@ -20,15 +20,8 @@ package com.elasticgrid.rest;
 
 import com.elasticgrid.cluster.CloudFederationClusterManager;
 import com.elasticgrid.cluster.ClusterManager;
-import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.model.ec2.EC2Cluster;
-import com.elasticgrid.model.lan.LANCluster;
-import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
-import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
 import com.elasticgrid.storage.StorageManager;
-import org.rioproject.associations.Association;
 import org.rioproject.associations.AssociationDescriptor;
-import org.rioproject.associations.AssociationListener;
 import org.rioproject.associations.AssociationMgmt;
 import org.rioproject.associations.AssociationType;
 import org.rioproject.core.OperationalStringManager;
@@ -44,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
 
 /**
  * JSB exposing the underlying REST API.
@@ -107,9 +99,23 @@ public class RestJSB extends ServiceBeanAdapter {
             provisionMonitorAssociation.setInterfaceNames(ProvisionMonitor.class.getName());
             provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
 
-            // register the association listener
+            // build the association with the cluster manager to fulfill
+            AssociationDescriptor clusterManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+            provisionMonitorAssociation.setMatchOnName(false);
+            provisionMonitorAssociation.setInterfaceNames(CloudFederationClusterManager.class.getName());
+            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
+
+            // build the association with the storage manager to fulfill
+            AssociationDescriptor storageManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+            provisionMonitorAssociation.setMatchOnName(false);
+            provisionMonitorAssociation.setInterfaceNames(StorageManager.class.getName());
+            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
+
+            // register the association listeners
             AssociationMgmt assocMgt = new AssociationMgmt();
             assocMgt.register(new ProvisionMonitorListener());
+            assocMgt.register(new ClusterManagerListener());
+            assocMgt.register(new StorageManagerListener());
 
             // search for the provision monitor
             assocMgt.addAssociationDescriptors(provisionMonitorAssociation);
@@ -122,17 +128,7 @@ public class RestJSB extends ServiceBeanAdapter {
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
-        initializeClusterManager();
-        storageManager = (StorageManager) context.getConfiguration().getEntry(CONFIG_COMPONENT,
-                "storageManager", StorageManager.class);
         new RestApplication();
-    }
-
-    public static void initializeClusterManager() throws IOException {
-        clusterManager = new CloudFederationClusterManager();
-        CloudPlatformManager<LANCluster> lanCloud = new LANCloudPlatformManagerFactory().getInstance();
-        CloudPlatformManager<EC2Cluster> ec2Cloud = new EC2CloudPlatformManagerFactory().getInstance();
-        clusterManager.setClouds(Arrays.asList(lanCloud, ec2Cloud));
     }
 
     /**
@@ -173,19 +169,12 @@ public class RestJSB extends ServiceBeanAdapter {
         RestJSB.provisionMonitor = provisionMonitor;
     }
 
-    /**
-     * An AssociationListener for Provision Monitor instances
-     */
-    static class ProvisionMonitorListener implements AssociationListener<ProvisionMonitor> {
-        public void discovered(Association association, ProvisionMonitor provisionMonitor) {
-            setProvisionMonitor(provisionMonitor);
-        }
-
-        public void changed(Association association, ProvisionMonitor provisionMonitor) {
-        }
-
-        public void broken(Association association, ProvisionMonitor provisionMonitor) {
-            setProvisionMonitor(null);
-        }
+    public static void setClusterManager(CloudFederationClusterManager clusterManager) {
+        RestJSB.clusterManager = clusterManager;
     }
+
+    public static void setStorageManager(StorageManager storageManager) {
+        RestJSB.storageManager = storageManager;
+    }
+
 }

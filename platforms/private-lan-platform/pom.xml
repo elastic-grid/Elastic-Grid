@@ -31,6 +31,12 @@
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-storage</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>private-lan-cloud-platform</artifactId>
             <version>${pom.version}</version>
             <classifier>impl</classifier>
