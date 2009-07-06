@@ -24,8 +24,11 @@
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-core</artifactId>
             <version>${pom.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <glassfish-version>v2ur2-b04</glassfish-version>
+    </properties>
 
 </project>

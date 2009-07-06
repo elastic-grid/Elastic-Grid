@@ -18,7 +18,7 @@
     	<!--<module>tomcat5</module>-->
         <module>tomcat6</module>
         <module>jboss5</module>
-        <!--<module>glassfish2</module>-->
+        <module>glassfish2</module>
 	    <!--<module>apache</module>-->
     </modules>
 
