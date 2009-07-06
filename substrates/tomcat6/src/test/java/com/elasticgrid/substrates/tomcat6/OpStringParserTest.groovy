@@ -59,7 +59,7 @@ class OpStringParserTest extends GroovyTestCase {
     assertEquals 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war', service.stagedData[0].location.toString()
     assertEquals '${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps', service.stagedData[0].installRoot
     def postInstall = tomcat.postInstallAttributes
-    assertFalse postInstall.execDescriptor.useNoHup()
+//    assertFalse postInstall.execDescriptor.useNoHup()
     assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine
     assertEquals '+x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh', postInstall.execDescriptor.inputArgs
 
