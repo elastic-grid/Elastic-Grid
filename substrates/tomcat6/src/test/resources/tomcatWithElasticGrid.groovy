@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 deployment(name:'My Sample Webapp') {
-    groups('rio')
+    groups('elastic-grid')
     tomcat(removeOnDestroy: true) {
         webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
     }

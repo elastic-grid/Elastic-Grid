@@ -17,6 +17,7 @@
         <!--<module>mysql</module>-->
     	<!--<module>tomcat5</module>-->
         <module>tomcat6</module>
+        <module>jboss5</module>
         <!--<module>glassfish2</module>-->
 	    <!--<module>apache</module>-->
     </modules>
@@ -69,6 +70,12 @@
                             <sources>
                                 <fileset>
                                     <directory>${pom.basedir}/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/test/java</directory>
                                     <includes>
                                         <include>**/*.groovy</include>
                                     </includes>

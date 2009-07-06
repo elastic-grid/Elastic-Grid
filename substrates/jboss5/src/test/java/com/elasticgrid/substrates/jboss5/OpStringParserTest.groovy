@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.substrates.tomcat6
+package com.elasticgrid.substrates.jboss5
 
 import org.rioproject.core.provision.StagedSoftware
 import org.rioproject.opstring.GroovyDSLOpStringParser
@@ -28,8 +28,8 @@ class OpStringParserTest extends GroovyTestCase {
     def OpStringParser egParser = new ElasticGridDSLOpStringParser()
 
     void testXmlParserOnTomcatDeployment() {
-        testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithRio.groovy")
-        testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithElasticGrid.groovy")
+        testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/jbossWithRio.groovy")
+        testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/jbossWithElasticGrid.groovy")
     }
     void testXmlParserOnTomcatDeploymentFromFile(parser, file) {
         def opstrings = parser.parse(file, null, false, null, null, null, false, null)

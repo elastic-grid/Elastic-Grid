@@ -7,15 +7,15 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>substrate-tomcat6</artifactId>
+    <artifactId>substrate-jboss5</artifactId>
     <packaging>jar</packaging>
-    <name>Substrates :: Tomcat 6</name>
+    <name>Substrates :: JBoss 5</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>coyote</artifactId>
-            <version>${tomcat-version}</version>
+            <groupId>org.jboss.jbossas</groupId>
+            <artifactId>jboss-as-main</artifactId>
+            <version>${jboss-version}</version>
         </dependency>
 
         <dependency>
@@ -29,7 +29,7 @@
             <artifactId>rio</artifactId>
         </dependency>
 
-        <!-- Elastic Grid Manager -->
+        <!-- Elastic Grid Core -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>
@@ -37,8 +37,15 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.com/maven2</url>
+        </repository>
+    </repositories>
+
     <properties>
-        <tomcat-version>6.0.16</tomcat-version>
+        <jboss-version>5.1.0.GA</jboss-version>
     </properties>
 
 </project>

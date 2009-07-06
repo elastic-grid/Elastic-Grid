@@ -17,18 +17,18 @@
  */
 deployment(name:'My Sample Webapp') {
     groups('elastic-grid')
-    serviceExec(name:'Tomcat') {
-        software(name:'Tomcat', version:'6.0.16', removeOnDestroy: true) {
-            install source:'https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-6.0.16.zip',
-                    target:'${RIO_HOME}/system/external/tomcat', unarchive: true
+    serviceExec(name:'JBoss') {
+        software(name:'JBoss', version:'5.1.0.GA', removeOnDestroy: true) {
+            install source:'https://elastic-grid.s3.amazonaws.com/jboss/jboss-5.1.0.GA.zip',
+                    target:'${RIO_HOME}/system/external/jboss', unarchive: true
             postInstall(removeOnCompletion: true) {
-                execute command:'/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
+                execute command:'/bin/chmod +x ${RIO_HOME}/system/external/jboss/jboss-5.1.0.GA/bin/*.sh',
                         nohup: false
             }
         }
         execute inDirectory:'bin', command: 'catalina.sh run'
         data source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war',
-             target:'${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps'
+             target:'${RIO_HOME}/system/external/jboss/jboss-5.1.0.GA/webapps'
         maintain 1
     }
 }
