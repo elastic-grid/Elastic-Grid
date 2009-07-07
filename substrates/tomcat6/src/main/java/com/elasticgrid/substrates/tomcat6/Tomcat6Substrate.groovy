@@ -49,7 +49,7 @@ class Tomcat6Substrate extends AbstractSubstrate {
     }
     emc.webapp = {Map attributes ->
       data source: attributes.source,
-              target: "\${EG_HOME}/system/external/tomcat/apache-tomcat-$version/webapps"
+              target: "tomcat/apache-tomcat-$version/webapps"
     }
   }
 

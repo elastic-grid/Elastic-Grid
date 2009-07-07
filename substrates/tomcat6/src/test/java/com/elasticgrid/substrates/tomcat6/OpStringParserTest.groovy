@@ -68,7 +68,7 @@ class OpStringParserTest extends GroovyTestCase {
     System.setProperty("EG_HOME", '.')
     assertTrue service.stagedData[0].removeOnDestroy()
     assertEquals 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war', service.stagedData[0].location.toString()
-    assertEquals "\${EG_HOME}/system/external/tomcat/apache-tomcat-${version}/webapps", service.stagedData[0].installRoot
+    assertEquals "tomcat/apache-tomcat-${version}/webapps", service.stagedData[0].installRoot
     def postInstall = tomcat.postInstallAttributes
 //    assertFalse postInstall.execDescriptor.useNoHup()
     assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine

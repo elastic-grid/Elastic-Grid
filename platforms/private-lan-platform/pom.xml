@@ -55,24 +55,19 @@
         </dependency>
 
         <!-- Substrates dependencies -->
-		<!--<dependency>-->
-			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-mysql</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
-        <!--<dependency>-->
-			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-tomcat5</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
         <dependency>
 			<groupId>com.elasticgrid.substrates</groupId>
 			<artifactId>substrate-tomcat6</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+        <dependency>
+			<groupId>com.elasticgrid.substrates</groupId>
+			<artifactId>substrate-jboss5</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
         <!--<dependency>-->
 			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-glassfish2</artifactId>-->
+			<!--<artifactId>substrate-glassfish3</artifactId>-->
 			<!--<version>${pom.version}</version>-->
 		<!--</dependency>-->
 

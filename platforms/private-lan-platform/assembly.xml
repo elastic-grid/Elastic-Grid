@@ -126,12 +126,13 @@
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
         <!-- Substrates dependencies -->
-		<!--<dependencySet>-->
-            <!--<includes>-->
-                <!--<include>com.elasticgrid.substrates:substrate-tomcat6</include>-->
-            <!--</includes>-->
-			<!--<outputDirectory>lib/elastic-grid</outputDirectory>-->
-        <!--</dependencySet>-->
+		<dependencySet>
+            <includes>
+                <include>com.elasticgrid.substrates:substrate-tomcat6</include>
+                <include>com.elasticgrid.substrates:substrate-jboss5</include>
+            </includes>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
+        </dependencySet>
         <!-- Applicationss (REST API) dependencies -->
 		<dependencySet>
             <includes>
