@@ -42,7 +42,7 @@
     </dependencies>
 
     <properties>
-        <tomcat-version>6.0.16</tomcat-version>
+        <tomcat-version>6.0.20</tomcat-version>
     </properties>
 
 </project>

@@ -26,8 +26,9 @@ import com.elasticgrid.opstring.ElasticGridDSLOpStringParser
 class OpStringParserTest extends GroovyTestCase {
   def OpStringParser rioParser = new GroovyDSLOpStringParser()
   def OpStringParser egParser = new ElasticGridDSLOpStringParser()
+  def version = '6.0.20'
 
-  void testXmlParserOnTomcatDeployment() {
+  void testTomcatDSL() {
     testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithRio.groovy")
     testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithElasticGrid.groovy")
   }
@@ -44,24 +45,24 @@ class OpStringParserTest extends GroovyTestCase {
     def systemComponents = service.serviceLevelAgreements.systemRequirements.systemComponents
     assertEquals 1, systemComponents.size()
     assertEquals 'Tomcat', systemComponents[0].attributes['Name']
-    assertEquals '6.0.16', systemComponents[0].attributes['Version']
+    assertEquals version, systemComponents[0].attributes['Version']
     def softwareLoads = systemComponents[0].stagedSoftware
 
     assertEquals 'Expected 1 software load', 1, softwareLoads.length
     def StagedSoftware tomcat = softwareLoads[0]
     assertTrue "Data should be removed on service destroy", tomcat.removeOnDestroy()
-    assertEquals 'https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-6.0.16.zip', tomcat.location.toString()
-    assertEquals '${RIO_HOME}/system/external/tomcat', tomcat.installRoot
+    assertEquals "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip", tomcat.location.toString()
+    assertEquals 'tomcat', tomcat.installRoot
     assertTrue tomcat.unarchive()
 
-    System.setProperty("RIO_HOME", '.')
+    System.setProperty("EG_HOME", '.')
     assertTrue service.stagedData[0].removeOnDestroy()
     assertEquals 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war', service.stagedData[0].location.toString()
-    assertEquals '${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps', service.stagedData[0].installRoot
+    assertEquals "\${EG_HOME}/system/external/tomcat/apache-tomcat-${version}/webapps", service.stagedData[0].installRoot
     def postInstall = tomcat.postInstallAttributes
 //    assertFalse postInstall.execDescriptor.useNoHup()
     assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine
-    assertEquals '+x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh', postInstall.execDescriptor.inputArgs
+    assertEquals "+x tomcat/apache-tomcat-${version}/bin/*.sh", postInstall.execDescriptor.inputArgs
 
     assertEquals 'bin', service.execDescriptor.workingDirectory
     assertEquals 'catalina.sh', service.execDescriptor.commandLine
