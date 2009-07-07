@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>substrate-glassfish2</artifactId>
     <packaging>jar</packaging>
-    <name>Substrates :: GlassFish 2</name>
+    <name>Substrates :: GlassFish 3</name>
 
     <dependencies>
 
@@ -28,7 +28,7 @@
     </dependencies>
 
     <properties>
-        <glassfish-version>v2ur2-b04</glassfish-version>
+        <glassfish-version>v3</glassfish-version>
     </properties>
 
 </project>

@@ -14,15 +14,24 @@
 
     <modules>
         <module>substrate-api</module>
-        <!--<module>mysql</module>-->
-    	<!--<module>tomcat5</module>-->
         <module>tomcat6</module>
         <module>jboss5</module>
-        <module>glassfish2</module>
-	    <!--<module>apache</module>-->
+        <module>glassfish3</module>
+	<!--<module>apache</module>-->
+        <!--<module>mysql</module>-->
     </modules>
 
     <dependencies>
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>boot</artifactId>
+        </dependency>
+
         <!-- Groovy dependencies -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

@@ -32,15 +32,15 @@ class OpStringParserTest extends GroovyTestCase {
     URL url = "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip".toURL()
     println "Testing Substrate availability on $url"
     try {
-      url.newReader().getText()
+      url.newReader().read()
     } catch (IOException) {
       fail "Could not download Substrate from $url"
     }
   }
 
   void testTomcatDSL() {
-    testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithRio.groovy")
-    testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithElasticGrid.groovy")
+    testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithoutDSL.groovy")
+    testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithDSL.groovy")
   }
 
   void testXmlParserOnTomcatDeploymentFromFile(parser, file) {

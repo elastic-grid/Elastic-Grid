@@ -12,6 +12,7 @@
     <name>Substrates :: Tomcat 6</name>
 
     <dependencies>
+        <!-- Tomcat dependencies -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>coyote</artifactId>
@@ -22,16 +23,7 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>substrate-api</artifactId>
             <version>${pom.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>boot</artifactId>
-        </dependency>
+        </dependency>        
 
         <!-- Elastic Grid Manager -->
         <dependency>

@@ -12,9 +12,10 @@
     <name>Substrates :: JBoss 5</name>
 
     <dependencies>
+        <!-- JBoss dependencies -->
         <dependency>
             <groupId>org.jboss.jbossas</groupId>
-            <artifactId>jboss-as-main</artifactId>
+            <artifactId>jboss-as-management</artifactId>
             <version>${jboss-version}</version>
         </dependency>
 
@@ -22,11 +23,6 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>substrate-api</artifactId>
             <version>${pom.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio</artifactId>
         </dependency>
 
         <!-- Elastic Grid Core -->
