@@ -28,6 +28,16 @@ class OpStringParserTest extends GroovyTestCase {
   def OpStringParser egParser = new ElasticGridDSLOpStringParser()
   def version = '6.0.20'
 
+  void testSubstrateAvailability() {
+    URL url = "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip".toURL()
+    println "Testing Substrate availability on $url"
+    try {
+      url.newReader().getText()
+    } catch (IOException) {
+      fail "Could not download Substrate from $url"
+    }
+  }
+
   void testTomcatDSL() {
     testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithRio.groovy")
     testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithElasticGrid.groovy")
