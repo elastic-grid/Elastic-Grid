@@ -7,24 +7,22 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>substrate-glassfish2</artifactId>
+    <artifactId>substrate-load-balancer</artifactId>
     <packaging>jar</packaging>
-    <name>Substrates :: GlassFish 2</name>
+    <name>Substrates :: Load Balancer</name>
 
     <dependencies>
-
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>substrate-api</artifactId>
             <version>${pom.version}</version>
-        </dependency>
+        </dependency>        
 
-        <!-- Elastic Grid Core -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
-            <artifactId>elastic-grid-core</artifactId>
+            <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

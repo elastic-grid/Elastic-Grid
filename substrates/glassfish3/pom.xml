@@ -7,32 +7,28 @@
         <version>0.9.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>substrate-tomcat5</artifactId>
+    <artifactId>substrate-glassfish2</artifactId>
     <packaging>jar</packaging>
-    <name>Substrates :: Tomcat 5</name>
+    <name>Substrates :: GlassFish 3</name>
 
     <dependencies>
-		<dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>catalina</artifactId>
-            <version>${tomcat-version}</version>
-        </dependency>
+
         <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>catalina-cluster</artifactId>
-            <version>${tomcat-version}</version>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>substrate-api</artifactId>
+            <version>${pom.version}</version>
         </dependency>
-		<!--
+
+        <!-- Elastic Grid Core -->
         <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>tomcat-coyote</artifactId>
-            <version>${tomcat-version}</version>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-core</artifactId>
+            <version>${pom.version}</version>
         </dependency>
-		-->
     </dependencies>
 
     <properties>
-        <tomcat-version>5.5.23</tomcat-version>
+        <glassfish-version>v3</glassfish-version>
     </properties>
 
 </project>

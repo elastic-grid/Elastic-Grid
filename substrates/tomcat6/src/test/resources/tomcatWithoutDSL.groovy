@@ -16,19 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 deployment(name:'My Sample Webapp') {
-    groups('rio')
+    groups('elastic-grid')
     serviceExec(name:'Tomcat') {
-        software(name:'Tomcat', version:'6.0.16', removeOnDestroy: true) {
-            install source:'https://elastic-grid.s3.amazonaws.com/tomcat/apache-tomcat-6.0.16.zip',
-                    target:'${RIO_HOME}/system/external/tomcat', unarchive: true
+        software(name:'Tomcat', version:'6.0.20', removeOnDestroy: true) {
+            install source:'https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-6.0.20.zip',
+                    target:'tomcat', unarchive: true
             postInstall(removeOnCompletion: true) {
-                execute command:'/bin/chmod +x ${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/bin/*.sh',
-                        nohup: false
+                execute command: '/bin/chmod +x tomcat/apache-tomcat-6.0.20/bin/*.sh'
             }
         }
         execute inDirectory:'bin', command: 'catalina.sh run'
         data source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war',
-             target:'${RIO_HOME}/system/external/tomcat/apache-tomcat-6.0.16/webapps'
+             target:'tomcat/apache-tomcat-6.0.20/webapps'
         maintain 1
     }
 }
