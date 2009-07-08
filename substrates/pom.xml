@@ -19,6 +19,7 @@
         <!--<module>glassfish3</module>-->
 	    <!--<module>apache</module>-->
         <!--<module>mysql</module>-->
+        <module>load-balancer</module>
     </modules>
 
     <dependencies>

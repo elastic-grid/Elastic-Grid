@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid.substrates</groupId>
+        <artifactId>substrates</artifactId>
+        <version>0.9.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>substrate-load-balancer</artifactId>
+    <packaging>jar</packaging>
+    <name>Substrates :: Load Balancer</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>substrate-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>        
+
+        <!-- Elastic Grid Manager -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
