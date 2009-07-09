@@ -18,6 +18,7 @@
 
 package com.elasticgrid.platforms.ec2;
 
+import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.NodeProfile;
@@ -27,19 +28,17 @@ import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.model.ec2.impl.EC2NodeImpl;
 import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
 import com.elasticgrid.utils.amazon.AWSUtils;
-import com.elasticgrid.config.EC2Configuration;
 import org.easymock.EasyMock;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import java.io.File;
-import java.io.IOException;
 
 public class EC2CloudPlatformManagerTest {
     private EC2CloudPlatformManager cloudPlatformManager;
