@@ -40,6 +40,13 @@ public interface LoadBalancerManager {
      */
     LoadBalancer createLoadBalancer(String name, int inboundPort, int defaultOutboundPort, String protocol) throws LoadBalancingException, RemoteException;
 
+    /**
+     * Retrieve load-balancer information/details
+     * @param name the name of the load-balancer for which information should gathered
+     * @return the load-balancer details
+     * @throws LoadBalancingException
+     * @throws RemoteException
+     */
     LoadBalancer getLoadBalancer(String name) throws LoadBalancingException, RemoteException;
 
     /**
