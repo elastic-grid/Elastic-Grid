@@ -30,7 +30,7 @@ class LoadBalancerSubstrate extends AbstractSubstrate {
   }
 
   public void addDomainSpecificLanguageFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
-    emc.lb = { Map attributes ->
+    emc.loadBalancer = { Map attributes ->
       loadBalancedService = attributes.on
       println "Should load-balance $loadBalancedService"
       /*

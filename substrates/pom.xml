@@ -19,7 +19,7 @@
         <!--<module>glassfish3</module>-->
 	    <!--<module>apache</module>-->
         <!--<module>mysql</module>-->
-        <!--module>load-balancer</module-->
+        <module>load-balancer</module>
     </modules>
 
     <dependencies>
@@ -49,15 +49,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

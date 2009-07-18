@@ -22,34 +22,39 @@ import com.elasticgrid.loadbalancing.LoadBalancerManager;
 import com.elasticgrid.loadbalancing.LoadBalancingException;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.Listener;
+import com.xerox.amazonws.ec2.LoadBalancer;
 import com.xerox.amazonws.ec2.LoadBalancing;
-import org.easymock.EasyMock;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.reset;
-import static org.easymock.classextension.EasyMock.verify;
-import org.testng.annotations.AfterTest;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.same;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class ElasticLoadBalancingLoadBalancerManagerTest {
     private LoadBalancerManager lbm;
     private LoadBalancing elb;
-    private Jec2 ec2;
+    //private Jec2 ec2;
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCreationOfLoadBalancer() throws LoadBalancingException, RemoteException, com.xerox.amazonws.ec2.LoadBalancingException {
-        expect(elb.createLoadBalancer("test", EasyMock.<List<Listener>>anyObject(), Collections.singletonList((String) null), "??"))
-                .andReturn("the-dns-information.mydomain.com");
-        replay(elb);
-        replay(ec2);
+        when(elb.createLoadBalancer(eq("test"), (List<Listener>) anyObject(), same(Collections.singletonList((String) null)), eq("??")))
+                .thenReturn("the-dns-information.mydomain.com");
+        List<com.xerox.amazonws.ec2.LoadBalancer> lbs = Arrays.asList(
+            new LoadBalancer("test", "the-dns-information.mydomain.com", null, null, null, null, null)      
+        );
+        when(elb.describeLoadBalancers(Collections.singletonList("test"))).thenReturn(lbs);
         ElasticLoadBalancingLoadBalancer lb = (ElasticLoadBalancingLoadBalancer) lbm.createLoadBalancer("test", 80, 8080, "HTTP");
         assert "the-dns-information.mydomain.com".equals(lb.getDnsName());
+        verify(elb);
     }
 
 //    @Test(expectedExceptions = ClusterAlreadyRunningException.class)
@@ -86,16 +91,9 @@ public class ElasticLoadBalancingLoadBalancerManagerTest {
     @BeforeTest
     @SuppressWarnings("unchecked")
     public void setUpLoadBalancerManager() throws IOException {
-        elb = createMock(LoadBalancing.class);
-        ec2 = createMock(Jec2.class);
+        elb = mock(LoadBalancing.class);
+        Jec2 ec2 = mock(Jec2.class);
         lbm = new ElasticLoadBalancingLoadBalancerManager(elb, ec2);
     }
 
-    @AfterTest
-    public void verifyMocks() {
-        verify(elb);
-        reset(elb);
-        verify(ec2);
-        reset(ec2);
-    }
 }

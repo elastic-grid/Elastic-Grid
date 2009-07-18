@@ -18,7 +18,7 @@
 deployment(name: 'My Sample Webapp') {
   groups('elastic-grid')
 
-  lb on:'Tomcat', bind:80, to:8080
+  loadBalancer on:'Tomcat', bind:80, to:8080
 
   /*
   tomcat(removeOnDestroy: true) {
