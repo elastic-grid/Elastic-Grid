@@ -29,11 +29,6 @@
         <!-- Elastic Grid Storage dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-storage</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-s3-storage</artifactId>
             <version>${pom.version}</version>
             <optional>true</optional>

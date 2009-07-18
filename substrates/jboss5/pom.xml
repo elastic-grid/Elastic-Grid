@@ -25,7 +25,7 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid Core -->
+        <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>

@@ -39,7 +39,7 @@ class ElasticGridDSLOpStringParser extends GroovyDSLOpStringParser {
     // register each substrate in the DSL
     substrates.each() {Substrate substrate ->
       logger.info "Adding DSL features from ${substrate.name} substrate..."
-      substrate.addDomainSpecificLangueFeatures builder, emc
+      substrate.addDomainSpecificLanguageFeatures builder, emc
     }
   }
 }

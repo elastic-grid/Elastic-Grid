@@ -24,6 +24,7 @@ import org.rioproject.opstring.OpStringParser
 import com.elasticgrid.opstring.ElasticGridDSLOpStringParser
 
 class OpStringParserTest extends GroovyTestCase {
+
   def OpStringParser rioParser = new GroovyDSLOpStringParser()
   def OpStringParser egParser = new ElasticGridDSLOpStringParser()
   def version = '5.1.0.GA'
@@ -39,11 +40,11 @@ class OpStringParserTest extends GroovyTestCase {
   }
 
   void testXmlParserOnTomcatDeployment() {
-    testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/jbossWithoutDSL.groovy")
-    testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/jbossWithDSL.groovy")
+    testXmlParserOnJBossDeploymentFromFile rioParser, new File("src/test/resources/jbossWithoutDSL.groovy")
+    testXmlParserOnJBossDeploymentFromFile egParser, new File("src/test/resources/jbossWithDSL.groovy")
   }
 
-  void testXmlParserOnTomcatDeploymentFromFile(parser, file) {
+  void testXmlParserOnJBossDeploymentFromFile(parser, file) {
     def opstrings = parser.parse(file, null, false, null, null, null, false, null)
     assertEquals "There should be one and only one opstring", 1, opstrings.size()
     OpString opstring = opstrings[0]

@@ -20,16 +20,10 @@ package com.elasticgrid.storage.rackspace;
 import com.elasticgrid.storage.Storable;
 import com.mosso.client.cloudfiles.FilesClient;
 import com.mosso.client.cloudfiles.FilesObject;
-import com.mosso.client.cloudfiles.FilesAuthorizationException;
-import com.mosso.client.cloudfiles.FilesInvalidNameException;
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.File;
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
-import org.apache.commons.io.IOUtils;
 
 /**
  * {@link Storable} providing support for Rackspace Cloud Files.
@@ -59,7 +53,9 @@ public class CloudFilesStorable implements Storable {
         try {
             return object.getObjectAsStream();
         } catch (Exception e) {
-            throw new IOException("Can't get stream from storable", e);
+            IOException ioe = new IOException("Can't get stream from storable");
+            ioe.initCause(e);
+            throw ioe;
         }
     }
 
@@ -68,7 +64,9 @@ public class CloudFilesStorable implements Storable {
         try {
             object.writeObjectToFile(f);
         } catch (Exception e) {
-            throw new IOException("Can't write storable to file", e);
+            IOException ioe = new IOException("Can't get write storable to file");
+            ioe.initCause(e);
+            throw ioe;
         }
         return f;
     }

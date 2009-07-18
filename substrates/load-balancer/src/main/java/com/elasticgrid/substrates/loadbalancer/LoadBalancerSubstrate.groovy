@@ -24,14 +24,16 @@ import com.elasticgrid.substrates.FirewallRule.IpProtocol
 
 class LoadBalancerSubstrate extends AbstractSubstrate {
 
+
   public String getName() {
-    return "Load Balancer";
+    return "Load Balancer"
   }
 
-  public void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
-    emc.loadbalancer = { Map attributes, Closure cl ->
-      version = attributes.version ?: defaultVersion
-      def removeOnDestroy = attributes.removeOnDestroy ?: true
+  public void addDomainSpecificLanguageFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
+    emc.lb = { Map attributes ->
+      loadBalancedService = attributes.on
+      println "Should load-balance $loadBalancedService"
+      /*
       serviceExec(name: 'Tomcat') {
         software(name: 'Tomcat', version: version, removeOnDestroy: removeOnDestroy) {
           install source: "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip",
@@ -45,10 +47,7 @@ class LoadBalancerSubstrate extends AbstractSubstrate {
         maintain 1
         maxPerMachine 1
       }
-    }
-    emc.webapp = {Map attributes ->
-      data source: attributes.source,
-              target: "tomcat/apache-tomcat-$version/webapps"
+      */
     }
   }
 

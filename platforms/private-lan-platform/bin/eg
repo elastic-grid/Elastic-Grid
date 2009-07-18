@@ -136,7 +136,7 @@ if [ "$start" = "1" ]; then
         fi
     fi
 
-    classpath="-cp $(toNative $EG_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar:$EG_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar:$EG_LIB/elastic-grid/elastic-grid-utils-${pom.version}.jar:$EG_LIB/elastic-grid/jets3t-0.7.1.jar:$EG_LIB/elastic-grid/commons-logging-1.1.1.jar:$EG_LIB/elastic-grid/commons-httpclient-3.1.jar:$EG_LIB/elastic-grid/commons-codec-1.3.jar)"
+    classpath="-cp $(toNative $EG_LIB/boot.jar:$JINI_LIB/start.jar:$JAVA_HOME/lib/tools.jar:$EG_LIB/groovy/groovy-all-1.6.2.jar:$EG_LIB/elastic-grid/elastic-grid-core-${pom.version}.jar:$EG_LIB/elastic-grid/elastic-grid-utils-${pom.version}.jar:$EG_LIB/elastic-grid/jets3t-0.7.1.jar:$EG_LIB/elastic-grid/commons-logging-1.1.1.jar:$EG_LIB/elastic-grid/commons-httpclient-3.1.jar:$EG_LIB/elastic-grid/commons-codec-1.3.jar)"
     agentpath="-javaagent:$(toNative $EG_LIB/boot.jar)"
     launchTarget=com.sun.jini.start.ServiceStarter
     if [ -z "$1" ] ; then
@@ -170,7 +170,7 @@ else
     do
         CP=$CP:$j
     done
-    classpath="$(toNative $CP:$EG_LIB/rio-cli.jar:$EG_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$EG_LIB/spring/spring.jar:$EG_LIB/jakarta-commons/commons-logging.jar:$EG_LIB/groovy/groovy-all-1.6.0.jar)"
+    classpath="$(toNative $CP:$EG_LIB/rio-cli.jar:$EG_LIB/rio.jar:$JINI_LIB/jsk-lib.jar:$JINI_LIB/jsk-platform.jar:$EG_LIB/spring/spring.jar:$EG_LIB/jakarta-commons/commons-logging.jar:$EG_LIB/groovy/groovy-all-1.6.2.jar)"
     "$JAVACMD" -cp $classpath $JAVA_MEM_OPTIONS $EG_OPTS \
         -Djava.security.policy=$EG_HOME/policy/policy.all \
         -Djava.protocol.handler.pkgs=com.elasticgrid.aws \

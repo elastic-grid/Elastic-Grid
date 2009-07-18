@@ -57,7 +57,9 @@ public class S3Storable implements Storable {
         try {
             return object.getDataInputStream();
         } catch (S3ServiceException e) {
-            throw new IOException("Can't get stream from storable", e);
+            IOException ioe = new IOException("Can't get stream from storable");
+            ioe.initCause(e);
+            throw ioe;
         }
     }
 

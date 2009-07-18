@@ -15,9 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-deployment(name:'My Sample Webapp') {
-    groups('elastic-grid')
-    tomcat(removeOnDestroy: true) {
-        webapp source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
-    }
+deployment(name: 'My Sample Webapp') {
+  groups('elastic-grid')
+
+  lb on:'Tomcat', bind:80, to:8080
+
+  /*
+  tomcat(removeOnDestroy: true) {
+    webapp source: 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
+  }
+  */
+
 }

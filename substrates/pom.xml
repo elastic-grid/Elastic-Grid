@@ -19,7 +19,7 @@
         <!--<module>glassfish3</module>-->
 	    <!--<module>apache</module>-->
         <!--<module>mysql</module>-->
-        <module>load-balancer</module>
+        <!--module>load-balancer</module-->
     </modules>
 
     <dependencies>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.2</version>
             <scope>provided</scope>
         </dependency>
         <!-- Tests dependencies -->

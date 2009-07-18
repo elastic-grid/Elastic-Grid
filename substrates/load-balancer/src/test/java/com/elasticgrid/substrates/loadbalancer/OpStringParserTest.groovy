@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.elasticgrid.substrates.tomcat6
+package com.elasticgrid.substrates.loadbalancer
 
 import org.rioproject.core.provision.StagedSoftware
 import org.rioproject.opstring.GroovyDSLOpStringParser
@@ -26,8 +26,8 @@ import com.elasticgrid.opstring.ElasticGridDSLOpStringParser
 class OpStringParserTest extends GroovyTestCase {
   def OpStringParser rioParser = new GroovyDSLOpStringParser()
   def OpStringParser egParser = new ElasticGridDSLOpStringParser()
-  def version = '6.0.20'
 
+  /*
   void testSubstrateAvailability() {
     URL url = "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip".toURL()
     println "Testing Substrate availability on $url"
@@ -37,14 +37,15 @@ class OpStringParserTest extends GroovyTestCase {
       fail "Could not download Substrate from $url"
     }
   }
+  */
 
-  void testTomcatDSL() {
-    testXmlParserOnTomcatDeploymentFromFile rioParser, new File("src/test/resources/tomcatWithoutDSL.groovy")
-    testXmlParserOnTomcatDeploymentFromFile egParser, new File("src/test/resources/tomcatWithDSL.groovy")
+  void testLoadBalancerDSL() {
+    testXmlParserOnLoadBalancerDeploymentFromFile rioParser, new File("src/test/resources/loadbalancerWithDSL.groovy")
   }
 
-  void testXmlParserOnTomcatDeploymentFromFile(parser, file) {
+  void testXmlParserOnLoadBalancerDeploymentFromFile(parser, file) {
     def opstrings = parser.parse(file, null, false, null, null, null, false, null)
+    /*
     assertEquals "There should be one and only one opstring", 1, opstrings.size()
     OpString opstring = opstrings[0]
     assertEquals "The OpString name is not valid", 'My Sample Webapp', opstring.name
@@ -79,6 +80,7 @@ class OpStringParserTest extends GroovyTestCase {
     assertEquals 'run', service.execDescriptor.inputArgs
 
     assertEquals 1, service.planned
+    */
   }
 
 }

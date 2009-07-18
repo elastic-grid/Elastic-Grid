@@ -38,6 +38,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
+
         <!-- Tests dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>

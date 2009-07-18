@@ -38,7 +38,7 @@ public interface Substrate {
      * @param builder the XML {@link MarkupBuilder}
      * @param emc the {@link ExpandoMetaClass} to use in order to inject custom parsing logic
      */
-    void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc);
+    void addDomainSpecificLanguageFeatures(MarkupBuilder builder, ExpandoMetaClass emc);
 
     /**
      * Return the list of {@link Watch}es for the underlying application.

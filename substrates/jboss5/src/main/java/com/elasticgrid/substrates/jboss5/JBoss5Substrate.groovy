@@ -23,13 +23,14 @@ import com.elasticgrid.substrates.FirewallRule
 import com.elasticgrid.substrates.FirewallRule.IpProtocol
 
 class JBoss5Substrate extends AbstractSubstrate {
-    def defaultVersion = '5.1.0.GA'
+
+  def defaultVersion = '5.1.0.GA'
 
     public String getName() {
-        return "JBoss 5";
+        return "JBoss 5"
     }
 
-    public void addDomainSpecificLangueFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
+    public void addDomainSpecificLanguageFeatures(MarkupBuilder builder, ExpandoMetaClass emc) {
         emc.jboss = { Map attributes, Closure cl ->
             version = attributes.version ?: defaultVersion
             def removeOnDestroy = attributes.removeOnDestroy ?: true

@@ -16,13 +16,20 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>substrate-api</artifactId>
             <version>${pom.version}</version>
-        </dependency>        
+        </dependency>
 
         <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>com.elasticgrid</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>substrate-tomcat6</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
