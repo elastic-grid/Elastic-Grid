@@ -23,7 +23,6 @@ import com.elasticgrid.substrates.FirewallRule
 import com.elasticgrid.substrates.FirewallRule.IpProtocol
 
 class Tomcat6Substrate extends AbstractSubstrate {
-
   def defaultVersion = '6.0.20'
 
   public String getName() {
@@ -39,7 +38,7 @@ class Tomcat6Substrate extends AbstractSubstrate {
           install source: "https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-${version}.zip",
                   target: 'tomcat', unarchive: true
           postInstall(removeOnCompletion: removeOnDestroy) {
-            execute command: "/bin/chmod +x tomcat/apache-tomcat-$version/bin/*.sh"
+            execute command: "/bin/chmod +x bin/*.sh"
           }
         }
         execute inDirectory: 'bin', command: 'catalina.sh run'

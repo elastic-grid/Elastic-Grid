@@ -39,10 +39,10 @@ class JBoss5Substrate extends AbstractSubstrate {
                     install source: "https://elastic-grid-substrates.s3.amazonaws.com/jboss/jboss-${version}-jdk6.zip",
                             target: 'jboss', unarchive: true
                     postInstall(removeOnCompletion: removeOnDestroy) {
-                        execute command: "/bin/chmod +x jboss/jboss-$version/bin/*.sh"
+                        execute command: "/bin/chmod +x bin/*.sh"
                     }
                 }
-                execute inDirectory: 'bin', command: 'jboss.sh run'
+                execute inDirectory: 'bin', command: 'run.sh -Djboss.platform.mbeanserver'
                 cl()
                 maintain 1
                 maxPerMachine 1
