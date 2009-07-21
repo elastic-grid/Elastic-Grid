@@ -44,8 +44,6 @@ class JBoss5Substrate extends AbstractSubstrate {
                 }
                 execute inDirectory: 'bin', command: 'run.sh -Djboss.platform.mbeanserver'
                 cl()
-                maintain 1
-                maxPerMachine 1
             }
         }
         emc.application = { Map attributes ->

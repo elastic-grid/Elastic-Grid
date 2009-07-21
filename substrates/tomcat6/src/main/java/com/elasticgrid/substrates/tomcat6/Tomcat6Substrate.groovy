@@ -43,8 +43,6 @@ class Tomcat6Substrate extends AbstractSubstrate {
         }
         execute inDirectory: 'bin', command: 'catalina.sh run'
         cl()
-        maintain 1
-        maxPerMachine 1
       }
     }
     emc.webapp = {Map attributes ->
