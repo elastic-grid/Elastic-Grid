@@ -32,4 +32,3 @@ deployment(name: 'My Sample Webapp') {
     maxPerMachine 1
   }
 }
-
