@@ -15,9 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-deployment(name:'My Sample Webapp') {
-    groups('elastic-grid')
-    jboss(removeOnDestroy: true) {
-        application source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
+deployment(name: 'My Sample Webapp') {
+  groups('elastic-grid')
+  jboss(removeOnDestroy: true) {
+    application source: 'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war'
+
+    // monitor maximum time spent on a HTTP call
+    sla(id: 'active-thread-count', high: 100) {
+      policy type: 'notify'
+      monitor name: 'Active Thread Count',
+              objectName: 'jboss.system:type=ServerInfo',
+              attribute: 'activeThreadCount', period: 1000
     }
+
+    maintain 1
+    maxPerMachine 1
+  }
 }
