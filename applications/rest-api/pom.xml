@@ -19,6 +19,12 @@
             <groupId>com.elasticgrid</groupId>
             <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.java.dev.jets3t</groupId>
+                    <artifactId>jets3t</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 		<!-- Elastic Grid LAN provisioner -->

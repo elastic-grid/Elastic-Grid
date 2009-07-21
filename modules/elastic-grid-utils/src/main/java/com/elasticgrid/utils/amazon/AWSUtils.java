@@ -18,10 +18,9 @@
 
 package com.elasticgrid.utils.amazon;
 
-import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.S3Service;
-import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
+import org.jets3t.service.security.AWSCredentials;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -92,8 +91,16 @@ public class AWSUtils {
         return awsProperties;
     }
 
+    public static String getAccessID() throws IOException {
+        return loadEC2Configuration().getProperty("aws.accessId");
+    }
+
+    public static String getSecretKey() throws IOException {
+        return loadEC2Configuration().getProperty("aws.secretKey");
+    }
+
     public static String getDropBucket() throws IOException {
-        return (String) loadEC2Configuration().getProperty("eg.s3.dropBucket");
+        return loadEC2Configuration().getProperty("eg.s3.dropBucket");
     }
 
     public static S3Service getS3Service() {

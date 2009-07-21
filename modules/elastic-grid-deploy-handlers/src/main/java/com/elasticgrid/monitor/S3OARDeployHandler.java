@@ -19,7 +19,6 @@
 package com.elasticgrid.monitor;
 
 import com.elasticgrid.config.EC2Configuration;
-import com.elasticgrid.aws.s3.AWSURLStreamHandlerFactory;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
@@ -36,6 +35,7 @@ import org.rioproject.opstring.OpStringLoader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -56,15 +56,15 @@ import java.util.logging.Level;
  * @author Jerome Bernard
  */
 public class S3OARDeployHandler extends AbstractOARDeployHandler {
-    private String dropBucket;
-    private File installDirectory;
+    private final String dropBucket;
+    private final File installDirectory;
     private S3Service s3;
-    private boolean deleteAfterCopy;
+    private final boolean deleteAfterCopy;
     private final List<S3Object> processedOARs = new ArrayList<S3Object>();
 
-    static {
-        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
-    }
+//    static {
+//        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
+//    }
 
     /**
      * Create a S3OARDeployHandler with drop bucket and install directory
@@ -84,11 +84,13 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
      * @param deleteAfterCopy  Whether to remove the OAR from S3 after copying it
      */
     public S3OARDeployHandler(String dropBucket, File installDirectory, boolean deleteAfterCopy) {
+        if (dropBucket == null)
+            throw new IllegalArgumentException("The drop bucket can't be null");
         this.dropBucket = dropBucket;
         this.installDirectory = installDirectory;
         this.deleteAfterCopy = deleteAfterCopy;
         try {
-            // retrive S3 configuration parameters
+            // retrieve S3 configuration parameters
             Properties awsConfig = AWSUtils.loadEC2Configuration();
             String awsAccessID = awsConfig.getProperty(EC2Configuration.AWS_ACCESS_ID);
             String awsSecretKey = awsConfig.getProperty(EC2Configuration.AWS_SECRET_KEY);
@@ -129,6 +131,10 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
         try {
             // get a handle to the S3 bucket
             S3Bucket bucket = s3.getBucket(dropBucket);
+            if (bucket == null) {
+                logger.log(Level.WARNING, "Can't use S3 bucket " + dropBucket + ". Skipping...");
+                return Collections.emptyList();
+            }
             // retrieve the list of objects in the bucket
             List<S3Object> objects = new ArrayList<S3Object>(Arrays.asList(s3.listObjects(bucket)));
             // filter the list so that only OARs are kept

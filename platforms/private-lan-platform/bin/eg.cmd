@@ -43,10 +43,10 @@ if "%1"=="start" goto start
 set cliExt="%EG_HOME%\config\cli.groovy"
 set command_line=%*
 set launchTarget=com.elasticgrid.tools.cli.CLI
-set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-cli-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-ec2-provisioner-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\private-lan-provisioner-${pom.version}.jar"
+set classpath=-cp "%EG_HOME%\lib\rio-cli.jar";"%JINI_LIB%\jsk-lib.jar";"%JINI_LIB%\jsk-platform.jar";"%EG_HOME%\lib\spring\spring.jar";"%EG_HOME%\lib\jakarta-commons\commons-logging.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.2.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-cli-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\substrate-api-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-storage-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-ec2-provisioner-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\amazon-s3-storage-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\private-lan-provisioner-${pom.version}.jar"
 set props="-DRIO_HOME=%RIO_HOME% -DJINI_HOME=%JINI_HOME%"
 "%JAVACMD%" %classpath% -Xms256m -Xmx256m ^
-    -DRIO_HOME="%EG_HOME%" -DJINI_HOME="%JINI_HOME%" -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
+    -DEG_HOME="%EG_HOME%" -DRIO_HOME="%EG_HOME%" -DJINI_HOME="%JINI_HOME%" -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
     -Djava.util.logging.config.file=%EG_HOME%\config\eg-cli.logging.properties ^
     %launchTarget% %cliExt% %command_line%
 goto end
@@ -65,14 +65,14 @@ set RIO_LOG_DIR="%EG_HOME%\logs"
 set RIO_NATIVE_DIR="%EG_HOME%\lib\native";"%EG_HOME%\lib\hyperic"
 set PATH=%PATH%;%RIO_NATIVE_DIR%
 
-set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.0.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-utils-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\jets3t-0.7.1.jar";"%EG_HOME%\lib\elastic-grid\commons-logging-1.1.1.jar";"%EG_HOME%\lib\elastic-grid\commons-httpclient-3.1.jar";"%EG_HOME%\lib\elastic-grid\commons-codec-1.3.jar"
+set classpath=-cp "%EG_HOME%\lib\boot.jar";"%JINI_HOME%\lib\start.jar";"%JAVA_HOME%\lib\tools.jar";"%EG_HOME%\lib\groovy\groovy-all-1.6.2.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-core-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\elastic-grid-utils-${pom.version}.jar";"%EG_HOME%\lib\elastic-grid\jets3t-0.7.1.jar";"%EG_HOME%\lib\elastic-grid\commons-logging-1.1.1.jar";"%EG_HOME%\lib\elastic-grid\commons-httpclient-3.1.jar";"%EG_HOME%\lib\elastic-grid\commons-codec-1.3.jar"
 set agentpath=-javaagent:"%EG_HOME%\lib\boot.jar"
 
 set launchTarget=com.sun.jini.start.ServiceStarter
 
 "%JAVA_HOME%\bin\java" -server %JAVA_MEM_OPTIONS% %classpath% %agentpath% %EG_OPTS% %libpath% ^
     -Djava.security.policy="%EG_HOME%\policy\policy.all" ^
-    -Djava.protocol.handler.pkgs=net.jini.url ^
+    -Djava.protocol.handler.pkgs=com.elasticgrid.storage.amazon.s3 ^
     -DRIO_HOME="%EG_HOME%" ^
     -DEG_HOME="%EG_HOME%" ^
     -Dorg.rioproject.home="%EG_HOME%" ^

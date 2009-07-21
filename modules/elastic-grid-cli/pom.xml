@@ -18,6 +18,26 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.java.dev.jets3t</groupId>
+                    <artifactId>jets3t</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Elastic Grid Storage dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-s3-storage</artifactId>
+            <version>${pom.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>rackspace-cloudfiles-storage</artifactId>
+            <version>${pom.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- Elastic Grid Utils -->
@@ -25,6 +45,12 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-utils</artifactId>
             <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.java.dev.jets3t</groupId>
+                    <artifactId>jets3t</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Elastic Grid EC2 provisioner -->
@@ -32,6 +58,12 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>amazon-ec2-provisioner</artifactId>
             <version>${pom.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.java.dev.jets3t</groupId>
+                    <artifactId>jets3t</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Elastic Grid EC2 provisioner -->
         <dependency>
@@ -63,12 +95,6 @@
             <groupId>com.noelios.restlet</groupId>
             <artifactId>com.noelios.restlet</artifactId>
             <version>${restlet-release-version}</version>
-        </dependency>
-
-        <!-- Amazon S3 dependencies -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
         </dependency>
 
         <!-- Command line parsing -->
@@ -120,6 +146,8 @@
                     <target>1.5</target>
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
                 </configuration>
             </plugin>
             <plugin>

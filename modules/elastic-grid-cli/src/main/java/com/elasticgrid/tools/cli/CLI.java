@@ -25,6 +25,7 @@ import com.elasticgrid.model.lan.LANCluster;
 import com.elasticgrid.model.ec2.EC2Cluster;
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.elasticgrid.platforms.lan.LANCloudPlatformManagerFactory;
+import com.elasticgrid.storage.StorageManager;
 import org.rioproject.tools.cli.DirHandler;
 import org.rioproject.tools.cli.ListHandler;
 import org.rioproject.tools.cli.MonitorControl;

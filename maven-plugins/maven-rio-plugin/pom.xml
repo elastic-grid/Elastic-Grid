@@ -147,6 +147,10 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
                 </configuration>
             </plugin>
             <plugin>

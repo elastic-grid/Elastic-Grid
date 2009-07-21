@@ -25,7 +25,13 @@
         <!-- Core Services dependencies -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>cluster-manager-jsb</artifactId>
+            <artifactId>elastic-grid-cluster</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-storage</artifactId>
             <version>${pom.version}</version>
             <classifier>impl</classifier>
         </dependency>
@@ -55,24 +61,19 @@
         </dependency>
 
         <!-- Substrates dependencies -->
-		<!--<dependency>-->
-			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-mysql</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
-        <!--<dependency>-->
-			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-tomcat5</artifactId>-->
-			<!--<version>${pom.version}</version>-->
-		<!--</dependency>-->
         <dependency>
 			<groupId>com.elasticgrid.substrates</groupId>
 			<artifactId>substrate-tomcat6</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+        <dependency>
+			<groupId>com.elasticgrid.substrates</groupId>
+			<artifactId>substrate-jboss5</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
         <!--<dependency>-->
 			<!--<groupId>com.elasticgrid.substrates</groupId>-->
-			<!--<artifactId>substrate-glassfish2</artifactId>-->
+			<!--<artifactId>substrate-glassfish3</artifactId>-->
 			<!--<version>${pom.version}</version>-->
 		<!--</dependency>-->
 

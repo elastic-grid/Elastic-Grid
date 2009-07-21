@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid.substrates</groupId>
+        <artifactId>substrates</artifactId>
+        <version>0.9.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>substrate-glassfish2</artifactId>
+    <packaging>jar</packaging>
+    <name>Substrates :: GlassFish 3</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>substrate-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Grid Core -->
+        <dependency>
+            <groupId>com.elasticgrid</groupId>
+            <artifactId>elastic-grid-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <glassfish-version>v3</glassfish-version>
+    </properties>
+
+</project>

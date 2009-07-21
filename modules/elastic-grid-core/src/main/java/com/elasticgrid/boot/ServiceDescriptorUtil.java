@@ -187,8 +187,11 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
         String egHome = System.getProperty("EG_HOME");
         if (egHome == null)
             throw new RuntimeException("EG_HOME property not declared");
+        String agentRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
         String agentClasspath =
-            new File(egHome + File.separator + "lib" + File.separator + "cybernode.jar").getCanonicalPath();
+            new File(egHome + File.separator + "lib" + File.separator + "cybernode.jar").getCanonicalPath()
+            + File.pathSeparator +
+            new File(agentRoot + File.separator + getJarName(agentRoot, "substrate-api")).getCanonicalPath();
         String agentCodebase = BootUtil.getCodebase(new String[]{
             "cybernode-dl.jar",
             "rio-dl.jar",

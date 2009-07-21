@@ -27,8 +27,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.List;
 import java.util.Set;
 import java.rmi.RemoteException;
+import java.rmi.Remote;
 
-public interface ClusterManager<C extends Cluster> {
+public interface ClusterManager<C extends Cluster> extends Remote {
 
     /**
      * Start a cluster with a specified name and a specified number of instances.

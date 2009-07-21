@@ -25,6 +25,8 @@ package com.elasticgrid.config;
  */
 public interface GenericConfiguration {
     public static final String EG_CLUSTER_NAME  = "eg.cluster.name";
+    public static final String EG_DROP_BUCKET = "eg.s3.dropBucket";
+    public static final String EG_OVERRIDES_BUCKET = "eg.s3.overridesBucket";
     /* Either EC2 or LAN, default to EC2 if not declared */
     public static final String EG_MODE = "eg.mode";
 }

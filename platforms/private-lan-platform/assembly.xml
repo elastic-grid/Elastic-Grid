@@ -86,18 +86,25 @@
 		<!-- Core dependencies -->
         <dependencySet>
             <includes>
-                <include>com.elasticgrid:amazon-ec2-discovery</include>
-                <include>com.elasticgrid:amazon-ec2-provisioner</include>
-                <include>com.elasticgrid:private-lan-provisioner</include>
+                <!-- Core dependencies -->
 				<include>com.elasticgrid:elastic-grid-core</include>
                 <include>com.elasticgrid:elastic-grid-model</include>
                 <include>com.elasticgrid:elastic-grid-manager</include>
+                <include>com.elasticgrid:elastic-grid-storage</include>
                 <include>com.elasticgrid:elastic-grid-deploy-handlers</include>
-                <include>com.elasticgrid:cluster-manager-jsb</include>
-                <include>com.elasticgrid:private-lan-cloud-platform</include>
-                <include>com.elasticgrid:amazon-ec2-cloud-platform</include>
+                <include>com.elasticgrid:elastic-grid-cluster</include>
 				<include>com.elasticgrid:elastic-grid-utils</include>
 				<include>com.elasticgrid:elastic-grid-cli</include>
+                
+                <!-- Private LAN dependencies -->
+                <include>com.elasticgrid:private-lan-cloud-platform</include>
+                <include>com.elasticgrid:private-lan-provisioner</include>
+
+                <!-- Amazon EC2 dependencies -->
+                <include>com.elasticgrid:amazon-ec2-cloud-platform</include>
+                <include>com.elasticgrid:amazon-ec2-discovery</include>
+                <include>com.elasticgrid:amazon-ec2-provisioner</include>
+                <include>com.elasticgrid:amazon-s3-storage</include>
                 <!-- Typica dependencies -->
                 <include>com.google.code.typica:typica</include>
                 <include>javax.xml.bind:*</include>
@@ -105,6 +112,12 @@
                 <include>stax:stax-api</include>
                 <!-- Amazon S3 dependencies -->
                 <include>net.java.dev.jets3t:jets3t</include>
+
+                <!-- Rackspace Clouds dependencies -->
+                <include>com.elasticgrid:rackspace-cloudfiles-storage</include>
+                <include>com.mosso:cloud-files</include>
+                <include>log4j:log4j</include>
+
                 <!-- JiBX dependencies -->
                 <include>org.jibx:jibx-run</include>
                 <include>org.jibx:jibx-extras</include>
@@ -126,12 +139,13 @@
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
         <!-- Substrates dependencies -->
-		<!--<dependencySet>-->
-            <!--<includes>-->
-                <!--<include>com.elasticgrid.substrates:substrate-tomcat6</include>-->
-            <!--</includes>-->
-			<!--<outputDirectory>lib/elastic-grid</outputDirectory>-->
-        <!--</dependencySet>-->
+		<dependencySet>
+            <includes>
+                <include>com.elasticgrid.substrates:substrate-tomcat6</include>
+                <include>com.elasticgrid.substrates:substrate-jboss5</include>
+            </includes>
+			<outputDirectory>lib/elastic-grid</outputDirectory>
+        </dependencySet>
         <!-- Applicationss (REST API) dependencies -->
 		<dependencySet>
             <includes>

@@ -62,11 +62,6 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
         </dependency>
-        <!-- Amazon S3 integration -->
-        <dependency>
-            <groupId>net.java.dev.jets3t</groupId>
-            <artifactId>jets3t</artifactId>
-        </dependency>
 
         <!-- Jini 2.1 dependencies -->
         <dependency>
@@ -168,6 +163,8 @@
                     <target>1.5</target>
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
                 </configuration>
             </plugin>
 	    <!--

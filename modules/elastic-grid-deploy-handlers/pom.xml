@@ -21,10 +21,17 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <!-- Elastic Grid core -->
+        <!-- Amazon S3 Storage implementation -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>elastic-grid-core</artifactId>
+            <artifactId>amazon-s3-storage</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Rackspace CloudFiles Storage implementation -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>rackspace-cloudfiles-storage</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
@@ -145,6 +152,8 @@
                     <target>1.5</target>
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
                 </configuration>
             </plugin>
 	    <!--

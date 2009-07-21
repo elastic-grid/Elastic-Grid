@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid</groupId>
+        <artifactId>elastic-grid-modules</artifactId>
+        <version>0.9.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>elastic-grid-cluster</artifactId>
+    <packaging>jsb</packaging>
+    <name>Modules :: Cluster Manager (JSB)</name>
+
+    <dependencies>
+
+        <!-- Elastic Grid Manager -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-manager</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Grid EC2 Provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Elastic Grid Private LAN Provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>elastic-grid-cluster-${pom.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.0-rc-5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>generateTestStubs</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<index>true</index>-->
+                        <!--<manifest>-->
+                            <!--<addClasspath>true</addClasspath>-->
+                            <!--<addExtensions/>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-rio-plugin</artifactId>
+                <version>4.0-M3-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <environment>
+                        <rio.home>${env.RIO_HOME}</rio.home>
+                        <jini.home>${env.JINI_HOME}</jini.home>
+                    </environment>
+                    <implementationIns>
+                        <implementationIn>com.elasticgrid.cluster</implementationIn>
+                    </implementationIns>
+                    <implementationTopclasses>
+                        <implementationTopclass>com.elasticgrid.cluster.ClusterManagerJSB</implementationTopclass>
+                        <implementationTopclass>com.elasticgrid.cluster.ClusterManagerJSB$CloudPlatformManagerListener</implementationTopclass>
+                    </implementationTopclasses>
+                    <!--<downloadableIns>-->
+                        <!--<downloadableIn>com.elasticgrid.cluster</downloadableIn>-->
+                    <!--</downloadableIns>-->
+                    <!--<downloadableTopclasses>-->
+                        <!--<downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManager</downloadableTopclass>-->
+                        <!--<downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerProxy</downloadableTopclass>-->
+                    <!--</downloadableTopclasses>-->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

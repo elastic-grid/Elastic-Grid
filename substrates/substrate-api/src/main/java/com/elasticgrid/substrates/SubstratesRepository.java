@@ -20,15 +20,34 @@ package com.elasticgrid.substrates;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.net.URLClassLoader;
 import java.net.URL;
 import java.io.*;
 
 public class SubstratesRepository {
+    private static final String SUBSTRATES_DIRECTORY = System.getProperty("EG_HOME") + File.separator + "lib" + File.separator + "elastic-grid";
     private static final String SUBSTRATE_DSL_LOCATION = "META-INF/com/elasticgrid/substrates/SubstrateClass";
+    private static final Logger logger = Logger.getLogger(SubstratesRepository.class.getName());
 
     public static List<Substrate> findSubstrates() throws Exception {
-        URLClassLoader cl = (URLClassLoader) Thread.currentThread().getContextClassLoader();
+        logger.info("Searching for available substrates...");
+        File substratesDirectory = new File(SUBSTRATES_DIRECTORY);
+        File[] substratesJars = substratesDirectory.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.startsWith("substrate-") && !name.startsWith("substrate-api");
+            }
+        });
+        if (substratesJars == null)
+            substratesJars = new File[0];
+        URL[] urls = new URL[substratesJars.length];
+        for (int i = 0; i < substratesJars.length; i++) {
+            File substratesJar = substratesJars[i];
+            logger.fine("Detected JAR " + substratesJar.getName());
+            urls[i] = substratesJar.toURI().toURL();
+        }
+        URLClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
         List<Substrate> substrates = new LinkedList<Substrate>();
         // search for all JARs having some substrates declared
         Enumeration<URL> resources = cl.getResources(SUBSTRATE_DSL_LOCATION);

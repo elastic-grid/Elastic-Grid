@@ -14,19 +14,30 @@
 
     <modules>
         <module>substrate-api</module>
-        <!--<module>mysql</module>-->
-    	<!--<module>tomcat5</module>-->
         <module>tomcat6</module>
-        <!--<module>glassfish2</module>-->
+        <module>jboss5</module>
+        <!--<module>glassfish3</module>-->
 	    <!--<module>apache</module>-->
+        <!--<module>mysql</module>-->
+        <!--module>load-balancer</module-->
     </modules>
 
     <dependencies>
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>boot</artifactId>
+        </dependency>
+
         <!-- Groovy dependencies -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.2</version>
             <scope>provided</scope>
         </dependency>
         <!-- Tests dependencies -->
@@ -38,15 +49,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -73,6 +78,12 @@
                                         <include>**/*.groovy</include>
                                     </includes>
                                 </fileset>
+                                <fileset>
+                                    <directory>${pom.basedir}/src/test/java</directory>
+                                    <includes>
+                                        <include>**/*.groovy</include>
+                                    </includes>
+                                </fileset>
                             </sources>
                         </configuration>
                     </execution>
@@ -82,6 +93,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.4.1</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

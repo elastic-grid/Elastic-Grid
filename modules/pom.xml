@@ -24,21 +24,21 @@
     <modules>
         <module>elastic-grid-utils</module>
         <module>elastic-grid-model</module>
-        <!--module>elastic-grid-repository</module-->
         <module>elastic-grid-manager</module>
-        <module>cluster-manager-jsb</module>
+        <module>elastic-grid-cluster</module>
+        <module>elastic-grid-storage</module>
         <module>elastic-grid-core</module>
         <module>elastic-grid-cli</module>
         <module>amazon-sqs</module>
         <module>amazon-sdb</module>
+        <module>amazon-s3-storage</module>
         <module>amazon-ec2-bootstrapper</module>
         <module>amazon-ec2-discovery</module>
         <module>amazon-ec2-provisioner</module>
         <module>private-lan-provisioner</module>
-        <!--module>elastic-grid-oar</module-->
+        <module>rackspace-cloudfiles-storage</module>
         <!--module>examples</module-->
         <module>jabber-cli</module>
-        <!--module>jxta-discovery</module-->
 	    <module>elastic-grid-deploy-handlers</module>
         <module>private-lan-cloud-platform</module>
         <module>amazon-ec2-cloud-platform</module>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.2</version>
             <scope>provided</scope>
         </dependency>
         <!-- Tests dependencies -->
@@ -104,15 +104,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -132,6 +126,8 @@
                     <target>1.5</target>
                     <optimize>true</optimize>
                     <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
                 </configuration>
             </plugin>
             <plugin>
