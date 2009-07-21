@@ -22,10 +22,10 @@ deployment(name:'My Sample Webapp') {
             install source:'https://elastic-grid-substrates.s3.amazonaws.com/jboss/jboss-5.1.0.GA-jdk6.zip',
                     target:'jboss', unarchive: true
             postInstall(removeOnCompletion: true) {
-                execute command: '/bin/chmod +x jboss/jboss-5.1.0.GA/bin/*.sh'
+                execute command: '/bin/chmod +x bin/*.sh'
             }
         }
-        execute inDirectory:'bin', command: 'jboss.sh run'
+        execute inDirectory:'bin', command: 'run.sh -Djboss.platform.mbeanserver'
         data source:'https://javaone-demo.s3.amazonaws.com/video-conversion-oar/video-conversion.war',
              target:'jboss/jboss-5.1.0.GA/server/default/deploy'
         maintain 1

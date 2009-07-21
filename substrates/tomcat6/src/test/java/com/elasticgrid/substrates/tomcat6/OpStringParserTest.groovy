@@ -72,7 +72,7 @@ class OpStringParserTest extends GroovyTestCase {
     def postInstall = tomcat.postInstallAttributes
 //    assertFalse postInstall.execDescriptor.useNoHup()
     assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine
-    assertEquals "+x tomcat/apache-tomcat-${version}/bin/*.sh", postInstall.execDescriptor.inputArgs
+    assertEquals "+x bin/*.sh", postInstall.execDescriptor.inputArgs
 
     assertEquals 'bin', service.execDescriptor.workingDirectory
     assertEquals 'catalina.sh', service.execDescriptor.commandLine

@@ -39,7 +39,7 @@ class OpStringParserTest extends GroovyTestCase {
     }
   }
 
-  void testXmlParserOnTomcatDeployment() {
+  void testXmlParserOnJBossDeployment() {
     testXmlParserOnJBossDeploymentFromFile rioParser, new File("src/test/resources/jbossWithoutDSL.groovy")
     testXmlParserOnJBossDeploymentFromFile egParser, new File("src/test/resources/jbossWithDSL.groovy")
   }
@@ -72,11 +72,11 @@ class OpStringParserTest extends GroovyTestCase {
     assertEquals "jboss/jboss-${version}/server/default/deploy", service.stagedData[0].installRoot
     def postInstall = jboss.postInstallAttributes
     assertEquals '/bin/chmod', postInstall.execDescriptor.commandLine
-    assertEquals "+x jboss/jboss-${version}/bin/*.sh", postInstall.execDescriptor.inputArgs
+    assertEquals "+x bin/*.sh", postInstall.execDescriptor.inputArgs
 
     assertEquals 'bin', service.execDescriptor.workingDirectory
-    assertEquals 'jboss.sh', service.execDescriptor.commandLine
-    assertEquals 'run', service.execDescriptor.inputArgs
+    assertEquals 'run.sh', service.execDescriptor.commandLine
+    assertEquals '-Djboss.platform.mbeanserver', service.execDescriptor.inputArgs
 
     assertEquals 1, service.planned
   }

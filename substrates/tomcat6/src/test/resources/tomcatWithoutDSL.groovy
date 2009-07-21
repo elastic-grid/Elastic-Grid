@@ -22,7 +22,7 @@ deployment(name:'My Sample Webapp') {
             install source:'https://elastic-grid-substrates.s3.amazonaws.com/tomcat/apache-tomcat-6.0.20.zip',
                     target:'tomcat', unarchive: true
             postInstall(removeOnCompletion: true) {
-                execute command: '/bin/chmod +x tomcat/apache-tomcat-6.0.20/bin/*.sh'
+                execute command: '/bin/chmod +x bin/*.sh'
             }
         }
         execute inDirectory:'bin', command: 'catalina.sh run'
