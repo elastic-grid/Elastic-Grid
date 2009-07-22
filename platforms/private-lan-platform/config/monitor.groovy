@@ -63,8 +63,11 @@ class MonitorConfig {
 
   LoggerConfig[] getLoggerConfigs() {
     def loggers = []
-    ['org.rioproject.monitor': Level.INFO,
-            'net.jini.lookup.JoinManager': Level.OFF].each {name, level ->
+    [
+            'org.rioproject.monitor': Level.INFO,
+            'net.jini.lookup.JoinManager': Level.OFF,
+            'org.apache.commons.httpclient': Level.WARNING,
+    ].each {name, level ->
       loggers << new LoggerConfig(name, level, new LogHandlerConfig(new ConsoleHandler()))
     }
     return loggers as LoggerConfig[]
@@ -77,6 +80,7 @@ class MonitorConfig {
   }
 
   /* Configure DeployHandlers for the Monitor to use */
+
   DeployHandler[] getDeployHandlers() {
     def deployDir = System.getProperty('RIO_HOME') + '/deploy'
     return [

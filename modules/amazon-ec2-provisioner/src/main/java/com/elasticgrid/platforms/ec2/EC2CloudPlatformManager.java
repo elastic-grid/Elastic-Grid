@@ -247,11 +247,12 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
     public void setNodeInstantiator(EC2Instantiator nodeInstantiator) throws RemoteException {
         this.nodeInstantiator = nodeInstantiator;
         // ensure the Discovery.MONITOR group exists
-        if (!nodeInstantiator.getGroupsNames().contains(Discovery.MONITOR.getGroupName())) {
+        java.util.List<String> groupNames = nodeInstantiator.getGroupsNames();
+        if (!groupNames.contains(Discovery.MONITOR.getGroupName())) {
             nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
         }
         // ensure the Discovery.AGENT group exists
-        if (!nodeInstantiator.getGroupsNames().contains(Discovery.AGENT.getGroupName())) {
+        if (!groupNames.contains(Discovery.AGENT.getGroupName())) {
             nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
         }
     }
