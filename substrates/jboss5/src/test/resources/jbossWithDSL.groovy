@@ -25,7 +25,7 @@ deployment(name: 'My Sample Webapp') {
       policy type: 'notify'
       monitor name: 'Active Thread Count',
               objectName: 'jboss.system:type=ServerInfo',
-              attribute: 'activeThreadCount', period: 1000
+              attribute: 'ActiveThreadCount', period: 1000
     }
 
     maintain 1
