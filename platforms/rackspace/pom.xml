@@ -7,9 +7,9 @@
 	    <version>0.9.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>amazon-ec2-platform</artifactId>
+	<artifactId>rackspace</artifactId>
     <packaging>pom</packaging>
-    <name>Platforms :: EC2 Platform</name>
+    <name>Platforms :: Rackspace Platform</name>
     <prerequisites>
         <maven>2.0.8</maven>
     </prerequisites>
