@@ -25,11 +25,7 @@ deployment(name: 'My Sample Webapp') {
       policy type: 'notify'
       monitor name: 'Active Thread Count',
               objectName: 'jboss.system:type=ServerInfo',
-<<<<<<< HEAD:substrates/jboss5/src/test/resources/jbossWithDSL.groovy
               attribute: 'ActiveThreadCount', period: 1000
-=======
-              attribute: 'activeThreadCount', period: 1000
->>>>>>> Refactored a bit the JBoss and Tomcat substrates so that SLA requirements are exhibited in the end-user OpString and not "forced" by the Substrate.:substrates/jboss5/src/test/resources/jbossWithDSL.groovy
     }
 
     maintain 1
