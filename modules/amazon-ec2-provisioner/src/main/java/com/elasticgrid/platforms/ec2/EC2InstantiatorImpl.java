@@ -18,19 +18,21 @@
 
 package com.elasticgrid.platforms.ec2;
 
+import com.elasticgrid.model.Discovery;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.xerox.amazonws.ec2.EC2Exception;
 import com.xerox.amazonws.ec2.GroupDescription;
 import com.xerox.amazonws.ec2.Jec2;
 import com.xerox.amazonws.ec2.ReservationDescription;
+import org.apache.commons.lang.StringUtils;
 import static java.lang.String.format;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
 
 public class EC2InstantiatorImpl implements EC2Instantiator {
     private Jec2 jec2;
@@ -110,7 +112,12 @@ public class EC2InstantiatorImpl implements EC2Instantiator {
         try {
             groups = jec2.describeSecurityGroups(new String[] {});
         } catch (EC2Exception e) {
-            throw new RemoteException("Can't get list of groups names", e);
+            if (e.getCause() instanceof UnknownHostException) {
+                logger.log(Level.WARNING, "EC2: EC2 is not reachable. Ignoring cluster groups...");
+                return Arrays.asList(Discovery.MONITOR.getGroupName(), Discovery.AGENT.getGroupName());
+            } else {
+                throw new java.rmi.RemoteException("Can't get list of group names", e);
+            }
         }
         List<String> groupNames = new ArrayList<String>(groups.size());
         for (GroupDescription group : groups) {

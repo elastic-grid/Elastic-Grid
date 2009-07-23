@@ -35,6 +35,7 @@ import org.rioproject.opstring.OpStringLoader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -169,7 +170,11 @@ public class S3OARDeployHandler extends AbstractOARDeployHandler {
                 }
             }
         } catch (S3ServiceException e) {
-            logger.log(Level.SEVERE, "Unexpected S3 error", e);
+            if (e.getCause() instanceof UnknownHostException) {
+                logger.log(Level.WARNING, "EC2: EC2 is not reachable. Skipping new OAR detection...");  
+            } else {
+                logger.log(Level.SEVERE, "EC2: Unexpected S3 error", e);
+            }
         }
         return list;
     }

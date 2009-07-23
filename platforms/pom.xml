@@ -16,8 +16,9 @@
     </prerequisites>
 
     <modules>
-        <module>amazon-ec2-platform</module>
-        <module>private-lan-platform</module>
+		<module>private-lan</module>
+        <module>amazon</module>
+        <!--module>rackspace</module-->
     </modules>
 
     <build>

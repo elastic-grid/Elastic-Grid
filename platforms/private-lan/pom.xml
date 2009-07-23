@@ -7,7 +7,7 @@
 	    <version>0.9.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>private-lan-platform</artifactId>
+	<artifactId>private-lan</artifactId>
     <packaging>jar</packaging>
     <name>Platforms :: Private LAN Platform</name>
     <prerequisites>
