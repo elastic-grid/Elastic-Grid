@@ -10,6 +10,7 @@
     <artifactId>rackspace-cloudservers</artifactId>
     <packaging>jar</packaging>
     <name>Modules :: Rackspace Cloud Servers</name>
+    <description>Java API for the Rackspace Cloud Servers API using the REST API with XML documents.</description>
 
     <dependencies>
 
