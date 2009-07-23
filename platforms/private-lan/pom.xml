@@ -297,7 +297,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/private-lan-platform-0.9.1.jar"
+                                <copy file="${project.build.directory}/private-lan-0.9.1.jar"
                                       tofile="${staging.dir}/bin/panels/com.elasticgrid.tools.installer.AWSCredentialsPanel.jar"/>
                             </tasks>
                         </configuration>
