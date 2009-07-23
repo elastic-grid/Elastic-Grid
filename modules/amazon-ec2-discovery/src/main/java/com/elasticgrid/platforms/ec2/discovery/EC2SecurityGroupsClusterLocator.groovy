@@ -55,7 +55,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      Log.warn "EC2: EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2: EC2 is not reachable. Ignoring EC2 clusters."
       return [] as Set<String>
     }
     // extract cluster names
@@ -79,7 +79,7 @@ class EC2SecurityGroupsClusterLocator extends EC2ClusterLocator {
     try {
       reservations = ec2.describeInstances(Collections.emptyList())
     } catch (EC2Exception e) {
-      Log.warn "EC2: EC2 is not reacheable. Ignoring EC2 clusters."
+      Log.warn "EC2: EC2 is not reachable. Ignoring EC2 clusters."
       return Collections.emptySet()
     }
     // filter nodes which are not part of the cluster

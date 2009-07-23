@@ -50,9 +50,12 @@ class AgentConfig {
 
   LoggerConfig[] getLoggerConfigs() {
     def loggers = []
-    ['org.rioproject.cybernode': Level.INFO,
-     'org.rioproject.config': Level.INFO,
-     'net.jini.discovery.LookupDiscovery': Level.OFF].each {name, level ->
+    [
+            'org.rioproject.cybernode': Level.INFO,
+            'org.rioproject.config': Level.INFO,
+            'net.jini.discovery.LookupDiscovery': Level.OFF,
+            'org.apache.commons.httpclient': Level.WARNING,
+    ].each {name, level ->
       loggers << new LoggerConfig(name, level, new LogHandlerConfig(new ConsoleHandler()))
     }
     return loggers as LoggerConfig[]
