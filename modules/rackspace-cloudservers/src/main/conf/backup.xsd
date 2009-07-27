@@ -1,0 +1,52 @@
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+  <element name="backupSchedule" type="csapi:BackupSchedule" />
+
+  <!-- Complex Types -->
+  <complexType name="BackupSchedule">
+    <attribute type="xsd:boolean" name="enabled" use="required" />
+    <attribute type="csapi:WeeklyBackup" name="weekly" use="required" />
+    <attribute type="csapi:DailyBackup" name="daily" use="required" />
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="DailyBackup">
+    <restriction base="string">
+      <enumeration value="DISABLED" />
+      <enumeration value="H_0000_0200" />
+      <enumeration value="H_0200_0400" />
+      <enumeration value="H_0400_0600" />
+      <enumeration value="H_0600_0800" />
+      <enumeration value="H_0800_1000" />
+      <enumeration value="H_1000_1200" />
+      <enumeration value="H_1200_1400" />
+      <enumeration value="H_1400_1600" />
+      <enumeration value="H_1600_1800" />
+      <enumeration value="H_1800_2000" />
+      <enumeration value="H_2000_2200" />
+      <enumeration value="H_2200_0000" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="WeeklyBackup">
+    <restriction base="string">
+      <enumeration value="DISABLED" />
+      <enumeration value="SUNDAY" />
+      <enumeration value="MONDAY" />
+      <enumeration value="TUESDAY" />
+      <enumeration value="WEDNESDAY" />
+      <enumeration value="THURSDAY" />
+      <enumeration value="FRIDAY" />
+      <enumeration value="SATURDAY" />
+      <enumeration value="SUNDAY" />
+    </restriction>
+  </simpleType>
+
+</schema>
+

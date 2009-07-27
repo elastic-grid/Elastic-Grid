@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+
+  <element name="limits" type="csapi:Limits" />
+
+  <!-- Complex Types -->
+  <complexType name="Limits">
+    <sequence>
+      <element name="rate"      type="csapi:RateLimits" />
+      <element name="absolute"  type="csapi:AbsoluteLimits" />
+    </sequence>
+  </complexType>
+
+  <complexType name="RateLimits">
+    <sequence>
+      <element name="limit" type="csapi:RateLimit" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <complexType name="AbsoluteLimits">
+    <sequence>
+      <element name="limit" type="csapi:AbsoluteLimit" minOccurs="1" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+
+  <complexType name="RateLimit">
+    <attribute name="verb"      type="csapi:HTTPVerb" use="required" />
+    <attribute name="URI"       type="xsd:string" use="required" />
+    <attribute name="regex"     type="xsd:string" use="required" />
+    <attribute name="value"     type="xsd:int"    use="required" />
+    <attribute name="remaining" type="xsd:int"    use="required" />
+    <attribute name="unit"      type="csapi:RateLimitUnit" use="required" />
+    <attribute name="resetTime" type="xsd:long" use="required" />
+  </complexType>
+
+  <complexType name="AbsoluteLimit">
+    <attribute name="name"  type="xsd:string" use="required"/>
+    <attribute name="value" type="xsd:int" use="required"/>
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="HTTPVerb">
+    <restriction base="xsd:string">
+      <enumeration value="POST" />
+      <enumeration value="PUT" />
+      <enumeration value="GET" />
+      <enumeration value="DELETE" />
+      <enumeration value="HEAD" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="RateLimitUnit">
+    <restriction base="xsd:string">
+      <enumeration value="MINUTE"/>
+      <enumeration value="HOUR"/>
+      <enumeration value="DAY"/>
+    </restriction>
+  </simpleType>
+
+</schema>
+

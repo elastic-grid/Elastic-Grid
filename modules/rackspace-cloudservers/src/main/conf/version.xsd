@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+  <element name="version" type="csapi:Version" />
+
+  <!-- Complex Types -->
+  <complexType name="Version">
+    <attribute type="xsd:string"   name="id" use="required" fixed="v1.0" />
+    <attribute type="csapi:VersionStatus" name="status" use="required" />
+    <attribute type="xsd:anyURI"   name="docURL" use="required" />
+    <attribute type="xsd:anyURI"   name="wadl" use="required" />
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="VersionStatus">
+    <restriction base="xsd:string">
+      <enumeration value="BETA"  />
+      <enumeration value="CURRENT" />
+      <enumeration value="DEPRECATED"/>
+    </restriction>
+  </simpleType>
+</schema>
+

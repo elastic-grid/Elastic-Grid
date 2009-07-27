@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+  <element name="reboot"    type="csapi:Reboot"  />
+  <element name="rebuild"   type="csapi:Rebuild" />
+  <element name="resize"    type="csapi:Resize" />
+  <element name="confirmResize" type="csapi:ConfirmResize" />
+  <element name="revertResize" type="csapi:RevertResize" />
+  
+  <!-- Complex Types -->
+
+  <complexType abstract="true" name="Action" />
+
+  <complexType name="Reboot">
+    <complexContent>
+      <extension base="csapi:Action">
+	<attribute name="type" type="csapi:RebootType" use="required" />
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="Rebuild">
+    <complexContent>
+      <extension base="csapi:Action">
+	<attribute name="imageId" type="xsd:int" use="required" />
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="Resize">
+    <complexContent>
+      <extension base="csapi:Action">
+	<attribute name="flavorId" type="xsd:int" use="required" />
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="ConfirmResize">
+    <complexContent>
+      <extension base="csapi:Action" />
+    </complexContent>
+  </complexType>
+
+  <complexType name="RevertResize">
+    <complexContent>
+      <extension base="csapi:Action" />
+    </complexContent>
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="RebootType">
+    <restriction base="xsd:string">
+      <enumeration value="HARD" />
+      <enumeration value="SOFT" />
+    </restriction>
+  </simpleType>
+</schema>
+
