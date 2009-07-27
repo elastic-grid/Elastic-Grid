@@ -27,15 +27,13 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
 >
-  <include schemaLocation="flavor.xsd" />
-  <element name="flavors" type="csapi:Flavors" />
 
-  <!-- Complex Types -->
-  <complexType name="Flavors">
-    <sequence>
-      <element name="flavor" type="csapi:Flavor" minOccurs="0" maxOccurs="1000"/>
-    </sequence>
-  </complexType>
-
+  <!-- Simple types that span multiple requests -->
+  <simpleType name="Progress">
+    <restriction base="xsd:int">
+      <minInclusive value="0"/>
+      <maxInclusive value="100" />
+    </restriction>
+  </simpleType>
 </schema>
 

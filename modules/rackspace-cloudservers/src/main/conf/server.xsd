@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+  <include schemaLocation="common.xsd" />
+
+  <element name="server" type="csapi:Server">
+    <annotation>
+      <xsd:documentation
+          xml:lang="EN"
+          xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          Represents a server.
+        </p>
+      </xsd:documentation>
+    </annotation>
+  </element>
+
+  <element name="addresses" type="csapi:Addresses">
+    <annotation>
+      <xsd:documentation
+          xml:lang="EN"
+          xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          A list of addresses (public and private) belonging to a
+          particular server.
+        </p>
+      </xsd:documentation>
+    </annotation>
+  </element>
+
+  <element name="public" type="csapi:AddressList">
+    <annotation>
+      <xsd:documentation
+          xml:lang="EN"
+          xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          A list of public addresses belonging to a particular server.
+        </p>
+      </xsd:documentation>
+    </annotation>
+  </element>
+
+  <element name="private" type="csapi:AddressList">
+    <annotation>
+      <xsd:documentation
+          xml:lang="EN"
+          xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          A list of private addresses belonging to a particular server.
+        </p>
+      </xsd:documentation>
+    </annotation>
+  </element>
+
+  <element name="shareIp" type="csapi:ShareIp">
+    <annotation>
+      <xsd:documentation
+          xml:lang="EN"
+          xmlns="http://www.w3.org/1999/xhtml">
+        <p>
+          A request to share a public ip address.
+        </p>
+      </xsd:documentation>
+    </annotation>
+  </element>
+
+
+  <!-- Complex Types -->
+  <complexType name="Server">
+    <sequence>
+      <element name="metadata" type="csapi:Metadata" minOccurs="0" />
+      <element ref="csapi:addresses" minOccurs="0" />
+      <element name="personality" type="csapi:Personality" minOccurs="0" />
+    </sequence>
+    <attribute type="xsd:string" name="name" use="optional" />
+    <attribute type="xsd:int"    name="id"   use="optional" />
+    <attribute type="xsd:string" name="adminPass" use="optional"/>
+    <attribute type="xsd:int"    name="imageId" use="optional" />
+    <attribute type="xsd:int"    name="flavorId" use="optional" />
+    <attribute type="xsd:string"    name="hostId" use="optional" />
+    <attribute type="csapi:Progress"  name="progress"  use="optional" />
+    <attribute type="csapi:ServerStatus" name="status" use="optional" />
+    <attribute type="xsd:int" name="sharedIpGroupId" use="optional" />
+  </complexType>
+
+  <complexType name="Metadata">
+    <sequence>
+      <element name="meta" type="csapi:MetadataItem" minOccurs="0" maxOccurs="5" />
+    </sequence>
+  </complexType>
+
+  <complexType name="MetadataItem">
+    <simpleContent>
+      <extension base="csapi:MetadataValue">
+	<attribute name="key" type="csapi:MetadataKey" use="required"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <complexType name="Personality">
+    <sequence>
+      <!-- should the number of files be unbounded? -->
+      <element name="file" type="csapi:File" minOccurs="0" maxOccurs="5" />
+    </sequence>
+  </complexType>
+
+  <complexType name="File">
+    <simpleContent>
+      <extension base="csapi:FileContent">
+	<attribute name="path"  type="csapi:FileName" use="required" />
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <complexType name="Addresses">
+    <sequence>
+      <element ref="csapi:public"  minOccurs="0" />
+      <element ref="csapi:private" minOccurs="0" />
+    </sequence>
+  </complexType>
+
+  <complexType name="AddressList">
+    <sequence>
+      <element name="ip" type="csapi:Address" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <complexType name="Address">
+    <!-- really need a better simple type than a string -->
+    <attribute name="addr" type="xsd:string" use="required" />
+  </complexType>
+
+  <complexType name="ShareIp">
+	<attribute name="sharedIpGroupId" type="xsd:int" use="required" />
+	<attribute name="configureServer" type="xsd:boolean" default="false" />
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="ServerStatus">
+    <restriction base="xsd:string">
+      <enumeration value="ACTIVE" />
+      <enumeration value="SUSPENDED" />
+      <enumeration value="DELETED" />
+      <enumeration value="QUEUE_RESIZE" />
+      <enumeration value="PREP_RESIZE" />
+      <enumeration value="RESIZE" />
+      <enumeration value="VERIFY_RESIZE" />
+      <enumeration value="QUEUE_MOVE" />
+      <enumeration value="PREP_MOVE" />
+      <enumeration value="MOVE" />
+      <enumeration value="VERIFY_MOVE" />
+      <enumeration value="RESCUE" />
+      <enumeration value="ERROR" />
+      <enumeration value="BUILD" />
+      <enumeration value="RESTORING" />
+      <enumeration value="PASSWORD" />
+      <enumeration value="REBUILD" />
+      <enumeration value="DELETE_IP" />
+      <enumeration value="SHARE_IP_NO_CONFIG" />
+      <enumeration value="SHARE_IP" />
+      <enumeration value="REBOOT" />
+      <enumeration value="HARD_REBOOT" />
+      <enumeration value="UNKNOWN" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="FileName">
+    <restriction base="xsd:string">
+      <maxLength value="255" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="FileContent">
+    <restriction base="xsd:base64Binary">
+      <maxLength value="10240" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="MetadataKey">
+    <restriction base="xsd:string">
+      <maxLength value="255" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="MetadataValue">
+    <restriction base="xsd:string">
+      <maxLength value="255" />
+    </restriction>
+  </simpleType>
+</schema>

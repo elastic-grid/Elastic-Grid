@@ -27,15 +27,41 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
 >
-  <include schemaLocation="flavor.xsd" />
-  <element name="flavors" type="csapi:Flavors" />
+  <element name="sharedIpGroup" type="csapi:SharedIpGroup" />
 
   <!-- Complex Types -->
-  <complexType name="Flavors">
+  <complexType name="SharedIpGroup">
     <sequence>
-      <element name="flavor" type="csapi:Flavor" minOccurs="0" maxOccurs="1000"/>
+      <choice>
+        <annotation>
+          <xsd:documentation
+              xml:lang="EN"
+              xmlns="http://www.w3.org/1999/xhtml">
+            <p>
+              On a request a single ServerID <strong>may</strong> be
+              specified. On a response a ServerIDList is always
+              returned.  This server list may be empty.
+            </p>
+          </xsd:documentation>
+        </annotation>
+        <element name="server" type="csapi:ServerID" minOccurs="0" maxOccurs="1"/>
+        <element name="servers" type="csapi:ServerIDList"/>
+      </choice>
+    </sequence>
+    <attribute type="xsd:int"    name="id"   use="optional" />
+    <attribute type="xsd:string" name="name" use="required" />
+  </complexType>
+
+  <complexType name="ServerIDList">
+    <sequence>
+      <element name="server" type="csapi:ServerID" minOccurs="0" maxOccurs="25" />
     </sequence>
   </complexType>
 
+  <complexType name="ServerID">
+    <attribute name="id" type="xsd:int" use="required" />
+  </complexType>
 </schema>
+
+
 

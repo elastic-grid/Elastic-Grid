@@ -27,14 +27,17 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
 >
-  <include schemaLocation="flavor.xsd" />
-  <element name="flavors" type="csapi:Flavors" />
+
+  <element name="flavor" type="csapi:Flavor" />
 
   <!-- Complex Types -->
-  <complexType name="Flavors">
-    <sequence>
-      <element name="flavor" type="csapi:Flavor" minOccurs="0" maxOccurs="1000"/>
-    </sequence>
+  <complexType name="Flavor">
+    <attribute type="xsd:int"    name="id"   use="required" />
+    <attribute type="xsd:string" name="name" use="required" />
+    <!-- Is ram in MB? -->
+    <attribute type="xsd:int"    name="ram"  use="optional" />
+    <!-- Is disk in GB? -->
+    <attribute type="xsd:int"    name="disk" use="optional" />
   </complexType>
 
 </schema>

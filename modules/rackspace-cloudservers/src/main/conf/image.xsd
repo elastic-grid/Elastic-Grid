@@ -27,15 +27,31 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
 >
-  <include schemaLocation="flavor.xsd" />
-  <element name="flavors" type="csapi:Flavors" />
+  <include schemaLocation="common.xsd" />
+  <element name="image" type="csapi:Image" />
 
   <!-- Complex Types -->
-  <complexType name="Flavors">
-    <sequence>
-      <element name="flavor" type="csapi:Flavor" minOccurs="0" maxOccurs="1000"/>
-    </sequence>
+  <complexType name="Image">
+    <attribute type="xsd:int"         name="id"        use="optional" />
+    <attribute type="xsd:string"      name="name"      use="required" />
+    <attribute type="xsd:int"         name="serverId"  use="optional" />
+    <attribute type="xsd:dateTime"    name="updated" use="optional" />
+    <attribute type="xsd:dateTime"    name="created" use="optional" />
+    <attribute type="csapi:Progress"  name="progress"  use="optional" />
+    <attribute type="csapi:ImageStatus" name="status"    use="optional" />
   </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="ImageStatus">
+    <restriction base="xsd:string">
+      <enumeration value="UNKNOWN" />
+      <enumeration value="ACTIVE" />
+      <enumeration value="SAVING" />
+      <enumeration value="PREPARING" />
+      <enumeration value="QUEUED" />
+      <enumeration value="FAILED" />
+    </restriction>
+  </simpleType>
 
 </schema>
 
