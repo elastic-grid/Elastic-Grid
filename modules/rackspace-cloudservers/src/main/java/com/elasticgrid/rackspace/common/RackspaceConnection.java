@@ -17,50 +17,45 @@
  */
 package com.elasticgrid.rackspace.common;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpHost;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HeaderElement;
-import org.apache.http.entity.HttpEntityWrapper;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
-import org.apache.commons.io.IOUtils;
-import org.jibx.runtime.JiBXException;
-import org.jibx.runtime.IBindingFactory;
+import org.apache.http.protocol.HttpContext;
 import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
+import org.jibx.runtime.JiBXException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.TimeZone;
-import java.util.zip.GZIPInputStream;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import com.rackspace.cloudservers.jibx.CloudServersAPIFault;
 
 /**
  * This class provides common code to the REST connection classes
@@ -97,24 +92,28 @@ public class RackspaceConnection {
      *
      * @param username the Rackspace username
      * @param apiKey   the Rackspace API key
+     * @throws RackspaceException if the credentials are invalid
+     * @throws IOException        if there is a network issue
+     * @see #authenticate()
      */
     public RackspaceConnection(String username, String apiKey) throws RackspaceException, IOException {
         this.username = username;
         this.apiKey = apiKey;
-        String version = "?";
+        String version;
         try {
             Properties props = new Properties();
             props.load(this.getClass().getClassLoader().getResourceAsStream("version.properties"));
             version = props.getProperty("version");
         } catch (Exception ex) {
+            version = "?";
         }
         userAgent = userAgent + version + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ")";
         authenticate();
     }
 
     /**
-     * Authenticate on Rackspace API.
-     * Tokens are only valid for 24 hours, so client code should expect token to expire and renew them if needed.
+     * Authenticate on Rackspace API. Tokens are only valid for 24 hours, so client code should expect token to expire
+     * and renew them if needed.
      *
      * @return the auth token, valid for 24 hours
      * @throws RackspaceException if the credentials are invalid
@@ -125,7 +124,6 @@ public class RackspaceConnection {
         HttpGet request = new HttpGet(API_AUTH_URL);
         request.addHeader("X-Auth-User", username);
         request.addHeader("X-Auth-Key", apiKey);
-        request.addHeader(CoreProtocolPNames.USER_AGENT, userAgent);
         HttpResponse response = getHttpClient().execute(request);
         int statusCode = response.getStatusLine().getStatusCode();
         switch (statusCode) {
@@ -152,7 +150,12 @@ public class RackspaceConnection {
      * @param request  the HTTP method to use (GET, POST, DELETE, etc)
      * @param respType the class that represents the desired/expected return type
      * @return the unmarshalled entity
+     * @throws RackspaceException
+     * @throws IOException        if there is an I/O exception
+     * @throws HttpException      if there is an HTTP exception
+     * @throws JiBXException      if the result can't be unmarshalled
      */
+    @SuppressWarnings("unchecked")
     protected <T> T makeRequest(HttpRequestBase request, Class<T> respType)
             throws HttpException, IOException, JiBXException, RackspaceException {
 
@@ -161,7 +164,6 @@ public class RackspaceConnection {
 
         // add auth params, and protocol specific headers
         request.addHeader("X-Auth-Token", getAuthToken());
-        request.addHeader(CoreProtocolPNames.USER_AGENT, userAgent);
 
         // set accept and content-type headers
         request.setHeader("Accept", "application/xml; charset=UTF-8");
@@ -169,36 +171,54 @@ public class RackspaceConnection {
         request.setHeader("Content-Type", "application/xml; charset=UTF-8");
 
         // send the request
-        T result;
+        T result = null;
         boolean done = false;
         int retries = 0;
         boolean doRetry = false;
         RackspaceException error = null;
         do {
-            int statusCode = 600;
             HttpResponse response = null;
-            try {
-                logger.log(Level.INFO, "Querying {0}", request.getURI());
-                response = getHttpClient().execute(request);
-                statusCode = response.getStatusLine().getStatusCode();
-            } catch (SocketException e) {
-                doRetry = true;
-                error = new RackspaceException(e.getMessage(), e);
-            }
-            if (statusCode < 300) {
-                // 200: normal response
-            }
-            done = true;
-
+            logger.log(Level.INFO, "Querying {0}", request.getURI());
+            response = getHttpClient().execute(request);
+            int statusCode = response.getStatusLine().getStatusCode();
             InputStream entityStream = null;
-            try {
-                HttpEntity entity = response.getEntity();
-                entityStream = entity.getContent();
-                IBindingFactory bindingFactory = BindingDirectory.getFactory(respType);
-                IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
-                result = (T) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
-            } finally {
-                IOUtils.closeQuietly(entityStream);
+            HttpEntity entity = response.getEntity();
+            switch (statusCode) {
+                case 200:
+                case 202:
+                case 203:
+                    try {
+                        entityStream = entity.getContent();
+                        IBindingFactory bindingFactory = BindingDirectory.getFactory(respType);
+                        IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
+                        result = (T) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
+                    } finally {
+                        entity.consumeContent();
+                        IOUtils.closeQuietly(entityStream);
+                    }
+                    done = true;
+                    break;
+                case 503:   // service unavailable
+                    doRetry = true;
+                    break;
+                case 401:   // unauthorized
+                    authenticate();
+                    doRetry = true;
+                    break;
+                case 400:
+                case 500:
+                default:
+                    try {
+                        entityStream = entity.getContent();
+                        IBindingFactory bindingFactory = BindingDirectory.getFactory(CloudServersAPIFault.class);
+                        IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
+                        CloudServersAPIFault fault = (CloudServersAPIFault) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
+                        done = true;
+                        throw new RackspaceException(fault.getCode(), fault.getMessage(), fault.getDetails());
+                    } finally {
+                        entity.consumeContent();
+                        IOUtils.closeQuietly(entityStream);
+                    }
             }
 
             if (doRetry) {
@@ -210,6 +230,7 @@ public class RackspaceConnection {
                 try {
                     Thread.sleep((int) Math.pow(2.0, retries) * 1000);
                 } catch (InterruptedException ex) {
+                    // do nothing
                 }
             }
         } while (!done);
@@ -274,7 +295,8 @@ public class RackspaceConnection {
 //        params.setBooleanParameter("http.coonection.stalecheck", false);
         ConnManagerParams.setTimeout(params, getConnectionManagerTimeout());
         ConnManagerParams.setMaxTotalConnections(params, getMaxConnections());
-//        params.setIntParameter("http.soTimeout", getSoTimeout());     // TODO: figure out the param name!
+        params.setIntParameter("http.socket.timeout", getSoTimeout());
+        params.setIntParameter("http.connection.timeout", getConnectionTimeout());
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -282,6 +304,11 @@ public class RackspaceConnection {
         ClientConnectionManager connMgr = new ThreadSafeClientConnManager(params, schemeRegistry);
         hc = new DefaultHttpClient(connMgr, params);
 
+        ((DefaultHttpClient) hc).addRequestInterceptor(new HttpRequestInterceptor() {
+            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                request.addHeader(CoreProtocolPNames.USER_AGENT, userAgent);
+            }
+        });
         ((DefaultHttpClient) hc).addRequestInterceptor(new HttpRequestInterceptor() {
             public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
                 if (!request.containsHeader("Accept-Encoding")) {

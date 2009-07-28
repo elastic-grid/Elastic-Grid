@@ -22,42 +22,62 @@ import java.util.Map;
 
 /**
  * Rackspace Cloud Servers API.
+ *
  * @author Jerome Bernard
  */
 public interface CloudServers {
 
     /**
-     * Retreive the list of servers (only IDs and names) associated with the Rackspace account.
+     * Retrieve the list of servers (only IDs and names) associated with the Rackspace account.
+     *
      * @return the list of servers
+     * @throws CloudServersException
      */
     List<Server> getServers() throws CloudServersException;
 
     /**
-     * Retreive the list of servers (with details) associated with the Rackspace account.
+     * Retrieve the list of servers (with details) associated with the Rackspace account.
+     *
      * @return the list of servers
+     * @throws CloudServersException
      */
     List<Server> getServersWithDetails() throws CloudServersException;
 
     /**
+     * Retrieve the server details.
+     *
+     * @param serverID the ID of the server for which details should be retrieved
+     * @return the server details
+     * @throws CloudServersException
+     */
+    Server getServerDetails(int serverID) throws CloudServersException;
+
+    /**
      * Provision a new server.
+     *
      * @param serverName the name of the server to create
-     * @param imageID the image from which the server should be created
-     * @param flavorID the kind of hardware to use
+     * @param imageID    the image from which the server should be created
+     * @param flavorID   the kind of hardware to use
+     * @throws CloudServersException
      */
     void createServer(String serverName, String imageID, String flavorID) throws CloudServersException;
 
     /**
      * Provision a new server.
+     *
      * @param serverName the name of the server to create
-     * @param imageID the image from which the server should be created
-     * @param flavorID the kind of hardware to use
-     * @param metadata the launch metadata
+     * @param imageID    the image from which the server should be created
+     * @param flavorID   the kind of hardware to use
+     * @param metadata   the launch metadata
+     * @throws CloudServersException
      */
     void createServer(String serverName, String imageID, String flavorID, Map<String, String> metadata) throws CloudServersException;
 
     /**
      * Return the limits for the Rackspace API account.
+     *
      * @return the limits
+     * @throws CloudServersException
      */
     Limits getLimits() throws CloudServersException;
 

@@ -38,6 +38,11 @@ public class CloudServersTest {
         assert servers.size() == 0;
     }
 
+    @Test(expectedExceptions = CloudServersException.class)
+    public void retreiveServerDetailsOfNonExistingServer() throws CloudServersException {
+        api.getServerDetails(123);
+    }
+
     @Test
     public void testLimits() throws CloudServersException {
         Limits limits = api.getLimits();

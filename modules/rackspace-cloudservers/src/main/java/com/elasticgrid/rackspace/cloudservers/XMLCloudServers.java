@@ -19,8 +19,8 @@ package com.elasticgrid.rackspace.cloudservers;
 
 import com.elasticgrid.rackspace.common.RackspaceConnection;
 import com.elasticgrid.rackspace.common.RackspaceException;
-import com.rackspace.cloudservers.jibx.Servers;
 import com.rackspace.cloudservers.jibx.RateLimitUnit;
+import com.rackspace.cloudservers.jibx.Servers;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -28,7 +28,6 @@ import org.jibx.runtime.JiBXException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +35,7 @@ import java.util.logging.Logger;
 
 /**
  * Implementation based on the XML documents.
+ *
  * @author Jerome Bernard
  */
 public class XMLCloudServers extends RackspaceConnection implements CloudServers {
@@ -52,20 +52,29 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public List<Server> getServers() throws CloudServersException {
-		HttpGet request = new HttpGet(getServerManagementURL() + "/servers");
-		try {
-			Servers response = makeRequestInt(request, Servers.class);
-            List<Server> servers = new ArrayList<Server>(response.getServers().size());
-            for (com.rackspace.cloudservers.jibx.Server server : response.getServers())
-                servers.add(new Server(server));
-            return servers;
-		} finally {
-			// TODO: release connection!
-		}
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers");
+        Servers response = makeRequestInt(request, Servers.class);
+        List<Server> servers = new ArrayList<Server>(response.getServers().size());
+        for (com.rackspace.cloudservers.jibx.Server server : response.getServers())
+            servers.add(new Server(server));
+        return servers;
     }
 
-    public List<Server> getServersWithDetails() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Server> getServersWithDetails() throws CloudServersException {
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/details");
+        Servers response = makeRequestInt(request, Servers.class);
+        List<Server> servers = new ArrayList<Server>(response.getServers().size());
+        for (com.rackspace.cloudservers.jibx.Server server : response.getServers())
+            servers.add(new Server(server));
+        return servers;
+    }
+
+    public Server getServerDetails(int serverID) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID);
+        com.rackspace.cloudservers.jibx.Server response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Server.class);
+        return new Server(response);
     }
 
     public void createServer(String serverName, String imageID, String flavorID) {
@@ -78,26 +87,22 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
 
     public Limits getLimits() throws CloudServersException {
         HttpGet request = new HttpGet(getServerManagementURL() + "/limits");
-		try {
-			com.rackspace.cloudservers.jibx.Limits response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Limits.class);
-            List<RateLimit> rateLimits = new ArrayList<RateLimit>(response.getRate().getRateLimits().size());
-            for (com.rackspace.cloudservers.jibx.RateLimit limit : response.getRate().getRateLimits())
-                rateLimits.add(new RateLimit(
-                        HTTPVerb.valueOf(limit.getVerb().name()),
-                        limit.getURI(),
-                        limit.getRegex(),
-                        limit.getValue(),
-                        limit.getRemaining(),
-                        translateRateLimitUnit(limit.getUnit()),
-                        limit.getResetTime()
-                ));
-            List<AbsoluteLimit> absoluteLimits = new ArrayList<AbsoluteLimit>(response.getAbsolute().getAbsoluteLimits().size());
-            for (com.rackspace.cloudservers.jibx.AbsoluteLimit limit : response.getAbsolute().getAbsoluteLimits())
-                absoluteLimits.add(new AbsoluteLimit(limit.getName(), limit.getValue()));
-            return new Limits(rateLimits, absoluteLimits);
-		} finally {
-			// TODO: release connection!
-		}
+        com.rackspace.cloudservers.jibx.Limits response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Limits.class);
+        List<RateLimit> rateLimits = new ArrayList<RateLimit>(response.getRate().getRateLimits().size());
+        for (com.rackspace.cloudservers.jibx.RateLimit limit : response.getRate().getRateLimits())
+            rateLimits.add(new RateLimit(
+                    HTTPVerb.valueOf(limit.getVerb().name()),
+                    limit.getURI(),
+                    limit.getRegex(),
+                    limit.getValue(),
+                    limit.getRemaining(),
+                    translateRateLimitUnit(limit.getUnit()),
+                    limit.getResetTime()
+            ));
+        List<AbsoluteLimit> absoluteLimits = new ArrayList<AbsoluteLimit>(response.getAbsolute().getAbsoluteLimits().size());
+        for (com.rackspace.cloudservers.jibx.AbsoluteLimit limit : response.getAbsolute().getAbsoluteLimits())
+            absoluteLimits.add(new AbsoluteLimit(limit.getName(), limit.getValue()));
+        return new Limits(rateLimits, absoluteLimits);
     }
 
     private TimeUnit translateRateLimitUnit(RateLimitUnit unit) {
@@ -115,17 +120,17 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
 
     protected <T> T makeRequestInt(HttpRequestBase request, Class<T> respType)
             throws CloudServersException {
-		try {
-			return makeRequest(request, respType);
-		} catch (RackspaceException e) {
-			throw new CloudServersException(e);
-		} catch (JiBXException e) {
-			throw new CloudServersException("Problem parsing returned message.", e);
-		} catch (MalformedURLException e) {
-			throw new CloudServersException(e.getMessage(), e);
-		} catch (IOException e) {
-			throw new CloudServersException(e.getMessage(), e);
-		} catch (HttpException e) {
+        try {
+            return makeRequest(request, respType);
+        } catch (RackspaceException e) {
+            throw new CloudServersException(e);
+        } catch (JiBXException e) {
+            throw new CloudServersException("Problem parsing returned message.", e);
+        } catch (MalformedURLException e) {
+            throw new CloudServersException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new CloudServersException(e.getMessage(), e);
+        } catch (HttpException e) {
             throw new CloudServersException(e.getMessage(), e);
         }
     }

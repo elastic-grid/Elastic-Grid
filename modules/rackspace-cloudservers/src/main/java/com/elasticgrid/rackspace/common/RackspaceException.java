@@ -23,15 +23,41 @@ package com.elasticgrid.rackspace.common;
  * @author Jerome Bernard
  */
 public class RackspaceException extends Exception {
+    private int code;
+    private String details;
+
     public RackspaceException(String message) {
+        this(message, null);
+    }
+
+    public RackspaceException(int code, String message, String details) {
         super(message);
+        this.code = code;
+        this.details = details;
     }
 
     public RackspaceException(Throwable cause) {
         super(cause);
+        if (cause instanceof RackspaceException) {
+            this.code = ((RackspaceException) cause).code;
+            this.details = ((RackspaceException) cause).details;
+        }
     }
 
     public RackspaceException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    @Override
+    public String toString() {
+        return "Error " + getCode() + ": " + super.getMessage() + "\nDetails: " + getDetails();
     }
 }
