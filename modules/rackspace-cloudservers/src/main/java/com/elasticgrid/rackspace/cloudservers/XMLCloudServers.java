@@ -21,11 +21,17 @@ import com.elasticgrid.rackspace.common.RackspaceConnection;
 import com.elasticgrid.rackspace.common.RackspaceException;
 import com.rackspace.cloudservers.jibx.RateLimitUnit;
 import com.rackspace.cloudservers.jibx.Servers;
+import com.rackspace.cloudservers.jibx.Metadata;
+import com.rackspace.cloudservers.jibx.MetadataItem;
+import com.rackspace.cloudservers.jibx.Public;
+import com.rackspace.cloudservers.jibx.Private;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
 import org.jibx.runtime.BindingDirectory;
@@ -35,6 +41,8 @@ import org.jibx.runtime.JiBXException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +62,9 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
      *
      * @param username the Rackspace username
      * @param apiKey   the Rackspace API key
+     * @throws RackspaceException if the credentials are invalid
+     * @throws IOException        if there is a network issue
+     * @see #authenticate()
      */
     public XMLCloudServers(String username, String apiKey) throws RackspaceException, IOException {
         super(username, apiKey);
@@ -85,6 +96,81 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         return new Server(response);
     }
 
+    public Addresses getServerAddresses(int serverID) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips");
+        com.rackspace.cloudservers.jibx.Addresses response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Addresses.class);
+        try {
+            return new Addresses(response);
+        } catch (UnknownHostException e) {
+            throw new CloudServersException("Can't validate server addresses", e);
+        }
+    }
+
+    public List<InetAddress> getServerPublicAddresses(int serverID) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips/public");
+        Public response = makeRequestInt(request, Public.class);
+        try {
+            List<InetAddress> addresses = new ArrayList<InetAddress>(response.getAddressLists().size());
+            for (com.rackspace.cloudservers.jibx.Address address : response.getAddressLists()) {
+                addresses.add(InetAddress.getByName(address.getAddr()));
+            }
+            return addresses;
+        } catch (UnknownHostException e) {
+            throw new CloudServersException("Can't validate server addresses", e);
+        }
+    }
+
+    public List<InetAddress> getServerPrivateAddresses(int serverID) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips/private");
+        Private response = makeRequestInt(request, Private.class);
+        try {
+            List<InetAddress> addresses = new ArrayList<InetAddress>(response.getAddressLists().size());
+            for (com.rackspace.cloudservers.jibx.Address address : response.getAddressLists()) {
+                addresses.add(InetAddress.getByName(address.getAddr()));
+            }
+            return addresses;
+        } catch (UnknownHostException e) {
+            throw new CloudServersException("Can't validate server addresses", e);
+        }
+    }
+
+    public Server createServer(String name, int imageID, int flavorID) throws CloudServersException {
+        return createServer(name, imageID, flavorID, null);
+    }
+
+    public Server createServer(String name, int imageID, int flavorID, Map<String, String> metadata) throws CloudServersException {
+        if (name == null)
+            throw new IllegalArgumentException("Server name has to be specified!");
+        if (imageID == 0)
+            throw new IllegalArgumentException("Image ID has to be specified!");
+        if (flavorID == 0)
+            throw new IllegalArgumentException("Flavor ID has to be specified!");
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers");
+        com.rackspace.cloudservers.jibx.Server server = new com.rackspace.cloudservers.jibx.Server();
+        server.setName(name);
+        server.setImageId(imageID);
+        server.setFlavorId(flavorID);
+        if (metadata != null && !metadata.isEmpty()) {
+            Metadata rawMetadata = new Metadata();
+            List<MetadataItem> metadataItems = rawMetadata.getMetadatas();
+            for (Map.Entry<String, String> entry : metadata.entrySet()) {
+                MetadataItem item = new MetadataItem();
+                item.setKey(entry.getKey());
+                item.setString(entry.getValue());
+                metadataItems.add(item);
+            }
+            server.setMetadata(rawMetadata);
+        }
+        com.rackspace.cloudservers.jibx.Server created = makeEntityRequestInt(request, server, com.rackspace.cloudservers.jibx.Server.class);
+        return new Server(created);
+    }
+
     public void updateServerName(int serverID, String name) throws CloudServersException {
         updateServerNameAndPassword(serverID, name, null);
     }
@@ -106,12 +192,11 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         makeEntityRequestInt(request, server);
     }
 
-    public void createServer(String serverName, String imageID, String flavorID) {
-        createServer(serverName, imageID, flavorID, null);
-    }
-
-    public void createServer(String serverName, String imageID, String flavorID, Map<String, String> metadata) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void deleteServer(int serverID) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpDelete request = new HttpDelete(getServerManagementURL() + "/servers/" + serverID);
+        makeRequestInt(request);
     }
 
     public Limits getLimits() throws CloudServersException {
@@ -148,6 +233,10 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     protected void makeEntityRequestInt(HttpEntityEnclosingRequestBase request, final Object entity) throws CloudServersException {
+        makeEntityRequestInt(request, entity, Void.class);
+    }
+
+    protected <T> T makeEntityRequestInt(HttpEntityEnclosingRequestBase request, final Object entity, Class<T> respType) throws CloudServersException {
         request.setEntity(new EntityTemplate(new ContentProducer() {
             public void writeTo(OutputStream output) throws IOException {
                 try {
@@ -162,6 +251,10 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
                 }
             }
         }));
+        return makeRequestInt(request, respType);
+    }
+
+    protected void makeRequestInt(HttpRequestBase request) throws CloudServersException {
         makeRequestInt(request, Void.class);
     }
 

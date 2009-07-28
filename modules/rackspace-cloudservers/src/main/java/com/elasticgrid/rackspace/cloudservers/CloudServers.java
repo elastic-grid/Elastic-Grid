@@ -19,6 +19,7 @@ package com.elasticgrid.rackspace.cloudservers;
 
 import java.util.List;
 import java.util.Map;
+import java.net.InetAddress;
 
 /**
  * Rackspace Cloud Servers API.
@@ -51,6 +52,56 @@ public interface CloudServers {
      * @throws CloudServersException
      */
     Server getServerDetails(int serverID) throws CloudServersException;
+
+    /**
+     * Retrieve server addresses.
+     *
+     * @param serverID the ID of the server for which addresses should be retrieved
+     * @return the server addresses
+     * @throws CloudServersException
+     */
+    Addresses getServerAddresses(int serverID) throws CloudServersException;
+
+    /**
+     * Retrieve public server addresses.
+     *
+     * @param serverID the ID of the server for which addresses should be retrieved
+     * @return the server addresses
+     * @throws CloudServersException
+     */
+    List<InetAddress> getServerPublicAddresses(int serverID) throws CloudServersException;
+
+    /**
+     * Retrieve private server addresses.
+     *
+     * @param serverID the ID of the server for which addresses should be retrieved
+     * @return the server addresses
+     * @throws CloudServersException
+     */
+    List<InetAddress> getServerPrivateAddresses(int serverID) throws CloudServersException;
+
+    /**
+     * Provision a new server.
+     *
+     * @param name     the name of the server to create
+     * @param imageID  the image from which the server should be created
+     * @param flavorID the kind of hardware to use
+     * @return the created server with precious information such as admin password for that server
+     * @throws CloudServersException
+     */
+    Server createServer(String name, int imageID, int flavorID) throws CloudServersException;
+
+    /**
+     * Provision a new server.
+     *
+     * @param name     the name of the server to create
+     * @param imageID  the image from which the server should be created
+     * @param flavorID the kind of hardware to use
+     * @param metadata the launch metadata
+     * @return the created server with precious information such as admin password for that server
+     * @throws CloudServersException
+     */
+    Server createServer(String name, int imageID, int flavorID, Map<String, String> metadata) throws CloudServersException;
 
     /**
      * Update the specified server's name and/or administrative password. This operation allows you to update the name
@@ -87,25 +138,12 @@ public interface CloudServers {
     void updateServerNameAndPassword(int serverID, String name, String password) throws CloudServersException;
 
     /**
-     * Provision a new server.
+     * Deletes a cloud server instance from the system
      *
-     * @param serverName the name of the server to create
-     * @param imageID    the image from which the server should be created
-     * @param flavorID   the kind of hardware to use
+     * @param serverID the ID of the server to delete
      * @throws CloudServersException
      */
-    void createServer(String serverName, String imageID, String flavorID) throws CloudServersException;
-
-    /**
-     * Provision a new server.
-     *
-     * @param serverName the name of the server to create
-     * @param imageID    the image from which the server should be created
-     * @param flavorID   the kind of hardware to use
-     * @param metadata   the launch metadata
-     * @throws CloudServersException
-     */
-    void createServer(String serverName, String imageID, String flavorID, Map<String, String> metadata) throws CloudServersException;
+    void deleteServer(int serverID) throws CloudServersException;
 
     /**
      * Return the limits for the Rackspace API account.

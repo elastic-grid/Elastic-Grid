@@ -224,6 +224,14 @@ public class RackspaceConnection {
                         CloudServersAPIFault fault = (CloudServersAPIFault) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
                         done = true;
                         throw new RackspaceException(fault.getCode(), fault.getMessage(), fault.getDetails());
+                    } catch (JiBXException e) {
+                        response = getHttpClient().execute(request);
+                        entity = response.getEntity();
+                        entityStream = entity.getContent();
+                        logger.log(Level.SEVERE, "Can't unmarshal response from " + request.getURI()
+                                + " via " + request.getMethod() + ":" + IOUtils.toString(entityStream));
+                        e.printStackTrace();
+                        throw e;
                     } finally {
                         entity.consumeContent();
                         IOUtils.closeQuietly(entityStream);
@@ -245,57 +253,6 @@ public class RackspaceConnection {
         } while (!done);
 
         return result;
-
-        /*
-        Object response = null;
-        boolean done = false;
-        int retries = 0;
-        boolean doRetry = false;
-        AWSException error = null;
-        do {
-            int responseCode = 600;    // default to high value, so we don't think it is valid
-            try {
-                responseCode = getHttpClient().executeMethod(request);
-            } catch (SocketException ex) {
-                // these can generally be retried. Treat it like a 500 error
-                doRetry = true;
-                error = new AWSException(ex.getMessage(), ex);
-            }
-            // 100's are these are handled by httpclient
-            if (responseCode < 300) {
-                // 200's : parse normal response into requested object
-                if (respType != null) {
-                    InputStream iStr = request.getResponseBodyAsStream();
-                    response = JAXBuddy.deserializeXMLStream(respType, iStr);
-                }
-                done = true;
-            } else if (responseCode < 400) {
-                // 300's : what to do?
-                throw new HttpException("redirect error : " + responseCode);
-            } else if (responseCode < 500) {
-                // 400's : parse client error message
-                String body = getStringFromStream(request.getResponseBodyAsStream());
-                throw createException(body, "Client error : ");
-            } else if (responseCode < 600) {
-                // 500's : retry...
-                doRetry = true;
-                String body = getStringFromStream(request.getResponseBodyAsStream());
-                error = createException(body, "");
-            }
-            if (doRetry) {
-                retries++;
-                if (retries > maxRetries) {
-                    throw new HttpException("Number of retries exceeded : " + action, error);
-                }
-                doRetry = false;
-                try {
-                    Thread.sleep((int) Math.pow(2.0, retries) * 1000);
-                } catch (InterruptedException ex) {
-                }
-            }
-        } while (!done);
-        return (T) response;
-        */
     }
 
     private void configureHttpClient() {

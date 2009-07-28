@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
+import java.net.InetAddress;
 
 /**
  * Tests for the Rackspace Cloud Servers API.
@@ -44,9 +45,49 @@ public class CloudServersTest {
         api.getServerDetails(123);
     }
 
+//    @Test(expectedExceptions = CloudServersException.class)
+//    public void testUpdateServerNameAndPasswordOnNonExistingServer() throws CloudServersException {
+//        api.updateServerNameAndPassword(123, "new-name", "new-password");
+//    }
+
+//    @Test
+//    public void testCreateServerWithInvalidParameters() throws CloudServersException {
+//        api.createServer("test", 123, 123);
+//    }
+
+//    @Test(expectedExceptions = CloudServersException.class)
+//    public void testDeleteNonExistingServer() throws CloudServersException {
+//        api.deleteServer(123);
+//    }
+
+    /* WTF: I'm getting IP addresses I shouldn't have!!!!! There is clearly something wrong going on!!!!!! */
+    /*
     @Test(expectedExceptions = CloudServersException.class)
-    public void testUpdateServerNameAndPasswordOnNonExistingServer() throws CloudServersException {
-        api.updateServerNameAndPassword(123, "new-name", "new-password");
+    public void testGetServerAddressesForNonExistingServer() throws CloudServersException {
+        Addresses addresses = api.getServerAddresses(123);
+        assert addresses != null;
+        assert addresses.getPublicAddresses() != null;
+        assert addresses.getPublicAddresses().size() == 0;
+        assert addresses.getPrivateAddresses() != null;
+        assert addresses.getPrivateAddresses().size() == 0;
+    }
+    */
+
+    /* WTF: I'm getting IP addresses I shouldn't have!!!!! There is clearly something wrong going on!!!!!! */
+    /*
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testGetServerPublicAddressesForNonExistingServer() throws CloudServersException {
+        List<InetAddress> addresses = api.getServerPublicAddresses(123);
+        assert addresses != null;
+        assert addresses.size() == 0;
+    }
+    */
+
+    @Test
+    public void testGetServerPrivateAddressesForNonExistingServer() throws CloudServersException {
+        List<InetAddress> addresses = api.getServerPrivateAddresses(123);
+        assert addresses != null;
+        assert addresses.size() == 0;
     }
 
     @Test

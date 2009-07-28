@@ -37,13 +37,11 @@ public class Server implements Serializable {
     private final Integer flavorID;
     private final Status status;
     private final Map<String, String> metadata;
-    private final List<InetAddress> publicAddresses;
-    private final List<InetAddress> privateAddresses;
     private final Personality personality;
+    private final Addresses addresses;
 
     public Server(Integer id, String name, String adminPass, Integer imageID, Integer flavorID, Server.Status status,
-                  Map<String, String> metadata, List<InetAddress> publicAddresses, List<InetAddress> privateAddresses,
-                  Personality personality) {
+                  Map<String, String> metadata, Addresses addresses, Personality personality) {
         this.id = id;
         this.name = name;
         this.adminPass = adminPass;
@@ -51,8 +49,7 @@ public class Server implements Serializable {
         this.flavorID = flavorID;
         this.status = status;
         this.metadata = metadata;
-        this.publicAddresses = publicAddresses;
-        this.privateAddresses = privateAddresses;
+        this.addresses = addresses;
         this.personality = personality;
     }
 
@@ -61,8 +58,7 @@ public class Server implements Serializable {
                 server.getId(), server.getName(), server.getAdminPass(), server.getImageId(), server.getFlavorId(),
                 Status.valueOf(server.getStatus().name()),
                 metadataAsMap(server.getMetadata()),
-                null, // TODO: public addresses
-                null, // TODO: private addresse
+                null, // TODO: addresses
                 new Personality(server.getPersonality())
         );
     }
@@ -100,11 +96,11 @@ public class Server implements Serializable {
     }
 
     public List<java.net.InetAddress> getPublicAddresses() {
-        return publicAddresses;
+        return addresses.getPublicAddresses();
     }
 
     public List<java.net.InetAddress> getPrivateAddresses() {
-        return privateAddresses;
+        return addresses.getPrivateAddresses();
     }
 
     public enum Status {
