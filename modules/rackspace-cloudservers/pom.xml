@@ -27,6 +27,20 @@
             <version>4.0-beta2</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- Tests dependencies -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>elastic-grid-utils</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -45,20 +59,34 @@
                 <groupId>org.jibx</groupId>
                 <artifactId>maven-jibx-plugin</artifactId>
                 <version>1.2.1</version>
-                <configuration>
-                    <directory>src/main/conf</directory>
-                    <includes>
-                        <include>cloudservers.xsd</include>
-                    </includes>
-                    <options>
-                        <package>com.rackspace.cloudservers.jibx</package>
-                    </options>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>generate-java-code-from-schema</id>
                         <goals>
                             <goal>schema-codegen</goal>
                         </goals>
+                        <configuration>
+                            <directory>src/main/conf</directory>
+                            <includes>
+                                <include>cloudservers.xsd</include>
+                            </includes>
+                            <options>
+                                <package>com.rackspace.cloudservers.jibx</package>
+                            </options>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-binding</id>
+                        <goals>
+                            <goal>bind</goal>
+                        </goals>
+                        <configuration>
+                            <directory>target/generated-sources</directory>
+                            <load>true</load>
+                            <validate>true</validate>
+                            <!--<verbose>true</verbose>-->
+                            <verify>true</verify>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

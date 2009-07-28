@@ -17,40 +17,42 @@
  */
 package com.elasticgrid.rackspace.common;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpConnection;
+import org.apache.http.HttpHost;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.message.BasicHttpRequest;
-import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpParams;
+import org.apache.commons.io.IOUtils;
 import org.jibx.runtime.JiBXException;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-import java.util.logging.Logger;
-import java.util.Properties;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.Date;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.SocketException;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IUnmarshallingContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.io.ByteArrayInputStream;
-import java.text.Collator;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * This class provides common code to the REST connection classes
@@ -65,9 +67,6 @@ public class RackspaceConnection {
     private int maxConnections = 100;
     private String proxyHost = null;
     private int proxyPort;
-    private String proxyUser;
-    private String proxyPassword;
-    private String proxyDomain;    // for ntlm authentication
     private int connectionManagerTimeout = 0;
     private int soTimeout = 0;
     private int connectionTimeout = 0;
@@ -79,6 +78,8 @@ public class RackspaceConnection {
     private String cdnManagementURL;
     private String authToken;
 
+    private boolean authenticated = false;
+
     private static final String API_AUTH_URL = "https://auth.api.rackspacecloud.com/v1.0";
 
     private static final Logger logger = Logger.getLogger(RackspaceConnection.class.getName());
@@ -89,7 +90,7 @@ public class RackspaceConnection {
      * @param username the Rackspace username
      * @param apiKey   the Rackspace API key
      */
-    public RackspaceConnection(String username, String apiKey) {
+    public RackspaceConnection(String username, String apiKey) throws RackspaceException, IOException {
         this.username = username;
         this.apiKey = apiKey;
         String version = "?";
@@ -100,27 +101,35 @@ public class RackspaceConnection {
         } catch (Exception ex) {
         }
         userAgent = userAgent + version + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ")";
+        authenticate();
     }
 
     /**
      * Authenticate on Rackspace API.
      * Tokens are only valid for 24 hours, so client code should expect token to expire and renew them if needed.
+     *
      * @return the auth token, valid for 24 hours
      * @throws RackspaceException if the credentials are invalid
-     * @throws IOException if there is a network issue
+     * @throws IOException        if there is a network issue
      */
     public String authenticate() throws RackspaceException, IOException {
-        HttpGet request = new HttpGet();
+        logger.info("Authenticating to Rackspace API...");
+        HttpGet request = new HttpGet(API_AUTH_URL);
         request.addHeader("X-Auth-User", username);
         request.addHeader("X-Auth-Key", apiKey);
-        HttpResponse response = hc.execute(request);
+        request.addHeader(CoreProtocolPNames.USER_AGENT, userAgent);
+        HttpResponse response = getHttpClient().execute(request);
         int statusCode = response.getStatusLine().getStatusCode();
         switch (statusCode) {
             case 204:
-                serverManagementURL = response.getFirstHeader("X-Server-Management-Url").getValue();
-                storageURL = response.getFirstHeader("X-Storage-Url").getValue();
-                cdnManagementURL = request.getFirstHeader("X-CDN-Management-Url").getValue();
-                authToken = request.getFirstHeader("X-Auth-Token").getValue();
+                if (response.getFirstHeader("X-Server-Management-Url") != null)
+                    serverManagementURL = response.getFirstHeader("X-Server-Management-Url").getValue();
+                if (response.getFirstHeader("X-Storage-Url") != null)
+                    storageURL = response.getFirstHeader("X-Storage-Url").getValue();
+                if (response.getFirstHeader("X-CDN-Management-Url") != null)
+                    cdnManagementURL = response.getFirstHeader("X-CDN-Management-Url").getValue();
+                authToken = response.getFirstHeader("X-Auth-Token").getValue();
+                authenticated = true;
                 return authToken;
             case 401:
                 throw new RackspaceException("Invalid credentials: " + response.getStatusLine().getReasonPhrase());
@@ -132,11 +141,15 @@ public class RackspaceConnection {
     /**
      * Make a http request and process the response. This method also performs automatic retries.
      *
-     * @param request   the HTTP method to use (GET, POST, DELETE, etc)
-     * @param respType  the class that represents the desired/expected return type
+     * @param request  the HTTP method to use (GET, POST, DELETE, etc)
+     * @param respType the class that represents the desired/expected return type
+     * @return the unmarshalled entity
      */
     protected <T> T makeRequest(HttpRequestBase request, Class<T> respType)
             throws HttpException, IOException, JiBXException, RackspaceException {
+
+        if (!authenticated)
+            authenticate();
 
         // add auth params, and protocol specific headers
         request.addHeader("X-Auth-Token", getAuthToken());
@@ -146,7 +159,52 @@ public class RackspaceConnection {
         request.setHeader("Accept", "application/xml; charset=UTF-8");
         request.setHeader("Content-Type", "application/xml; charset=UTF-8");
 
-        return null;        // TODO: write the real code!
+        // send the request
+        T result;
+        boolean done = false;
+        int retries = 0;
+        boolean doRetry = false;
+        RackspaceException error = null;
+        do {
+            int statusCode = 600;
+            HttpResponse response = null;
+            try {
+                logger.log(Level.INFO, "Querying {0}", request.getURI());
+                response = getHttpClient().execute(request);
+                statusCode = response.getStatusLine().getStatusCode();
+            } catch (SocketException e) {
+                doRetry = true;
+                error = new RackspaceException(e.getMessage(), e);
+            }
+            if (statusCode < 300) {
+                // 200: normal response
+            }
+            done = true;
+
+            InputStream entityStream = null;
+            try {
+                entityStream = response.getEntity().getContent();
+                IBindingFactory bindingFactory = BindingDirectory.getFactory(respType);
+                IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
+                result = (T) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
+            } finally {
+                IOUtils.closeQuietly(entityStream);
+            }
+
+            if (doRetry) {
+                retries++;
+                if (retries > maxRetries) {
+                    throw new HttpException("Number of retries exceeded for " + request.getURI(), error);
+                }
+                doRetry = false;
+                try {
+                    Thread.sleep((int) Math.pow(2.0, retries) * 1000);
+                } catch (InterruptedException ex) {
+                }
+            }
+        } while (!done);
+
+        return result;
 
         /*
         Object response = null;
@@ -201,36 +259,24 @@ public class RackspaceConnection {
     }
 
     private void configureHttpClient() {
-        /*
-        MultiThreadedHttpConnectionManager connMgr = new MultiThreadedHttpConnectionManager();
-        HttpConnectionManagerParams connParams = connMgr.getParams();
-        connParams.setMaxTotalConnections(maxConnections);
-        connParams.setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, maxConnections);
-        connParams.setConnectionTimeout(connectionTimeout);
-        connParams.setSoTimeout(soTimeout);
-        connMgr.setParams(connParams);
-        hc = new HttpClient(connMgr);
-// NOTE: These didn't seem to help in my initial testing
-//			hc.getParams().setParameter("http.tcp.nodelay", true);
-//			hc.getParams().setParameter("http.connection.stalecheck", false);
-        hc.getParams().setConnectionManagerTimeout(connectionManagerTimeout);
-        hc.getParams().setSoTimeout(soTimeout);
+        HttpParams params = new BasicHttpParams();
+//        params.setBooleanParameter("http.tcp.nodelay", true);
+//        params.setBooleanParameter("http.coonection.stalecheck", false);
+        ConnManagerParams.setTimeout(params, getConnectionManagerTimeout());
+        ConnManagerParams.setMaxTotalConnections(params, getMaxConnections());
+//        params.setIntParameter("http.soTimeout", getSoTimeout());     // TODO: figure out the param name!
+
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        ClientConnectionManager connMgr = new ThreadSafeClientConnManager(params, schemeRegistry);
+        hc = new DefaultHttpClient(connMgr, params);
+
         if (proxyHost != null) {
-            HostConfiguration hostConfig = new HostConfiguration();
-            hostConfig.setProxy(proxyHost, proxyPort);
-            hc.setHostConfiguration(hostConfig);
-            log.info("Proxy Host set to " + proxyHost + ":" + proxyPort);
-            if (proxyUser != null && !proxyUser.trim().equals("")) {
-                if (proxyDomain != null) {
-                    hc.getState().setProxyCredentials(new AuthScope(proxyHost, proxyPort),
-                            new NTCredentials(proxyUser, proxyPassword, proxyHost, proxyDomain));
-                } else {
-                    hc.getState().setProxyCredentials(new AuthScope(proxyHost, proxyPort),
-                            new UsernamePasswordCredentials(proxyUser, proxyPassword));
-                }
-            }
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+            logger.info("Proxy Host set to " + proxyHost + ":" + proxyPort);
         }
-        */
     }
 
     public String getAuthToken() {
@@ -285,60 +331,54 @@ public class RackspaceConnection {
         return format.format(new Date());
     }
 
-    /**
-     * @return connection manager timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpClientParams.getConnectionManagerTimeout()
-     */
     public int getConnectionManagerTimeout() {
         return connectionManagerTimeout;
     }
 
-    /**
-     * @param connection manager timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpClientParams.getConnectionManagerTimeout()
-     */
     public void setConnectionManagerTimeout(int timeout) {
         connectionManagerTimeout = timeout;
         hc = null;
     }
 
-    /**
-     * @return socket timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionParams.getSoTimeout()
-     * @see org.apache.commons.httpclient.params.HttpMethodParams.getSoTimeout()
-     */
     public int getSoTimeout() {
         return soTimeout;
     }
 
-    /**
-     * @param socket timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionParams.getSoTimeout()
-     * @see org.apache.commons.httpclient.params.HttpMethodParams.getSoTimeout()
-     */
     public void setSoTimeout(int timeout) {
         soTimeout = timeout;
         hc = null;
     }
 
-    /**
-     * @return connection timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionParams.getConnectionTimeout()
-     */
     public int getConnectionTimeout() {
         return connectionTimeout;
     }
 
-    /**
-     * @param connection timeout in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionParams.getConnectionTimeout()
-     */
     public void setConnectionTimeout(int timeout) {
         connectionTimeout = timeout;
         hc = null;
     }
 
-    public String getUsername() {
-        return username;
+    public int getMaxConnections() {
+        return maxConnections;
+    }
+
+    public void setMaxConnections(int maxConnections) {
+        this.maxConnections = maxConnections;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
     }
 }

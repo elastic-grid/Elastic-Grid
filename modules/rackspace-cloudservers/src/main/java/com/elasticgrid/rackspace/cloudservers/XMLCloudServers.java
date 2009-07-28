@@ -45,7 +45,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
      * @param username the Rackspace username
      * @param apiKey   the Rackspace API key
      */
-    public XMLCloudServers(String username, String apiKey) {
+    public XMLCloudServers(String username, String apiKey) throws RackspaceException, IOException {
         super(username, apiKey);
     }
 
