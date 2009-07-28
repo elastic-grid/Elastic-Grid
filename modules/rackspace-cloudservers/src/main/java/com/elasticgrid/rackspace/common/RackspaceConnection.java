@@ -21,6 +21,13 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpHost;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.HeaderElement;
+import org.apache.http.entity.HttpEntityWrapper;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -51,6 +58,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.zip.GZIPInputStream;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -157,6 +165,7 @@ public class RackspaceConnection {
 
         // set accept and content-type headers
         request.setHeader("Accept", "application/xml; charset=UTF-8");
+        request.setHeader("Accept-Encoding", "gzip");
         request.setHeader("Content-Type", "application/xml; charset=UTF-8");
 
         // send the request
@@ -183,7 +192,8 @@ public class RackspaceConnection {
 
             InputStream entityStream = null;
             try {
-                entityStream = response.getEntity().getContent();
+                HttpEntity entity = response.getEntity();
+                entityStream = entity.getContent();
                 IBindingFactory bindingFactory = BindingDirectory.getFactory(respType);
                 IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
                 result = (T) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
@@ -272,6 +282,30 @@ public class RackspaceConnection {
         ClientConnectionManager connMgr = new ThreadSafeClientConnManager(params, schemeRegistry);
         hc = new DefaultHttpClient(connMgr, params);
 
+        ((DefaultHttpClient) hc).addRequestInterceptor(new HttpRequestInterceptor() {
+            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                if (!request.containsHeader("Accept-Encoding")) {
+                    request.addHeader("Accept-Encoding", "gzip");
+                }
+            }
+        });
+        ((DefaultHttpClient) hc).addResponseInterceptor(new HttpResponseInterceptor() {
+            public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+                HttpEntity entity = response.getEntity();
+                if (entity == null)
+                    return;
+                Header ceHeader = entity.getContentEncoding();
+                if (ceHeader != null) {
+                    for (HeaderElement codec : ceHeader.getElements()) {
+                        if (codec.getName().equalsIgnoreCase("gzip")) {
+                            response.setEntity(new GzipDecompressingEntity(response.getEntity()));
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+
         if (proxyHost != null) {
             HttpHost proxy = new HttpHost(proxyHost, proxyPort);
             hc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
@@ -304,31 +338,6 @@ public class RackspaceConnection {
 
     public void setHttpClient(HttpClient hc) {
         this.hc = hc;
-    }
-
-    private String getStringFromStream(InputStream iStr) throws IOException {
-        InputStreamReader rdr = new InputStreamReader(iStr, "UTF-8");
-        StringWriter wtr = new StringWriter();
-        char[] buf = new char[1024];
-        int bytes;
-        while ((bytes = rdr.read(buf)) > -1) {
-            if (bytes > 0) {
-                wtr.write(buf, 0, bytes);
-            }
-        }
-        iStr.close();
-        return wtr.toString();
-    }
-
-
-    /**
-     * Generate an rfc822 date for use in the Date HTTP header.
-     */
-    private static String httpDate() {
-        final String DateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-        SimpleDateFormat format = new SimpleDateFormat(DateFormat, Locale.US);
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return format.format(new Date());
     }
 
     public int getConnectionManagerTimeout() {
@@ -380,5 +389,26 @@ public class RackspaceConnection {
 
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
+    }
+
+    static class GzipDecompressingEntity extends HttpEntityWrapper {
+
+        public GzipDecompressingEntity(final HttpEntity entity) {
+            super(entity);
+        }
+
+        @Override
+        public InputStream getContent() throws IOException, IllegalStateException {
+            // the wrapped entity's getContent() decides about repeatability
+            InputStream wrappedin = wrappedEntity.getContent();
+            return new GZIPInputStream(wrappedin);
+        }
+
+        @Override
+        public long getContentLength() {
+            // length of ungzipped content is not known
+            return -1;
+        }
+
     }
 }
