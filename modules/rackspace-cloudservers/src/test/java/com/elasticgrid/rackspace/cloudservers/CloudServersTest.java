@@ -38,6 +38,16 @@ public class CloudServersTest {
         assert servers.size() == 0;
     }
 
+    @Test
+    public void testLimits() throws CloudServersException {
+        Limits limits = api.getLimits();
+        assert limits != null;
+        List<RateLimit> rateLimits = limits.getRateLimits();
+        assert rateLimits.size() > 0;
+        List<AbsoluteLimit> absoluteLimits = limits.getAbsoluteLimits();
+        assert absoluteLimits.size() > 0;
+    }
+
     @BeforeTest
     private void setupAPI() throws RackspaceException, IOException {
         String username = RackspaceUtils.getUsername();

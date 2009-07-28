@@ -20,6 +20,7 @@ package com.elasticgrid.rackspace.cloudservers;
 import com.elasticgrid.rackspace.common.RackspaceConnection;
 import com.elasticgrid.rackspace.common.RackspaceException;
 import com.rackspace.cloudservers.jibx.Servers;
+import com.rackspace.cloudservers.jibx.RateLimitUnit;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -72,6 +74,43 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
 
     public void createServer(String serverName, String imageID, String flavorID, Map<String, String> metadata) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Limits getLimits() throws CloudServersException {
+        HttpGet request = new HttpGet(getServerManagementURL() + "/limits");
+		try {
+			com.rackspace.cloudservers.jibx.Limits response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Limits.class);
+            List<RateLimit> rateLimits = new ArrayList<RateLimit>(response.getRate().getRateLimits().size());
+            for (com.rackspace.cloudservers.jibx.RateLimit limit : response.getRate().getRateLimits())
+                rateLimits.add(new RateLimit(
+                        HTTPVerb.valueOf(limit.getVerb().name()),
+                        limit.getURI(),
+                        limit.getRegex(),
+                        limit.getValue(),
+                        limit.getRemaining(),
+                        translateRateLimitUnit(limit.getUnit()),
+                        limit.getResetTime()
+                ));
+            List<AbsoluteLimit> absoluteLimits = new ArrayList<AbsoluteLimit>(response.getAbsolute().getAbsoluteLimits().size());
+            for (com.rackspace.cloudservers.jibx.AbsoluteLimit limit : response.getAbsolute().getAbsoluteLimits())
+                absoluteLimits.add(new AbsoluteLimit(limit.getName(), limit.getValue()));
+            return new Limits(rateLimits, absoluteLimits);
+		} finally {
+			// TODO: release connection!
+		}
+    }
+
+    private TimeUnit translateRateLimitUnit(RateLimitUnit unit) {
+        switch (unit) {
+            case MINUTE:
+                return TimeUnit.MINUTES;
+            case HOUR:
+                return TimeUnit.HOURS;
+            case DAY:
+                return TimeUnit.DAYS;
+            default:
+                throw new IllegalStateException("Unexpected enum value: " + unit);
+        }
     }
 
     protected <T> T makeRequestInt(HttpRequestBase request, Class<T> respType)

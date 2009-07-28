@@ -55,4 +55,10 @@ public interface CloudServers {
      */
     void createServer(String serverName, String imageID, String flavorID, Map<String, String> metadata) throws CloudServersException;
 
+    /**
+     * Return the limits for the Rackspace API account.
+     * @return the limits
+     */
+    Limits getLimits() throws CloudServersException;
+
 }
