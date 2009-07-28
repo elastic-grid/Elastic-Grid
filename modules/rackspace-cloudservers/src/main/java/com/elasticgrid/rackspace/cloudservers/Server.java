@@ -32,6 +32,7 @@ import java.net.InetAddress;
 public class Server implements Serializable {
     private final Integer id;
     private final String name;
+    private final String adminPass;
     private final Integer imageID;
     private final Integer flavorID;
     private final Status status;
@@ -40,11 +41,12 @@ public class Server implements Serializable {
     private final List<InetAddress> privateAddresses;
     private final Personality personality;
 
-    public Server(Integer id, String name, Integer imageID, Integer flavorID, Server.Status status,
+    public Server(Integer id, String name, String adminPass, Integer imageID, Integer flavorID, Server.Status status,
                   Map<String, String> metadata, List<InetAddress> publicAddresses, List<InetAddress> privateAddresses,
                   Personality personality) {
         this.id = id;
         this.name = name;
+        this.adminPass = adminPass;
         this.imageID = imageID;
         this.flavorID = flavorID;
         this.status = status;
@@ -56,7 +58,7 @@ public class Server implements Serializable {
 
     public Server(final com.rackspace.cloudservers.jibx.Server server) {
         this(
-                server.getId(), server.getName(), server.getImageId(), server.getFlavorId(),
+                server.getId(), server.getName(), server.getAdminPass(), server.getImageId(), server.getFlavorId(),
                 Status.valueOf(server.getStatus().name()),
                 metadataAsMap(server.getMetadata()),
                 null, // TODO: public addresses

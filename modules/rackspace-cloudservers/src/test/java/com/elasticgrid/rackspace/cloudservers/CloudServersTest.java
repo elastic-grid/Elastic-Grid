@@ -26,21 +26,27 @@ import java.util.List;
 
 /**
  * Tests for the Rackspace Cloud Servers API.
+ *
  * @author Jerome Bernard
  */
 public class CloudServersTest {
     private CloudServers api;
 
     @Test
-    public void listServersWhenNoneRunning() throws CloudServersException {
+    public void testListServersWhenNoneRunning() throws CloudServersException {
         List<Server> servers = api.getServers();
         assert servers != null;
         assert servers.size() == 0;
     }
 
     @Test(expectedExceptions = CloudServersException.class)
-    public void retreiveServerDetailsOfNonExistingServer() throws CloudServersException {
+    public void testRetreiveServerDetailsOfNonExistingServer() throws CloudServersException {
         api.getServerDetails(123);
+    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testUpdateServerNameAndPasswordOnNonExistingServer() throws CloudServersException {
+        api.updateServerNameAndPassword(123, "new-name", "new-password");
     }
 
     @Test
@@ -59,4 +65,10 @@ public class CloudServersTest {
         String apiKey = RackspaceUtils.getApiKey();
         api = new XMLCloudServers(username, apiKey);
     }
+
+//    static {
+//        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+//        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+//        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
+//    }
 }

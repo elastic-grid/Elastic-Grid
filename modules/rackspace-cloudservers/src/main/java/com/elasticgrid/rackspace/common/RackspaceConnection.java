@@ -27,6 +27,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -43,6 +44,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
@@ -178,7 +180,11 @@ public class RackspaceConnection {
         RackspaceException error = null;
         do {
             HttpResponse response = null;
-            logger.log(Level.INFO, "Querying {0}", request.getURI());
+            if (retries > 0)
+                logger.log(Level.INFO, "Retry #{0}: querying via {1} {2}",
+                        new Object[] { retries, request.getMethod(), request.getURI() });
+            else
+                logger.log(Level.INFO, "Querying via {0} {1}", new Object[] { request.getMethod(), request.getURI() });
             response = getHttpClient().execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
             InputStream entityStream = null;
@@ -199,9 +205,12 @@ public class RackspaceConnection {
                     done = true;
                     break;
                 case 503:   // service unavailable
+                    logger.log(Level.WARNING, "Service unavailable on {0} via {1}. Will retry in {2} seconds.",
+                            new Object[] { request.getURI(), request.getMethod(), Math.pow(2.0, retries + 1) });
                     doRetry = true;
                     break;
                 case 401:   // unauthorized
+                    logger.warning("Not authenticated or authentication token expired. Authenticating...");
                     authenticate();
                     doRetry = true;
                     break;
@@ -291,6 +300,12 @@ public class RackspaceConnection {
 
     private void configureHttpClient() {
         HttpParams params = new BasicHttpParams();
+
+        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+        HttpProtocolParams.setContentCharset(params, "UTF-8");
+        HttpProtocolParams.setUserAgent(params, userAgent);
+        HttpProtocolParams.setUseExpectContinue(params, true);
+
 //        params.setBooleanParameter("http.tcp.nodelay", true);
 //        params.setBooleanParameter("http.coonection.stalecheck", false);
         ConnManagerParams.setTimeout(params, getConnectionManagerTimeout());
@@ -304,11 +319,6 @@ public class RackspaceConnection {
         ClientConnectionManager connMgr = new ThreadSafeClientConnManager(params, schemeRegistry);
         hc = new DefaultHttpClient(connMgr, params);
 
-        ((DefaultHttpClient) hc).addRequestInterceptor(new HttpRequestInterceptor() {
-            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                request.addHeader(CoreProtocolPNames.USER_AGENT, userAgent);
-            }
-        });
         ((DefaultHttpClient) hc).addRequestInterceptor(new HttpRequestInterceptor() {
             public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
                 if (!request.containsHeader("Accept-Encoding")) {

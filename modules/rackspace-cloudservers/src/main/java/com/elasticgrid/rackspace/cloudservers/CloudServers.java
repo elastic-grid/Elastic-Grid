@@ -53,6 +53,40 @@ public interface CloudServers {
     Server getServerDetails(int serverID) throws CloudServersException;
 
     /**
+     * Update the specified server's name and/or administrative password. This operation allows you to update the name
+     * of the server and change the administrative password. This operation changes the name of the server in the Cloud
+     * Servers system and does not change the server host name itself.
+     *
+     * @param serverID the ID of the server to update
+     * @param name     the new name for the server
+     * @throws CloudServersException
+     */
+    void updateServerName(int serverID, String name) throws CloudServersException;
+
+    /**
+     * Update the specified server's name and/or administrative password. This operation allows you to update the name
+     * of the server and change the administrative password. This operation changes the name of the server in the Cloud
+     * Servers system and does not change the server host name itself.
+     *
+     * @param serverID the ID of the server to update
+     * @param password the new password
+     * @throws CloudServersException
+     */
+    void updateServerPassword(int serverID, String password) throws CloudServersException;
+
+    /**
+     * Update the specified server's name and/or administrative password. This operation allows you to update the name
+     * of the server and change the administrative password. This operation changes the name of the server in the Cloud
+     * Servers system and does not change the server host name itself.
+     *
+     * @param serverID the ID of the server to update
+     * @param name     the new name for the server
+     * @param password the new password
+     * @throws CloudServersException
+     */
+    void updateServerNameAndPassword(int serverID, String name, String password) throws CloudServersException;
+
+    /**
      * Provision a new server.
      *
      * @param serverName the name of the server to create

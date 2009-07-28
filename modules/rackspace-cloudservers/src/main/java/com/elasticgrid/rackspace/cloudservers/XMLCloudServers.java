@@ -22,10 +22,18 @@ import com.elasticgrid.rackspace.common.RackspaceException;
 import com.rackspace.cloudservers.jibx.RateLimitUnit;
 import com.rackspace.cloudservers.jibx.Servers;
 import org.apache.http.HttpException;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentProducer;
+import org.apache.http.entity.EntityTemplate;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IMarshallingContext;
 import org.jibx.runtime.JiBXException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +85,27 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         return new Server(response);
     }
 
+    public void updateServerName(int serverID, String name) throws CloudServersException {
+        updateServerNameAndPassword(serverID, name, null);
+    }
+
+    public void updateServerPassword(int serverID, String password) throws CloudServersException {
+        updateServerNameAndPassword(serverID, null, password);
+    }
+
+    public void updateServerNameAndPassword(final int serverID, final String name, final String password) throws CloudServersException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        HttpPut request = new HttpPut(getServerManagementURL() + "/servers/" + serverID);
+        com.rackspace.cloudservers.jibx.Server server = new com.rackspace.cloudservers.jibx.Server();
+        server.setId(serverID);
+        if (name != null)
+            server.setName(name);
+        if (password != null)
+            server.setAdminPass(password);
+        makeEntityRequestInt(request, server);
+    }
+
     public void createServer(String serverName, String imageID, String flavorID) {
         createServer(serverName, imageID, flavorID, null);
     }
@@ -118,8 +147,25 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         }
     }
 
-    protected <T> T makeRequestInt(HttpRequestBase request, Class<T> respType)
-            throws CloudServersException {
+    protected void makeEntityRequestInt(HttpEntityEnclosingRequestBase request, final Object entity) throws CloudServersException {
+        request.setEntity(new EntityTemplate(new ContentProducer() {
+            public void writeTo(OutputStream output) throws IOException {
+                try {
+                    IBindingFactory bindingFactory = BindingDirectory.getFactory(entity.getClass());
+                    final IMarshallingContext marshallingCxt = bindingFactory.createMarshallingContext();
+                    marshallingCxt.marshalDocument(entity, "UTF-8", true, output);
+                } catch (JiBXException e) {
+                    IOException ioe = new IOException("Can't marshal server details");
+                    ioe.initCause(e);
+                    e.printStackTrace();
+                    throw ioe;
+                }
+            }
+        }));
+        makeRequestInt(request, Void.class);
+    }
+
+    protected <T> T makeRequestInt(HttpRequestBase request, Class<T> respType) throws CloudServersException {
         try {
             return makeRequest(request, respType);
         } catch (RackspaceException e) {
