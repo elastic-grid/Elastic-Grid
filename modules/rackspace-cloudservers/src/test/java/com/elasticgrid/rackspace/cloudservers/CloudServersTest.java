@@ -19,6 +19,9 @@ package com.elasticgrid.rackspace.cloudservers;
 
 import com.elasticgrid.utils.rackspace.RackspaceUtils;
 import com.elasticgrid.rackspace.common.RackspaceException;
+import com.elasticgrid.rackspace.BackupSchedule;
+import com.elasticgrid.rackspace.BackupSchedule.WeeklyBackup;
+import com.elasticgrid.rackspace.BackupSchedule.DailyBackup;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.io.IOException;
@@ -164,6 +167,22 @@ public class CloudServersTest {
     @Test(expectedExceptions = CloudServersException.class)
     public void testCreateImageWithInvalidParameters() throws CloudServersException {
         api.createImage("test", 123);
+    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testBackupScheduleOfNonExistingServer() throws CloudServersException {
+        BackupSchedule backupSchedule = api.getBackupSchedule(123);
+        System.out.println("Backup schedule: " + backupSchedule);
+    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testScheduleBackupForNonExistingServer() throws CloudServersException {
+        api.scheduleBackup(123, new BackupSchedule(true, WeeklyBackup.SUNDAY, DailyBackup.H_0400_0600));
+    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testDeleteBackupScheduleForNonExistingServer() throws CloudServersException {
+        api.deleteBackupSchedule(123);
     }
 
     @BeforeTest

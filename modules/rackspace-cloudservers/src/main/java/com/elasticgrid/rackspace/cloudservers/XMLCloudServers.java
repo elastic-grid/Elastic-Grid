@@ -19,6 +19,9 @@ package com.elasticgrid.rackspace.cloudservers;
 
 import com.elasticgrid.rackspace.common.RackspaceConnection;
 import com.elasticgrid.rackspace.common.RackspaceException;
+import com.elasticgrid.rackspace.BackupSchedule;
+import com.elasticgrid.rackspace.BackupSchedule.DailyBackup;
+import com.elasticgrid.rackspace.BackupSchedule.WeeklyBackup;
 import com.rackspace.cloudservers.jibx.RateLimitUnit;
 import com.rackspace.cloudservers.jibx.Servers;
 import com.rackspace.cloudservers.jibx.Metadata;
@@ -381,6 +384,37 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
                 created.getUpdated(), created.getCreated(), created.getProgress(),
                 created.getStatus() == null ? null : Image.Status.valueOf(created.getStatus().name())
         );
+    }
+
+    public BackupSchedule getBackupSchedule(int serverID) throws CloudServersException {
+        logger.log(Level.INFO, "Retrieving backup schedule for server {0}...", serverID);
+        validateServerID(serverID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/backup_schedule");
+        com.rackspace.cloudservers.jibx.BackupSchedule response = makeRequestInt(request, com.rackspace.cloudservers.jibx.BackupSchedule.class);
+        return new BackupSchedule(
+                response.getEnabled(),
+                BackupSchedule.WeeklyBackup.valueOf(response.getWeekly().name()),
+                BackupSchedule.DailyBackup.valueOf(response.getDaily().name())
+        );
+    }
+
+    public void scheduleBackup(int serverID, BackupSchedule schedule) throws CloudServersException {
+        logger.log(Level.INFO, "Updating backup schedule for server {0} to {1}...",
+                new Object[]{serverID, schedule});
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/backup_schedule");
+        com.rackspace.cloudservers.jibx.BackupSchedule s = new com.rackspace.cloudservers.jibx.BackupSchedule();
+        s.setEnabled(schedule.isEnabled());
+        s.setWeekly(com.rackspace.cloudservers.jibx.WeeklyBackup.valueOf(schedule.getWeekly().name()));
+        s.setDaily(com.rackspace.cloudservers.jibx.DailyBackup.valueOf(schedule.getDaily().name()));
+        makeEntityRequestInt(request, s);
+    }
+
+    public void deleteBackupSchedule(int serverID) throws CloudServersException {
+        logger.log(Level.INFO, "Deleting backup schedule for server {0}...", serverID);
+        validateServerID(serverID);
+        HttpDelete request = new HttpDelete(getServerManagementURL() + "/servers/" + serverID + "/backup_schedule");
+        makeRequestInt(request);
     }
 
     private TimeUnit translateRateLimitUnit(RateLimitUnit unit) {

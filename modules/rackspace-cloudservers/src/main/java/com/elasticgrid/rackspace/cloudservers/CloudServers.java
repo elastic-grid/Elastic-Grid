@@ -17,6 +17,9 @@
  */
 package com.elasticgrid.rackspace.cloudservers;
 
+import com.elasticgrid.rackspace.BackupSchedule;
+import com.elasticgrid.rackspace.BackupSchedule.WeeklyBackup;
+import com.elasticgrid.rackspace.BackupSchedule.DailyBackup;
 import java.util.List;
 import java.util.Map;
 import java.net.InetAddress;
@@ -293,5 +296,31 @@ public interface CloudServers {
      * @throws CloudServersException
      */
     Image createImage(String name, int serverID) throws CloudServersException;
+
+    /**
+     * Retrieve the backup schedule for a server.
+     *
+     * @param serverID the ID of the server for which the backup schedule should be retrieved
+     * @return the backup schedule
+     * @throws CloudServersException
+     */
+    BackupSchedule getBackupSchedule(int serverID) throws CloudServersException;
+
+    /**
+     * Create or update backup schedule for a server.
+     *
+     * @param serverID the ID of the server for which the backup schedule should be created/updated
+     * @param schedule the backup schedule
+     * @throws CloudServersException
+     */
+    void scheduleBackup(int serverID, BackupSchedule schedule) throws CloudServersException;
+
+    /**
+     * Delete backup schedule for a server.
+     *
+     * @param serverID the ID of the server for which the backup schedule should be deleted
+     * @throws CloudServersException
+     */
+    void deleteBackupSchedule(int serverID) throws CloudServersException;
 
 }
