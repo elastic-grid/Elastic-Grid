@@ -259,4 +259,39 @@ public interface CloudServers {
      */
     Flavor getFlavorDetails(int flavorID) throws CloudServersException;
 
+    /**
+     * Retrieve the list of images (only IDs and names) associated with the Rackspace account.
+     *
+     * @return the images
+     * @throws CloudServersException
+     */
+    List<Image> getImages() throws CloudServersException;
+
+    /**
+     * Retrieve the list of images (with details) associated with the Rackspace account.
+     *
+     * @return the images
+     * @throws CloudServersException
+     */
+    List<Image> getImagesWithDetails() throws CloudServersException;
+
+    /**
+     * Retrieve the image details.
+     *
+     * @param imageID the ID of the image for which details should be retrieved
+     * @return the image details
+     * @throws CloudServersException
+     */
+    Image getImageDetails(int imageID) throws CloudServersException;
+
+    /**
+     * Create a new image from a server.
+     *
+     * @param name     the name of the image to create
+     * @param serverID the ID of the server whose content will be used for creating the image
+     * @return the created image details
+     * @throws CloudServersException
+     */
+    Image createImage(String name, int serverID) throws CloudServersException;
+
 }

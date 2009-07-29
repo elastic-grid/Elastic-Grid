@@ -31,6 +31,7 @@ import com.rackspace.cloudservers.jibx.Resize;
 import com.rackspace.cloudservers.jibx.ConfirmResize;
 import com.rackspace.cloudservers.jibx.RevertResize;
 import com.rackspace.cloudservers.jibx.Flavors;
+import com.rackspace.cloudservers.jibx.Images;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -150,7 +151,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void shareAddress(int serverID, InetAddress address) throws CloudServersException {
-        logger.log(Level.INFO, "Sharing IP address {0} with server {1}...", new Object[] { address, serverID });
+        logger.log(Level.INFO, "Sharing IP address {0} with server {1}...", new Object[]{address, serverID});
         validateServerID(serverID);
         if (address == null)
             throw new IllegalArgumentException("Invalid IP address");
@@ -160,7 +161,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void unshareAddress(int serverID, InetAddress address) throws CloudServersException {
-        logger.log(Level.INFO, "Unsharing IP address {0} with server {1}...", new Object[] { address, serverID });
+        logger.log(Level.INFO, "Unsharing IP address {0} with server {1}...", new Object[]{address, serverID});
         validateServerID(serverID);
         if (address == null)
             throw new IllegalArgumentException("Invalid IP address");
@@ -175,7 +176,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
 
     public Server createServer(String name, int imageID, int flavorID, Map<String, String> metadata) throws CloudServersException {
         logger.log(Level.INFO, "Creating server {0} from image {1} running on flavor {2}...",
-                new Object[] { name, imageID, flavorID });
+                new Object[]{name, imageID, flavorID});
         if (name == null)
             throw new IllegalArgumentException("Server name has to be specified!");
         if (imageID == 0)
@@ -207,7 +208,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void rebootServer(int serverID, RebootType type) throws CloudServersException {
-        logger.log(Level.INFO, "Rebooting server {0} via {1} reboot...", new Object[] { serverID, type.name() });
+        logger.log(Level.INFO, "Rebooting server {0} via {1} reboot...", new Object[]{serverID, type.name()});
         validateServerID(serverID);
         HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
         Reboot reboot = new Reboot();
@@ -223,7 +224,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void rebuildServer(int serverID, int imageID) throws CloudServersException {
-        logger.log(Level.INFO, "Rebuilding server {0} from image {1}...", new Object[] { serverID, imageID });
+        logger.log(Level.INFO, "Rebuilding server {0} from image {1}...", new Object[]{serverID, imageID});
         validateServerID(serverID);
         HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
         Rebuild rebuild = new Rebuild();
@@ -232,7 +233,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void resizeServer(int serverID, int flavorID) throws CloudServersException {
-        logger.log(Level.INFO, "Resizing server {0} to run on flavor {1}...", new Object[] { serverID, flavorID });
+        logger.log(Level.INFO, "Resizing server {0} to run on flavor {1}...", new Object[]{serverID, flavorID});
         validateServerID(serverID);
         HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
         Resize resize = new Resize();
@@ -329,6 +330,59 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         return new Flavor(response.getId(), response.getName(), response.getRam(), response.getDisk());
     }
 
+    public List<Image> getImages() throws CloudServersException {
+        logger.info("Retrieving images information...");
+        HttpGet request = new HttpGet(getServerManagementURL() + "/images");
+        Images response = makeRequestInt(request, Images.class);
+        List<Image> images = new ArrayList<Image>(response.getImages().size());
+        for (com.rackspace.cloudservers.jibx.Image image : response.getImages())
+            images.add(new Image(
+                    image.getId(), image.getName(), image.getServerId(),
+                    image.getUpdated(), image.getCreated(), image.getProgress(),
+                    image.getStatus() == null ? null : Image.Status.valueOf(image.getStatus().name())
+            ));
+        return images;
+    }
+
+    public List<Image> getImagesWithDetails() throws CloudServersException {
+        logger.info("Retrieving detailed images information...");
+        HttpGet request = new HttpGet(getServerManagementURL() + "/images/details");
+        Images response = makeRequestInt(request, Images.class);
+        List<Image> images = new ArrayList<Image>(response.getImages().size());
+        for (com.rackspace.cloudservers.jibx.Image image : response.getImages())
+            images.add(new Image(
+                    image.getId(), image.getName(), image.getServerId(),
+                    image.getUpdated(), image.getCreated(), image.getProgress(),
+                    image.getStatus() == null ? null : Image.Status.valueOf(image.getStatus().name())
+            ));
+        return images;
+    }
+
+    public Image getImageDetails(int imageID) throws CloudServersException {
+        logger.log(Level.INFO, "Retrieving detailed information for image {0}...", imageID);
+        validateImageID(imageID);
+        HttpGet request = new HttpGet(getServerManagementURL() + "/images/" + imageID);
+        com.rackspace.cloudservers.jibx.Image response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Image.class);
+        return new Image(response.getId(), response.getName(), response.getServerId(),
+                response.getUpdated(), response.getCreated(), response.getProgress(),
+                response.getStatus() == null ? null : Image.Status.valueOf(response.getStatus().name()));
+    }
+
+    public Image createImage(String name, int serverID) throws CloudServersException {
+        logger.log(Level.INFO, "Creating image named {0} from server {1}...", new Object[]{name, serverID});
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/images");
+        com.rackspace.cloudservers.jibx.Image image = new com.rackspace.cloudservers.jibx.Image();
+        image.setName(name);
+        image.setServerId(serverID);
+        com.rackspace.cloudservers.jibx.Image created = makeEntityRequestInt(request, image, com.rackspace.cloudservers.jibx.Image.class);
+        return new Image(
+                created.getId(), created.getName(), created.getServerId(),
+                created.getUpdated(), created.getCreated(), created.getProgress(),
+                created.getStatus() == null ? null : Image.Status.valueOf(created.getStatus().name())
+        );
+    }
+
     private TimeUnit translateRateLimitUnit(RateLimitUnit unit) {
         switch (unit) {
             case MINUTE:
@@ -392,5 +446,10 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     private void validateFlavorID(int flavorID) throws IllegalArgumentException {
         if (flavorID == 0)
             throw new IllegalArgumentException("Invalid flavorID " + flavorID);
+    }
+
+    private void validateImageID(int imageID) throws IllegalArgumentException {
+        if (imageID == 0)
+            throw new IllegalArgumentException("Invalid imageID " + imageID);
     }
 }

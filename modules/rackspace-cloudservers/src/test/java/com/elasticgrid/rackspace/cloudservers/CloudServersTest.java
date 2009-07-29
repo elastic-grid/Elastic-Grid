@@ -141,6 +141,31 @@ public class CloudServersTest {
 //            System.out.println("Flavor: " + f);
 //    }
 
+//    @Test
+//    public void testRetrieveAllImages() throws CloudServersException {
+//        List<Image> images = api.getImages();
+//        assert images != null;
+//        assert images.size() > 0;
+//        for (Image image : images) {
+//            image = api.getImageDetails(image.getId());
+//            System.out.println("Image: " + image);
+//        }
+//    }
+
+//    @Test
+//    public void testRetrieveDetailsOfAllImages() throws CloudServersException {
+//        List<Image> images = api.getImagesWithDetails();
+//        assert images != null;
+//        assert images.size() > 0;
+//        for (Image image : images)
+//            System.out.println("Image: " + image);
+//    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testCreateImageWithInvalidParameters() throws CloudServersException {
+        api.createImage("test", 123);
+    }
+
     @BeforeTest
     private void setupAPI() throws RackspaceException, IOException {
         String username = RackspaceUtils.getUsername();
