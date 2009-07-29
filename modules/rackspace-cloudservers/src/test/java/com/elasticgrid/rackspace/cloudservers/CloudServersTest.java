@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Tests for the Rackspace Cloud Servers API.
@@ -41,7 +42,7 @@ public class CloudServersTest {
     }
 
     @Test(expectedExceptions = CloudServersException.class)
-    public void testRetreiveServerDetailsOfNonExistingServer() throws CloudServersException {
+    public void testRetrieveServerDetailsOfNonExistingServer() throws CloudServersException {
         api.getServerDetails(123);
     }
 
@@ -55,10 +56,10 @@ public class CloudServersTest {
 //        api.createServer("test", 123, 123);
 //    }
 
-//    @Test(expectedExceptions = CloudServersException.class)
-//    public void testDeleteNonExistingServer() throws CloudServersException {
-//        api.deleteServer(123);
-//    }
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testDeleteNonExistingServer() throws CloudServersException {
+        api.deleteServer(123);
+    }
 
     /* WTF: I'm getting IP addresses I shouldn't have!!!!! There is clearly something wrong going on!!!!!! */
     /*
@@ -88,6 +89,16 @@ public class CloudServersTest {
         List<InetAddress> addresses = api.getServerPrivateAddresses(123);
         assert addresses != null;
         assert addresses.size() == 0;
+    }
+
+//    @Test
+//    public void testShareIpAddressWithNonExistingServer() throws CloudServersException, UnknownHostException {
+//        api.shareAddress(123, InetAddress.getLocalHost());
+//    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void testRebootNonExistingServer() throws CloudServersException {
+        api.rebootServer(123);
     }
 
     @Test

@@ -17,12 +17,10 @@
  */
 package com.elasticgrid.rackspace.cloudservers;
 
-import java.io.Serializable;
-
 /**
- * Enum for HTTP Verb (mostly used by the /limits API call)
+ * Reboot type enum.
  * @author Jerome Bernard
  */
-public enum HTTPVerb implements Serializable {
-    POST, PUT, GET, DELETE, HEAD
+public enum RebootType {
+    HARD, SOFT
 }

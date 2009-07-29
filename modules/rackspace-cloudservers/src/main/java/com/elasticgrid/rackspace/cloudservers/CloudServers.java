@@ -81,6 +81,24 @@ public interface CloudServers {
     List<InetAddress> getServerPrivateAddresses(int serverID) throws CloudServersException;
 
     /**
+     * Share an IP address to the specified server.
+     *
+     * @param serverID the ID of the server for which the IP should be shared
+     * @param address  the IP¨address to share with the server
+     * @throws CloudServersException
+     */
+    void shareAddress(int serverID, InetAddress address) throws CloudServersException;
+
+    /**
+     * Remove a shared IP address from the specified server.
+     *
+     * @param serverID the ID of the server for which the IP should be not be shared anymore
+     * @param address  the IP¨address to stop sharing with the server
+     * @throws CloudServersException
+     */
+    void unshareAddress(int serverID, InetAddress address) throws CloudServersException;
+
+    /**
      * Provision a new server.
      *
      * @param name     the name of the server to create
@@ -102,6 +120,25 @@ public interface CloudServers {
      * @throws CloudServersException
      */
     Server createServer(String name, int imageID, int flavorID, Map<String, String> metadata) throws CloudServersException;
+
+    /**
+     * Reboot the specified server.
+     *
+     * @param serverID the ID of the server to reboot
+     * @throws CloudServersException
+     * @see #rebootServer(int, RebootType)
+     */
+    void rebootServer(int serverID) throws CloudServersException;
+
+    /**
+     * Reboot the specified server.
+     *
+     * @param serverID the ID of the server to reboot
+     * @param type     the type of reboot to perform
+     * @throws CloudServersException
+     * @see #rebootServer(int) 
+     */
+    void rebootServer(int serverID, RebootType type) throws CloudServersException;
 
     /**
      * Update the specified server's name and/or administrative password. This operation allows you to update the name

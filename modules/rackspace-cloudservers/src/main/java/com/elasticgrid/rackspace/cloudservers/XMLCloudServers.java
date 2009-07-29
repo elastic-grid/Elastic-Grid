@@ -25,6 +25,7 @@ import com.rackspace.cloudservers.jibx.Metadata;
 import com.rackspace.cloudservers.jibx.MetadataItem;
 import com.rackspace.cloudservers.jibx.Public;
 import com.rackspace.cloudservers.jibx.Private;
+import com.rackspace.cloudservers.jibx.Reboot;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -89,16 +90,14 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public Server getServerDetails(int serverID) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID);
         com.rackspace.cloudservers.jibx.Server response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Server.class);
         return new Server(response);
     }
 
     public Addresses getServerAddresses(int serverID) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips");
         com.rackspace.cloudservers.jibx.Addresses response = makeRequestInt(request, com.rackspace.cloudservers.jibx.Addresses.class);
         try {
@@ -109,8 +108,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public List<InetAddress> getServerPublicAddresses(int serverID) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips/public");
         Public response = makeRequestInt(request, Public.class);
         try {
@@ -125,8 +123,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public List<InetAddress> getServerPrivateAddresses(int serverID) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpGet request = new HttpGet(getServerManagementURL() + "/servers/" + serverID + "/ips/private");
         Private response = makeRequestInt(request, Private.class);
         try {
@@ -138,6 +135,24 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         } catch (UnknownHostException e) {
             throw new CloudServersException("Can't validate server addresses", e);
         }
+    }
+
+    public void shareAddress(int serverID, InetAddress address) throws CloudServersException {
+        validateServerID(serverID);
+        if (address == null)
+            throw new IllegalArgumentException("Invalid IP address");
+        HttpPut request = new HttpPut(getServerManagementURL() + "/servers/" + serverID
+                + "/ips/public/" + address.getHostAddress());
+        makeRequestInt(request);
+    }
+
+    public void unshareAddress(int serverID, InetAddress address) throws CloudServersException {
+        validateServerID(serverID);
+        if (address == null)
+            throw new IllegalArgumentException("Invalid IP address");
+        HttpDelete request = new HttpDelete(getServerManagementURL() + "/servers/" + serverID
+                + "/ips/public/" + address.getHostAddress());
+        makeRequestInt(request);
     }
 
     public Server createServer(String name, int imageID, int flavorID) throws CloudServersException {
@@ -171,6 +186,18 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         return new Server(created);
     }
 
+    public void rebootServer(int serverID) throws CloudServersException {
+        rebootServer(serverID, RebootType.SOFT);
+    }
+
+    public void rebootServer(int serverID, RebootType type) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        Reboot reboot = new Reboot();
+        reboot.setType(com.rackspace.cloudservers.jibx.RebootType.valueOf(type.name()));
+        makeEntityRequestInt(request, reboot);
+    }
+
     public void updateServerName(int serverID, String name) throws CloudServersException {
         updateServerNameAndPassword(serverID, name, null);
     }
@@ -180,8 +207,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void updateServerNameAndPassword(final int serverID, final String name, final String password) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpPut request = new HttpPut(getServerManagementURL() + "/servers/" + serverID);
         com.rackspace.cloudservers.jibx.Server server = new com.rackspace.cloudservers.jibx.Server();
         server.setId(serverID);
@@ -193,8 +219,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
     }
 
     public void deleteServer(int serverID) throws CloudServersException {
-        if (serverID == 0)
-            throw new IllegalArgumentException("Invalid serverID " + serverID);
+        validateServerID(serverID);
         HttpDelete request = new HttpDelete(getServerManagementURL() + "/servers/" + serverID);
         makeRequestInt(request);
     }
@@ -272,5 +297,10 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         } catch (HttpException e) {
             throw new CloudServersException(e.getMessage(), e);
         }
+    }
+
+    private void validateServerID(int serverID) throws IllegalArgumentException {
+        if (serverID == 0)
+            throw new IllegalArgumentException("Invalid serverID " + serverID);
     }
 }

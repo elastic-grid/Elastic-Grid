@@ -58,6 +58,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import com.rackspace.cloudservers.jibx.CloudServersAPIFault;
+import com.elasticgrid.rackspace.cloudservers.CloudServersException;
 
 /**
  * This class provides common code to the REST connection classes
@@ -214,6 +215,8 @@ public class RackspaceConnection {
                     authenticate();
                     doRetry = true;
                     break;
+                case 417:
+                    throw new CloudServersException(new IllegalArgumentException("Some parameters are invalid!")); // TODO: temp hack 'til Rackspace API is fixed!
                 case 400:
                 case 500:
                 default:
