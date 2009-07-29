@@ -17,6 +17,8 @@
  */
 package com.elasticgrid.rackspace.common;
 
+import com.elasticgrid.rackspace.cloudservers.CloudServersException;
+import com.rackspace.cloudservers.jibx.CloudServersAPIFault;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -34,6 +36,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -42,7 +45,6 @@ import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
@@ -52,13 +54,10 @@ import org.jibx.runtime.IUnmarshallingContext;
 import org.jibx.runtime.JiBXException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
-import com.rackspace.cloudservers.jibx.CloudServersAPIFault;
-import com.elasticgrid.rackspace.cloudservers.CloudServersException;
 
 /**
  * This class provides common code to the REST connection classes
@@ -183,9 +182,9 @@ public class RackspaceConnection {
             HttpResponse response = null;
             if (retries > 0)
                 logger.log(Level.INFO, "Retry #{0}: querying via {1} {2}",
-                        new Object[] { retries, request.getMethod(), request.getURI() });
+                        new Object[]{retries, request.getMethod(), request.getURI()});
             else
-                logger.log(Level.INFO, "Querying via {0} {1}", new Object[] { request.getMethod(), request.getURI() });
+                logger.log(Level.INFO, "Querying via {0} {1}", new Object[]{request.getMethod(), request.getURI()});
             response = getHttpClient().execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
             InputStream entityStream = null;
@@ -207,7 +206,7 @@ public class RackspaceConnection {
                     break;
                 case 503:   // service unavailable
                     logger.log(Level.WARNING, "Service unavailable on {0} via {1}. Will retry in {2} seconds.",
-                            new Object[] { request.getURI(), request.getMethod(), Math.pow(2.0, retries + 1) });
+                            new Object[]{request.getURI(), request.getMethod(), Math.pow(2.0, retries + 1)});
                     doRetry = true;
                     break;
                 case 401:   // unauthorized
@@ -270,6 +269,7 @@ public class RackspaceConnection {
 //        params.setBooleanParameter("http.coonection.stalecheck", false);
         ConnManagerParams.setTimeout(params, getConnectionManagerTimeout());
         ConnManagerParams.setMaxTotalConnections(params, getMaxConnections());
+        ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(getMaxConnections()));
         params.setIntParameter("http.socket.timeout", getSoTimeout());
         params.setIntParameter("http.connection.timeout", getConnectionTimeout());
 
@@ -370,6 +370,7 @@ public class RackspaceConnection {
 
     public void setMaxConnections(int maxConnections) {
         this.maxConnections = maxConnections;
+        hc = null;
     }
 
     public String getProxyHost() {
@@ -378,6 +379,7 @@ public class RackspaceConnection {
 
     public void setProxyHost(String proxyHost) {
         this.proxyHost = proxyHost;
+        hc = null;
     }
 
     public int getProxyPort() {
@@ -386,6 +388,7 @@ public class RackspaceConnection {
 
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
+        hc = null;
     }
 
     static class GzipDecompressingEntity extends HttpEntityWrapper {

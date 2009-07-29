@@ -20,13 +20,13 @@ package com.elasticgrid.rackspace.cloudservers;
 import com.rackspace.cloudservers.jibx.Metadata;
 import com.rackspace.cloudservers.jibx.MetadataItem;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
-import java.net.InetAddress;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Rackspace Server.
+ *
  * @author Jerome Bernard
  */
 public class Server implements Serializable {

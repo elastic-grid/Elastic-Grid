@@ -234,4 +234,29 @@ public interface CloudServers {
      */
     Limits getLimits() throws CloudServersException;
 
+    /**
+     * Retrieve the list of flavors (only IDs and names) associated with the Rackspace account.
+     *
+     * @return the flavors
+     * @throws CloudServersException
+     */
+    List<Flavor> getFlavors() throws CloudServersException;
+
+    /**
+     * Retrieve the list of flavors (with details) associated with the Rackspace account.
+     *
+     * @return the flavors
+     * @throws CloudServersException
+     */
+    List<Flavor> getFlavorsWithDetails() throws CloudServersException;
+
+    /**
+     * Retrieve the flavor details.
+     *
+     * @param flavorID the ID of the flavor for which details should be retrieved
+     * @return the flavor details
+     * @throws CloudServersException
+     */
+    Flavor getFlavorDetails(int flavorID) throws CloudServersException;
+
 }

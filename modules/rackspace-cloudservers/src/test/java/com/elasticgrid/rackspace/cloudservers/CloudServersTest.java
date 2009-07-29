@@ -121,6 +121,26 @@ public class CloudServersTest {
         assert absoluteLimits.size() > 0;
     }
 
+    @Test
+    public void testRetrieveAllFlavors() throws CloudServersException {
+        List<Flavor> flavors = api.getFlavors();
+        assert flavors != null;
+        assert flavors.size() > 0;
+        for (Flavor f : flavors) {
+            f = api.getFlavorDetails(f.getId());
+            System.out.println("Flavor: " + f);
+        }
+    }
+
+//    @Test
+//    public void testRetrieveDetailsOfAllFlavors() throws CloudServersException {
+//        List<Flavor> flavors = api.getFlavorsWithDetails();
+//        assert flavors != null;
+//        assert flavors.size() > 0;
+//        for (Flavor f : flavors)
+//            System.out.println("Flavor: " + f);
+//    }
+
     @BeforeTest
     private void setupAPI() throws RackspaceException, IOException {
         String username = RackspaceUtils.getUsername();
@@ -128,9 +148,14 @@ public class CloudServersTest {
         api = new XMLCloudServers(username, apiKey);
     }
 
-//    static {
-//        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-//        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-//        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
-//    }
+    /*
+    static {
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "info");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "info");
+        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.impl.client.ClientParamsStack", "info");
+    }
+    */
 }
