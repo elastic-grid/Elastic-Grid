@@ -136,9 +136,53 @@ public interface CloudServers {
      * @param serverID the ID of the server to reboot
      * @param type     the type of reboot to perform
      * @throws CloudServersException
-     * @see #rebootServer(int) 
+     * @see #rebootServer(int, RebootType)
      */
     void rebootServer(int serverID, RebootType type) throws CloudServersException;
+
+    /**
+     * Rebuild the specified server.
+     *
+     * @param serverID the ID of the server to rebuild
+     * @throws CloudServersException
+     * @see #rebuildServer(int, int)
+     */
+    void rebuildServer(int serverID) throws CloudServersException;
+
+    /**
+     * Rebuild the specified server from an different image than the one initially used.
+     *
+     * @param serverID the ID of the server to rebuild
+     * @param imageID  the new image to use
+     * @throws CloudServersException
+     * @see #rebuildServer(int)
+     */
+    void rebuildServer(int serverID, int imageID) throws CloudServersException;
+
+    /**
+     * Resize the specified server.
+     *
+     * @param serverID the ID of the server to resize
+     * @param flavorID the new flavor of hardware which should be used
+     * @throws CloudServersException
+     */
+    void resizeServer(int serverID, int flavorID) throws CloudServersException;
+
+    /**
+     * Confirm a pending resize action.
+     *
+     * @param serverID the ID of the server for which the resize should be confirmed
+     * @throws CloudServersException
+     */
+    void confirmResize(int serverID) throws CloudServersException;
+
+    /**
+     * Cancel and revert a pending resize action.
+     *
+     * @param serverID the ID of the server for which the resize should be cancelled
+     * @throws CloudServersException
+     */
+    void revertResize(int serverID) throws CloudServersException;
 
     /**
      * Update the specified server's name and/or administrative password. This operation allows you to update the name

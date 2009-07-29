@@ -101,6 +101,16 @@ public class CloudServersTest {
         api.rebootServer(123);
     }
 
+    @Test(expectedExceptions = CloudServersException.class)
+    public void rebuildNonExistingServer() throws CloudServersException {
+        api.rebuildServer(123);
+    }
+
+    @Test(expectedExceptions = CloudServersException.class)
+    public void resizeNonExistingServer() throws CloudServersException {
+        api.resizeServer(123, 456);
+    }
+
     @Test
     public void testLimits() throws CloudServersException {
         Limits limits = api.getLimits();

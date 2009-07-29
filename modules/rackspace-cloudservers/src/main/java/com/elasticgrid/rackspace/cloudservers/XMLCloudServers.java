@@ -26,6 +26,10 @@ import com.rackspace.cloudservers.jibx.MetadataItem;
 import com.rackspace.cloudservers.jibx.Public;
 import com.rackspace.cloudservers.jibx.Private;
 import com.rackspace.cloudservers.jibx.Reboot;
+import com.rackspace.cloudservers.jibx.Rebuild;
+import com.rackspace.cloudservers.jibx.Resize;
+import com.rackspace.cloudservers.jibx.ConfirmResize;
+import com.rackspace.cloudservers.jibx.RevertResize;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -196,6 +200,40 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         Reboot reboot = new Reboot();
         reboot.setType(com.rackspace.cloudservers.jibx.RebootType.valueOf(type.name()));
         makeEntityRequestInt(request, reboot);
+    }
+
+    public void rebuildServer(int serverID) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        makeEntityRequestInt(request, new Rebuild());
+    }
+
+    public void rebuildServer(int serverID, int imageID) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        Rebuild rebuild = new Rebuild();
+        rebuild.setImageId(imageID);
+        makeEntityRequestInt(request, rebuild);
+    }
+
+    public void resizeServer(int serverID, int flavorID) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        Resize resize = new Resize();
+        resize.setFlavorId(flavorID);
+        makeEntityRequestInt(request, resize);
+    }
+
+    public void confirmResize(int serverID) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        makeEntityRequestInt(request, new ConfirmResize());
+    }
+
+    public void revertResize(int serverID) throws CloudServersException {
+        validateServerID(serverID);
+        HttpPost request = new HttpPost(getServerManagementURL() + "/servers/" + serverID + "/action");
+        makeEntityRequestInt(request, new RevertResize());
     }
 
     public void updateServerName(int serverID, String name) throws CloudServersException {
