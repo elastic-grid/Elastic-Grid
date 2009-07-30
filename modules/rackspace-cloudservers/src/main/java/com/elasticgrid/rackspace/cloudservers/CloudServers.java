@@ -323,6 +323,6 @@ public interface CloudServers {
      */
     void deleteBackupSchedule(int serverID) throws CloudServersException;
 
-    List getSharedIPGroups() throws CloudServersException;
+//    List getSharedIPGroups() throws CloudServersException;
 
 }
