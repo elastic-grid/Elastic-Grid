@@ -198,6 +198,15 @@ public class RackspaceConnection {
                         IBindingFactory bindingFactory = BindingDirectory.getFactory(respType);
                         IUnmarshallingContext unmarshallingCxt = bindingFactory.createUnmarshallingContext();
                         result = (T) unmarshallingCxt.unmarshalDocument(entityStream, "UTF-8");
+
+                        /*
+                        // DEBUG:
+                        response = getHttpClient().execute(request);
+                        entity = response.getEntity();
+                        entityStream = entity.getContent();
+                        logger.log(Level.SEVERE, "Can't unmarshal response from " + request.getURI()
+                                + " via " + request.getMethod() + ":" + IOUtils.toString(entityStream));
+                        */
                     } finally {
                         entity.consumeContent();
                         IOUtils.closeQuietly(entityStream);
