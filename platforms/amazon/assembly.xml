@@ -9,7 +9,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${basedir}/target/private-lan-platform</directory>
+            <directory>${basedir}/target/private-lan</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>**/*</include>
@@ -32,7 +32,7 @@
     </fileSets>
     <files>
         <file>
-            <source>${basedir}/target/private-lan-platform/bin/eg</source>
+            <source>${basedir}/target/private-lan/bin/eg</source>
             <outputDirectory>/bin</outputDirectory>
             <filtered>true</filtered>
             <fileMode>0755</fileMode>

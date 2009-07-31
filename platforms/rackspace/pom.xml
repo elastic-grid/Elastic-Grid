@@ -18,7 +18,7 @@
         <!-- Private LAN platofrm dependency -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>private-lan-platform</artifactId>
+            <artifactId>private-lan</artifactId>
             <version>${pom.version}</version>
             <scope>provided</scope>
         </dependency>

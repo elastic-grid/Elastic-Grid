@@ -87,7 +87,7 @@ public class CloudServersTest {
     }
     */
 
-    @Test
+    @Test(expectedExceptions = CloudServersException.class)
     public void testGetServerPrivateAddressesForNonExistingServer() throws CloudServersException {
         List<InetAddress> addresses = api.getServerPrivateAddresses(123);
         assert addresses != null;
