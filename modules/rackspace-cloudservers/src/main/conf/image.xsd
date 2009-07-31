@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+
+<schema
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:csapi="http://docs.rackspacecloud.com/servers/api/v1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://docs.rackspacecloud.com/servers/api/v1.0"
+>
+  <include schemaLocation="common.xsd" />
+  <element name="image" type="csapi:Image" />
+
+  <!-- Complex Types -->
+  <complexType name="Image">
+    <attribute type="xsd:int"         name="id"        use="optional" />
+    <attribute type="xsd:string"      name="name"      use="required" />
+    <attribute type="xsd:int"         name="serverId"  use="optional" />
+    <attribute type="xsd:dateTime"    name="updated" use="optional" />
+    <attribute type="xsd:dateTime"    name="created" use="optional" />
+    <attribute type="csapi:Progress"  name="progress"  use="optional" />
+    <attribute type="csapi:ImageStatus" name="status"    use="optional" />
+  </complexType>
+
+  <!-- Simple Types -->
+  <simpleType name="ImageStatus">
+    <restriction base="xsd:string">
+      <enumeration value="UNKNOWN" />
+      <enumeration value="ACTIVE" />
+      <enumeration value="SAVING" />
+      <enumeration value="PREPARING" />
+      <enumeration value="QUEUED" />
+      <enumeration value="FAILED" />
+    </restriction>
+  </simpleType>
+
+</schema>
+

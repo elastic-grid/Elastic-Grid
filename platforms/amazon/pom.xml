@@ -18,7 +18,7 @@
         <!-- Private LAN platofrm dependency -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
-            <artifactId>private-lan-platform</artifactId>
+            <artifactId>private-lan</artifactId>
             <version>${pom.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -195,8 +195,8 @@
                             <tasks>
                                 <mkdir dir="${basedir}/target"/>
                                 <gunzip dest="${basedir}/target/elastic-grid-${pom.version}.tar"
-                                        src="${settings.localRepository}/com/elasticgrid/private-lan-platform/${pom.version}/private-lan-platform-${pom.version}-bin.tar.gz"/>
-                                <untar dest="${basedir}/target/private-lan-platform"
+                                        src="${settings.localRepository}/com/elasticgrid/private-lan/${pom.version}/private-lan-${pom.version}-bin.tar.gz"/>
+                                <untar dest="${basedir}/target/private-lan"
                                        src="${basedir}/target/elastic-grid-${pom.version}.tar"/>
                             </tasks>
                         </configuration>
