@@ -39,7 +39,7 @@ KEY_NAME=eg-keypair
 
 # Where your EC2 private key is stored (created when following the Amazon Getting Started guide).
 # You need to change this if you don't store this with your other EC2 keys.
-PRIVATE_KEY_PATH=`echo "$EC2_KEYDIR"/"id_rsa-$KEY_NAME"`
+PRIVATE_KEY_PATH=`echo "$EC2_KEYDIR"/"id-$KEY_NAME"`
 
 # SSH options used when connecting to EC2 instances.
 SSH_OPTS=`echo -i "$PRIVATE_KEY_PATH" -o StrictHostKeyChecking=no -o ServerAliveInterval=30`
