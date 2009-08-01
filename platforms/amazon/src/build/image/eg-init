@@ -75,3 +75,6 @@ elif [ "$NODE" = "agent" ]; then
 else
     echo "Unknown node type [$NODE]"
 fi
+
+# Run this script on next boot
+rm -f /var/ec2/ec2-run-user-data.*

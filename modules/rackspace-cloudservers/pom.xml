@@ -43,6 +43,20 @@
 
     </dependencies>
 
+    <repositories>
+        <repository>
+			<id>jibx</id>
+			<url>http://jibx.sourceforge.net/maven2</url>
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+                <!--<updatePolicy>always</updatePolicy>-->
+            <!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+            <!--</snapshots>-->
+		</repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -58,7 +72,7 @@
             <plugin>
                 <groupId>org.jibx</groupId>
                 <artifactId>maven-jibx-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.2.1.1</version>
                 <executions>
                     <execution>
                         <id>generate-java-code-from-schema</id>

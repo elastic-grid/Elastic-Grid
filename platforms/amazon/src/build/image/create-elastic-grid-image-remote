@@ -16,7 +16,7 @@
 
 
 # Create a Elastic Grid AMI. Runs on the EC2 instance.
-# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
+# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/common/trunk/src/contrib/ec2/bin/)
 
 # Import variables
 bin=`dirname "$0"`
@@ -56,6 +56,10 @@ sed -i -e "s|# export JAVA_HOME=.*|export JAVA_HOME=/usr/local/jdk${JAVA_VERSION
        -e 's|# export EG_SLAVE_SLEEP=.*|export EG_SLAVE_SLEEP=1|' \
        -e 's|# export EG_OPTS=.*|export EG_OPTS=-server|' \
       /usr/local/elastic-grid-$EG_VERSION/bin/eg
+
+# Run user data as script on instance startup
+chmod +x /etc/init.d/ec2-run-user-data
+echo "/etc/init.d/ec2-run-user-data" >> /etc/rc.d/rc.local
 
 # Do configuration on instance startup
 echo "echo 'Starting Elastic Grid...'" >> /etc/rc.d/rc.local
