@@ -17,10 +17,8 @@
  */
 package com.elasticgrid.rackspace.cloudservers;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-import java.io.Serializable;
+import java.io.*;
+import java.util.*;
 
 /**
  * Rackspace API limits.
@@ -51,10 +49,10 @@ class RateLimit implements Serializable {
     private final String regex;
     private final int value;
     private final int remaining;
-    private final TimeUnit unit;
+    private final RateLimit.Unit unit;
     private final long resetTime;
 
-    RateLimit(HTTPVerb verb, String URI, String regex, int value, int remaining, TimeUnit unit, long resetTime) {
+    RateLimit(HTTPVerb verb, String URI, String regex, int value, int remaining, RateLimit.Unit unit, long resetTime) {
         this.verb = verb;
         this.URI = URI;
         this.regex = regex;
@@ -84,7 +82,7 @@ class RateLimit implements Serializable {
         return remaining;
     }
 
-    public TimeUnit getUnit() {
+    public RateLimit.Unit getUnit() {
         return unit;
     }
 
@@ -105,6 +103,10 @@ class RateLimit implements Serializable {
         sb.append(", resetTime=").append(resetTime);
         sb.append('}');
         return sb.toString();
+    }
+
+    enum Unit implements Serializable {
+        MINUTE, HOUR, DAY
     }
 }
 
