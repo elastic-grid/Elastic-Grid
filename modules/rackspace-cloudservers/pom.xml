@@ -80,7 +80,7 @@
                             <goal>schema-codegen</goal>
                         </goals>
                         <configuration>
-                            <directory>src/main/conf</directory>
+                            <directory>${basedir}/src/main/conf</directory>
                             <includes>
                                 <include>cloudservers.xsd</include>
                             </includes>
@@ -95,7 +95,7 @@
                             <goal>bind</goal>
                         </goals>
                         <configuration>
-                            <directory>target/generated-sources</directory>
+                            <directory>${basedir}/target/generated-sources</directory>
                             <load>true</load>
                             <validate>true</validate>
                             <!--<verbose>true</verbose>-->
