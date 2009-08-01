@@ -20,9 +20,6 @@ package com.elasticgrid.rackspace.cloudservers;
 import com.elasticgrid.rackspace.common.RackspaceConnection;
 import com.elasticgrid.rackspace.common.RackspaceException;
 import com.elasticgrid.rackspace.BackupSchedule;
-import com.elasticgrid.rackspace.BackupSchedule.DailyBackup;
-import com.elasticgrid.rackspace.BackupSchedule.WeeklyBackup;
-import com.rackspace.cloudservers.jibx.RateLimitUnit;
 import com.rackspace.cloudservers.jibx.Servers;
 import com.rackspace.cloudservers.jibx.Metadata;
 import com.rackspace.cloudservers.jibx.MetadataItem;
@@ -56,7 +53,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -296,7 +292,7 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
                     limit.getRegex(),
                     limit.getValue(),
                     limit.getRemaining(),
-                    translateRateLimitUnit(limit.getUnit()),
+                    RateLimit.Unit.valueOf(limit.getUnit().name()),
                     limit.getResetTime()
             ));
         List<AbsoluteLimit> absoluteLimits = new ArrayList<AbsoluteLimit>(response.getAbsolute().getAbsoluteLimits().size());
@@ -415,19 +411,6 @@ public class XMLCloudServers extends RackspaceConnection implements CloudServers
         validateServerID(serverID);
         HttpDelete request = new HttpDelete(getServerManagementURL() + "/servers/" + serverID + "/backup_schedule");
         makeRequestInt(request);
-    }
-
-    private TimeUnit translateRateLimitUnit(RateLimitUnit unit) {
-        switch (unit) {
-            case MINUTE:
-                return TimeUnit.MINUTES;
-            case HOUR:
-                return TimeUnit.HOURS;
-            case DAY:
-                return TimeUnit.DAYS;
-            default:
-                throw new IllegalStateException("Unexpected enum value: " + unit);
-        }
     }
 
     protected void makeEntityRequestInt(HttpEntityEnclosingRequestBase request, final Object entity) throws CloudServersException {
