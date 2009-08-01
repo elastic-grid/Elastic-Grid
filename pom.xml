@@ -328,10 +328,16 @@
             <url>http://www.rio-project.org/maven2</url>
         </repository>
 		<repository>
-			<name>jets3t</name>
 			<id>jets3t</id>
 			<url>http://jets3t.s3.amazonaws.com/maven2</url>
-		</repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+		</repository>		
     </repositories>
 
     <pluginRepositories>
@@ -361,6 +367,10 @@
             <releases>
                 <enabled>true</enabled>
             </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jibx</id>
+            <url>http://jibx.sourceforge.net/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 

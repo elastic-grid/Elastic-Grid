@@ -18,7 +18,7 @@
 
 
 # Create a Elastic Grid AMI. Runs on the EC2 instance.
-# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
+# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/common/trunk/src/contrib/ec2/bin/)
 
 # Your Amazon Account Number.
 AWS_ACCOUNT_ID=
@@ -53,9 +53,6 @@ EG_VERSION=0.9.1
 # so you can store it in a bucket you own.
 S3_BUCKET=elastic-grid-distributions
 
-# Enable public access to JobTracker and TaskTracker web interfaces
-ENABLE_WEB_PORTS=true
-
 # The EC2 instance type: m1.small, m1.large, m1.xlarge
 INSTANCE_TYPE="m1.small"
 #INSTANCE_TYPE="m1.large"
@@ -70,7 +67,7 @@ JAVA_VERSION=1.6.0_14
 
 # SUPPORTED_ARCHITECTURES = ['i386', 'x86_64']
 # The download URL for the Sun JDK. Visit http://java.sun.com/javase/downloads/index.jsp and get the URL for the "Linux self-extracting file".
-if [ "$INSTANCE_TYPE" == "m1.small" ]; then
+if [ "$INSTANCE_TYPE" == "m1.small" -o "$INSTANCE_TYPE" == "c1.medium" ]; then
   ARCH='i386'
   BASE_AMI_IMAGE="ami-5647a33f"  # ec2-public-images/fedora-8-i386-base-v1.08.manifest.xml
   JAVA_BINARY_URL=""
@@ -78,4 +75,8 @@ else
   ARCH='x86_64'
   BASE_AMI_IMAGE="ami-2547a34c"  # ec2-public-images/fedora-8-x86_64-base-v1.08.manifest.xml
   JAVA_BINARY_URL=""
+fi
+
+if [ "$AMI_KERNEL" != "" ]; then
+  KERNEL_ARG="--kernel ${AMI_KERNEL}"
 fi

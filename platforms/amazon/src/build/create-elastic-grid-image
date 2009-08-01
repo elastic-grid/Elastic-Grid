@@ -19,7 +19,7 @@
 
 
 # Create a Elastic Grid AMI. Runs on the EC2 instance.
-# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/core/trunk/src/contrib/ec2/bin/)
+# Inspired by Hadoop (http://svn.apache.org/viewvc/hadoop/common/trunk/src/contrib/ec2/bin/)
 
 # Import variables
 . eg-ec2-env.sh
@@ -65,6 +65,7 @@ echo "Copying scripts."
 # Copy setup scripts
 scp $SSH_OPTS eg-ec2-env.sh "root@$HOSTNAME:/mnt"
 scp $SSH_OPTS image/create-elastic-grid-image-remote "root@$HOSTNAME:/mnt"
+scp $SSH_OPTS image/ec2-run-user-data "root@$HOSTNAME:/etc/init.d"
 scp $SSH_OPTS image/eg-init "root@$HOSTNAME:"
 scp $SSH_OPTS image/eg-bootstrap "root@$HOSTNAME:"
 
