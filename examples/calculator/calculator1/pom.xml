@@ -72,7 +72,7 @@
                         <jini.home>${env.JINI_HOME}</jini.home>
                     </environment>
                     <oarName>calculator1</oarName>
-                    <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
+                    <opstring>src/main/conf/calculator.groovy</opstring>
                     <!--<opstring-test>${basedir}/src/test/conf/calculator.groovy</opstring-test>-->
 
                     <implementationIns>
