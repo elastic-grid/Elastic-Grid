@@ -23,6 +23,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>impl</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>amazon-ec2-cloud-platform</artifactId>
+            <version>${pom.version}</version>
+            <classifier>dl</classifier>
+        </dependency>
+
         <!-- Applications dependencies -->
 		<dependency>
 			<groupId>com.elasticgrid.applications</groupId>
