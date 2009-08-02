@@ -42,6 +42,7 @@
     <dependencySets>
         <dependencySet>
             <includes>
+                <include>com.elasticgrid:amazon-ec2-cloud-platform</include>
                 <include>com.elasticgrid:amazon-ec2-bootstrapper</include>
             </includes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
