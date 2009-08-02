@@ -36,12 +36,12 @@
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://www.elastic-grid.com/jira/browse/EG</url>
+        <url>http://jira.elastic-grid.com/browse/EG</url>
     </issueManagement>
 
     <ciManagement>
         <system>teamcity</system>
-        <url>http://www.elastic-grid.com/teamcity</url>
+        <url>http://ci.elastic-grid.com</url>
     </ciManagement>
 
     <modules>
