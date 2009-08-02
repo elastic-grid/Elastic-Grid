@@ -32,11 +32,24 @@ class MonitorConfig {
   long deployMonitorPeriod = 30000
 
   String[] getInitialOpStrings() {
-    [System.getProperty('EG_HOME') + '/config/elastic-grid-core-services.groovy'] as String[]
+    def opstrings = []
+    File egLibsDirectory = new File(System.getProperty('EG_HOME') + File.separatorChar + 'lib' + File.separatorChar + 'elastic-grid');
+    def egConfigDirectory = System.getProperty('EG_HOME') + '/config'
+    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-core-services.groovy'
+    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-private-lan-services.groovy'
+    egLibsDirectory.eachFileMatch(~".*platform.*-impl.jar") {File f ->
+      if (f.name.startsWith('amazon-ec2-cloud-platform'))
+        opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-amazon-services.groovy'
+      else if (f.name.startsWith('rackspace-cloud-platform'))
+        opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
+    }
+    return opstrings as String[]
   }
 
   String[] getInitialLookupGroups() {
-    def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')]
+    if (System.getProperty(Constants.GROUPS_PROPERTY_NAME) == null)
+      System.setProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')
+    def groups = [System.getProperty(Constants.GROUPS_PROPERTY_NAME)]
     return groups as String[]
   }
 
