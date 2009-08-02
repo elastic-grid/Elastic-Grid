@@ -124,6 +124,9 @@
                 <include>commons-codec:commons-codec</include>
                 <include>com.elasticgrid.substrates:substrate-api</include>
             </includes>
+            <excludes>
+                <exclude>com.elasticgrid:rackspace-cloudfiles-storage</exclude>
+            </excludes>
 			<outputDirectory>lib/elastic-grid</outputDirectory>
         </dependencySet>
 		<!-- Framework dependencies -->
