@@ -315,7 +315,7 @@ public class OarMojo extends AbstractMojo {
 		}
 
 		if (downloadableIns != null) {
-        	getLog().info("Building downnloadable classes jar (in " + jarDownloadableName + ")...");
+        	getLog().info("Building downloadable classes jar (in " + jarDownloadableName + ")...");
 	        classDepAndJarTask = new ClassDepAndJarTask();
 	        classDepAndJarTask.setProject(antProject);
 	        classDepAndJarTask.setClasspath(classpath);
@@ -378,12 +378,12 @@ public class OarMojo extends AbstractMojo {
         oar.setDestFile(new File(oarFile));
         // add the opstring
         ZipFileSet fileSetOpstring = new ZipFileSet();
-        fileSetOpstring.setDir(new File(opstring).getParentFile());
-        fileSetOpstring.setIncludes(new File(opstring).getName());
+        fileSetOpstring.setDir(getOpString().getParentFile());
+        fileSetOpstring.setIncludes(getOpString().getName());
         oar.addZipfileset(fileSetOpstring);
         // add the required JARs
         ZipFileSet fileSetJARs = new ZipFileSet();
-        fileSetJARs.setDir(new File("target"));
+        fileSetJARs.setDir(new File(project.getBuild().getDirectory()));
         fileSetJARs.setPrefix("lib");
         fileSetJARs.setIncludes("*.jar");
         oar.addZipfileset(fileSetJARs);
@@ -411,6 +411,13 @@ public class OarMojo extends AbstractMojo {
         	projectHelper.attachArtifact(project, "jar", "", new File(jarClientName));
         if (new File(jarDownloadableName).exists())
 	        projectHelper.attachArtifact(project, "jar", "dl", new File(jarDownloadableName));
+    }
+
+    private File getOpString() {
+        File f = new File(opstring);
+        if (!f.exists())
+            f = new File(project.getBasedir(), opstring);
+        return f;
     }
 
 }
