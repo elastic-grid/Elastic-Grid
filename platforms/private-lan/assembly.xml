@@ -101,7 +101,7 @@
                 <include>com.elasticgrid:private-lan-provisioner</include>
 
                 <!-- Amazon EC2 dependencies -->
-                <include>com.elasticgrid:amazon-ec2-cloud-platform</include>
+                <!--<include>com.elasticgrid:amazon-ec2-cloud-platform</include>-->
                 <include>com.elasticgrid:amazon-ec2-discovery</include>
                 <include>com.elasticgrid:amazon-ec2-provisioner</include>
                 <include>com.elasticgrid:amazon-s3-storage</include>

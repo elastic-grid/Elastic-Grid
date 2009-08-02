@@ -21,4 +21,16 @@ deployment(name: 'Elastic Grid for Private LAN') {
 //    }
     maintain 1
   }
+
+  service(name: 'Amazon S3 Storage Engine') {
+    interfaces {
+      classes 'com.elasticgrid.storage.spi.StorageEngine'
+      resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+    }
+    implementation(class: 'com.elasticgrid.storage.amazon.s3.S3StorageEngineJSB') {
+      resources 'elastic-grid/amazon-s3-storage-${pom.version}.jar',
+                'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+    }
+    maintain 1
+  }
 }
