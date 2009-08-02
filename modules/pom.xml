@@ -37,7 +37,6 @@
         <module>amazon-ec2-provisioner</module>
         <module>private-lan-provisioner</module>
         <module>rackspace-cloudfiles-storage</module>
-		<module>rackspace-cloudservers</module>
 		<module>rackspace-cloudservers-provisioner</module>
         <!--module>examples</module-->
         <module>jabber-cli</module>
