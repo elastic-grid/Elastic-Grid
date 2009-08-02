@@ -49,7 +49,7 @@ public class AWSOverridesBucketPanel extends AbstractInstallerPanel {
 
         // setup title
         title("Integration with Amazon EC2")
-                .text("Elastic Grid needs to know the name of the S3 bucket where your Elastic Grid overrides will be uploaded.")
+                .text("Elastic Grid needs to know the name of the S3 bucket where your Elastic Grid overrides will be uploaded. Overrides are a way to extend/alter the default configuration files used by Elastic Grid for various services such as the agent or the monitor.")
                 .space();
 
         // setup AWS buckets field

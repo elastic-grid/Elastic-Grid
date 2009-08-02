@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class AWSSecurityGroupsPanel extends AbstractInstallerPanel {
     private JList lSecurityGroups;
-    private List<String> groups = Arrays.asList("eg-monitor-and-agent", "eg-agent", "elastic-grid");
+    private List<String> groups = Arrays.asList("eg-monitor", "eg-agent", "elastic-grid");
 
     public AWSSecurityGroupsPanel(InstallerFrame parent, InstallData installData) {
         super(parent, installData);
@@ -44,14 +44,14 @@ public class AWSSecurityGroupsPanel extends AbstractInstallerPanel {
 
         // setup title
         title("Integration with Amazon EC2")
-                .text("Elastic Grid needs some valid security groups allowing your desktop to connect to the EC2 instances.")
+                .text("Elastic Grid needs some valid security groups used in order to allow networking between the various Elastic Grid servers. The set of security groups to create/use is illustrated below:")
                 .space();
 
         // setup AWS groups field
-        lSecurityGroups = list("EC2 Security Groups to be created", groups);
+        lSecurityGroups = list("EC2 Security Groups", groups);
 
         space().space()
-                .text("Elastic Grid Security Groups open required firewall ports so that your EC2 instances can be reached from SSH or Elastic Grid tools.");
+                .text("Elastic Grid Security Groups open required firewall ports so that your EC2 instances can be reached from SSH or the Elastic Grid tools.");
 
         getLayoutHelper().completeLayout();
     }
