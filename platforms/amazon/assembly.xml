@@ -17,6 +17,7 @@
             <excludes>
                 <exclude>bin/*</exclude>
                 <exclude>config/eg.properties.template</exclude>
+                <exclude>lib/elastic-grid/private-lan-cloud-platform*</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
