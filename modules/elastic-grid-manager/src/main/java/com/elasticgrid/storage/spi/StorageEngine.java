@@ -22,12 +22,13 @@ import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.ContainerNotFoundException;
 import java.util.List;
 import java.rmi.RemoteException;
+import java.rmi.Remote;
 
 /**
  * The Storage Engine enables virtualization of underlying storage providers.
  * @author Jerome Bernard
  */
-public interface StorageEngine {
+public interface StorageEngine extends Remote {
 
     /**
      * Return the name of the underlying storage technology used.

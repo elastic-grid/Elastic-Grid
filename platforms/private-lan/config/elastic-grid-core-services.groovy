@@ -13,7 +13,7 @@ deployment(name: 'Elastic Grid') {
     }
     association name: 'cloudPlatforms', property: 'cloudPlatforms',
                 serviceType: 'com.elasticgrid.cluster.spi.CloudPlatformManager',
-                type: 'requires', matchOnName: 'false'
+                type: 'requires', matchOnName: false
     maintain 1
   }
 
@@ -27,7 +27,7 @@ deployment(name: 'Elastic Grid') {
     }
     association name: 'storageEngines', property: 'storageEngines',
                 serviceType: 'com.elasticgrid.storage.spi.StorageEngine',
-                type: 'requires', matchOnName: 'false'
+                type: 'requires', matchOnName: false
     maintain 1
   }
 
