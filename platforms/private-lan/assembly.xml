@@ -111,12 +111,7 @@
                 <include>javax.activation:activation</include>
                 <include>stax:stax-api</include>
                 <!-- Amazon S3 dependencies -->
-                <include>net.java.dev.jets3t:jets3t</include>
-
-                <!-- Rackspace Clouds dependencies -->
-                <include>com.elasticgrid:rackspace-cloudfiles-storage</include>
-                <include>com.mosso:cloud-files</include>
-                <include>log4j:log4j</include>
+                <include>net.java.dev.jets3t:jets3t</include>                
 
                 <!-- JiBX dependencies -->
                 <include>org.jibx:jibx-run</include>
