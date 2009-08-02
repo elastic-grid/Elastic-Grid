@@ -49,7 +49,7 @@ public class AWSDropBucketPanel extends AbstractInstallerPanel {
 
         // setup title
         title("Integration with Amazon EC2")
-                .text("Elastic Grid needs to know the name of the S3 bucket where your applications will be uploaded.")
+                .text("Elastic Grid needs to know the name of the S3 bucket where your applications will be uploaded. Elastic Grid do scan this S3 bucket regularly in order to detect new applications dropped there for deployment on the cloud.")
                 .space();
 
         // setup AWS buckets field
