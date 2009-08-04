@@ -66,7 +66,7 @@ public class S3StorageEngine implements StorageEngine {
     public Container createContainer(String name) throws StorageException {
         try {
             logger.log(Level.FINE, "Creating S3 bucket {0}", name);
-            S3Bucket bucket = s3.createBucket(name);
+            S3Bucket bucket = s3.getOrCreateBucket(name);
             return new S3Container(s3, bucket);
         } catch (S3ServiceException e) {
             throw new StorageException("Can't create container", e);
