@@ -23,14 +23,13 @@ import com.elasticgrid.config.GenericConfiguration;
 import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.model.ec2.EC2NodeType;
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
-import com.elasticgrid.platforms.ec2.EC2Instantiator;
+import com.elasticgrid.platforms.ec2.EC2NodeInstantiator;
 import com.elasticgrid.platforms.ec2.StartInstanceTask;
 import com.elasticgrid.utils.amazon.AWSUtils;
 import org.rioproject.core.jsb.ServiceBeanContext;
 import org.rioproject.event.EventHandler;
 import org.rioproject.sla.SLA;
 import org.rioproject.sla.ScalingPolicyHandler;
-import org.rioproject.watch.ThresholdEvent;
 import com.xerox.amazonws.ec2.EC2Utils;
 import java.io.IOException;
 import static java.lang.String.format;
@@ -46,7 +45,7 @@ import java.util.logging.Logger;
  * @author Jerome Bernard
  */
 public class EC2ScalingPolicyHandler extends ScalingPolicyHandler {
-    private EC2Instantiator ec2;
+    private EC2NodeInstantiator ec2;
     private String clusterName;
     private EC2NodeType nodeType;
     private String ami;

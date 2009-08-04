@@ -25,7 +25,7 @@ import com.elasticgrid.model.Discovery;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface EC2Instantiator extends NodeInstantiator<EC2Node> {
+public interface EC2NodeInstantiator extends NodeInstantiator<EC2Node> {
 
     /**
      * Starts Amazon EC2 instances.

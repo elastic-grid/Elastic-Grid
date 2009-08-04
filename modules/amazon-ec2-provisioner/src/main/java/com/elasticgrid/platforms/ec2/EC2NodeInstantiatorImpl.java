@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EC2InstantiatorImpl implements EC2Instantiator {
+public class EC2NodeInstantiatorImpl implements EC2NodeInstantiator {
     private Jec2 jec2;
-    private static final Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
+    private static final Logger logger = Logger.getLogger(EC2NodeInstantiator.class.getName());
 
     public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
         if (StringUtils.isEmpty(imageID))

@@ -18,9 +18,7 @@
 
 package com.elasticgrid;
 
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.model.Discovery;
-import com.elasticgrid.platforms.ec2.EC2Instantiator;
+import com.elasticgrid.platforms.ec2.EC2NodeInstantiator;
 import net.jini.id.UuidFactory;
 import static java.lang.String.format;
 import java.rmi.RemoteException;
@@ -28,8 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class MockEC2Instantiator implements EC2Instantiator {
-    private Logger logger = Logger.getLogger(EC2Instantiator.class.getName());
+public class MockEC2NodeInstantiator implements EC2NodeInstantiator {
+    private Logger logger = Logger.getLogger(EC2NodeInstantiator.class.getName());
 
     public List<String> startInstances(String imageID, int minCount, int maxCount, List<String> groupSet, String userData, String keyName, boolean publicAddress, Object... options) throws RemoteException {
         logger.info(format("Starting new Amazon EC2 instance from image %s...", imageID));
