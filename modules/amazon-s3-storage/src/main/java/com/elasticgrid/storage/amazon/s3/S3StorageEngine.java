@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.lang.String.format;
 
 /**
  * {@link StorageEngine} providing support for Amazon S3.
@@ -69,7 +70,7 @@ public class S3StorageEngine implements StorageEngine {
             S3Bucket bucket = s3.getOrCreateBucket(name);
             return new S3Container(s3, bucket);
         } catch (S3ServiceException e) {
-            throw new StorageException("Can't create container", e);
+            throw new StorageException(format("Can't create container '%s'", name), e);
         }
     }
 
@@ -81,7 +82,7 @@ public class S3StorageEngine implements StorageEngine {
                 throw new ContainerNotFoundException(name);
             return new S3Container(s3, bucket);
         } catch (S3ServiceException e) {
-            throw new StorageException("Can't find container", e);
+            throw new StorageException(format("Can't find container '%s", name), e);
         }
     }
 
@@ -96,7 +97,7 @@ public class S3StorageEngine implements StorageEngine {
                 s3.deleteObject(bucket, o.getKey());
             s3.deleteBucket(bucket);
         } catch (S3ServiceException e) {
-            throw new StorageException("Can't delete container", e);
+            throw new StorageException(format("Can't delete container '%s'", name), e);
         }
     }
 }
