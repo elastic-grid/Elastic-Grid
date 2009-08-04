@@ -37,7 +37,7 @@ public class CloudServersCloudPlatformManagerFactory implements CloudPlatformMan
     static CloudServersNodeInstantiator nodeInstantiator;
     static CloudServers cs;
 
-    public CloudServersCloudPlatformManager getInstance() throws IOException, RackspaceException {
+    public synchronized CloudServersCloudPlatformManager getInstance() throws IOException, RackspaceException {
         if (instance == null) {
             Properties config = AWSUtils.loadEC2Configuration();
 
