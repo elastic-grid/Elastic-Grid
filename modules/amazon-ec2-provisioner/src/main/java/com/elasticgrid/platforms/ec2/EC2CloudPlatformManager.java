@@ -57,6 +57,9 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
     private String awsAccessID, awsSecretKey;
     private boolean awsSecured = true;
     private String ami32, ami64;
+    /** Timeout in seconds used when starting and stopping EC2 instances. */
+    private int startStopTimeout = 10 * 60;
+
     private ExecutorService executor = Executors.newFixedThreadPool(5);
     private static final Logger logger = Logger.getLogger(EC2CloudPlatformManager.class.getName());
 
@@ -115,7 +118,7 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
 
         // wait for the threads to finish
         for (Future<List<String>> future : futures) {
-            future.get(5 * 60, TimeUnit.SECONDS);
+            future.get(startStopTimeout, TimeUnit.SECONDS);
         }
     }
 
@@ -285,4 +288,7 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         this.clusterLocator = clusterLocator;
     }
 
+    public void setStartStopTimeout(int startStopTimeout) {
+        this.startStopTimeout = startStopTimeout;
+    }
 }
