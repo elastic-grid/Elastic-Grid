@@ -15,28 +15,23 @@
 	
 		<!-- Rackspace Cloud Servers -->
 		<dependency>
-			<groupId>net.elasticgrid.rackspace</groupId>
-			<artifactId>rackspace-cloudservers</artifactId>
+			<groupId>net.elasticgrid</groupId>
+			<artifactId>elastic-rack</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+
+        <!-- Private LAN provisioner -->
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>private-lan-provisioner</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
 
         <!-- Elastic Grid Manager -->
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-manager</artifactId>
             <version>${pom.version}</version>
-        </dependency>
-
-        <!-- Cloud Files dependency -->
-        <dependency>
-            <groupId>com.mosso</groupId>
-            <artifactId>cloud-files</artifactId>
-            <version>1.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.13</version>
         </dependency>
 
         <dependency>

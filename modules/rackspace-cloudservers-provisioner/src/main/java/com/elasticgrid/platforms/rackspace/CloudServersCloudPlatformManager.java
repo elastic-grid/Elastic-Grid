@@ -16,55 +16,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.elasticgrid.platforms.ec2;
+package com.elasticgrid.platforms.rackspace;
 
+import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.cluster.spi.AbstractCloudPlatformManager;
 import com.elasticgrid.cluster.spi.CloudPlatformManager;
-import com.elasticgrid.model.Cluster;
-import com.elasticgrid.model.ClusterAlreadyRunningException;
 import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.Discovery;
 import com.elasticgrid.model.NodeProfileInfo;
-import com.elasticgrid.model.ClusterNotFoundException;
-import com.elasticgrid.model.ec2.EC2Cluster;
-import com.elasticgrid.model.ec2.EC2Node;
-import com.elasticgrid.model.ec2.EC2NodeType;
-import com.elasticgrid.model.ec2.impl.EC2ClusterImpl;
-import com.elasticgrid.platforms.ec2.discovery.EC2ClusterLocator;
-import static java.lang.String.format;
+import com.elasticgrid.model.rackspace.CloudServersCluster;
+import com.elasticgrid.model.rackspace.CloudServersNode;
+import com.elasticgrid.model.rackspace.impl.CloudServersClusterImpl;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Cluster> implements CloudPlatformManager<EC2Cluster> {
-    private EC2NodeInstantiator nodeInstantiator;
-    private EC2ClusterLocator clusterLocator;
+public class CloudServersCloudPlatformManager extends AbstractCloudPlatformManager<CloudServersCluster> implements CloudPlatformManager<CloudServersCluster> {
+    private CloudServersNodeInstantiator nodeInstantiator;
+    private ClusterLocator<CloudServersNode> clusterLocator;
 
     private String overridesBucket;
-    private String awsAccessID, awsSecretKey;
-    private boolean awsSecured = true;
-    private String ami32, ami64;
+    private String username, apiKey;
+    private String image;
     private ExecutorService executor = Executors.newFixedThreadPool(5);
-    private static final Logger logger = Logger.getLogger(EC2CloudPlatformManager.class.getName());
+    private static final Logger logger = Logger.getLogger(CloudServersCloudPlatformManager.class.getName());
 
     public String getName() {
-        return "Amazon EC2";
+        return "Rackspace Cloud Servers";
     }
 
     public void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        /*
         // ensure the cluster name group exists
         String securityGroupNameForCluster = "elastic-grid-cluster-" + clusterName;
         if (!nodeInstantiator.getGroupsNames().contains(securityGroupNameForCluster)) {
@@ -87,7 +76,7 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
                         break;
                     case MEDIUM_HIGH_CPU:
                         ami = ami32;
-                        break;                     
+                        break;
                     case LARGE:
                         ami = ami64;
                         break;
@@ -117,52 +106,54 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         for (Future<List<String>> future : futures) {
             future.get(5 * 60, TimeUnit.SECONDS);
         }
+        */
     }
 
     public void stopCluster(String clusterName) throws ClusterException, RemoteException {
         logger.log(Level.INFO, "Stopping cluster ''{0}''", new Object[] { clusterName });
         // locate all nodes in the cluster
-        Collection<EC2Node> nodes = clusterLocator.findNodes(clusterName);
+        Collection<CloudServersNode> nodes = clusterLocator.findNodes(clusterName);
         // stop each node one by one
-        for (EC2Node node : nodes) {
-            nodeInstantiator.shutdownInstance(node.getInstanceID());
+        for (CloudServersNode node : nodes) {
+            nodeInstantiator.shutdownInstance(node.getServerID());
         }
     }
 
-    public Collection<EC2Cluster> findClusters() throws ClusterException, RemoteException {
+    public Collection<CloudServersCluster> findClusters() throws ClusterException, RemoteException {
         Collection<String> clustersNames = clusterLocator.findClusters();
-        List<EC2Cluster> clusters = new ArrayList<EC2Cluster>(clustersNames.size());
+        List<CloudServersCluster> clusters = new ArrayList<CloudServersCluster>(clustersNames.size());
         for (String cluster : clustersNames) {
             clusters.add(cluster(cluster));
         }
         return clusters;
     }
 
-    public EC2Cluster cluster(String name) throws RemoteException, ClusterException {
-        EC2Cluster cluster = new EC2ClusterImpl();
-        Set<EC2Node> nodes = clusterLocator.findNodes(name);
+    public CloudServersCluster cluster(String name) throws RemoteException, ClusterException {
+        CloudServersCluster cluster = new CloudServersClusterImpl();
+        Set<CloudServersNode> nodes = clusterLocator.findNodes(name);
         if (nodes == null)
-            return (EC2Cluster) cluster.name(name);
+            return (CloudServersCluster) cluster.name(name);
         else
-            return (EC2Cluster) cluster.name(name).addNodes(nodes);
+            return (CloudServersCluster) cluster.name(name).addNodes(nodes);
     }
 
     public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology) throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
+        /*
         // inspect the current cluster in order to figure out its topology
-        EC2Cluster cluster = cluster(clusterName);
+        CloudServersCluster cluster = cluster(clusterName);
 
         if (cluster.getNodes().isEmpty())
             throw new ClusterNotFoundException(clusterName);
 
-        Set<EC2Node> monitors = cluster.getMonitorNodes();
-        Set<EC2Node> agents = cluster.getAgentNodes();
+        Set<CloudServersNode> monitors = cluster.getMonitorNodes();
+        Set<CloudServersNode> agents = cluster.getAgentNodes();
         // figure out which MONITORs are actually MONITOR_AND_AGENT and update the MONITOR set
-        Set<EC2Node> monitorsAndAgents = new HashSet<EC2Node>();
-        Iterator<EC2Node> monitorsIterator = monitors.iterator();
+        Set<CloudServersNode> monitorsAndAgents = new HashSet<CloudServersNode>();
+        Iterator<CloudServersNode> monitorsIterator = monitors.iterator();
         while (monitorsIterator.hasNext()) {
-            EC2Node ec2Node =  monitorsIterator.next();
-            if (ec2Node.getProfile().isAgent()) {
-                monitorsAndAgents.add(ec2Node);
+            CloudServersNode csNode =  monitorsIterator.next();
+            if (csNode.getProfile().isAgent()) {
+                monitorsAndAgents.add(csNode);
                 monitorsIterator.remove();
             }
         }
@@ -242,46 +233,41 @@ public class EC2CloudPlatformManager extends AbstractCloudPlatformManager<EC2Clu
         for (Future future : futures) {
             future.get(5 * 60, TimeUnit.SECONDS);
         }
+        */
     }
 
-    public void setNodeInstantiator(EC2NodeInstantiator nodeNodeInstantiator) throws RemoteException {
-        this.nodeInstantiator = nodeNodeInstantiator;
+    public void setNodeInstantiator(CloudServersNodeInstantiator nodeInstantiator) throws RemoteException {
+        this.nodeInstantiator = nodeInstantiator;
+        /*
         // ensure the Discovery.MONITOR group exists
-        java.util.List<String> groupNames = nodeNodeInstantiator.getGroupsNames();
+        List<String> groupNames = nodeInstantiator.getGroupsNames();
         if (!groupNames.contains(Discovery.MONITOR.getGroupName())) {
-            nodeNodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
+            nodeInstantiator.createSecurityGroup(Discovery.MONITOR.getGroupName());
         }
         // ensure the Discovery.AGENT group exists
         if (!groupNames.contains(Discovery.AGENT.getGroupName())) {
-            nodeNodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
+            nodeInstantiator.createSecurityGroup(Discovery.AGENT.getGroupName());
         }
+        */
     }
 
     public void setOverridesBucket(String overridesBucket) {
         this.overridesBucket = overridesBucket;
     }
 
-    public void setAwsAccessID(String awsAccessID) {
-        this.awsAccessID = awsAccessID;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setAwsSecretKey(String awsSecretKey) {
-        this.awsSecretKey = awsSecretKey;
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
-    public void setAwsSecured(boolean awsSecured) {
-        this.awsSecured = awsSecured;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setAmi32(String ami32) {
-        this.ami32 = ami32;
-    }
-
-    public void setAmi64(String ami64) {
-        this.ami64 = ami64;
-    }
-
-    public void setClusterLocator(EC2ClusterLocator clusterLocator) {
+    public void setClusterLocator(ClusterLocator clusterLocator) {
         this.clusterLocator = clusterLocator;
     }
 

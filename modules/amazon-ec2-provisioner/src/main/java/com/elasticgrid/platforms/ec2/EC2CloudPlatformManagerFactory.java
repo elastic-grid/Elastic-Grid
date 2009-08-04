@@ -30,7 +30,7 @@ import java.util.Properties;
 public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFactory<EC2Cluster> {
     static EC2CloudPlatformManager instance;
     static EC2SecurityGroupsClusterLocator clusterLocator;
-    static EC2Instantiator nodeInstantiator;
+    static EC2NodeInstantiator nodeInstantiator;
     static Jec2 ec2;
 
     public EC2CloudPlatformManager getInstance() throws IOException {
@@ -63,10 +63,10 @@ public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFacto
         return clusterLocator;
     }
 
-    public EC2Instantiator getNodeInstantiator() throws IOException {
+    public EC2NodeInstantiator getNodeInstantiator() throws IOException {
         if (nodeInstantiator == null) {
-            nodeInstantiator = new EC2InstantiatorImpl();
-            ((EC2InstantiatorImpl) nodeInstantiator).setEc2(getEC2());
+            nodeInstantiator = new EC2NodeInstantiatorImpl();
+            ((EC2NodeInstantiatorImpl) nodeInstantiator).setEc2(getEC2());
         }
         return nodeInstantiator;
     }
