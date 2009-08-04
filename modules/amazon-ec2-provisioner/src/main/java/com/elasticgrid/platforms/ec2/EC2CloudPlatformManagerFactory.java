@@ -33,7 +33,7 @@ public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFacto
     static EC2Instantiator nodeInstantiator;
     static Jec2 ec2;
 
-    public EC2CloudPlatformManager getInstance() throws IOException {
+    public synchronized EC2CloudPlatformManager getInstance() throws IOException {
         if (instance == null) {
             Properties config = AWSUtils.loadEC2Configuration();
 
