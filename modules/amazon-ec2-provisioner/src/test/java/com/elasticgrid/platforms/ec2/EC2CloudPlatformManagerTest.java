@@ -41,14 +41,14 @@ import java.util.concurrent.TimeoutException;
 
 public class EC2CloudPlatformManagerTest {
     private EC2CloudPlatformManager cloudPlatformManager;
-    private EC2Instantiator mockEC2;
+    private EC2NodeInstantiator mockEC2Node;
     private EC2ClusterLocator mockLocator;
     private Properties egProps;
 
     @Test(expectedExceptions = ClusterAlreadyRunningException.class)
     public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-        mockEC2 = mock(EC2Instantiator.class);
-        when(mockEC2.startInstances(egProps.getProperty(EC2Configuration.AWS_EC2_AMI32),
+        mockEC2Node = mock(EC2NodeInstantiator.class);
+        when(mockEC2Node.startInstances(egProps.getProperty(EC2Configuration.AWS_EC2_AMI32),
                 1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
                 "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
                         "AWS_EC2_AMI32=" + egProps.getProperty(EC2Configuration.AWS_EC2_AMI32) + "," +
@@ -57,7 +57,7 @@ public class EC2CloudPlatformManagerTest {
                         "AWS_SQS_SECURED=true,DROP_BUCKET=" + egProps.getProperty(EC2Configuration.EG_DROP_BUCKET),
                 egProps.getProperty(EC2Configuration.AWS_EC2_KEYPAIR), true, EC2NodeType.SMALL))
                 .thenReturn(null);
-        when(mockEC2.getGroupsNames())
+        when(mockEC2Node.getGroupsNames())
                 .thenReturn(Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"));
         mockLocator = mock(EC2ClusterLocator.class);
         when(mockLocator.findNodes("test"))
@@ -65,14 +65,14 @@ public class EC2CloudPlatformManagerTest {
         when(mockLocator.findNodes("test"))
                 .thenReturn(new HashSet<EC2Node>(Arrays.asList(new EC2NodeImpl(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL).instanceID("123"))));
 
-        cloudPlatformManager.setNodeInstantiator(mockEC2);
+        cloudPlatformManager.setNodeInstantiator(mockEC2Node);
         cloudPlatformManager.setClusterLocator(mockLocator);
         
         NodeProfileInfo monitorAndAgentSmall = new NodeProfileInfo(NodeProfile.MONITOR_AND_AGENT, EC2NodeType.SMALL, 1);
         cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
         cloudPlatformManager.startCluster("test", Arrays.asList(monitorAndAgentSmall));
 
-        verify(mockEC2);
+        verify(mockEC2Node);
         verify(mockLocator);
     }
 

@@ -25,7 +25,7 @@ import com.elasticgrid.platforms.lan.discovery.JiniGroupsClusterLocator;
 public class LANCloudPlatformManagerFactory implements CloudPlatformManagerFactory<LANCluster> {
     static LANCloudPlatformManager instance;
 
-    public CloudPlatformManager<LANCluster> getInstance() {
+    public synchronized CloudPlatformManager<LANCluster> getInstance() {
         if (instance == null) {
             instance = new LANCloudPlatformManager();
             instance.setClusterLocator(new JiniGroupsClusterLocator());

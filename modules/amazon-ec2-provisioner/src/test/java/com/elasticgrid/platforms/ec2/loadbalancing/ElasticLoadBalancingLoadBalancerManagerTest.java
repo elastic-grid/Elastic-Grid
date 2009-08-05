@@ -59,7 +59,7 @@ public class ElasticLoadBalancingLoadBalancerManagerTest {
 
 //    @Test(expectedExceptions = ClusterAlreadyRunningException.class)
 //    public void testStartingARunningGrid() throws ClusterException, ExecutionException, TimeoutException, InterruptedException, RemoteException {
-//        mockEC2 = EasyMock.createMock(EC2Instantiator.class);
+//        mockEC2 = EasyMock.createMock(EC2NodeInstantiator.class);
 //        EasyMock.expect(mockEC2.startInstances(egProps.getProperty(EC2Configuration.AWS_EC2_AMI32),
 //                1, 1, Arrays.asList("elastic-grid-cluster-test", "eg-monitor", "eg-agent", "elastic-grid"),
 //                "CLUSTER_NAME=test,AWS_ACCESS_ID=null,AWS_SECRET_KEY=null," +
