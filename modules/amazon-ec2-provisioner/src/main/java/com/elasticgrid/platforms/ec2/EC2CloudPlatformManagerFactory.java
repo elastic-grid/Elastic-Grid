@@ -47,7 +47,7 @@ public class EC2CloudPlatformManagerFactory implements CloudPlatformManagerFacto
             instance.setAwsSecretKey(awsSecretKey);
             instance.setAwsSecured(secured);
             instance.setAmi32(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
-            instance.setAmi64(config.getProperty(EC2Configuration.AWS_EC2_AMI32));
+            instance.setAmi64(config.getProperty(EC2Configuration.AWS_EC2_AMI64));
             instance.setClusterLocator(getClusterLocator());
             instance.setNodeInstantiator(getNodeInstantiator());
             String timeout = config.getProperty(EC2Configuration.EG_CLUSTER_START_STOP_TIMEOUT);
