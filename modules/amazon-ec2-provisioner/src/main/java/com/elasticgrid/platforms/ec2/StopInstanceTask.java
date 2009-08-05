@@ -21,10 +21,10 @@ import java.util.concurrent.Callable;
 import java.rmi.RemoteException;
 
 public class StopInstanceTask implements Callable<Void> {
-    private EC2Instantiator nodeInstantiator;
+    private EC2NodeInstantiator nodeInstantiator;
     private String instanceID;
 
-    public StopInstanceTask(EC2Instantiator nodeInstantiator, String instanceID) {
+    public StopInstanceTask(EC2NodeInstantiator nodeInstantiator, String instanceID) {
         this.nodeInstantiator = nodeInstantiator;
         this.instanceID = instanceID;
     }

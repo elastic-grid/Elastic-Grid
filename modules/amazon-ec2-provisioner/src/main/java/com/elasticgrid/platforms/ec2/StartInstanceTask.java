@@ -34,7 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StartInstanceTask implements Callable<List<String>> {
-    private EC2Instantiator nodeInstantiator;
+    private EC2NodeInstantiator nodeInstantiator;
     private String clusterName;
     private NodeProfile profile;
     private EC2NodeType instanceType;
@@ -43,7 +43,7 @@ public class StartInstanceTask implements Callable<List<String>> {
     private String userData;
     private static final Logger logger = Logger.getLogger(StartInstanceTask.class.getName());
 
-    public StartInstanceTask(EC2Instantiator nodeInstantiator, String clusterName, NodeProfile profile,
+    public StartInstanceTask(EC2NodeInstantiator nodeInstantiator, String clusterName, NodeProfile profile,
                              EC2NodeType instanceType, String override, String ami,
                              String awsAccessID, String awsSecretKey, boolean awsSecured) throws ClusterException {
         if (nodeInstantiator == null)
