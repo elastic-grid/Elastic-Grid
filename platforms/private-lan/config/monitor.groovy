@@ -74,10 +74,16 @@ class MonitorConfig {
      */
     Exporter getOpStringManagerExporter() {
         Exporter getOpStringManagerExporter() {
-            File pubHostName = new File("/tmp/public-hostname")
-            return new JrmpExporter(0,
-                                    new ClientSocketFactory(pubHostName.text),
-                                    null)
+            Exporter exporter
+            String hostName = System.getProperty("java.rmi.server.hostname")
+            if(hostName)
+                exporter  = new JrmpExporter(0,
+                                             new ClientSocketFactory(hostName),
+                                             null)
+            else
+                exporter  = new JrmpExporter()
+
+            return exporter
         }
     }
 
