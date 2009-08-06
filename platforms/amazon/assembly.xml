@@ -17,6 +17,8 @@
             <excludes>
                 <exclude>bin/*</exclude>
                 <exclude>config/eg.properties.template</exclude>
+                <exclude>config/elastic-grid-private-lan-services.groovy</exclude>
+                <exclude>config/elastic-grid-rackspace-services.groovy</exclude>
                 <exclude>lib/elastic-grid/private-lan-cloud-platform*</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>

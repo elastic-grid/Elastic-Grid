@@ -20,6 +20,7 @@ echo "Attempting to start Elastic Grid" | logger -t elastic-grid
 
 wget -q -O - http://169.254.169.254/latest/user-data | tr ',' '\n' > /tmp/user-data
 wget -q -O - http://169.254.169.254/2007-01-19/meta-data/public-hostname | tr ',' '\n' > /tmp/public-hostname
+wget -q -O - http://169.254.169.254/2007-01-19/meta-data/security-groups | tr ',' '\n' > /tmp/security-groups
 source /tmp/user-data
 
 export EG_HOME=`ls -d /usr/local/elastic-grid-*`
