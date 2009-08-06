@@ -44,6 +44,7 @@ public class BootstrapperTest {
                 "AWS_SQS_SECURED=true\n" +
                 "DROP_BUCKET=elastic-grid-drop-target";
         FileUtils.writeStringToFile(new File("/tmp/user-data"), data);
+        FileUtils.writeStringToFile(new File("/tmp/security-groups"), "elastic-grid, elastic-grid-cluster-test, eg-monitor");
         System.setProperty("EG_HOME", System.getProperty("java.io.tmpdir"));
         new File(System.getProperty("java.io.tmpdir") + File.separatorChar + "config").mkdir();
         Bootstrapper bootstrapper = new Bootstrapper();
@@ -70,6 +71,7 @@ public class BootstrapperTest {
                 "AWS_SQS_SECURED=true\n" +
                 "DROP_BUCKET=elastic-grid-drop-target";
         FileUtils.writeStringToFile(new File("/tmp/user-data"), data);
+        FileUtils.writeStringToFile(new File("/tmp/security-groups"), "elastic-grid, elastic-grid-cluster-test, eg-agent");
         System.setProperty("EG_HOME", System.getProperty("java.io.tmpdir"));
         new File(System.getProperty("java.io.tmpdir") + File.separatorChar + "config").mkdir();
         Bootstrapper bootstrapper = new Bootstrapper();

@@ -18,13 +18,8 @@
 
 package com.elasticgrid.amazon.boot;
 
-import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.config.EC2Configuration;
-import com.elasticgrid.model.ClusterException;
-import com.elasticgrid.model.Node;
 import com.elasticgrid.model.Discovery;
-import com.elasticgrid.model.NodeProfile;
-import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -33,10 +28,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Bootstrapper in charge of fetching the EC2 launch parameters and generating the EG configuration files.
@@ -76,17 +69,13 @@ public class Bootstrapper {
         File file = saveConfiguration(egParameters);
         System.out.printf("Elastic Grid configuration file generated in '%s'\n", file.getAbsolutePath());
 
-        // start Spring context
-        final ClusterLocator locator = new EC2CloudPlatformManagerFactory().getClusterLocator();
-        final String clusterName = launchParameters.getProperty(LAUNCH_PARAMETER_CLUSTER_NAME);
-
         String securityGroups = FileUtils.readFileToString(new File("/tmp/security-groups"));
         System.out.printf("Security groups for this EC2 instances are '%s'\n", securityGroups);
         String profile = "monitor-agent";
         boolean hasMonitor = securityGroups.contains(Discovery.MONITOR.getGroupName());
         boolean hasAgent = securityGroups.contains(Discovery.AGENT.getGroupName());
         if (!hasAgent && !hasMonitor) {
-            System.err.println("Missing node profile information! Make sure this node has required security groups!";
+            System.err.println("Missing node profile information! Make sure this node has required security groups!");
             System.exit(-1);
         } else if (hasAgent && hasMonitor) {
             profile = "monitor-and-agent";
