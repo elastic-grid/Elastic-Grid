@@ -22,14 +22,14 @@ deployment(name: 'CLI Jabber Gateway') {
   service(name: 'CLI Jabber Gateway') {
     interfaces {
       classes 'com.elasticgrid.tools.cli.jabber.JabberCLI'
-      resources 'jabber/jabber-cli-0.9.1-dl.jar'
+      resources 'jabber/jabber-cli-0.9.2-dl.jar'
 
     }
     implementation(class: 'com.elasticgrid.tools.cli.jabber.JabberCLIJSB') {
-      resources 'jabber/jabber-cli-0.9.1-impl.jar',
+      resources 'jabber/jabber-cli-0.9.2-impl.jar',
                 'jabber/smack-3.0.4.jar',
                 'jabber/smackx-3.0.4.jar',
-                'elastic-grid/kernel/elastic-grid-cli-0.9.1.jar'
+                'elastic-grid/kernel/elastic-grid-cli-0.9.2.jar'
     }
 
     configuration '''
