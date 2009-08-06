@@ -22,6 +22,8 @@ import com.elasticgrid.cluster.discovery.ClusterLocator;
 import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.model.ClusterException;
 import com.elasticgrid.model.Node;
+import com.elasticgrid.model.Discovery;
+import com.elasticgrid.model.NodeProfile;
 import com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerFactory;
 import com.xerox.amazonws.ec2.EC2Exception;
 import org.apache.commons.io.FileUtils;
@@ -78,37 +80,24 @@ public class Bootstrapper {
         final ClusterLocator locator = new EC2CloudPlatformManagerFactory().getClusterLocator();
         final String clusterName = launchParameters.getProperty(LAUNCH_PARAMETER_CLUSTER_NAME);
 
-        // get the currently running node
-        Node thisNode = null;
-        String profile = null;
-        try {
-            Set<Node> nodes = locator.findNodes(clusterName);
-            for (Node node : nodes) {
-                if (node.getAddress().equals(InetAddress.getLocalHost()))
-                    thisNode = node;
-            }
-            if (thisNode == null) {
-                System.err.println("Could not find node " + InetAddress.getLocalHost() + ". Assuming monitor profile.");
-                profile = "monitor";
-            } else {
-                switch (thisNode.getProfile()) {
-                    case AGENT:
-                        profile = "agent";
-                        break;
-                    case MONITOR:
-                        profile = "monitor";
-                        break;
-                    case MONITOR_AND_AGENT:
-                        profile = "monitor-and-agent";
-                        break;
-                }
-            }
-            FileUtils.writeStringToFile(new File("/tmp/eg-node-to-start"), profile);
-            System.out.printf("Local machine is morphed into a %s\n", profile);
-        } catch (ClusterException e) {
-            System.err.println("Could not find nodes in cluster!");
+        String securityGroups = FileUtils.readFileToString(new File("/tmp/security-groups"));
+        System.out.printf("Security groups for this EC2 instances are '%s'\n", securityGroups);
+        String profile = "monitor-agent";
+        boolean hasMonitor = securityGroups.contains(Discovery.MONITOR.getGroupName());
+        boolean hasAgent = securityGroups.contains(Discovery.AGENT.getGroupName());
+        if (!hasAgent && !hasMonitor) {
+            System.err.println("Missing node profile information! Make sure this node has required security groups!";
             System.exit(-1);
+        } else if (hasAgent && hasMonitor) {
+            profile = "monitor-and-agent";
+        } else if (hasMonitor) {
+            profile = "monitor";
+        } else {
+            profile = "agent";
         }
+
+        FileUtils.writeStringToFile(new File("/tmp/eg-node-to-start"), profile);
+        System.out.printf("Local machine is morphed into a %s\n", profile);
 
         String overridesURL = "";
         if (launchParameters.containsKey(LAUNCH_PARAMETER_OVERRIDES_URL))
