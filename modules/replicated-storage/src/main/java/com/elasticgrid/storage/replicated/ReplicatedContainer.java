@@ -38,9 +38,9 @@ public class ReplicatedContainer implements Container {
     private final List<Container> otherContainers;
     private static final Logger logger = Logger.getLogger(ReplicatedContainer.class.getName());
 
-    public ReplicatedContainer(Container preferred, Container... otherContainers) {
+    public ReplicatedContainer(Container preferred, List<Container> otherContainers) {
         this.preferred = preferred;
-        this.otherContainers = Arrays.asList(otherContainers);
+        this.otherContainers = otherContainers;
     }
 
     public String getName() {

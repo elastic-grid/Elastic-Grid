@@ -17,23 +17,21 @@
  */
 package com.elasticgrid.storage.replicated;
 
-import com.elasticgrid.config.EC2Configuration;
 import com.elasticgrid.config.RackspaceConfiguration;
-import com.elasticgrid.storage.StorageException;
-import com.elasticgrid.storage.ContainerNotFoundException;
 import com.elasticgrid.storage.Container;
+import com.elasticgrid.storage.ContainerNotFoundException;
+import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.rackspace.CloudFilesStorageEngine;
-import com.elasticgrid.storage.amazon.s3.S3StorageEngine;
-import com.elasticgrid.storage.spi.AbstractStorageEngineTest;
 import com.elasticgrid.storage.spi.StorageEngine;
-import com.elasticgrid.utils.amazon.AWSUtils;
 import com.elasticgrid.utils.rackspace.RackspaceUtils;
-import java.util.Properties;
-import java.util.List;
-import java.rmi.RemoteException;
-import static org.mockito.Mockito.*;
-import org.testng.annotations.Test;
 import org.apache.commons.lang.math.RandomUtils;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import org.testng.annotations.Test;
+import java.rmi.RemoteException;
+import java.util.Properties;
 
 /**
  * {@link ReplicatedStorageEngine} tests.

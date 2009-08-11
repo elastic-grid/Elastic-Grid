@@ -49,6 +49,17 @@ public class ReplicatedStorageEngine implements StorageEngine {
 
     public List<Container> getContainers() throws StorageException, RemoteException {
         try {
+//            List<Container> otherContainers = new LinkedList<Container>();
+//            for (StorageEngine engine : otherEngines) {
+//                try {
+//                    otherContainers.addAll(engine.getContainers());
+//                } catch (StorageException e) {
+//                    logger.log(Level.SEVERE,
+//                            "Could not get containers of storage engine {0}. {0} won't be in sync anymore...",
+//                            engine.getStorageName());
+//                }
+//            }
+//            return new ReplicatedContainer(preferred.getContainers(), otherContainers);
             return preferred.getContainers();
         } catch (SecurityException e) {
             logger.log(Level.WARNING,
@@ -82,7 +93,7 @@ public class ReplicatedStorageEngine implements StorageEngine {
         for (int i = 0; i < otherEngines.size(); i++) {
             StorageEngine engine = otherEngines.get(i);
             try {
-                engine.createContainer(name);
+                return new ReplicatedContainer(engine.createContainer(name), null);     // TODO: add replicated containers
             } catch (StorageException e) {
                 logger.log(Level.WARNING,
                         "Could not create container ''{0}'' on storage engine {1}. Trying to revert to shared state...",
@@ -105,7 +116,7 @@ public class ReplicatedStorageEngine implements StorageEngine {
 
     public Container findContainerByName(String name) throws StorageException, RemoteException {
         try {
-            return preferred.findContainerByName(name);
+            return new ReplicatedContainer(preferred.findContainerByName(name), null);  // TODO: add replicated containers
         } catch (StorageException e) {
             logger.log(Level.WARNING,
                     "Could not find container ''{0}'' via {1}. Trying next storage engine...",
