@@ -41,6 +41,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>rackspace-cloudfiles-storage</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
