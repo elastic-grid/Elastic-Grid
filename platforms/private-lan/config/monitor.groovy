@@ -29,6 +29,7 @@ import java.util.logging.Level
 class MonitorConfig {
   String serviceName = 'Elastic Grid Monitor'
   String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
+  String jmxName = 'com.elasticgrid.monitor:type=Monitor'
   long deployMonitorPeriod = 30000
 
   String[] getInitialOpStrings() {
