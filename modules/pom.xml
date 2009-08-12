@@ -42,6 +42,7 @@
         <!--module>examples</module-->
         <module>jabber-cli</module>
 	    <module>elastic-grid-deploy-handlers</module>
+	    <module>elastic-grid-protocol-handlers</module>
         <module>private-lan-cloud-platform</module>
         <module>amazon-ec2-cloud-platform</module>
     </modules>

@@ -36,6 +36,8 @@ public class S3StorageEngineJSB extends ServiceBeanAdapter implements StorageEng
     @Override
     public void initialize(ServiceBeanContext context) throws Exception {
         super.initialize(context);
+        System.setProperty("jets3t.bucket.mx", "true");
+        System.setProperty("jets3t.object.mx", "true");
         String awsAccessID = AWSUtils.getAccessID();
         String awsSecretKey = AWSUtils.getSecretKey();
         engine = new S3StorageEngine(awsAccessID, awsSecretKey);
