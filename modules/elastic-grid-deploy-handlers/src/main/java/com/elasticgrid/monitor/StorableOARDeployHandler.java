@@ -28,6 +28,9 @@ import org.rioproject.monitor.AbstractOARDeployHandler;
 import org.rioproject.opstring.OAR;
 import org.rioproject.opstring.OARUtil;
 import org.rioproject.opstring.OpStringLoader;
+import org.rioproject.associations.AssociationDescriptor;
+import org.rioproject.associations.AssociationType;
+import org.rioproject.associations.AssociationMgmt;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -56,9 +59,10 @@ import java.rmi.RemoteException;
 public class StorableOARDeployHandler extends AbstractOARDeployHandler {
     private String dropContainer;
     private File installDirectory;
-    private StorageManager storageManager;
     private boolean deleteAfterCopy;
     private final List<Storable> processedOARs = new ArrayList<Storable>();
+    private static StorageManager storageManager;
+    private static final int TIMEOUT = 5 * 60 * 1000;   // 5 minutes
 
 //    static {
 //        URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());
@@ -85,14 +89,35 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
         this.dropContainer = dropContainer;
         this.installDirectory = installDirectory;
         this.deleteAfterCopy = deleteAfterCopy;
-//        try {
-            storageManager = null;  // TODO; how to get it??
-            StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
-            logger.log(Level.INFO, "Using {0}'s drop container {1}",
-                    new Object[] { storageEngine.getStorageName(), dropContainer });
-//        } catch (StorageException e) {
-//            logger.log(Level.SEVERE, "Could not create StorableOARDeployHandler", e);
-//        }
+
+        // build the association with the storage manager to fulfill
+        AssociationDescriptor storageManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+        storageManagerAssociation.setMatchOnName(false);
+        storageManagerAssociation.setInterfaceNames(StorageManager.class.getName());
+        storageManagerAssociation.setGroups(System.getProperty("org.rioproject.groups"));
+
+        // register the association listeners
+        AssociationMgmt assocMgt = new AssociationMgmt();
+        assocMgt.register(new StorageManagerListener());
+
+        // search for the provision monitor
+        assocMgt.addAssociationDescriptors(storageManagerAssociation);
+
+        long before = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        while ((now - before) < TIMEOUT) {
+            logger.log(Level.WARNING, "Waiting for storage manager to be advertised...");
+            try {
+                Thread.sleep(1000); // sleep for a sec
+            } catch (InterruptedException e) {
+                // ignore
+            }
+            now = System.currentTimeMillis();
+        }
+
+        StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+        logger.log(Level.INFO, "Using {0}'s drop container {1}",
+                new Object[] { storageEngine.getStorageName(), dropContainer });
 
         // create install directory if needed
         if (!installDirectory.exists()) {
@@ -186,7 +211,6 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
     }
 
     private void doDownload(Storable oar) throws IOException {
-        // TODO: write the "storage" protocol handler!!!
         install(new URL("storage://" + dropContainer + '/' + oar.getName()), installDirectory);
         if (deleteAfterCopy) {
             try {
@@ -201,5 +225,9 @@ public class StorableOARDeployHandler extends AbstractOARDeployHandler {
                 logger.log(Level.WARNING, "Could not delete {0} after installing it.", oar.getName());
             }
         }
+    }
+
+    public static void setStorageManager(StorageManager storageManager) {
+        StorableOARDeployHandler.storageManager = storageManager;
     }
 }
