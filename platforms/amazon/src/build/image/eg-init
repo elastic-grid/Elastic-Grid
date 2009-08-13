@@ -63,9 +63,9 @@ elif [ "$NODE" = "monitor-and-agent" ]; then
     "$EG_HOME"/bin/eg start monitor $OVERRIDES_URL 2>&1 > /var/log/eg/eg-monitor.log &
 
     echo Starting Elastic Grid agent | logger -t elastic-grid
-    # We need to have a utility to check whether overrides are actually in the location
-    # they are supposed to
-    OVERRIDES_URL=""
+    if [ -n "$OVERRIDES_URL" ]; then
+        OVERRIDES_URL="$OVERRIDES_URL/start-agent-override.groovy"
+    fi
     "$EG_HOME"/bin/eg start agent $OVERRIDES_URL 2>&1 > /var/log/eg/eg-agent.log &
 elif [ "$NODE" = "agent" ]; then
     echo Starting Elastic Grid agent | logger -t elastic-grid

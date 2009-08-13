@@ -38,6 +38,8 @@ import java.util.logging.Logger;
  *
  * This handler has to be installed before any connection is made by using the following code:
  * <pre>URL.setURLStreamHandlerFactory(new AWSURLStreamHandlerFactory());</pre>
+ * or must be set via a JVM property such as:
+ * <pre>-Djava.protocol.handler.pkgs=com.elasticgrid.storage.amazon</pre>
  *
  * @author Jerome Bernard
  */

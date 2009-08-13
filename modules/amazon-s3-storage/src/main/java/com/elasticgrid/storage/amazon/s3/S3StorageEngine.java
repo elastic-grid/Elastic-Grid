@@ -43,6 +43,8 @@ public class S3StorageEngine implements StorageEngine {
     private final Logger logger = Logger.getLogger(S3StorageEngine.class.getName());
 
     public S3StorageEngine(String awsAccessId, String awsSecretKey) throws S3ServiceException {
+        System.setProperty("jets3t.bucket.mx", "true");
+        System.setProperty("jets3t.object.mx", "true");
         s3 = new RestS3Service(new AWSCredentials(awsAccessId, awsSecretKey));
     }
 

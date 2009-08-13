@@ -101,15 +101,15 @@ public class RestJSB extends ServiceBeanAdapter {
 
             // build the association with the cluster manager to fulfill
             AssociationDescriptor clusterManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
-            provisionMonitorAssociation.setMatchOnName(false);
-            provisionMonitorAssociation.setInterfaceNames(CloudFederationClusterManager.class.getName());
-            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
+            clusterManagerAssociation.setMatchOnName(false);
+            clusterManagerAssociation.setInterfaceNames(CloudFederationClusterManager.class.getName());
+            clusterManagerAssociation.setGroups(context.getServiceBeanConfig().getGroups());
 
             // build the association with the storage manager to fulfill
             AssociationDescriptor storageManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
-            provisionMonitorAssociation.setMatchOnName(false);
-            provisionMonitorAssociation.setInterfaceNames(StorageManager.class.getName());
-            provisionMonitorAssociation.setGroups(context.getServiceBeanConfig().getGroups());
+            storageManagerAssociation.setMatchOnName(false);
+            storageManagerAssociation.setInterfaceNames(StorageManager.class.getName());
+            storageManagerAssociation.setGroups(context.getServiceBeanConfig().getGroups());
 
             // register the association listeners
             AssociationMgmt assocMgt = new AssociationMgmt();
@@ -118,7 +118,10 @@ public class RestJSB extends ServiceBeanAdapter {
             assocMgt.register(new StorageManagerListener());
 
             // search for the provision monitor
-            assocMgt.addAssociationDescriptors(provisionMonitorAssociation);
+            assocMgt.addAssociationDescriptors(
+                    provisionMonitorAssociation,
+                    clusterManagerAssociation,
+                    storageManagerAssociation);
         } catch(Exception e) {
             logger.log(Level.SEVERE, "Register to LifeCycleManager", e);
             throw e;

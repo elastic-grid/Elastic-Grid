@@ -28,9 +28,10 @@ import java.util.logging.Level
  */
 @Component ('org.rioproject.monitor')
 class MonitorConfig {
-    String serviceName = 'Elastic Grid Monitor'
-    String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
-    long deployMonitorPeriod = 30000
+  String serviceName = 'Elastic Grid Monitor'
+  String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
+  String jmxName = 'com.elasticgrid.monitor:type=Monitor'
+  long deployMonitorPeriod = 30000
 
     String[] getInitialOpStrings() {
         def opstrings = []
