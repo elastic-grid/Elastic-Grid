@@ -35,16 +35,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>4.0-M3</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <environment>
-                        <rio.home>${env.EG_HOME}</rio.home>
-                        <jini.home>${env.JINI_HOME}</jini.home>
-                    </environment>
                     <opstring>${basedir}/src/main/conf/VideoConversion.groovy</opstring>
-                    <!--<opstring>${basedir}/src/main/conf/video-conversion.xml</opstring>-->
-                    <!--<opstring-test>${basedir}/src/test/conf/opstring-test-insufficiant-cpu.xml</opstring-test>-->
                 </configuration>
             </plugin>
             <plugin>

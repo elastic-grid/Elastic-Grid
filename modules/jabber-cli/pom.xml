@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jabber-cli</artifactId>
-    <packaging>jsb</packaging>
+    <packaging>classdepandjar</packaging>
     <name>Modules :: Jabber CLI</name>
 
     <dependencies>
@@ -63,34 +63,28 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>4.0-M3</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <environment>
-                        <rio.home>${env.RIO_HOME}</rio.home>
-                        <jini.home>${env.JINI_HOME}</jini.home>
-                    </environment>
-
-                    <implementationIns>
-                        <implementationIn>com.elasticgrid.tools.cli.jabber</implementationIn>
-                    </implementationIns>
-                    <implementationTopclasses>
-                        <implementationTopclass>com.elasticgrid.tools.cli.jabber.JabberCLIJSB</implementationTopclass>
-                    </implementationTopclasses>
-
-                    <clientIns>
-                        <clientIn>com.elasticgrid.tools.cli.jabber</clientIn>
-                    </clientIns>
-                    <clientTopclasses>
-                        <clientTopclass>com.elasticgrid.tools.cli.jabber.JabberCLI</clientTopclass>
-                    </clientTopclasses>
-
-                    <downloadableIns>
-                        <downloadableIn>com.elasticgrid.tools.cli.jabber</downloadableIn>
-                    </downloadableIns>
-                    <downloadableTopclasses>
-                        <downloadableTopclass>com.elasticgrid.tools.cli.jabber.JabberCLI</downloadableTopclass>
-                    </downloadableTopclasses>
+                    <createJars>
+                        <createJar>
+                            <ins>
+                                <in>com.elasticgrid.tools.cli.jabber</in>
+                            </ins>
+                            <topclasses>
+                                <topclass>com.elasticgrid.tools.cli.jabber.JabberCLIJSB</topclass>
+                            </topclasses>
+                        </createJar>
+                        <createJar>
+                            <classifier>dl</classifier>
+                            <ins>
+                                <in>com.elasticgrid.tools.cli.jabber</in>
+                            </ins>
+                            <topclasses>
+                                <topclass>com.elasticgrid.tools.cli.jabber.JabberCLI</topclass>
+                            </topclasses>
+                        </createJar>
+                    </createJars>
                 </configuration>
             </plugin>
             <plugin>
