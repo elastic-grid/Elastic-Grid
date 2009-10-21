@@ -9,7 +9,7 @@ deployment(name: 'Elastic Grid for Private LAN') {
                 'elastic-grid/elastic-grid-model-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.platforms.lan.LANCloudPatformManagerJSB') {
-      resources 'elastic-grid/private-lan-cloud-platform-${pom.version}-impl.jar',
+      resources 'elastic-grid/private-lan-cloud-platform-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
