@@ -52,6 +52,7 @@
                 <include>COPYING.txt</include>
                 <include>COPYING.LESSER.txt</include>
 				<include>lib/**</include>
+				<include>lib-dl/**</include>
             </includes>
 			<useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
