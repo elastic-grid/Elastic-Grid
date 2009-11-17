@@ -8,7 +8,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>elastic-grid-cluster</artifactId>
-    <packaging>jsb</packaging>
+    <packaging>classdepandjar</packaging>
     <name>Modules :: Cluster Manager (JSB)</name>
 
     <dependencies>
@@ -97,27 +97,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>4.0-M3</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <environment>
-                        <rio.home>${env.RIO_HOME}</rio.home>
-                        <jini.home>${env.JINI_HOME}</jini.home>
-                    </environment>
-                    <implementationIns>
-                        <implementationIn>com.elasticgrid.cluster</implementationIn>
-                    </implementationIns>
-                    <implementationTopclasses>
-                        <implementationTopclass>com.elasticgrid.cluster.ClusterManagerJSB</implementationTopclass>
-                        <implementationTopclass>com.elasticgrid.cluster.ClusterManagerJSB$CloudPlatformManagerListener</implementationTopclass>
-                    </implementationTopclasses>
-                    <!--<downloadableIns>-->
-                        <!--<downloadableIn>com.elasticgrid.cluster</downloadableIn>-->
-                    <!--</downloadableIns>-->
-                    <!--<downloadableTopclasses>-->
-                        <!--<downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManager</downloadableTopclass>-->
-                        <!--<downloadableTopclass>com.elasticgrid.platforms.ec2.EC2CloudPlatformManagerProxy</downloadableTopclass>-->
-                    <!--</downloadableTopclasses>-->
+                    <createJars>
+                        <createJar>
+                            <ins>
+                                <in>com.elasticgrid.cluster</in>
+                            </ins>
+                            <topclasses>
+                                <topclass>com.elasticgrid.cluster.ClusterManagerJSB</topclass>
+                                <topclass>com.elasticgrid.cluster.ClusterManagerJSB$CloudPlatformManagerListener</topclass>
+                            </topclasses>
+                        </createJar>
+                    </createJars>
                 </configuration>
             </plugin>
         </plugins>

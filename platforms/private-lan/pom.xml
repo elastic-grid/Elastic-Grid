@@ -27,19 +27,16 @@
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-cluster</artifactId>
             <version>${pom.version}</version>
-            <classifier>impl</classifier>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>elastic-grid-storage</artifactId>
             <version>${pom.version}</version>
-            <classifier>impl</classifier>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
             <artifactId>private-lan-cloud-platform</artifactId>
             <version>${pom.version}</version>
-            <classifier>impl</classifier>
         </dependency>
         <dependency>
             <groupId>${pom.groupId}</groupId>
@@ -274,6 +271,8 @@
                                 <get dest="${staging.dir}/ec2-api-tools.zip" verbose="yes" usetimestamp="yes"
                                      src="http://www.amazon.com/gp/redirect.html/ref=aws_rc_ec2tools?location=http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip&amp;token=A80325AA4DAB186C80828ED5138633E3F49160D9"/>
                                 <unzip src="${staging.dir}/ec2-api-tools.zip" dest="${staging.dir}"/>
+                                <!-- Display Rio version going to be used -->
+                                <echo>Bundling Rio ${rio.version} from ${rio.home}/distribution/target/rio-${rio.version}...</echo>
                             </tasks>
                         </configuration>
                     </execution>

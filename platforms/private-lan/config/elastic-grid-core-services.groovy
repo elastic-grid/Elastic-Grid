@@ -7,7 +7,7 @@ deployment(name: 'Elastic Grid') {
       resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.cluster.ClusterManagerJSB') {
-      resources 'elastic-grid/elastic-grid-cluster-${pom.version}-impl.jar',
+      resources 'elastic-grid/elastic-grid-cluster-${pom.version}.jar',
                 'elastic-grid/amazon-ec2-provisioner-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar'
     }
@@ -23,7 +23,7 @@ deployment(name: 'Elastic Grid') {
       resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.storage.StorageManagerJSB') {
-      resources 'elastic-grid/elastic-grid-storage-${pom.version}-impl.jar'
+      resources 'elastic-grid/elastic-grid-storage-${pom.version}.jar'
     }
     association name: 'storageEngines', property: 'storageEngines',
                 serviceType: 'com.elasticgrid.storage.spi.StorageEngine',

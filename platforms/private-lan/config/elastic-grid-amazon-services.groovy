@@ -9,7 +9,7 @@ deployment(name: 'Elastic Grid for Amazon') {
                 'elastic-grid/elastic-grid-model-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.platforms.ec2.EC2CloudPatformManagerJSB') {
-      resources 'elastic-grid/amazon-ec2-cloud-platform-${pom.version}-impl.jar',
+      resources 'elastic-grid/amazon-ec2-cloud-platform-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar',
                 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }

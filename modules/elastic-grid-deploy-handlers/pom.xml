@@ -104,46 +104,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <environment>
-                        <rio.home>${env.RIO_HOME}</rio.home>
-                        <jini.home>${env.JINI_HOME}</jini.home>
-                    </environment>
-
-                    <implementationIns>
-                        <implementationIn>com.elasticgrid</implementationIn>
-                        <implementationIn>com.xerox</implementationIn>
-                    </implementationIns>
-                    <implementationTopclasses>
-                        <implementationTopclass>com.elasticgrid.monitor.EC2ProvisionMonitorImpl</implementationTopclass>
-                        <implementationTopclass>com.elasticgrid.platforms.ec2.costmodel.EC2SmallInstanceCostModel</implementationTopclass>
-                        <implementationTopclass>com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler</implementationTopclass>
-                    </implementationTopclasses>
-
-                    <clientIns>
-                        <clientIn>com.elasticgrid.monitor</clientIn>
-                        <clientIn>com.elasticgrid.amazon.sla</clientIn>
-                    </clientIns>
-                    <clientTopclasses>
-                        <clientTopclass>com.elasticgrid.monitor.EC2ProvisionMonitor</clientTopclass>
-                        <clientTopclass>com.elasticgrid.amazon.ec2.sla.EC2ScalingPolicyHandler</clientTopclass>
-                    </clientTopclasses>
-
-                    <downloadableIns>
-                        <downloadableIn>com.elasticgrid</downloadableIn>
-                    </downloadableIns>
-                    <downloadableTopclasses>
-                        <downloadableTopclass>com.elasticgrid.monitor.EC2ProvisionMonitor</downloadableTopclass>
-                    </downloadableTopclasses>
-                </configuration>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

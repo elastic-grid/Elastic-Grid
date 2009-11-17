@@ -13,8 +13,7 @@ class StartAgentConfig {
         String jiniHome = System.getProperty('JINI_HOME')
         String egHome = System.getProperty('EG_HOME')
 
-        def websterRoots = [jiniHome+'/lib-dl', ';',
-                            jiniHome+'/lib',    ';',
+        def websterRoots = [egHome+'/lib-dl', ';',
                             egHome+'/lib']
 
         String policyFile = egHome+'/policy/policy.all'

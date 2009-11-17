@@ -134,26 +134,38 @@
             <dependency>
                 <groupId>org.rioproject</groupId>
                 <artifactId>rio</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>${rio.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.rioproject</groupId>
                 <artifactId>boot</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>${rio.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.rioproject</groupId>
                 <artifactId>monitor</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <version>${rio.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.rioproject.tools</groupId>
-                <artifactId>cli</artifactId>
-                <version>4.0-M3-SNAPSHOT</version>
+                <groupId>org.rioproject</groupId>
+                <artifactId>cybernode</artifactId>
+                <version>${rio.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>rio-cli</artifactId>
+                <version>${rio.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>rio-test</artifactId>
+                <version>${rio.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- Jini 2.1 dependencies -->
             <dependency>
@@ -373,5 +385,9 @@
             <url>http://jibx.sourceforge.net/maven2</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <properties>
+        <rio.version>4.0-M3</rio.version>
+    </properties>
 
 </project>
