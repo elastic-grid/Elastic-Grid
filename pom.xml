@@ -150,10 +150,22 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.rioproject.tools</groupId>
-                <artifactId>cli</artifactId>
+                <groupId>org.rioproject</groupId>
+                <artifactId>cybernode</artifactId>
                 <version>${rio.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>rio-cli</artifactId>
+                <version>${rio.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.rioproject</groupId>
+                <artifactId>rio-test</artifactId>
+                <version>${rio.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- Jini 2.1 dependencies -->
             <dependency>

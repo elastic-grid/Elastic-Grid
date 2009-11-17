@@ -38,8 +38,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rioproject.tools</groupId>
-            <artifactId>cli</artifactId>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio-cli</artifactId>
         </dependency>
 
         <dependency>
