@@ -17,6 +17,8 @@
 
     <modules>
         <module>rest-api</module>
+        <module>admin-console</module>
+        <module>admin-console-jsb</module>
     </modules>
 
     <reporting>

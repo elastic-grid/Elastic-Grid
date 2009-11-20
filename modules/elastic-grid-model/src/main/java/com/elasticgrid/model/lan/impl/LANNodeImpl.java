@@ -39,6 +39,10 @@ public class LANNodeImpl extends AbstractNode implements LANNode {
         super(profile);
     }
 
+    public String getID() {
+        return getInstanceID();
+    }
+
     public String getInstanceID() {
         return instanceID;
     }

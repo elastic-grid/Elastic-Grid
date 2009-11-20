@@ -236,6 +236,38 @@ public class ServiceDescriptorUtil extends org.rioproject.boot.ServiceDescriptor
                                         restApiConfig);
     }
 
+
+    public static ServiceDescriptor getAdminConsole(String policy, String adminConsoleConfig) throws IOException {
+        return getAdminConsole(policy, getAnonymousPort(), adminConsoleConfig);
+    }
+
+    public static ServiceDescriptor getAdminConsole(String policy, String... adminConsoleConfig) throws IOException {
+        return getAdminConsole(policy, getAnonymousPort(), adminConsoleConfig);
+    }
+
+    public static ServiceDescriptor getAdminConsole(String policy, int port, String... adminConsoleConfig) throws IOException {
+        return getAdminConsole(policy, BootUtil.getHostAddress(), port, adminConsoleConfig);
+    }
+
+    public static ServiceDescriptor getAdminConsole(String policy, String hostAddress, int port,
+                                               String... adminConsoleConfig) throws IOException {
+        String egHome = System.getProperty("EG_HOME");
+        if (egHome == null)
+            throw new RuntimeException("EG_HOME property not declared");
+        String adminConsoleRoot = egHome + File.separator + "lib" + File.separator + "elastic-grid";
+        String adminConsoleClasspath = new File(adminConsoleRoot + File.separator + getJarName(adminConsoleRoot, "admin-console-jsb")).getCanonicalPath();
+        String adminConsoleCodebase = BootUtil.getCodebase(new String[]{"rio-dl.jar",
+                                                            "jsk-dl.jar"},
+                                                            hostAddress,
+                                                            Integer.toString(port));
+        String implClass = "com.elasticgrid.admin.AdminConsoleJSB";
+        return new RioServiceDescriptor(adminConsoleCodebase,
+                                        policy,
+                                        adminConsoleClasspath,
+                                        implClass,
+                                        adminConsoleConfig);
+    }
+
     private static String getJarName(String egHome, String nameNoVersion) {
         String jarName = null;
         File f = new File(egHome);

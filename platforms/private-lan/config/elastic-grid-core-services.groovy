@@ -5,9 +5,11 @@ deployment(name: 'Elastic Grid') {
     interfaces {
       classes 'com.elasticgrid.cluster.ClusterManager'
       resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+      resources 'elastic-grid/elastic-grid-model-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.cluster.ClusterManagerJSB') {
       resources 'elastic-grid/elastic-grid-cluster-${pom.version}.jar',
+                'elastic-grid/elastic-grid-model-${pom.version}.jar',
                 'elastic-grid/amazon-ec2-provisioner-${pom.version}.jar',
                 'elastic-grid/private-lan-provisioner-${pom.version}.jar'
     }
@@ -17,7 +19,7 @@ deployment(name: 'Elastic Grid') {
     maintain 1
   }
 
-  service(name: 'Storage Manager') {
+  service(name: 'Storage Engine Manager') {
     interfaces {
       classes 'com.elasticgrid.storage.StorageManager'
       resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'

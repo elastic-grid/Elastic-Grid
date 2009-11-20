@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Elastic Grid
+    Copyright (C) 2008-2009 Elastic Grid, LLC.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <servlet>
+        <servlet-name>clusterManager</servlet-name>
+        <servlet-class>com.elasticgrid.admin.server.ClusterManagerServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>storageManager</servlet-name>
+        <servlet-class>com.elasticgrid.admin.server.StorageManagerServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>gwt-log-remote-logger-servlet</servlet-name>
+        <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>clusterManager</servlet-name>
+        <url-pattern>/admin/clusterManager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>storageManager</servlet-name>
+        <url-pattern>/admin/storageManager</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>gwt-log-remote-logger-servlet</servlet-name>
+        <url-pattern>/admin/gwt-log</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>Admin.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
