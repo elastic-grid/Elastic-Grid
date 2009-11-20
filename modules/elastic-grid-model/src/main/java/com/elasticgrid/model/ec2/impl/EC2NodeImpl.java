@@ -40,6 +40,10 @@ public class EC2NodeImpl extends AbstractNode implements EC2Node {
         setType(type);
     }
 
+    public String getID() {
+        return getInstanceID();
+    }
+
     public String getInstanceID() {
         return instanceID;
     }

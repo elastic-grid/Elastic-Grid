@@ -24,6 +24,7 @@ import java.net.InetAddress;
  * @author Jerome Bernard
  */
 public interface Node<N extends Node> {
+    String getID();
     NodeProfile getProfile();
     InetAddress getAddress();
     NodeType getType();
