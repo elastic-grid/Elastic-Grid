@@ -1,10 +1,10 @@
 deployment(name: 'Elastic Grid for Rackspace') {
   groups '${org.rioproject.groups}'
 
-  service(name: 'Rackspace CloudFiles Storage Engine') {
+  service(name: 'Rackspace CloudFiles StorageEngine Engine') {
     interfaces {
       classes 'com.elasticgrid.storage.spi.StorageEngine'
-      resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+      resources 'elastic-grid/rackspace-cloudfiles-storage-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.storage.rackspace.CloudFilesStorageEngineJSB') {
       resources 'elastic-grid/rackspace-cloudfiles-storage-${pom.version}.jar',
