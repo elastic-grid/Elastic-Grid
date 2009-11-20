@@ -26,7 +26,7 @@ deployment(name: 'CLI Jabber Gateway') {
 
     }
     implementation(class: 'com.elasticgrid.tools.cli.jabber.JabberCLIJSB') {
-      resources 'jabber/jabber-cli-0.9.3-impl.jar',
+      resources 'jabber/jabber-cli-0.9.3.jar',
                 'jabber/smack-3.0.4.jar',
                 'jabber/smackx-3.0.4.jar',
                 'elastic-grid/kernel/elastic-grid-cli-0.9.3.jar'

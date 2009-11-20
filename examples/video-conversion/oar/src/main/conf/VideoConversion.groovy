@@ -43,7 +43,7 @@ deployment(name:'Video Conversion Example') {
 
         }
         implementation(class: 'com.elasticgrid.examples.video.VideoConverterJSB') {
-            resources 'video-conversion-oar/lib/video-conversion-converter-0.9.3-impl.jar',
+            resources 'video-conversion-oar/lib/video-conversion-converter-0.9.3.jar',
                       'video-conversion-oar/lib/video-conversion-converter-0.9.3.jar'
         }
 
