@@ -4,7 +4,8 @@ deployment(name: 'Elastic Grid') {
   service(name: 'Cluster Manager') {
     interfaces {
       classes 'com.elasticgrid.cluster.ClusterManager'
-      resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar'
+      resources 'elastic-grid/elastic-grid-manager-${pom.version}.jar',
+                'elastic-grid/elastic-grid-model-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.cluster.ClusterManagerJSB') {
       resources 'elastic-grid/elastic-grid-cluster-${pom.version}.jar',
