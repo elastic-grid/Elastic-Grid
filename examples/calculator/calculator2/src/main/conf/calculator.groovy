@@ -1,8 +1,8 @@
 deployment(name:'Calculator 2') {
     groups 'elastic-grid'
 
-    resources id:'impl.jars', 'calculator2_0.9.2/lib/calculator2-0.9.2.1-impl.jar'
-    resources id:'client.jars', 'calculator2_0.9.2/lib/calculator2-0.9.2.1-dl.jar'
+    resources id:'impl.jars', 'calculator2_0.9.2/lib/calculator2-0.9.3-impl.jar'
+    resources id:'client.jars', 'calculator2_0.9.2/lib/calculator2-0.9.3-dl.jar'
 
     service(name: 'Calculator') {
         interfaces {

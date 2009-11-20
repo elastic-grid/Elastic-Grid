@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.elasticgrid</groupId>
         <artifactId>elastic-grid-modules</artifactId>
-        <version>0.9.2.1</version>
+        <version>0.9.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jabber-cli</artifactId>

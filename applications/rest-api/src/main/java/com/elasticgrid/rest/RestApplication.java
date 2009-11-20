@@ -76,10 +76,10 @@ public class RestApplication extends WadlApplication {
         appInfo.getNamespaces().put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
         GrammarsInfo grammar = new GrammarsInfo();
         IncludeInfo include = new IncludeInfo();
-        include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.9.2.1.xsd"));
-//        include.setTargetRef(new Reference("applications/rest-api/src/main/resources/com/elasticgrid/rest/elastic-grid-0.9.2.1.xsd"));
+        include.setTargetRef(new Reference("http://www.elastic-grid.com/schemas/elastic-grid-0.9.3.xsd"));
+//        include.setTargetRef(new Reference("applications/rest-api/src/main/resources/com/elasticgrid/rest/elastic-grid-0.9.3.xsd"));
 //        ClassLoader cl = getClass().getClassLoader();
-//        URL resource = cl.getResource("elastic-grid-0.9.2.1.xsd");
+//        URL resource = cl.getResource("elastic-grid-0.9.3.xsd");
 //        include.setTargetRef(new Reference(resource.toString()));
         grammar.getIncludes().add(include);
         appInfo.setGrammars(grammar);
