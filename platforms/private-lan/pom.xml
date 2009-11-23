@@ -21,6 +21,11 @@
 			<artifactId>rest-api</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+        <dependency>
+			<groupId>com.elasticgrid.applications</groupId>
+			<artifactId>admin-console-jsb</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
         <!-- Core Services dependencies -->
         <dependency>
