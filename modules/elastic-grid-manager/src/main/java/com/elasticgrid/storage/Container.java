@@ -17,15 +17,16 @@
  */
 package com.elasticgrid.storage;
 
-import java.util.List;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * A container is a set of objects stored in the cloud.
  * @author Jerome Bernard
  */
-public interface Container {
+public interface Container extends Serializable {
     /**
      * Return the name of the container.
      * @return name of the container
