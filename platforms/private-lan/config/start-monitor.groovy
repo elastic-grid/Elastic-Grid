@@ -11,7 +11,6 @@ import com.sun.jini.start.ServiceDescriptor
 class StartMonitorConfig {
 
   ServiceDescriptor[] getServiceDescriptors() {
-    String jiniHome = System.getProperty('JINI_HOME')
     String egHome = System.getProperty('EG_HOME')
 
     def websterRoots = [egHome + '/lib-dl', ';',
@@ -28,7 +27,9 @@ class StartMonitorConfig {
             /* Elastic Grid Provision Monitor */
             ServiceDescriptorUtil.getMonitor(policyFile, getMonitorConfigArgs(egHome)),
             /* Elastic Grid REST API */
-            ServiceDescriptorUtil.getRestApi(policyFile, getRestConfigArgs(egHome))
+            ServiceDescriptorUtil.getRestApi(policyFile, getRestConfigArgs(egHome)),
+            /* Elastic Grid Web Administration Console */
+            ServiceDescriptorUtil.getAdminConsole(policyFile, getAdminConsoleConfigArgs(egHome))
     ]
 
     return (ServiceDescriptor[]) serviceDescriptors
@@ -40,6 +41,10 @@ class StartMonitorConfig {
 
   String[] getRestConfigArgs(String egHome) {
     return ["${egHome}/config/rest-api.groovy"] as String[]
+  }
+
+  String[] getAdminConsoleConfigArgs(String egHome) {
+    return ["${egHome}/config/admin-console.groovy"] as String[]
   }
 
   String[] getLookupConfigArgs(String egHome) {

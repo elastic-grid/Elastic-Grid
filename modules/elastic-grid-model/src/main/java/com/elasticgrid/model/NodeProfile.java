@@ -18,6 +18,8 @@
 
 package com.elasticgrid.model;
 
+import java.io.Serializable;
+
 /**
  * Enum of the node profiles.
  * A node can either be a monitor or an agent or both.
@@ -26,7 +28,7 @@ package com.elasticgrid.model;
  * is not stuck too.
  * @author Jerome Bernard
  */
-public enum NodeProfile {
+public enum NodeProfile implements Serializable {
     MONITOR(false, true), AGENT(true, false),
     MONITOR_AND_AGENT(true, true);
 

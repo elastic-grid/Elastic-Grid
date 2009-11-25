@@ -1,7 +1,7 @@
 deployment(name:'Calculator') {
     groups 'calculator'
 
-    resources id:'impl.jars', 'target/calculator-mavenized-1.0-impl.jar'
+    resources id:'impl.jars', 'target/calculator-mavenized-1.0.jar'
     resources id:'client.jars', 'target/calculator-mavenized-1.0-dl.jar'
 
     service(name: 'Calculator') {

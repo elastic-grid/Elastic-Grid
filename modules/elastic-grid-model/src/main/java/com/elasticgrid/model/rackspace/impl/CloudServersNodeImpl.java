@@ -41,6 +41,10 @@ public class CloudServersNodeImpl extends AbstractNode implements CloudServersNo
         setType(type);
     }
 
+    public String getID() {
+        return getServerID();
+    }
+
     public String getServerID() {
         return serverID;
     }

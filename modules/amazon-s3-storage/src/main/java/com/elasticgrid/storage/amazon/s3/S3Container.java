@@ -19,15 +19,21 @@ package com.elasticgrid.storage.amazon.s3;
 
 import com.elasticgrid.storage.Container;
 import com.elasticgrid.storage.Storable;
-import com.elasticgrid.storage.StorageException;
 import com.elasticgrid.storage.StorableNotFoundException;
+import com.elasticgrid.storage.StorageException;
 import org.jets3t.service.S3Service;
 import org.jets3t.service.S3ServiceException;
+import org.jets3t.service.security.AWSCredentials;
+import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Bucket;
 import org.jets3t.service.model.S3Object;
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +43,10 @@ import java.util.List;
  * @author Jerome Bernard
  */
 public class S3Container implements Container {
-    private final S3Service s3;
-    private final S3Bucket bucket;
-    private final MimetypesFileTypeMap mimes;
+    private transient S3Service s3;
+    private transient S3Bucket bucket;
+    private transient MimetypesFileTypeMap mimes;
+    private static final long serialVersionUID = 1L; 
 
     public S3Container(final S3Service s3, final S3Bucket bucket) {
         this.s3 = s3;
@@ -108,5 +115,27 @@ public class S3Container implements Container {
         } catch (Exception e) {
             throw new StorageException("Can't delete storable", e);
         }
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        oos.writeObject(s3.getAWSCredentials());
+        oos.writeObject(bucket.getName());
+//        oos.writeChars(bucket.getName());
+    }
+
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+        try {
+            AWSCredentials credentials = (AWSCredentials) ois.readObject();
+            String bucketName = (String) ois.readObject();
+            s3 = new RestS3Service(credentials);
+            bucket = new S3Bucket(bucketName);
+        } catch (Exception e) {
+            IOException ioe = new IOException("Can't deserialize");
+            ioe.initCause(e);
+            throw ioe;
+        }
+        mimes = new MimetypesFileTypeMap();
     }
 }

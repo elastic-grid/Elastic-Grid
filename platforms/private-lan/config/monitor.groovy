@@ -33,20 +33,20 @@ class MonitorConfig {
   String jmxName = 'com.elasticgrid.monitor:type=Monitor'
   long deployMonitorPeriod = 30000
 
-    String[] getInitialOpStrings() {
-        def opstrings = []
-        File egLibsDirectory = new File(System.getProperty('EG_HOME') + File.separatorChar + 'lib' + File.separatorChar + 'elastic-grid');
-        def egConfigDirectory = System.getProperty('EG_HOME') + '/config'
-        opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-core-services.groovy'
-        egLibsDirectory.eachFileMatch(~".*platform.*-impl.jar") {File f ->
-            if (f.name.startsWith('private-lan-cloud-platform'))
-                opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-private-lan-services.groovy'
-            if (f.name.startsWith('amazon-ec2-cloud-platform'))
-                opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-amazon-services.groovy'
-            else if (f.name.startsWith('rackspace-cloud-platform'))
-                opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
-        }
-        return opstrings as String[]
+  String[] getInitialOpStrings() {
+    def opstrings = []
+    File egLibsDirectory = new File(System.getProperty('EG_HOME') + File.separatorChar + 'lib' + File.separatorChar + 'elastic-grid');
+    def egConfigDirectory = System.getProperty('EG_HOME') + '/config'
+    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-core-services.groovy'
+    egLibsDirectory.eachFileMatch(~".*platform.*.jar") {File f ->
+      if (!f.name.endsWith("-dl.jar")) {
+        if (f.name.startsWith('private-lan-cloud-platform'))
+          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-private-lan-services.groovy'
+        if (f.name.startsWith('amazon-ec2-cloud-platform'))
+          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-amazon-services.groovy'
+        else if (f.name.startsWith('rackspace-cloud-platform'))
+          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
+      }
     }
 
     String[] getInitialLookupGroups() {

@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.elasticgrid</groupId>
         <artifactId>elastic-grid</artifactId>
-        <version>0.9.2.1</version>
+        <version>0.9.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.elasticgrid</groupId>
@@ -17,6 +17,8 @@
 
     <modules>
         <module>rest-api</module>
+        <module>admin-console</module>
+        <module>admin-console-jsb</module>
     </modules>
 
     <reporting>
