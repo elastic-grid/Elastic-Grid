@@ -17,6 +17,8 @@
  */
 package com.elasticgrid.model;
 
-public interface NodeType {
+import java.io.Serializable;
+
+public interface NodeType extends Serializable {
     String getName();
 }

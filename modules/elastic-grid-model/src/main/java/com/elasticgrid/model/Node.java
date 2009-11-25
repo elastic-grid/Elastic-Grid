@@ -18,12 +18,13 @@
 
 package com.elasticgrid.model;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
 /**
  * @author Jerome Bernard
  */
-public interface Node<N extends Node> {
+public interface Node<N extends Node> extends Serializable {
     String getID();
     NodeProfile getProfile();
     InetAddress getAddress();
