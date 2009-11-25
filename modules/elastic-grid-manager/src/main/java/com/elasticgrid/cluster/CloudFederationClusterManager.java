@@ -75,7 +75,10 @@ public class CloudFederationClusterManager<C extends Cluster> implements Cluster
         }
         return cluster;
         */
-        return clouds.get(ec2Mode?1:0).cluster(name);
+        if (clouds.size() == 1)
+            return clouds.get(0).cluster(name);
+        else
+            return clouds.get(ec2Mode?1:0).cluster(name);
     }
 
     public void resizeCluster(String clusterName, List<NodeProfileInfo> clusterTopology)
@@ -84,6 +87,8 @@ public class CloudFederationClusterManager<C extends Cluster> implements Cluster
     }
 
     public void setClouds(List<CloudPlatformManager<C>> clouds) {
+        if (clouds == null)
+            throw new IllegalArgumentException("The list of cloud platforms can't be null");
         this.clouds = clouds;
         try {
             Properties awsConfig = AWSUtils.loadEC2Configuration();

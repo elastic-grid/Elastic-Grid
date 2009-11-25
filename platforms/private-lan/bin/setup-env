@@ -1,1 +1,2 @@
-export EG_OPTS="-Dorg.rioproject.groups=$CLUSTER_NAME -Dcom.sun.management.jmxremote"
+#export EG_OPTS="-Dorg.rioproject.groups=$CLUSTER_NAME -Dcom.sun.management.jmxremote"
+export EG_OPTS="-Dorg.rioproject.groups=$CLUSTER_NAME"
