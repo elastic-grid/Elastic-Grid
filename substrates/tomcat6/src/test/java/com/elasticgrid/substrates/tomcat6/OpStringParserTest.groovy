@@ -44,7 +44,7 @@ class OpStringParserTest extends GroovyTestCase {
   }
 
   void testXmlParserOnTomcatDeploymentFromFile(parser, file) {
-    def opstrings = parser.parse(file, null, false, null, null, null, false, null)
+    def opstrings = parser.parse(file, null, false, null, null, null)
     assertEquals "There should be one and only one opstring", 1, opstrings.size()
     OpString opstring = opstrings[0]
     assertEquals "The OpString name is not valid", 'My Sample Webapp', opstring.name
