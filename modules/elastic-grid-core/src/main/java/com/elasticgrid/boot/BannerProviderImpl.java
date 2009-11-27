@@ -28,9 +28,9 @@ public class BannerProviderImpl implements BannerProvider {
     public String getBanner(String service) {
         StringBuffer banner = new StringBuffer();
         banner.append("\n");
-        banner.append("____ _ ____\n");
-        banner.append("|__/ | |  |   " + service + "\n");
-        banner.append("|  \\ | |__|   Version: ${pom.version}\n");
+        banner.append("____ _    ____ ____ ___ _ ____    ____ ____ _ ___\n");
+        banner.append("|___ |    |__| [__   |  | |       | __ |__/ | |  \\  "+ service + "\n");
+        banner.append("|___ |___ |  | ___]  |  | |___    |__] |  \\ | |__/  Version: ${pom.version}\n");                                                            
         banner.append("\n");
         banner.append("Elastic Grid Home: " + System.getProperty("EG_HOME"));
         return banner.toString();
