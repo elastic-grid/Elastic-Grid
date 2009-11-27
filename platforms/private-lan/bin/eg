@@ -50,7 +50,7 @@ EG_HOME=$(cd "$EG_HOME" && pwd)
 EG_LIB=$EG_HOME/lib
 
 # Check JINI_HOME
-JINI_HOME=$RIO_HOME
+JINI_HOME=$EG_HOME
 JINI_LIB=$JINI_HOME/lib
 
 # Check for JAVA_HOME

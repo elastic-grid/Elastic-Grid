@@ -17,7 +17,7 @@
  */
 package com.elasticgrid.boot;
 
-import org.rioproject.resources.util.BannerProvider;
+import org.rioproject.util.BannerProvider;
 
 /**
  * Banner provider.

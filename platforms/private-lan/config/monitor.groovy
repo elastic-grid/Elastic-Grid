@@ -22,33 +22,34 @@ import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
-import org.rioproject.resources.util.BannerProvider
 import com.elasticgrid.boot.BannerProviderImpl
+import org.rioproject.util.BannerProvider
 
 /**
  * Declare Provision Monitor properties
  */
-@Component ('org.rioproject.monitor')
+@Component('org.rioproject.monitor')
 class MonitorConfig {
-  String serviceName = 'Elastic Grid Monitor'
-  String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
-  String jmxName = 'com.elasticgrid.monitor:type=Monitor'
-  long deployMonitorPeriod = 30000
-
-  String[] getInitialOpStrings() {
-    def opstrings = []
-    File egLibsDirectory = new File(System.getProperty('EG_HOME') + File.separatorChar + 'lib' + File.separatorChar + 'elastic-grid');
-    def egConfigDirectory = System.getProperty('EG_HOME') + '/config'
-    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-core-services.groovy'
-    egLibsDirectory.eachFileMatch(~".*platform.*.jar") {File f ->
-      if (!f.name.endsWith("-dl.jar")) {
-        if (f.name.startsWith('private-lan-cloud-platform'))
-          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-private-lan-services.groovy'
-        if (f.name.startsWith('amazon-ec2-cloud-platform'))
-          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-amazon-services.groovy'
-        else if (f.name.startsWith('rackspace-cloud-platform'))
-          opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
-      }
+    String serviceName = 'Elastic Grid Monitor'
+    String serviceComment = 'Elastic Grid Dynamic Provisioning Agent'
+    String jmxName = 'com.elasticgrid.monitor:type=Monitor'
+    long deployMonitorPeriod = 30000
+    
+    String[] getInitialOpStrings() {
+        def opstrings = []
+        File egLibsDirectory = new File(System.getProperty('EG_HOME') + File.separatorChar + 'lib' + File.separatorChar + 'elastic-grid');
+        def egConfigDirectory = System.getProperty('EG_HOME') + '/config'
+        opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-core-services.groovy'
+        egLibsDirectory.eachFileMatch(~".*platform.*.jar") {File f ->
+            if (!f.name.endsWith("-dl.jar")) {
+                if (f.name.startsWith('private-lan-cloud-platform'))
+                    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-private-lan-services.groovy'
+                if (f.name.startsWith('amazon-ec2-cloud-platform'))
+                    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-amazon-services.groovy'
+                else if (f.name.startsWith('rackspace-cloud-platform'))
+                    opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
+            }
+        }
     }
 
     String[] getInitialLookupGroups() {
@@ -72,31 +73,12 @@ class MonitorConfig {
         return new LeastActiveSelector()
     }
 
-    /**
-     * Use a JrmpExporter for the OpStringManager.
-     */
-    Exporter getOpStringManagerExporter() {
-        Exporter getOpStringManagerExporter() {
-            Exporter exporter
-            String hostName = System.getProperty("java.rmi.server.hostname")
-            if(hostName)
-                exporter  = new JrmpExporter(0,
-                                             new ClientSocketFactory(hostName),
-                                             null)
-            else
-                exporter  = new JrmpExporter()
-
-            return exporter
-        }
-    }
 
     LoggerConfig[] getLoggerConfigs() {
         def loggers = []
-        [
-            'org.rioproject.monitor': Level.INFO,
-            'net.jini.lookup.JoinManager': Level.OFF,
-            'org.apache.commons.httpclient': Level.WARNING,
-        ].each {name, level ->
+        ['org.rioproject.monitor': Level.INFO,
+         'net.jini.lookup.JoinManager': Level.OFF,
+         'org.apache.commons.httpclient': Level.WARNING].each {name, level ->
             loggers << new LoggerConfig(name, level, new LogHandlerConfig(new ConsoleHandler()))
         }
         return loggers as LoggerConfig[]
@@ -118,16 +100,16 @@ class MonitorConfig {
         ] as DeployHandler[]
     }
 
-  BannerProvider getBannerProvider() {
-    return new BannerProviderImpl()
-  }
+    BannerProvider getBannerProvider() {
+        return new BannerProviderImpl()
+    }
 
 }
 
 /**
  * Configures the SharedDiscoveryManager class to create
  */
-@Component ('org.rioproject.resources.client.DiscoveryManagementPool')
+@Component('org.rioproject.resources.client.DiscoveryManagementPool')
 class MonitorSharedDiscoveryManagerConfig {
     String sharedDiscoveryManager = EC2LookupDiscoveryManager.class.getName()
 }
