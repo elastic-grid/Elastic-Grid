@@ -21,6 +21,8 @@ import org.rioproject.log.LoggerConfig
 import org.rioproject.log.LoggerConfig.LogHandlerConfig
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
+import org.rioproject.resources.util.BannerProvider
+import com.elasticgrid.boot.BannerProviderImpl
 
 /**
  * Declare Provision Monitor properties
@@ -104,6 +106,10 @@ class MonitorConfig {
             new FileSystemOARDeployHandler(new File(deployDir)),
             new com.elasticgrid.monitor.S3OARDeployHandler(AWSUtils.getDropBucket(), new File(deployDir))
     ] as DeployHandler[]
+  }
+
+  BannerProvider getBannerProvider() {
+    return new BannerProviderImpl()
   }
 
 }

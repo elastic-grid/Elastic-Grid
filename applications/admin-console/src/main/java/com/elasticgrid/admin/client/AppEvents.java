@@ -44,4 +44,6 @@ public class AppEvents {
     public static final EventType START_NODE = new EventType();
     public static final EventType STOP_NODE = new EventType();
 
+    public static final EventType DEPLOY_APPLICATION = new EventType();
+
 }
