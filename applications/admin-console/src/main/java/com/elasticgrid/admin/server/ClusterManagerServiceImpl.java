@@ -27,6 +27,11 @@ import com.elasticgrid.admin.model.Service;
 import com.elasticgrid.admin.model.Thresholds;
 import com.elasticgrid.admin.model.Watch;
 import com.elasticgrid.cluster.ClusterManager;
+import com.elasticgrid.storage.Container;
+import com.elasticgrid.storage.StorageException;
+import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.StorageEngine;
+import com.elasticgrid.utils.amazon.AWSUtils;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import net.jini.core.entry.Entry;
 import net.jini.core.lookup.ServiceItem;
@@ -46,6 +51,7 @@ import org.rioproject.monitor.ProvisionMonitor;
 import org.rioproject.watch.Accumulator;
 import org.rioproject.watch.WatchDataSource;
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -61,6 +67,7 @@ import java.util.logging.Logger;
 
 public class ClusterManagerServiceImpl extends RemoteServiceServlet implements ClusterManagerService {
     private static ClusterManager clusterManager;
+    private static StorageManager storageManager;
     private ServiceDiscoveryManager sdm;
     private LookupCache agents;
     private LookupCache monitors;
@@ -76,9 +83,17 @@ public class ClusterManagerServiceImpl extends RemoteServiceServlet implements C
         clusterManagerAssociation.setMatchOnName(false);
         clusterManagerAssociation.setInterfaceNames(ClusterManager.class.getName());
         clusterManagerAssociation.setGroups(discoGroup);
+
+        AssociationDescriptor storageManagerAssociation = new AssociationDescriptor(AssociationType.REQUIRES);
+        storageManagerAssociation.setMatchOnName(false);
+        storageManagerAssociation.setInterfaceNames(StorageManager.class.getName());
+        storageManagerAssociation.setGroups(discoGroup);
+
         AssociationMgmt assocMgt = new AssociationMgmt();
         assocMgt.register(new ClusterManagerListener());
+        assocMgt.register(new StorageManagerListener());
         assocMgt.addAssociationDescriptors(clusterManagerAssociation);
+        assocMgt.addAssociationDescriptors(storageManagerAssociation);
 
         try {
             LookupDiscoveryManager ldm = new LookupDiscoveryManager(new String[]{discoGroup, "all"}, null, null);
@@ -138,6 +153,16 @@ public class ClusterManagerServiceImpl extends RemoteServiceServlet implements C
     public void stopNode(Node node) {
         logger.info("Stopping node " + node);
         // TODO: write this!!
+    }
+
+    public void deployApplication(String application) {
+        try {
+            StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+            Container container = storageEngine.findContainerByName(AWSUtils.getDropBucket());
+            container.uploadStorable(new File(application));
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't deploy application", e);
+        }
     }
 
     public Map<Node, List<Watch>> getWatchesForNodes(List<Node> nodes) {
@@ -371,5 +396,18 @@ public class ClusterManagerServiceImpl extends RemoteServiceServlet implements C
     public static void setClusterManager(ClusterManager clusterManager) {
         logger.log(Level.FINE, "Found cluster manager {0}", clusterManager.getClass().getName());
         ClusterManagerServiceImpl.clusterManager = clusterManager;
+    }
+
+    public synchronized static StorageManager getStorageManager() throws InterruptedException {
+        while (storageManager == null) {
+            logger.warning("Waiting for discovery of storage manager...");
+            Thread.sleep(200);
+        }
+        return storageManager;
+    }
+
+    public static void setStorageManager(StorageManager storageManager) {
+        logger.log(Level.FINE, "Found storage manager {0}", storageManager.getClass().getName());
+        ClusterManagerServiceImpl.storageManager = storageManager;
     }
 }

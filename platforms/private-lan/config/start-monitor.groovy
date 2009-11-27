@@ -6,16 +6,20 @@
 import com.elasticgrid.boot.ServiceDescriptorUtil
 import org.rioproject.config.Component
 import com.sun.jini.start.ServiceDescriptor
+import org.rioproject.config.Repository
 
 @Component ('com.sun.jini.start')
 class StartMonitorConfig {
 
   ServiceDescriptor[] getServiceDescriptors() {
     String egHome = System.getProperty('EG_HOME')
+    String m2Repo = Repository.getLocalRepository().absolutePath
 
     def websterRoots = [egHome + '/lib-dl', ';',
             egHome + '/lib', ';',
-            egHome + '/deploy']
+            egHome + '/deploy',
+            m2Repo
+    ]
 
     String policyFile = egHome + '/policy/policy.all'
 

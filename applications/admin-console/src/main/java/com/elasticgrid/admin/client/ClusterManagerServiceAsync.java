@@ -23,6 +23,7 @@ import com.elasticgrid.admin.model.NodeProfileInfo;
 import com.elasticgrid.admin.model.Watch;
 import com.elasticgrid.admin.model.Service;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public interface ClusterManagerServiceAsync {
     void findCluster(String name, AsyncCallback<Cluster> async);
     void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology, AsyncCallback<Void> async);
     void stopCluster(String clusterName, AsyncCallback<Void> async);
+    void deployApplication(String application, AsyncCallback<Void> async);
     void stopNode(Node node, AsyncCallback<Void> async);
     void getWatchesForNodes(List<Node> nodes, AsyncCallback<Map<Node, List<Watch>>> async);
     void getWatchesForServices(List<Service> services, AsyncCallback<Map<Service, List<Watch>>> async);

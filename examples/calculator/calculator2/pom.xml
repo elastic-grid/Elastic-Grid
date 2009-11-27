@@ -16,31 +16,13 @@
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>cybernode</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>monitor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>boot</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.rioproject</groupId>
-            <artifactId>rio-cli</artifactId>
+            <version>4.0-M3</version>
         </dependency>
 
         <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio-test</artifactId>
+            <version>4.0-M3</version>
             <scope>test</scope>
         </dependency>
 
@@ -51,13 +33,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.sun.jini</groupId>
-            <artifactId>tools</artifactId>
-            <version>2.1</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -65,39 +40,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-rio-plugin</artifactId>
-                <version>4.0-M3</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <opstring>src/main/conf/calculator.groovy</opstring>
-                    <createJars>
-                        <createJar>
-                            <ins>
-                                <in>calculator</in>
-                            </ins>
-                            <topclasses>
-                                <topclass>calculator.service.CalculatorImpl</topclass>
-                                <topclass>calculator.service.AddImpl</topclass>
-                                <topclass>calculator.service.SubtractImpl</topclass>
-                                <topclass>calculator.service.DivideImpl</topclass>
-                                <topclass>calculator.service.MultiplyImpl</topclass>
-                                <topclass>calculator.service.ModuloImpl</topclass>
-                            </topclasses>
-                        </createJar>
-                        <createJar>
-                            <classifier>dl</classifier>
-                            <ins>
-                                <in>calculator</in>
-                            </ins>
-                            <topclasses>
-                                <topclass>calculator.Calculator</topclass>
-                                <topclass>calculator.Add</topclass>
-                                <topclass>calculator.Subtract</topclass>
-                                <topclass>calculator.Divide</topclass>
-                                <topclass>calculator.Multiply</topclass>
-                                <topclass>calculator.Modulo</topclass>
-                            </topclasses>
-                        </createJar>
-                    </createJars>
+                    <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
+                    <createJar>
+                        <classifier>dl</classifier>
+                        <in>org.rioproject.examples.calculator</in>
+                        <topclasses>
+                            <topclass>org.rioproject.examples.calculator.Calculator</topclass>
+                            <topclass>org.rioproject.examples.calculator.Add</topclass>
+                            <topclass>org.rioproject.examples.calculator.Subtract</topclass>
+                            <topclass>org.rioproject.examples.calculator.Divide</topclass>
+                            <topclass>org.rioproject.examples.calculator.Multiply</topclass>
+                        </topclasses>
+                    </createJar>
                 </configuration>
             </plugin>
             <plugin>
@@ -121,7 +77,7 @@
                 <version>2.4.3-alpha-1</version>
                 <configuration>
                     <forkMode>once</forkMode>
-                    <argLine>-Dopstring=${basedir}/src/test/conf/calculator.groovy -DRIO_HOME=${env.RIO_HOME}</argLine>
+                    <argLine>-Dopstring=${basedir}/src/main/conf/calculator.groovy</argLine>
                 </configuration>
                 <executions>
                     <execution>

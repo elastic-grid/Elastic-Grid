@@ -18,6 +18,8 @@
 package com.elasticgrid.admin.client.widget.cluster;
 
 import com.elasticgrid.admin.model.Application;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.tips.ToolTipConfig;
@@ -73,6 +75,14 @@ public class ApplicationsPanel extends ContentPanel {
                 "Deploy new application",
                 "Deploy a new application in the cluster."
         ));
+        deploy.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                DeployApplicationDialog dialog = new DeployApplicationDialog();
+                dialog.setClosable(false);
+                dialog.show();
+            }
+        });
         toolBar.add(deploy);
         undeploy = new Button("Undeploy");
         undeploy.setIcon(IconHelper.createStyle("icon-application-delete"));

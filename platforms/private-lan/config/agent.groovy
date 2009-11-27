@@ -18,6 +18,8 @@ import net.jini.jeri.tcp.TcpServerEndpoint
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
 import com.elasticgrid.platforms.ec2.discovery.EC2LookupDiscoveryManager
+import org.rioproject.resources.util.BannerProvider
+import com.elasticgrid.boot.BannerProviderImpl
 
 /**
  * Declare Agent properties
@@ -65,6 +67,10 @@ class AgentConfig {
     def fdh = org.rioproject.fdh.HeartbeatFaultDetectionHandler.class.name
     def fdhConf = ['-', fdh + '.heartbeatPeriod=10000', fdh + 'heartbeatGracePeriod=10000']
     return FaultDetectionHandlerFactory.getClassBundle(fdh, fdhConf)
+  }
+
+  BannerProvider getBannerProvider() {
+    return new BannerProviderImpl()
   }
 }
 
