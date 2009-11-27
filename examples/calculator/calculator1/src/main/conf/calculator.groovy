@@ -1,16 +1,16 @@
 deployment(name:'Calculator 1') {
     groups 'elastic-grid'
 
-    resources id:'impl.jars', 'calculator1_0.9.2/lib/calculator1-0.9.3.jar'
-    resources id:'client.jars', 'calculator1_0.9.2/lib/calculator1-0.9.3-dl.jar'
+    artifact id:'service', 'com.elasticgrid.examples.calculator:calculator1:1.0'
+    artifact id:'service-dl', 'com.elasticgrid.examples.calculator:calculator1:dl:1.0'
 
     service(name: 'Calculator') {
         interfaces {
             classes 'calculator.Calculator'
-            resources ref:'client.jars'
+            artifact ref:'service-dl'
         }
         implementation(class:'calculator.service.CalculatorImpl') {
-            resources ref:'impl.jars'
+            artifact ref:'service'
         }
         associations {
             association name:'Add', type:'uses', property:'add'
@@ -25,18 +25,12 @@ deployment(name:'Calculator 1') {
         service(name: s) {
             interfaces {
                 classes "calculator.$s"
-                resources ref:'client.jars'
+                artifact ref:'service-dl'
             }
             implementation(class: "calculator.service.${s}Impl") {
-                resources ref:'impl.jars'
+                artifact ref:'service'
             }
-          /*
-            sla(id: 'CPU', low:0.2, high:0.8) {
-              policy type: 'scaling', max: 3, lowerDampener: 3000, upperDampener: 3000
-            }
-          */
             maintain 1
         }
     }
 }
-

@@ -15,18 +15,18 @@
  */
 package calculator;
 
-import org.rioproject.cybernode.StaticCybernode;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.Parameterized;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.rioproject.cybernode.StaticCybernode;
 import java.io.File;
 import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.Collection;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example testing the Calculator service and it's required services from the
