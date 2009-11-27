@@ -25,13 +25,16 @@ import org.rioproject.associations.AssociationListener;
 class StorageManagerListener implements AssociationListener<StorageManager> {
     public void discovered(Association association, StorageManager storageManager) {
         StorageManagerServiceImpl.setStorageManager(storageManager);
+        ClusterManagerServiceImpl.setStorageManager(storageManager);
     }
 
     public void changed(Association association, StorageManager storageManager) {
         StorageManagerServiceImpl.setStorageManager(storageManager);
+        ClusterManagerServiceImpl.setStorageManager(storageManager);
     }
 
     public void broken(Association association, StorageManager storageManager) {
         StorageManagerServiceImpl.setStorageManager(null);
+        ClusterManagerServiceImpl.setStorageManager(null);
     }
 }

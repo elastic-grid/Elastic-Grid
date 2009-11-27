@@ -33,6 +33,7 @@ import com.extjs.gxt.ui.client.mvc.Dispatcher;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class ClustersController extends Controller {
         registerEventTypes(AppEvents.STOP_CLUSTER);
         registerEventTypes(AppEvents.START_NODE);
         registerEventTypes(AppEvents.STOP_NODE);
+        registerEventTypes(AppEvents.DEPLOY_APPLICATION);
     }
 
     @Override
@@ -93,6 +95,8 @@ public class ClustersController extends Controller {
         } else if (type == AppEvents.STOP_NODE) {
             cancelWatchUpdater();
             onStopNode(event);
+        } else if (type == AppEvents.DEPLOY_APPLICATION) {
+            onDeployApplication(event);
         }
     }
 
@@ -233,6 +237,18 @@ public class ClustersController extends Controller {
                 }
             });
         }
+    }
+
+    private void onDeployApplication(final AppEvent event) {
+        Log.info("Should deploy the application...");
+        service.deployApplication(event.<String>getData(), new AsyncCallback<Void>() {
+            public void onSuccess(Void result) {
+                // TODO: not sure what to do here?
+            }
+            public void onFailure(Throwable throwable) {
+                Dispatcher.forwardEvent(AppEvents.ERROR, throwable);
+            }
+        });
     }
 
     private void cancelWatchUpdater() {

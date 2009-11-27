@@ -23,6 +23,7 @@ import com.elasticgrid.admin.model.NodeProfileInfo;
 import com.elasticgrid.admin.model.Service;
 import com.elasticgrid.admin.model.Watch;
 import com.google.gwt.user.client.rpc.RemoteService;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,12 @@ public interface ClusterManagerService extends RemoteService {
     void startCluster(String clusterName, List<NodeProfileInfo> clusterTopology);
     void stopCluster(String clusterName);
     void stopNode(Node node);
+
+    /**
+     * Deploy an application.
+     * @param application the path to the file (OAR) of the application
+     */
+    void deployApplication(String application);
 
     Map<Node, List<Watch>> getWatchesForNodes(List<Node> nodes);
     Map<Service, List<Watch>> getWatchesForServices(List<Service> services);
