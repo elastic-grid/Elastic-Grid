@@ -29,10 +29,10 @@ public class BannerProviderImpl implements BannerProvider {
         StringBuffer banner = new StringBuffer();
         banner.append("\n");
         banner.append("____ _    ____ ____ ___ _ ____    ____ ____ _ ___\n");
-        banner.append("|___ |    |__| [__   |  | |       | __ |__/ | |  \\  "+ service + "\n");
-        banner.append("|___ |___ |  | ___]  |  | |___    |__] |  \\ | |__/  Version: ${pom.version}\n");                                                            
+        banner.append("|___ |    |__| [__   |  | |       | __ |__/ | |  \\  ").append(service).append("\n");
+        banner.append("|___ |___ |  | ___]  |  | |___    |__] |  \\ | |__/  Version: ${pom.version}\n");
         banner.append("\n");
-        banner.append("Elastic Grid Home: " + System.getProperty("EG_HOME"));
+        banner.append("Elastic Grid Home: ").append(System.getProperty("EG_HOME"));
         return banner.toString();
     }
 }
