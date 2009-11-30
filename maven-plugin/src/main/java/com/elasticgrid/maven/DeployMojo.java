@@ -17,12 +17,20 @@
  */
 package com.elasticgrid.maven;
 
-import com.elasticgrid.storage.StorageManager;
-import com.elasticgrid.storage.spi.StorageEngine;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import java.io.File;
+import java.util.Set;
 
 /**
  * Deploys an Elastic Grid OpString to the repository.
@@ -41,13 +49,54 @@ public class DeployMojo extends AbstractMojo {
      */
     private String oarFileName;
 
-    private StorageManager storageManager;
+    /**
+     * The maven project.
+     *
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    private MavenProject project;
+
+    /**
+     * Dependency artifacts
+     *
+     * @parameter expression="${project.dependencyArtifacts}"
+     */
+    private Set<Artifact> dependencies;
+
+    /** @component */
+    private ArtifactResolver resolver;
+
+    /** @component */
+    private ArtifactMetadataSource artifactMetadataSource;
+
+    /** @parameter default-value="${localRepository}" */
+    private org.apache.maven.artifact.repository.ArtifactRepository localRepository;
+
+    /** @parameter default-value="${project.remoteArtifactRepositories}" */
+    private java.util.List remoteRepositories;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         File oar = new File(oarFileName);
         getLog().info("Deploying oar " + oar.getName() + "...");
-//        StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
-//        storageEngine.getContainers();
-        //TODO: do something!
+
+        ArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
+        try {
+            ArtifactResolutionResult result = resolver.resolveTransitively(
+                    dependencies, project.getArtifact(),
+                    localRepository, remoteRepositories,
+                    artifactMetadataSource, filter);
+            Set<Artifact> artifacts = result.getArtifacts();
+
+            for (Artifact artifact : artifacts) {
+                getLog().info("Detected dependency: " + artifact + " available in " + artifact.getFile());
+                // TODO: this is where the actual copy to the remote maven repo shoud occur!
+            }
+        } catch (ArtifactResolutionException e) {
+            throw new MojoFailureException(e, "Can't resolve artifact", "Can't resolve artifact");
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoFailureException(e, "Can't find artifact", "Can't find artifact");
+        }
     }
 }
