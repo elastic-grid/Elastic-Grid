@@ -14,6 +14,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.rioproject</groupId>
             <artifactId>rio</artifactId>
             <version>4.0-M3</version>
@@ -39,7 +45,7 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-rio-plugin</artifactId>
+                <artifactId>maven-elastic-grid-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
                     <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
@@ -56,6 +62,25 @@
                     </createJar>
                 </configuration>
             </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-rio-plugin</artifactId>-->
+                <!--<extensions>true</extensions>-->
+                <!--<configuration>-->
+                    <!--<opstring>${basedir}/src/main/conf/calculator.groovy</opstring>-->
+                    <!--<createJar>-->
+                        <!--<classifier>dl</classifier>-->
+                        <!--<in>org.rioproject.examples.calculator</in>-->
+                        <!--<topclasses>-->
+                            <!--<topclass>org.rioproject.examples.calculator.Calculator</topclass>-->
+                            <!--<topclass>org.rioproject.examples.calculator.Add</topclass>-->
+                            <!--<topclass>org.rioproject.examples.calculator.Subtract</topclass>-->
+                            <!--<topclass>org.rioproject.examples.calculator.Divide</topclass>-->
+                            <!--<topclass>org.rioproject.examples.calculator.Multiply</topclass>-->
+                        <!--</topclasses>-->
+                    <!--</createJar>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

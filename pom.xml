@@ -45,6 +45,7 @@
     </ciManagement>
 
     <modules>
+	<module>maven-plugin</module>
         <module>modules</module>
         <module>substrates</module>
         <module>examples</module>

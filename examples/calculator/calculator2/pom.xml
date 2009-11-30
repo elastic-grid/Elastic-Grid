@@ -39,7 +39,7 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-rio-plugin</artifactId>
+                <artifactId>maven-elastic-grid-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
                     <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
