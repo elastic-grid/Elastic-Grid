@@ -17,9 +17,12 @@
  */
 package com.elasticgrid.maven;
 
+import com.elasticgrid.storage.StorageManager;
+import com.elasticgrid.storage.spi.StorageEngine;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import java.io.File;
 
 /**
  * Deploys an Elastic Grid OpString to the repository.
@@ -31,14 +34,20 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class DeployMojo extends AbstractMojo {
     /**
-     * OpString to deploy.
-     * @parameter
+     * The OAR to generate.
+     *
+     * @parameter expression="${project.build.directory}/${project.build.finalName}.oar"
      * @required
      */
-    private String opstring;
+    private String oarFileName;
+
+    private StorageManager storageManager;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        System.out.println("Should install OAR!!");
+        File oar = new File(oarFileName);
+        getLog().info("Deploying oar " + oar.getName() + "...");
+//        StorageEngine storageEngine = storageManager.getPreferredStorageEngine();
+//        storageEngine.getContainers();
         //TODO: do something!
     }
 }
