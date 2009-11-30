@@ -50,6 +50,7 @@ class MonitorConfig {
                     opstrings << egConfigDirectory + File.separatorChar + 'elastic-grid-rackspace-services.groovy'
             }
         }
+        return opstrings
     }
 
     String[] getInitialLookupGroups() {
