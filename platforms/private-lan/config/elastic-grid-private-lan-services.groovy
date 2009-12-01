@@ -1,5 +1,7 @@
+import org.rioproject.config.Constants
+
 deployment(name: 'Elastic Grid for Private LAN') {
-  groups '${org.rioproject.groups}'
+  groups System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')
 
   service(name: 'Private LAN Cloud Platform') {
     interfaces {
@@ -26,7 +28,8 @@ deployment(name: 'Elastic Grid for Private LAN') {
   service(name: 'Amazon S3 Storage Engine') {
     interfaces {
       classes 'com.elasticgrid.storage.spi.StorageEngine'
-      resources 'elastic-grid/amazon-s3-storage-${pom.version}.jar'
+      resources 'elastic-grid/amazon-s3-storage-${pom.version}.jar',
+                'elastic-grid/elastic-grid-manager-${pom.version}.jar'
     }
     implementation(class: 'com.elasticgrid.storage.amazon.s3.S3StorageEngineJSB') {
       resources 'elastic-grid/amazon-s3-storage-${pom.version}.jar',

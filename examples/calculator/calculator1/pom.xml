@@ -51,13 +51,13 @@
                     <opstring>${basedir}/src/main/conf/calculator.groovy</opstring>
                     <createJar>
                         <classifier>dl</classifier>
-                        <in>org.rioproject.examples.calculator</in>
+                        <in>calculator</in>
                         <topclasses>
-                            <topclass>org.rioproject.examples.calculator.Calculator</topclass>
-                            <topclass>org.rioproject.examples.calculator.Add</topclass>
-                            <topclass>org.rioproject.examples.calculator.Subtract</topclass>
-                            <topclass>org.rioproject.examples.calculator.Divide</topclass>
-                            <topclass>org.rioproject.examples.calculator.Multiply</topclass>
+                            <topclass>calculator.Calculator</topclass>
+                            <topclass>calculator.Add</topclass>
+                            <topclass>calculator.Subtract</topclass>
+                            <topclass>calculator.Divide</topclass>
+                            <topclass>calculator.Multiply</topclass>
                         </topclasses>
                     </createJar>
                 </configuration>
