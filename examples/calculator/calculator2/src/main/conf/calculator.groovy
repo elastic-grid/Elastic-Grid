@@ -1,8 +1,10 @@
-deployment(name:'Calculator 2') {
-    groups 'elastic-grid'
+import org.rioproject.config.Constants
 
-    artifact id:'service', 'com.elasticgrid.examples.calculator:calculator2:1.0'
-    artifact id:'service-dl', 'com.elasticgrid.examples.calculator:calculator2:dl:1.0'
+deployment(name:'Calculator 2') {
+    groups System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')
+
+    artifact id:'service',    'com.elasticgrid.examples.calculator:calculator2:0.9.3'
+    artifact id:'service-dl', 'com.elasticgrid.examples.calculator:calculator2:dl:0.9.3'
 
     service(name: 'Calculator') {
         interfaces {
