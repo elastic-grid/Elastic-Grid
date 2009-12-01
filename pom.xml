@@ -45,7 +45,7 @@
     </ciManagement>
 
     <modules>
-	<module>maven-plugin</module>
+	    <module>maven-plugin</module>
         <module>modules</module>
         <module>substrates</module>
         <module>examples</module>
@@ -57,12 +57,12 @@
         <repository>
             <id>elastic-grid</id>
             <name>Elastic Grid Repository</name>
-            <url>scp://maven.elastic-grid.com/Library/WebServer/Sites/maven.elastic-grid.com</url>
+            <url>scp://maven.elastic-grid.com/home/55056/users/.home/domains/maven.elastic-grid.com/html</url>
         </repository>
-        <site>
-            <id>website</id>
-            <url>scp://shell.forge.objectweb.org/var/lib/gforge/chroot/home/groups/elastic-grid/htdocs</url>
-        </site>
+        <!--<site>-->
+            <!--<id>website</id>-->
+            <!--<url>scp://shell.forge.objectweb.org/var/lib/gforge/chroot/home/groups/elastic-grid/htdocs</url>-->
+        <!--</site>-->
     </distributionManagement>
 
     <developers>
