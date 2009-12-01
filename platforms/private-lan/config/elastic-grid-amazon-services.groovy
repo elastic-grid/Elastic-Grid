@@ -1,5 +1,7 @@
+import org.rioproject.config.Constants
+
 deployment(name: 'Elastic Grid for Amazon') {
-  groups '${org.rioproject.groups}'
+  groups System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')
 
   service(name: 'Amazon EC2 Cloud Platform') {
     interfaces {

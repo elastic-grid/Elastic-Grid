@@ -1,5 +1,7 @@
+import org.rioproject.config.Constants
+
 deployment(name: 'Elastic Grid for Rackspace') {
-  groups '${org.rioproject.groups}'
+  groups System.getProperty(Constants.GROUPS_PROPERTY_NAME, 'elastic-grid')
 
   service(name: 'Rackspace CloudFiles StorageEngine Engine') {
     interfaces {
