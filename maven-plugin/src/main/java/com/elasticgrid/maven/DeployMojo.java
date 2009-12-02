@@ -30,6 +30,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -80,7 +81,7 @@ public class DeployMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         File oar = new File(oarFileName);
         getLog().info("Deploying oar " + oar.getName() + "...");
-
+        // TODO: copy the OAR to the dropBucket
         ArtifactFilter filter = new ScopeArtifactFilter(Artifact.SCOPE_RUNTIME);
         try {
             ArtifactResolutionResult result = resolver.resolveTransitively(
@@ -97,6 +98,12 @@ public class DeployMojo extends AbstractMojo {
             throw new MojoFailureException(e, "Can't resolve artifact", "Can't resolve artifact");
         } catch (ArtifactNotFoundException e) {
             throw new MojoFailureException(e, "Can't find artifact", "Can't find artifact");
+        }
+
+        List<Artifact> attachments = project.getAttachedArtifacts();
+        for (Artifact artifact : attachments) {
+            getLog().info("Detected attachment: " + artifact + " available in " + artifact.getFile());
+            // TODO: copy the artifacts to the maven repo too!
         }
     }
 }
