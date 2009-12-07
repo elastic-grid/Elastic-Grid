@@ -19,6 +19,7 @@ package com.elasticgrid.maven;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
@@ -74,11 +75,12 @@ public class DeployMojo extends AbstractMojo {
     private ArtifactMetadataSource artifactMetadataSource;
 
     /** @parameter default-value="${localRepository}" */
-    private org.apache.maven.artifact.repository.ArtifactRepository localRepository;
+    private ArtifactRepository localRepository;
 
     /** @parameter default-value="${project.remoteArtifactRepositories}" */
-    private java.util.List remoteRepositories;
+    private List remoteRepositories;
 
+    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
         File oar = new File(oarFileName);
         getLog().info("Deploying oar " + oar.getName() + "...");
