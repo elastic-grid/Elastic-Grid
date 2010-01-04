@@ -93,7 +93,7 @@ public class DeployMojo extends AbstractMojo {
 
             for (Artifact artifact : artifacts) {
                 getLog().info("Detected dependency: " + artifact + " available in " + artifact.getFile());
-                // TODO: this is where the actual copy to the remote maven repo shoud occur!
+                // TODO: this is where the actual copy to the remote maven repository should occur!
             }
         } catch (ArtifactResolutionException e) {
             throw new MojoFailureException(e, "Can't resolve artifact", "Can't resolve artifact");
