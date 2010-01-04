@@ -10,7 +10,6 @@ import com.sun.jini.start.ServiceDescriptor;
 @Component('com.sun.jini.start')
 class StartAgentConfig {
     ServiceDescriptor[] getServiceDescriptors() {
-        String jiniHome = System.getProperty('JINI_HOME')
         String egHome = System.getProperty('EG_HOME')
 
         def websterRoots = [egHome+'/lib-dl', ';',

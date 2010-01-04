@@ -104,7 +104,6 @@ public class DeployMojo extends AbstractMojo {
         }
 
         List<Artifact> attachments = project.getAttachedArtifacts();
-        getLog().info("Found " + attachments.size() + " attachments");
         for (Artifact artifact : attachments) {
             getLog().info("Detected attachment: " + artifact + " available in " + artifact.getFile());
             // TODO: copy the artifacts to the maven repo too!
