@@ -1,6 +1,6 @@
 /**
  * Elastic Grid
- * Copyright (C) 2008-2009 Elastic Grid, LLC.
+ * Copyright (C) 2008-2010 Elastic Grid, LLC.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -38,7 +38,7 @@ import java.util.Set;
  * Deploys an Elastic Grid OpString to the repository.
  *
  * @goal deploy
- * @execute goal="oar" phase="package"
+ * @execute goal="oar"
  * @description Deploys an Elastic Grid OpString to the repository
  * @requiresProject true
  * @requiresDependencyResolution
