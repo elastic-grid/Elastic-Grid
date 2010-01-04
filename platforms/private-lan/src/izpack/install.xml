@@ -139,7 +139,7 @@ Rio installation file.
 			</fileset>
         </pack>
         <pack name="Amazon EC2 API Tools" installGroups="All" required="no">
-            <description>Official Amazon EC2 API Tools (version 1.3-36506) pre-configured.</description>
+            <description>Official Amazon EC2 API Tools (version 1.3-46266) pre-configured.</description>
             <fileset dir="../staging/ec2-api-tools-1.3-46266" targetdir="$INSTALL_PATH/ec2-api-tools">
                 <include name="**/*"/>
             </fileset>
