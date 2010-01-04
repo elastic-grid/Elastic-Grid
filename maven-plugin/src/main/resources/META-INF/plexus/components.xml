@@ -28,7 +28,7 @@
                 <extension>jar</extension>
                 <packaging>classdepandjar</packaging>
                 <language>java</language>
-                <addedToClasspath>false</addedToClasspath>
+                <addedToClasspath>true</addedToClasspath>
             </configuration>
         </component>
         <component>
@@ -36,8 +36,8 @@
             <role-hint>oar</role-hint>
             <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
             <configuration>
-                <extension>jar</extension>
                 <type>oar</type>
+                <extension>jar</extension>
                 <packaging>jar</packaging>
                 <language>java</language>
                 <addedToClasspath>false</addedToClasspath>
@@ -59,6 +59,7 @@
                             <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
                             <package>org.apache.maven.plugins:maven-elastic-grid-plugin:classdepandjar</package>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                            <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>
                     </lifecycle>
                 </lifecycles>
@@ -80,6 +81,7 @@
                             <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
                             <package>org.apache.maven.plugins:maven-elastic-grid-plugin:oar</package>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                            <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                         </phases>
                     </lifecycle>
                 </lifecycles>
