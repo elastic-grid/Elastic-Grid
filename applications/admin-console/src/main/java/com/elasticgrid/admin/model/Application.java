@@ -17,7 +17,6 @@
  */
 package com.elasticgrid.admin.model;
 
-import com.extjs.gxt.ui.client.data.BaseModel;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import java.io.Serializable;
 import java.util.List;
@@ -47,8 +46,13 @@ public class Application extends BaseTreeModel implements Serializable {
     public void setServices(List<Service> services) {
         set("services", services);
         set("number_of_services", services.size());
-        for (Service service : services)
-           add(service);
+        for (Service service : services) {
+            /* HACK: START -- if those lines are removed we end up with a NPE with GXT 2.1.0 ! */
+//            service.setAllowNestedValues(false);
+//            service.set("gxt", new BaseTreeModel());
+            /* HACK: END */
+            add(service);
+        }
     }
 
     @Override
