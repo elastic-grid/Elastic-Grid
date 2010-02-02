@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.elasticgrid</groupId>
+        <artifactId>elastic-grid-modules</artifactId>
+        <version>0.9.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>elastic-grid-sla-engines</artifactId>
+    <packaging>jar</packaging>
+    <name>Modules :: SLA Engines (CEP and Rules Engines)</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-api</artifactId>
+            <version>5.1.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version>5.1.0.M1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-compiler</artifactId>
+            <version>5.1.0.M1</version>
+        </dependency>
+
+        <!-- Rio dependencies -->
+        <dependency>
+            <groupId>org.rioproject</groupId>
+            <artifactId>rio</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                    <encoding>UTF-8</encoding>
+                    <meminitial>128m</meminitial>
+                    <maxmem>1024m</maxmem>
+                </configuration>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.groovy.maven</groupId>-->
+                <!--<artifactId>gmaven-plugin</artifactId>-->
+                <!--<version>1.0</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>generateStubs</goal>-->
+                            <!--<goal>compile</goal>-->
+                            <!--<goal>generateTestStubs</goal>-->
+                            <!--<goal>testCompile</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<sources>-->
+                                <!--<fileset>-->
+                                    <!--<directory>${pom.basedir}/src/main/java</directory>-->
+                                    <!--<includes>-->
+                                        <!--<include>**/*.groovy</include>-->
+                                    <!--</includes>-->
+                                <!--</fileset>-->
+                            <!--</sources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-rio-plugin</artifactId>-->
+                <!--<version>4.0-M3</version>-->
+                <!--<extensions>true</extensions>-->
+                <!--<configuration>-->
+                    <!--<createJars>-->
+                        <!--<createJar>-->
+                            <!--<ins>-->
+                                <!--<in>com.elasticgrid.storage</in>-->
+                            <!--</ins>-->
+                            <!--<topclasses>-->
+                                <!--<topclass>com.elasticgrid.storage.StorageManagerJSB</topclass>-->
+                            <!--</topclasses>-->
+                        <!--</createJar>-->
+                    <!--</createJars>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
+</project>

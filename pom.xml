@@ -350,7 +350,11 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-		</repository>		
+		</repository>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.com/maven2</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>

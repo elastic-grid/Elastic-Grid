@@ -29,6 +29,7 @@
         <module>elastic-grid-storage</module>
         <module>elastic-grid-core</module>
         <module>elastic-grid-cli</module>
+        <module>elastic-grid-sla-engines</module>
 	<module>replicated-storage</module>
         <module>amazon-sqs</module>
         <module>amazon-sdb</module>

@@ -1,0 +1,9 @@
+package com.elasticgrid.sla.drools
+
+import com.elasticgrid.sla.drools.VoiceCall
+
+declare VoiceCall
+    @role( event )
+    @timestamp( callDateTime )
+    @duration( callDuration )
+end
